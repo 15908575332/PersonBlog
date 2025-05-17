@@ -3,6 +3,27 @@
         <div class="navigation" :class="[isNavHidden ? 'navHiddenZoomOut' : 'navHiddenZoomIn']">
             <Navigation></Navigation>
         </div>
+
+        <main>
+            <div class="content">
+                <h1>La Patisserie Belle</h1>
+                <p>我是一个热爱生活、喜欢分享的人。这个博客是我记录自己生活点滴、感悟和思考的地方，也是我和读者交流的平台。
+                    我喜欢读书、旅行、美食和电影。我会在博客中分享我心仪的书籍、旅行中的美景和美食佳肴，同时也会和大家探讨电影艺术和社会现象。
+                    除此之外，我还会分享我个人的成长经历和经验，包括工作、学习和生活的点滴，希望能够和大家一起成长，共同探索人生的意义。
+                    感谢你们来到我的博客主页，希望我们可以一起交流、分享和成长。
+                </p>
+                <button class="btn">查看更多</button>
+            </div>
+            <div class="stack" ref="stackRef">
+                <div v-for="(img, idx) in cards" :key="img" class="card" :class="{ swap: idx === cards.length - 1 }"
+                    @click="onCardClick(idx)" :style="{
+                        zIndex: idx + 1
+                    }">
+                    <img :src="img" alt="" />
+                </div>
+            </div>
+        </main>
+
         <!-- 连续滚动轮播 -->
         <div class="carousel">
             <div>
@@ -14,7 +35,6 @@
                 </div>
             </div>
         </div>
-
         <!-- 缩略图轮播 -->
         <div class="thumbnail__carousel">
             <ThumbnailCarousel></ThumbnailCarousel>
@@ -125,6 +145,29 @@ import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
 
 const scorllDirection = ref();
+const cardImages = [
+    'https://www.jq22.com/newjs/nns1.jpg',
+    'https://www.jq22.com/newjs/nns2.jpg',
+    'https://www.jq22.com/newjs/nns3.jpg',
+    'https://www.jq22.com/newjs/nns4.jpg',
+    'https://www.jq22.com/newjs/nns5.jpg',
+    'https://www.jq22.com/newjs/nns6.jpg',
+];
+const cards = ref([...cardImages]);
+const stackRef = ref(null);
+let autoplayInterval = null;
+
+function moveCard() {
+    // 将最后一张卡片移到最前面
+    cards.value.unshift(cards.value.pop());
+}
+
+function onCardClick(idx) {
+    // 只有最上面那张卡片可点击
+    if (idx === cards.value.length - 1) {
+        moveCard();
+    }
+}
 const imageList_left = ref([
     utils.getAssetsFile("img/travelAlbum/10003.jpg"),
     utils.getAssetsFile("img/travelAlbum/10004.jpg"),
@@ -236,14 +279,19 @@ const handleScroll = () => {
 const debouncedHandleScroll = debounce(handleScroll, 100); // 300ms 防抖延迟
 
 onMounted(() => {
+    autoplayInterval = setInterval(moveCard, 4000);
+
     window.addEventListener('scroll', debouncedHandleScroll);
 });
 
 onBeforeUnmount(() => {
+    clearInterval(autoplayInterval);
     window.removeEventListener('scroll', debouncedHandleScroll);
 });
 </script>
 <style scoped lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Quicksand:wght@300..700&display=swap");
+
 #TravelAlbum {
     background-image: linear-gradient(90deg, rgba(37, 82, 110, .1) 1px, #fff 0), linear-gradient(180deg, rgba(37, 82, 110, .1) 1px, #fff 0);
     background-size: 3rem 3rem;
@@ -264,9 +312,267 @@ onBeforeUnmount(() => {
         animation: navHiddenZoomIn 0.5s ease forwards;
     }
 
+    //自动播放卡片
+    main {
+        width: 100vw;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        place-items: center;
+
+        // text-content
+        .content {
+            user-select: none;
+            padding-left: 10vw;
+
+            h1 {
+                font-family: "Dancing Script", cursive;
+                font-size: clamp(2.5rem, 4vw, 6rem);
+                font-weight: 700;
+                background: -webkit-linear-gradient(0deg, #f76591, #ffc16f);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                line-height: 1.1;
+                margin-bottom: 36px;
+                padding-left: 10px;
+            }
+
+            p {
+                font-size: clamp(0.9rem, 4vw, 1.2rem);
+                line-height: 1.6;
+
+            }
+
+            .btn {
+                background-color: #f76591;
+                background-image: linear-gradient(-180deg, #ffc16f, #f76591);
+                font-size: clamp(0.8rem, 8vw, 0.9rem);
+                font-weight: 600;
+                color: #fff;
+                width: max-content;
+                outline: 0;
+                border: 0;
+                border-radius: 6px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                padding: 10px 20px;
+                margin-top: 26px;
+                text-align: center;
+                transform: scale(1);
+                transition: all 0.2s ease-in;
+                cursor: pointer;
+                touch-action: manipulation;
+                user-select: none;
+                -webkit-user-select: none;
+                pointer-events: auto;
+
+                &:hover {
+                    box-shadow: 0 4px 10px rgba(247, 101, 145, 0.5);
+                    transform: scale(0.98);
+                }
+            }
+
+        }
+
+
+
+        /* Stacked Cards */
+        .stack {
+            position: relative;
+
+
+            .card {
+                position: absolute;
+                transform: translate(-50%, -50%);
+                top: 50%;
+                left: 50%;
+                width: 350px;
+                height: 500px;
+                border-radius: 2rem;
+                box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25),
+                    0 15px 20px 0 rgba(0, 0, 0, 0.125);
+                transition: transform 0.6s;
+                user-select: none;
+
+                img {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: inherit;
+                    object-fit: cover;
+                    pointer-events: none;
+                }
+
+                &:nth-last-child(n + 5) {
+                    --x: calc(-50% + 90px);
+                    transform: translate(var(--x), -50%) scale(0.85);
+                    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.01);
+                }
+
+                &:nth-last-child(4) {
+                    --x: calc(-50% + 60px);
+                    transform: translate(var(--x), -50%) scale(0.9);
+                }
+
+                &:nth-last-child(3) {
+                    --x: calc(-50% + 30px);
+                    transform: translate(var(--x), -50%) scale(0.95);
+                }
+
+                &:nth-last-child(2) {
+                    --x: calc(-50%);
+                    transform: translate(var(--x), -50%) scale(1);
+                }
+
+                &:nth-last-child(1) {
+                    --x: calc(-50% - 30px);
+                    transform: translate(var(--x), -50%) scale(1.05);
+                }
+
+                &:nth-last-child(1) img {
+                    box-shadow: 0 1px 5px 5px rgba(255, 193, 111, 0.5);
+                }
+            }
+        }
+
+        .swap {
+            animation: swap 1.3s ease-out forwards;
+        }
+
+        @keyframes swap {
+            30% {
+                transform: translate(calc(var(--x) - 250px), -50%) scale(0.85) rotate(-5deg) rotateY(65deg);
+            }
+
+            100% {
+                transform: translate(calc(var(--x) - 30px), -50%) scale(0.5);
+                z-index: -1;
+            }
+        }
+
+        /* Media queries for keyframes */
+
+        @media (max-width: 1200px) {
+            @keyframes swap {
+                30% {
+                    transform: translate(calc(var(--x) - 200px), -50%) scale(0.85) rotate(-5deg) rotateY(65deg);
+                }
+
+                100% {
+                    transform: translate(calc(var(--x) - 30px), -50%) scale(0.5);
+                    z-index: -1;
+                }
+            }
+        }
+
+        @media (max-width: 1050px) {
+            @keyframes swap {
+                30% {
+                    transform: translate(calc(var(--x) - 150px), -50%) scale(0.85) rotate(-5deg) rotateY(65deg);
+                }
+
+                100% {
+                    transform: translate(calc(var(--x) - 30px), -50%) scale(0.5);
+                    z-index: -1;
+                }
+            }
+        }
+
+        /* Media queries for other classes */
+
+        @media (max-width: 1200px) {
+            .content {
+                padding-left: 80px;
+            }
+
+            .content p {
+                padding-right: 40px;
+            }
+
+            .card {
+                width: 250px;
+                height: 380px;
+            }
+        }
+
+        @media (max-width: 1050px) {
+            .content {
+                padding-left: 60px;
+            }
+
+            .content p {
+                line-height: 1.5;
+            }
+
+            .card {
+                width: 220px;
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 990px) {
+            .content p {
+                padding-right: 0;
+            }
+
+            .card {
+                width: 200px;
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 950px) {
+            main {
+                grid-template-columns: 1fr;
+                grid-template-rows: 4fr 3fr;
+                grid-template-areas:
+                    "stacked"
+                    "content";
+            }
+
+            .content {
+                grid-area: content;
+                text-align: center;
+                padding: 0 90px;
+            }
+
+            .btn {
+                margin-bottom: 30px;
+            }
+
+            .stack {
+                grid-area: stacked;
+            }
+        }
+
+        @media (max-width: 650px) {
+            main {
+                grid-template-rows: 1fr 1fr;
+            }
+
+            .content {
+                padding: 0 50px;
+            }
+
+            .content h1 {
+                padding-left: 0;
+            }
+
+            .btn {
+                padding: 8px 16px;
+            }
+
+            .card {
+                width: 180px;
+                height: 260px;
+            }
+        }
+    }
+
     // 无限滚动
     .carousel {
-        height: 100vh;
+        // height: 100vh;
         display: flex;
         align-items: center;
         animation: opacityIn 1s ease-in forwards;
@@ -277,14 +583,14 @@ onBeforeUnmount(() => {
         }
     }
 
-
     // 缩略轮播
     .thumbnail__carousel {
-        position: absolute;
-        top: 49%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
+        // position: absolute;
+        // top: 49%;
+        // left: 50%;
+        // transform: translate(-50%, -50%);
+        // z-index: 1;
+        margin: 10vh auto;
     }
 
     // 主体内容
@@ -353,33 +659,6 @@ onBeforeUnmount(() => {
             $imgCount : 8;
             height: 32rem;
             background-color: #fff;
-
-            .nav-bgc {
-                margin: 4rem 0 2rem;
-                background-image: linear-gradient(to right bottom, #60a5fa, #5eead4, #34d399);
-
-                &::before {
-                    content: "";
-                    position: absolute;
-                    top: -3rem;
-                    right: -3rem;
-                    width: 12rem;
-                    height: 12rem;
-                    border-radius: 50%;
-                    background-color: hsla(0, 0%, 100%, 0.1);
-                }
-
-                &::after {
-                    content: "";
-                    position: absolute;
-                    left: -3rem;
-                    bottom: -3rem;
-                    width: 8rem;
-                    height: 8rem;
-                    border-radius: 50%;
-                    background-color: hsla(0, 0%, 100%, 0.1);
-                }
-            }
 
             .stage {
                 position: relative;
