@@ -1,0 +1,71 @@
+// record column组件导航栏样式重写
+// travel Album组件导航栏样式重写
+#recordColumn,
+#TravelAlbum,
+#helpLink {
+    .navigation {
+        a {
+            color: #585858;
+        }
+        .logo {
+            span {
+                color: #585858;
+            }
+        }
+        .navigate {
+            &:hover {
+                background-color: #f0f4f5;
+            }
+        }
+    }
+}
+//会员中心徽标样式重写
+#memberCenter {
+    .ant-ribbon-text {
+        font-size: 18px;
+        font-family: "gtpy";
+        color: #fff;
+    }
+}
+// 全局提示组件ant-message样式重写
+.ant-message {
+    top: 3rem;
+}
+.ant-message-notice .ant-message-notice-content {
+    // background: linear-gradient(90deg, #23d0b0, #23b5c8 20%, #e73c7e, #ed7156);
+    font-size: 18px;
+    border-radius: 10px;
+    padding: 8px 15px;
+    font-weight: 700;
+    font-family: "lmst";
+}
+
+:where(.css-dev-only-do-not-override-17yhhjv).ant-message-notice .anticon {
+    display: none;
+}
+:where(.css-dev-only-do-not-override-1p3hq3p).ant-typography {
+    font-family: "gtpy";
+}
+
+span.cc-cmd {
+    padding: 3px 0;
+}
+// 留言板样式重写
+.vue-danmaku .danmus .dm {
+    color: #fff !important;
+    font-size: 22px;
+    font-family: "gtpy";
+    background: #272b2d90;
+    padding: 8px 15px;
+    border-radius: 30px;
+    @include flexCenter(row, center);
+}
+// 记录页面详情>表情样式重写
+.v3-group {
+    .v3-emojis {
+        button {
+            max-width: 5.5% !important;
+            flex-basis: 5.5% !important;
+        }
+    }
+}

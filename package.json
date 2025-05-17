@@ -1,0 +1,46 @@
+{
+  "name": "blog",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ciar4n/izmir": "^1.0.1",
+    "@highlightjs/vue-plugin": "^2.1.0",
+    "@vitejs/plugin-basic-ssl": "^1.2.0",
+    "ant-design-vue": "^4.2.6",
+    "aos": "^3.0.0-beta.6",
+    "axios": "^1.7.7",
+    "dayjs": "^1.11.13",
+    "highlight.js": "^11.11.1",
+    "highlightjs-line-numbers.js": "^2.9.0",
+    "live2d-render": "^0.0.5",
+    "lunar-javascript": "^1.6.12",
+    "pinia": "^2.2.7",
+    "pixi-live2d-display": "^0.4.0",
+    "pixi.js": "^6.5.10",
+    "v-preview-image": "^3.1.0",
+    "vite-plugin-compression": "^0.5.1",
+    "vue": "^3.4.37",
+    "vue-awesome-paginate": "^1.2.0",
+    "vue-lazyload": "^3.0.0",
+    "vue-router": "^4.4.5",
+    "vue3-carousel-3d": "^1.0.4",
+    "vue3-danmaku": "^1.6.1",
+    "vue3-emoji-picker": "^1.1.8"
+  },
+  "devDependencies": {
+    "@types/aos": "^3.0.7",
+    "@types/node": "^22.8.5",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "autoprefixer": "^10.4.21",
+    "sass": "^1.79.3",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1",
+    "vue-tsc": "^2.0.29"
+  }
+}

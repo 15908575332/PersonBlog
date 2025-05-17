@@ -1,0 +1,139 @@
+@mixin flexCenter($direction, $layout) {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-direction: $direction;
+    justify-content: $layout;
+}
+// 媒体查询
+$breakpointers: (
+    "phone": (
+        320px,
+        480px
+    ),
+    "pad": (
+        481px,
+        768px
+    ),
+    "notebook": (
+        769px,
+        1024px
+    ),
+    "desktop": (
+        1025px,
+        1200px
+    ),
+    "tv": 1201px
+);
+@mixin media-to($breakname) {
+    $bp: map-get($breakpointers, $breakname);
+
+    @if type-of($bp) == "list" {
+        $min: nth($bp, 1);
+        $max: nth($bp, 2);
+
+        @media (min-width: $min) and (max-width: $max) {
+            @content; //类似于slot
+        }
+    } @else {
+        @media (min-width: $bp) {
+            @content;
+        }
+    }
+}
+
+//首页、留言、登录页面背景图放大缩小动画
+@keyframes fadeIn {
+    from {
+        transform: scale(1.3);
+        backdrop-filter: blur(10px);
+    }
+
+    to {
+        transform: scale(1);
+        backdrop-filter: blur(0);
+    }
+}
+
+// 随笔、相册页面导航栏隐藏动画
+@keyframes navHiddenZoomOut {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-100%);
+    }
+}
+
+// 随笔、相册页面导航栏显示动画
+@keyframes navHiddenZoomIn {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+// 随笔、资源页面背景图向下滑动动画
+@keyframes zoomInDown {
+    from {
+        transform: translate3d(0, -2.5rem, 0);
+        visibility: visible;
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+// 随笔、资源、详情页面主体内容向上滑动动画
+@keyframes zoomInUp {
+    from {
+        transform: translate3d(0, 2.5rem, 0);
+        visibility: visible;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+// 相册页面缩略图轮播、专栏页面常规轮播放大缩小动画
+@keyframes clipDiamondIn {
+    0% {
+        opacity: 0.2;
+        transform-origin: 50% 50%;
+        transform: scale(1.2, 1.2);
+        -webkit-filter: blur(50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform-origin: 50% 50%;
+        transform: scale(1, 1);
+        -webkit-filter: blur(0px);
+    }
+}
+// 下拉菜单显示动画
+@keyframes opacityIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* 定义放大缩小动画 */
+// @keyframes scale-animation {
+//     0% {
+//         transform: scale(1); /* 原始大小 */
+//     }
+//     50% {
+//         transform: scale(1.2); /* 放大到两倍大小 */
+//     }
+//     100% {
+//         transform: scale(1); /* 缩小回原始大小 */
+//     }
+// }
