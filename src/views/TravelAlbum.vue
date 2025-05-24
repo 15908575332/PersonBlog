@@ -6,7 +6,7 @@
     </div>
 
     <!-- 堆叠切换 -->
-    <div class="page page1">
+    <div class="stacking_switch page page1">
       <div class="navigation">
         <Navigation></Navigation>
       </div>
@@ -383,14 +383,14 @@ $(document).ready(function () {
       }
     }
   });
-  $(document).on("click", ".scroll-btn", function () {
+  $(".nav-panel").on("click", ".scroll-btn", function () {
     if ($(this).hasClass("up")) {
       navigateUp();
     } else {
       navigateDown();
     }
   });
-  $(document).on("click", ".nav-btn:not(.active)", function () {
+  $(".nav-panel").on("click", ".nav-btn:not(.active)", function () {
     if (!scrolling) {
       var target = $(this).attr("data-target");
       if (Modernizr.csstransforms) {
@@ -446,7 +446,7 @@ $(document).ready(function () {
   }
 
   // 堆叠切换
-  .page1 {
+  .stacking_switch {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
@@ -473,6 +473,7 @@ $(document).ready(function () {
       p {
         font-size: clamp(0.9rem, 4vw, 1.2rem);
         line-height: 1.6;
+        font-family: 'gtpy';
       }
 
       .btn {
@@ -496,7 +497,7 @@ $(document).ready(function () {
         user-select: none;
         -webkit-user-select: none;
         pointer-events: auto;
-
+        font-family: 'lmst';
         &:hover {
           box-shadow: 0 4px 10px rgba(247, 101, 145, 0.5);
           transform: scale(0.98);
