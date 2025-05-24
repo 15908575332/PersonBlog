@@ -19,9 +19,9 @@ const balloons = Array.from({ length: balloonCount }, (_, i) => {
     const [c1, c2] = colorPairs[random(0, colorPairs.length - 1)];
     return {
         width: random(60, 120) + 'px',
-        delay: random(-1, 95) + 's',
+        delay: random(0, 2) + 's', // 让动画延迟为0~2秒，气球首次进入页面就能陆续出现
         left: random(1, 99) + '%',
-        duration: random(8, 10) + 's', // 新增动画时长，4~10秒
+        duration: random(8, 10) + 's', // 新增动画时长，8~10秒
         bg: `linear-gradient(45deg,${c1},${c2})`
     };
 });

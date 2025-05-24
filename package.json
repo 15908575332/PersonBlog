@@ -18,6 +18,7 @@
     "dayjs": "^1.11.13",
     "highlight.js": "^11.11.1",
     "highlightjs-line-numbers.js": "^2.9.0",
+    "jquery": "^3.7.1",
     "live2d-render": "^0.0.5",
     "lunar-javascript": "^1.6.12",
     "pinia": "^2.2.7",
