@@ -90,7 +90,12 @@
     <div class="vue3-carousel-3d page page4">
       <div class="carousel_title">
         <h1>vue-carousel-3d | 基于vue.js的漂亮3D轮播图组件</h1>
+        <div class="thisLogo">
+          <img src="/public/vite.svg" alt="" />
+          <span>Personal blog</span>
+        </div>
       </div>
+
       <div class="carousel_body">
         <carousel-3d
           :controlsVisible="true"
@@ -113,7 +118,7 @@
         <h1>通过CSS3的transform和box-reflect属性实现图片的倒影效果</h1>
         <div class="thisLogo">
           <img src="/public/vite.svg" alt="" />
-          <span>Blog 个人博客</span>
+          <span>Personal blog</span>
         </div>
       </div>
       <!-- 舞台层 -->
@@ -410,6 +415,14 @@ $(document).ready(function () {
 });
 </script>
 <style scoped lang="scss">
+@font-face {
+  font-family: "Vampiro One";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Vampiro One"), local("VampiroOne-Regular"),
+    url("@/assets/fonts/Ho2Xld8UbQyBA8XLxF1_NYbN6UDyHWBl620a-IRfuBk.woff")
+      format("woff");
+}
 #TravelAlbum {
   $pagesCount: 10; // 页面数量
   position: absolute;
@@ -450,6 +463,7 @@ $(document).ready(function () {
         background: -webkit-linear-gradient(0deg, #f76591, #ffc16f);
         background-clip: text;
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
         line-height: 1.1;
         margin-bottom: 36px;
@@ -758,9 +772,22 @@ $(document).ready(function () {
     @include flexCenter(column, center);
     margin: 0;
     .carousel_title {
+      transform: translateY(-15vh);
+
       h1 {
         font-size: 38px;
-        transform: translateY(-15vh);
+        padding: 1.5rem 0;
+      }
+      .thisLogo {
+        @include flexCenter(row, center);
+
+        span {
+          font-family: "Vampiro One";
+          font-size: 1.6rem;
+          background: -webkit-linear-gradient(0deg, #b341fe, #5ab1ff);
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
       }
     }
     .carousel_body {
@@ -780,10 +807,24 @@ $(document).ready(function () {
   .inverted {
     $imgCount: 8;
     @include flexCenter(column, center);
+
     .inverted_title {
+      transform: translateY(-15vh);
+
       h1 {
         font-size: 38px;
-        transform: translateY(-15vh);
+        padding: 1.5rem 0;
+      }
+      .thisLogo {
+        @include flexCenter(row, center);
+
+        span {
+          font-family: "Vampiro One";
+          font-size: 1.6rem;
+          background: -webkit-linear-gradient(0deg, #b341fe, #5ab1ff);
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
       }
     }
     .stage {
