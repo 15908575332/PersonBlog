@@ -15,8 +15,7 @@
             <img src="@/assets/img/public/avatar01.webp" alt="" />
             <h1>Sara</h1>
           </li>
-          <li class="item heart">
-          </li>
+          <li class="item heart"></li>
           <li class="item">
             <img src="@/assets/img/public/avatar02.webp" alt="" />
             <h1>Abby</h1>
@@ -150,31 +149,39 @@
         <!-- 模块导航 -->
         <div class="module">
           <ul>
-            <li @click="changeModule = 'module1'">
+            <li
+              v-for="(item, index) in module_data"
+              @click="changeModule = item.id"
+              :key="item.id"
+            >
               <div class="card__left">
-                <img src="@/assets/img/family/loveWeiYan.jpg" alt="" />
+                <img :src="item.img" alt="image" />
               </div>
               <div class="card__right">
-                <div class="card__title">点点滴滴</div>
-                <div class="card__desc">☀️今朝有酒今朝醉</div>
+                <div class="card__title">{{ item.title }}</div>
+                <div class="card__desc">{{ item.desc }}</div>
               </div>
-            </li>
-            <li @click="changeModule = 'module2'">
-              <div class="card__left">
-                <img src="@/assets/img/family/lovePhoto.jpg" alt="" />
-              </div>
-              <div class="card__right">
-                <div class="card__title">时光相册</div>
-                <div class="card__desc">📸记录美好瞬间</div>
-              </div>
-            </li>
-            <li @click="changeModule = 'module3'">
-              <div class="card__left">
-                <img src="@/assets/img/family/loveMessage.jpg" alt="" />
-              </div>
-              <div class="card__right">
-                <div class="card__title">祝福板</div>
-                <div class="card__desc">📋写下你们的祝福</div>
+              <!-- 风车 -->
+              <div class="windmill" v-if="item.id === changeModule">
+                <div class="case">
+                  <div class="one">
+                    <div class="leaf"></div>
+                    <div class="square"></div>
+                  </div>
+                  <div class="two">
+                    <div class="leaf"></div>
+                    <div class="square"></div>
+                  </div>
+                  <div class="three">
+                    <div class="leaf"></div>
+                    <div class="square"></div>
+                  </div>
+                  <div class="four">
+                    <div class="leaf"></div>
+                    <div class="square"></div>
+                  </div>
+                  <div class="dot"></div>
+                </div>
               </div>
             </li>
           </ul>
@@ -375,7 +382,28 @@ const updateCountdown = () => {
   countdown.value = { days, hours, minutes, seconds };
 };
 // 模块切换
+const module_data = [
+  {
+    id: "module1",
+    title: "点点滴滴",
+    desc: "☀️今朝有酒今朝醉",
+    img: utils.getAssetsFile("img/family/loveWeiYan.jpg"),
+  },
+  {
+    id: "module2",
+    title: "时光相册",
+    desc: "📸记录美好瞬间",
+    img: utils.getAssetsFile("img/family/lovePhoto.jpg"),
+  },
+  {
+    id: "module3",
+    title: "祝福板",
+    desc: "📋写下你们的祝福",
+    img: utils.getAssetsFile("img/family/loveMessage.jpg"),
+  },
+];
 const changeModule = ref("module1");
+console.log(changeModule.value);
 let interval;
 let intervalId;
 onMounted(() => {
@@ -621,7 +649,7 @@ onUnmounted(() => {
         background-image: url("@/assets/img/family/love.jpg");
         background-size: 100% 100%;
         font-family: "gtpy";
-        margin: 1rem 0;
+        margin: 3rem 0;
 
         h1 {
           position: absolute;
@@ -661,13 +689,14 @@ onUnmounted(() => {
       .module {
         width: 100%;
         font-family: "gtpy";
-        padding: 1rem 0;
+        // padding: rem 0;
 
         ul {
           @include flexCenter(row, space-between);
 
           li {
             @include flexCenter(row, center);
+            position: relative;
             border-radius: 0.6rem;
             background-color: #fff;
             padding: 1rem;
@@ -705,6 +734,172 @@ onUnmounted(() => {
               }
 
               padding-left: 1rem;
+            }
+            // 风车
+            .windmill {
+              --color1: #fa8073;
+              --color2: #34cb32;
+              --color3: #e0c27c;
+              --color4: #36b6f7;
+              position: absolute;
+              top: 0.5rem;
+              right: 2rem;
+              .case {
+                width: 60px;
+                height: 60px;
+                display: flex;
+                flex-wrap: wrap;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                animation: rotateC 1.8s linear 0s infinite reverse forwards;
+              }
+              .dot {
+                width: calc(100% / 10);
+                height: calc(100% / 10);
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                background: white;
+                border-radius: 50%;
+                z-index: 1;
+              }
+              .one,
+              .two,
+              .three,
+              .four {
+                width: 50%;
+                height: 50%;
+              }
+              .one {
+                position: absolute;
+                left: 0;
+                top: 0;
+                .leaf {
+                  width: calc(50% - 2px);
+                  height: calc(100% - 2px);
+                  border: 1px solid black;
+                  border-top-left-radius: 120px;
+                  border-bottom-left-radius: 120px;
+                  background: var(--color1);
+                  position: absolute;
+                  right: 0;
+                  top: 0;
+                  z-index: 1;
+                }
+                .square {
+                  width: calc(50% - 2px);
+                  height: 50%;
+                  border: 1px solid black;
+                  border-bottom-color: transparent;
+                  background: var(--color1);
+                  position: absolute;
+                  right: 0;
+                  bottom: 0;
+                  z-index: 0;
+                }
+              }
+              .two {
+                position: absolute;
+                right: 0;
+                top: 0;
+                .leaf {
+                  width: calc(100% - 2px);
+                  height: calc(50% - 2px);
+                  border: 1px solid black;
+                  border-top-left-radius: 120px;
+                  border-top-right-radius: 120px;
+                  background: var(--color2);
+                  position: absolute;
+                  left: 0;
+                  bottom: 0;
+                  z-index: 1;
+                }
+                .square {
+                  width: 50%;
+                  height: calc(50% - 2px);
+                  border: 1px solid black;
+                  border-left-color: transparent;
+                  background: var(--color2);
+                  position: absolute;
+                  left: 0;
+                  bottom: 0;
+                  z-index: 0;
+                }
+              }
+              .three {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+
+                .leaf {
+                  width: calc(100% - 2px);
+                  height: calc(50% - 2px);
+                  border: 1px solid black;
+                  border-bottom-left-radius: 120px;
+                  border-bottom-right-radius: 120px;
+                  background: var(--color3);
+                  position: absolute;
+                  right: 0;
+                  top: 0;
+                  z-index: 1;
+                }
+                .square {
+                  width: 50%;
+                  height: calc(50% - 2px);
+                  border: 1px solid black;
+                  border-right-color: transparent;
+                  background: var(--color3);
+                  position: absolute;
+                  right: 0;
+                  top: 0;
+                  z-index: 0;
+                }
+              }
+              .four {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+
+                .leaf {
+                  width: calc(50% - 2px);
+                  height: calc(100% - 2px);
+                  border: 1px solid black;
+                  border-top-right-radius: 120px;
+                  border-bottom-right-radius: 120px;
+                  background: var(--color4);
+                  position: absolute;
+                  left: 0;
+                  top: 0;
+                  z-index: 1;
+                }
+                .square {
+                  width: calc(50% - 2px);
+                  height: 50%;
+                  border: 1px solid black;
+                  border-top-color: transparent;
+                  background: var(--color4);
+                  position: absolute;
+                  left: 0;
+                  top: 0;
+                  z-index: 0;
+                }
+              }
+
+              @keyframes rotateC {
+                0% {
+                  transform: rotateZ(0deg);
+                }
+                100% {
+                  transform: rotateZ(360deg);
+                }
+              }
             }
           }
         }
