@@ -16,9 +16,9 @@
                 random-channel="true" is-suspend="true" speeds="100" debounce="800">
                 <template v-slot:dm="{ index, danmu }">
                     <div class="message-img">
-                        <img :src=danmu.avatar alt="">
+                        <img :src="danmu.avatar" alt="">
                     </div>
-                    <span>{{ danmu.name }}：{{ danmu.text }}</span>
+                    <span :style="{ color: danmu.color }">{{ danmu.name }}：{{ danmu.text }}</span>
                 </template>
             </vue-danmaku>
             <form class="message-input" @submit.prevent="insertMessage">
@@ -42,18 +42,23 @@ const videoSrc = computed(() => {
         backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`
     }
 });
+
+function getRandomColor() {
+    return `hsl(${Math.floor(Math.random() * 360)}, 80%, 55%)`;
+}
+
 const danmus = ref([
-    { avatar: utils.getAssetsFile('img/profile_picture/10001.png'), name: 'sara', text: '设置一串很长的文字测试留言功能是否正常' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10002.png'), name: 'auther', text: '这里是留言' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10006.png'), name: 'ff', text: '北风卷地白草折，胡天八月即飞雪。' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10053.png'), name: 'homePage', text: '山回路转不见君，雪上空留马行处。' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10054.png'), name: 'back1', text: '轮台东门送君去，去时雪满天山路。' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10055.png'), name: 'webp', text: '纷纷暮雪下辕门，风掣红旗冻不翻。' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10056.png'), name: 'Jqavk', text: '中军置酒饮归客，胡琴琵琶与羌笛。' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10057.png'), name: 'utils', text: '瀚海阑干百丈冰，愁云惨淡万里凝。' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10058.png'), name: 'getAssetsFile', text: '将军角弓不得控，都护铁衣冷难着。' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10059.png'), name: 'randomIndex', text: '散入珠帘湿罗幕，狐裘不暖锦衾薄。' },
-    { avatar: utils.getAssetsFile('img/profile_picture/10060.png'), name: '中文名字', text: '忽如一夜春风来，千树万树梨花开。' },
+    { avatar: utils.getAssetsFile('img/profile_picture/10001.png'), name: 'sara', text: '设置一串很长的文字测试留言功能是否正常', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10002.png'), name: 'auther', text: '这里是留言', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10006.png'), name: 'ff', text: '北风卷地白草折，胡天八月即飞雪。', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10053.png'), name: 'homePage', text: '山回路转不见君，雪上空留马行处。', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10054.png'), name: 'back1', text: '轮台东门送君去，去时雪满天山路。', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10055.png'), name: 'webp', text: '纷纷暮雪下辕门，风掣红旗冻不翻。', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10056.png'), name: 'Jqavk', text: '中军置酒饮归客，胡琴琵琶与羌笛。', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10057.png'), name: 'utils', text: '瀚海阑干百丈冰，愁云惨淡万里凝。', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10058.png'), name: 'getAssetsFile', text: '将军角弓不得控，都护铁衣冷难着。', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10059.png'), name: 'randomIndex', text: '散入珠帘湿罗幕，狐裘不暖锦衾薄。', color: getRandomColor() },
+    { avatar: utils.getAssetsFile('img/profile_picture/10060.png'), name: '中文名字', text: '忽如一夜春风来，千树万树梨花开。', color: getRandomColor() },
 ])
 const videoUrls = ref([
     utils.getAssetsFile('img/homePage/back1.webp'),
@@ -66,7 +71,7 @@ const videoUrls = ref([
 // 插入留言
 const insertMessage = () => {
     if (inputValue.value) {
-        danmaku.value.add({ avatar: utils.getAssetsFile('img/profile_picture/10053.png'), name: '测试提交', text: inputValue.value });
+        danmaku.value.add({ avatar: utils.getAssetsFile('img/profile_picture/10053.png'), name: '测试提交', text: inputValue.value, color: getRandomColor() });
         message.success('发送成功~~');
     } else {
         message.warn('你还没有填写呢~~');
@@ -141,6 +146,8 @@ onUnmounted(() => {
             top: 5rem;
             width: 100%;
             height: 90%;
+            will-change: transform;
+            transform: translateZ(0);
 
             .message-img {
                 width: 25px;
