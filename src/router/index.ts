@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import HomePage from "../views/HomePage.vue";
 import MessageBoard from "../views/MessageBoard.vue";
-import UerRegisterLogin from "../views/RegisterLogin.vue";
+import UserRegisterLogin from "../views/RegisterLogin.vue";
 import recordListDetail from '@/views/recordList/recordResource.vue'
 import { message } from "ant-design-vue";
 message.config({
@@ -90,7 +90,10 @@ const router = createRouter({
             path: "/listDetail/:id", name: "listDetail", component: () => import('@/Components/ListDetail/index.vue')
         },
         {
-            path: "/userInfo", component: UerRegisterLogin,
+            path: "/userInfo", component: UserRegisterLogin,
+        },
+        {
+            path: '/resetPassword', component: () => import('@/views/ResetPassword.vue')
         },
         {
             path: "/travelAlbum", component: () => import('@/views/TravelAlbum.vue')
@@ -105,6 +108,7 @@ const router = createRouter({
         {
             path: "/memberCenter", component: () => import("@/views/MemberCenter.vue") //会员中心
         },
+
     ],
     // 路由切换时始终滚动到最顶部
     scrollBehavior(to, from, savedPosition) {
@@ -116,20 +120,20 @@ const router = createRouter({
     }
 
 })
-router.beforeEach((to, from, next) => {
-    if (to.path === '/userInfo') {
-        next();
-    } else {
-        const token = sessionStorage.getItem('simulateUserToken');
-        const tokenExpireTime = sessionStorage.getItem('sessionExpiration');
+// router.beforeEach((to, from, next) => {
+//     if (to.path === '/userInfo') {
+//         next();
+//     } else {
+//         const token = sessionStorage.getItem('simulateUserToken');
+//         const tokenExpireTime = sessionStorage.getItem('sessionExpiration');
 
-        if (token || (tokenExpireTime !== null && new Date().getTime() > parseInt(tokenExpireTime))) {
-            next();
-        } else {
-            message.warning('请先登录');
-            next('/userInfo');
-            return from;
-        }
-    }
-});
+//         if (token || (tokenExpireTime !== null && new Date().getTime() > parseInt(tokenExpireTime))) {
+//             next();
+//         } else {
+//             message.warning('请先登录');
+//             next('/userInfo');
+//             return from;
+//         }
+//     }
+// });
 export default router;

@@ -28,8 +28,8 @@
                     <h2 class="form_title title incline_en"><span>登录</span></h2>
                     <span class="form__span">或者使用你的电子邮箱账户</span>
                     <input class="form__input" placeholder="用户名/手机号/邮箱" v-model="registerData.email">
-                    <input class="form__input" type="password" placeholder="请输入你的密码" v-model="registerData.password"><a
-                        class="form__link">忘记密码</a>
+                    <input class="form__input" type="password" placeholder="请输入你的密码" v-model="registerData.password">
+                    <a href="/resetPassword" class="form__link">忘记密码</a>
                     <button class="form__button button submit" @click="login"><span>登录</span></button>
                 </form>
             </div>
