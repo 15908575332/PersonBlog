@@ -2,9 +2,23 @@
   <div class="reset-password-container">
     <div class="reset-password-card">
       <h2>重置密码</h2>
-      <div class="steps">
-        <div :class="['step', { active: step === 1 }]">1. 验证身份</div>
-        <div :class="['step', { active: step === 2 }]">2. 修改密码</div>
+      <div class="steps" :style="`--step: ${step}; --steps: ${steps.length}`">
+        <div class="step-line"></div>
+        <div
+          v-for="(item, idx) in steps"
+          :key="idx"
+          class="step-dot"
+          :class="{
+            active: step === idx + 1,
+            completed: step > idx + 1,
+            clickable: canClickStep(idx + 1),
+          }"
+          @click="handleStepClick(idx + 1)"
+        >
+          <div class="dot">
+            <span class="step-num">{{ item }}</span>
+          </div>
+        </div>
       </div>
       <form v-if="step === 1" @submit.prevent="onAccountAndCodeSubmit">
         <section class="form-content">
@@ -18,7 +32,7 @@
                 :data-has-value="!!account"
               />
               <label class="input__label" for="account">
-                <span class="input__label-conten">邮箱或手机号</span>
+                <span class="input__label-content">邮箱或手机号</span>
               </label>
             </span>
           </div>
@@ -69,35 +83,46 @@
         <div class="btn-row">
           <button type="submit">下一步</button>
         </div>
-        {{ codeSent }}
       </form>
       <form v-else @submit.prevent="onSubmit">
-        <div class="form-group">
-          <label for="newPassword">新密码</label>
-          <input
-            v-model="newPassword"
-            type="password"
-            id="newPassword"
-            placeholder="请输入新密码"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">确认新密码</label>
-          <input
-            v-model="confirmPassword"
-            type="password"
-            id="confirmPassword"
-            placeholder="请再次输入新密码"
-            required
-          />
-        </div>
-        <div class="btn-row">
-          <button type="button" class="back-btn" @click="step = 1">
-            上一步
-          </button>
-          <button type="submit">确认修改</button>
-        </div>
+        <section class="form-content">
+          <div class="input-group">
+            <span class="input">
+              <input
+                v-model="newPassword"
+                class="input__field"
+                type="password"
+                id="newPassword"
+                placeholder="请输入新密码"
+                required
+              />
+              <label class="input__label" for="captchaInput">
+                <span class="input__label-content">新密码</span>
+              </label>
+            </span>
+          </div>
+          <div class="input-group">
+            <span class="input">
+              <input
+                v-model="confirmPassword"
+                class="input__field"
+                type="password"
+                id="confirmPassword"
+                placeholder="请再次输入新密码"
+                required
+              />
+              <label class="input__label" for="captchaInput">
+                <span class="input__label-content">确认新密码</span>
+              </label>
+            </span>
+          </div>
+
+          <!-- 按钮 -->
+          <div class="btn-row">
+            <button type="button" @click="step = 1">上一步</button>
+            <button class="confirm-modification" type="submit">确认修改</button>
+          </div>
+        </section>
       </form>
       <div
         v-if="message"
@@ -112,6 +137,7 @@
 
 <script setup>
 import { ref } from "vue";
+const steps = ["1", "2"];
 const step = ref(1);
 const account = ref("");
 const code = ref("");
@@ -223,6 +249,16 @@ function onSubmit() {
   newPassword.value = "";
   confirmPassword.value = "";
 }
+
+function canClickStep(targetStep) {
+  // 只允许前后切换，或根据业务自定义
+  return targetStep <= step.value + 1;
+}
+function handleStepClick(targetStep) {
+  if (canClickStep(targetStep)) {
+    step.value = targetStep;
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -231,154 +267,236 @@ function onSubmit() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  // background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  font-size: 1rem;
+  font-family: "lmst", sans-serif;
 }
 
 .reset-password-card {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  padding: 2.5rem 2rem 2rem 2rem;
-  width: 700px;
-  height: 600px;
+  width: 450px;
+  height: 500px;
   display: flex;
   flex-direction: column;
   position: relative;
+  padding: 2rem;
+  //标题
   h2 {
     text-align: center;
     margin-bottom: 1.5rem;
     color: #f76d6d;
   }
-  form {
-    flex: 1 1 auto;
+  // 步骤条
+  .steps {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-  .btn-row {
-    margin-top: auto;
-    margin-bottom: 0;
-    position: absolute;
-    left: 2rem;
-    right: 2rem;
-    bottom: 2rem;
-    display: flex;
-    justify-content: space-around;
-    gap: 2rem;
-  }
-}
-
-.steps {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-  margin-top: 0.5rem;
-  .step {
-    flex: 1;
-    text-align: center;
-    padding: 0.5rem 0;
-    border-bottom: 2px solid #eee;
-    color: #aaa;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.2s, border-color 0.2s;
-    &.active {
-      color: #f76d6d;
-      border-bottom: 2.5px solid #f76d6d;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 40px;
+    .step-line {
+      position: absolute;
+      top: 50%;
+      left: 18px;
+      right: 18px;
+      height: 4px;
+      background: #eee;
+      z-index: 0;
+      transform: translateY(-50%);
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 4px;
+        width: calc(50% * var(--step));
+        background: #f76d6d;
+        z-index: 1;
+        transition: width 0.3s;
+        pointer-events: none;
+      }
+    }
+    .step-dot {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      width: 100%;
+      //圆点
+      .dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #eee;
+        border: 2px solid #eee;
+        transition: background 0.2s, border-color 0.2s;
+        position: relative;
+        .step-num {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 0.85rem;
+          color: #000000;
+          transition: color 0.2s;
+        }
+      }
+      &.active .dot {
+        background: #f76d6d;
+        border-color: #f76d6d;
+        .step-num {
+          color: #fff;
+        }
+      }
+      // 新增：高亮所有已完成（当前及之前）圆点
+      &.active .dot,
+      &.completed .dot {
+        background: #f76d6d;
+        border-color: #f76d6d;
+        .step-num {
+          color: #fff;
+        }
+      }
+    }
+    //文字
+    // .label {
+    //   font-size: 0.95rem;
+    //   color: #aaa;
+    //   transition: color 0.2s;
+    // }
+    // &.active .label {
+    //   color: #f76d6d;
+    //   font-weight: bold;
+    // }
+    &.clickable {
+      cursor: pointer;
     }
   }
 }
+
 // 表单样式
 .form-content {
+  @include flexCenter(column, space-between);
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 2rem 0;
+
   .input-group {
+    @include flexCenter(row, space-between);
+    width: 100%;
     .input {
       position: relative;
       display: block;
       width: 100%;
       input {
         width: 100%;
-        padding: 0.5rem 0 0.2rem 0;
+        padding: 1rem 0 0.2rem 0.5rem;
         border: none;
         border-bottom: 2px solid #918278;
         border-radius: 0;
         background: transparent;
-        font-size: 1rem;
         transition: border-color 0.2s;
         box-shadow: none;
+        font-family: inherit;
+        letter-spacing: 1px;
+        color: #1a1f1f;
         &::placeholder {
           color: transparent;
         }
         &:focus {
-          border-bottom: 2px solid #ed0707;
+          border-bottom: 2px solid #f77b7b;
           outline: none;
         }
         &:focus + .input__label,
         &[data-has-value="true"] + .input__label {
-          color: #ed0707;
-          transform: translateY(-1.2em) scale(0.85);
+          color: #f77b7b;
+          transform: translateY(-1.5em) scale(0.85);
         }
       }
       .input__label {
         position: absolute;
         left: 0;
-        bottom: 0.2rem;
-        font-size: 1rem;
+        bottom: 0rem;
         color: #918278;
         pointer-events: none;
         transition: color 0.2s, transform 0.2s;
         transform-origin: left bottom;
-        background: #fff;
-        padding: 0 0.2em;
+        padding: 0.2em;
       }
     }
   }
 }
-.graphic {
+
+//按钮组
+.btn-row {
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+  width: 370px;
   position: absolute;
-  top: 0;
-  left: 0;
-  fill: none;
-  &--nao {
-    stroke: #92989e;
-    pointer-events: none;
-    -webkit-transition: -webkit-transform 0.7s, stroke 0.7s;
-    transition: transform 0.7s, stroke 0.7s;
-    -webkit-transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
-    transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
+  bottom: 2rem;
+
+  button {
+    padding: 0.4rem 0;
+    width: 40%;
+    background: linear-gradient(90deg, #fda085, #f6d365);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: "gtpy";
+    transition: background 0.2s;
+    &:hover {
+      background: linear-gradient(90deg, #f6d365, #fda085);
+    }
+  }
+  //确认修改
+  .confirm-modification {
+    background: #0483ec;
+    &:hover {
+      background: #0366c9;
+    }
   }
 }
 
 //数字验证码
 .send-code-btn,
 .captcha-img {
-  padding: 0.5rem 1rem;
-  min-width: 6rem;
+  padding: 0.3rem 0;
+  font-family: inherit;
+  min-width: 4rem;
   text-align: center;
-  max-width: 6rem;
-  letter-spacing: 2px;
+  max-width: 4rem;
   border: none;
   border-radius: 6px;
-  background: #fda085;
+  background: #f7787b;
   color: #fff;
-  font-size: 0.95rem;
   cursor: pointer;
   transition: background 0.2s;
+  font-size: 0.8rem;
   &:disabled {
     background: #eee;
     color: #aaa;
     cursor: not-allowed;
   }
 }
+
 // 图形验证码
 .captcha-img {
   display: inline-block;
+  letter-spacing: 2px;
   background: repeating-linear-gradient(
     135deg,
     #f6d365,
     #fda085 10px,
     #fff 20px
   );
-  color: #f76d6d;
+
+  color: #f0057a;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   border: 1px solid #fda085;
   transition: background 0.2s;
@@ -392,53 +510,17 @@ function onSubmit() {
   }
 }
 
-button[type="submit"] {
-  width: 50%;
-  padding: 0.7rem;
-  background: linear-gradient(90deg, #fda085, #f6d365);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-  &:hover {
-    background: linear-gradient(90deg, #f6d365, #fda085);
-  }
-}
-
 .msg {
-  margin-top: 1rem;
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
-  font-size: 1rem;
   &.error {
     color: #e74c3c;
   }
   &.success {
     color: #27ae60;
-  }
-}
-
-.btn-row {
-  display: flex;
-  justify-content: space-around;
-  gap: 2rem;
-}
-
-.back-btn {
-  width: 50%;
-  background: #eee;
-  color: #f76d6d;
-  border: none;
-  border-radius: 6px;
-  padding: 0.7rem 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-  &:hover {
-    background: #f6d365;
   }
 }
 </style>
