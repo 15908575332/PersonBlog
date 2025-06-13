@@ -437,14 +437,6 @@ $(document).ready(function () {
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
 
-  // 导航栏
-  .navigation {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-  }
-
   // 堆叠切换
   .stacking_switch {
     display: grid;

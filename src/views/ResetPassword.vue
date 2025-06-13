@@ -1,5 +1,8 @@
 <template>
   <div class="reset-password-container">
+    <div class="navigation">
+      <navigation></navigation>
+    </div>
     <div class="reset-password-card">
       <h2>重置密码</h2>
       <div class="steps" :style="`--step: ${step}; --steps: ${steps.length}`">
@@ -178,6 +181,7 @@
 import { ref } from "vue";
 import { message, notification } from "ant-design-vue";
 import utils from "@/utils/getAssetsFile";
+import Navigation from "@/components/NavigationMenu/index.vue";
 
 const steps = ["1", "2"];
 const step = ref(1);
@@ -326,13 +330,13 @@ function handleStepClick(targetStep) {
   display: flex;
   align-items: center;
   justify-content: center;
-  // background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
   font-size: 1rem;
   font-family: "lmst", sans-serif;
 }
 
 .reset-password-card {
-  background: #fff;
+  background: transparent;
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   width: 450px;
@@ -399,7 +403,7 @@ function handleStepClick(targetStep) {
           left: 50%;
           transform: translate(-50%, -50%);
           font-size: 0.85rem;
-          color: #000000;
+          color: #f0107a;
           transition: color 0.2s;
           line-height: 2;
         }
@@ -443,7 +447,7 @@ function handleStepClick(targetStep) {
       width: 100%;
       input {
         width: 100%;
-        padding: 1rem 0 0.2rem 0.5rem;
+        padding: 1.2rem 0 0.2rem 0.5rem;
         border: none;
         border-bottom: 2px solid #918278;
         border-radius: 0;
@@ -463,7 +467,7 @@ function handleStepClick(targetStep) {
         &:focus + .input__label,
         &[data-has-value="true"] + .input__label {
           color: #f77b7b;
-          transform: translateY(-1.5em) scale(0.85);
+          transform: translateY(-1.3em) scale(0.9);
         }
       }
       .input__label {
@@ -475,6 +479,15 @@ function handleStepClick(targetStep) {
         transition: color 0.2s, transform 0.2s;
         transform-origin: left bottom;
         padding: 0.2em;
+        .input__label-content {
+          text-align: center;
+          @include flexCenter(row, center);
+          img {
+            width: 24px;
+            height: 22px;
+            margin-right: 0.5rem;
+          }
+        }
       }
     }
   }
