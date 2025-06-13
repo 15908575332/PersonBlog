@@ -70,3 +70,14 @@ span.cc-cmd {
     }
 }
 
+// Notification 通知提醒框样式重写
+.ant-notification-notice {
+    .ant-notification-notice-with-icon {
+        .ant-notification-notice-message {
+            font-size: 1rem;
+        }
+        .ant-notification-notice-description {
+            font-size: 0.8rem;
+        }
+    }
+}

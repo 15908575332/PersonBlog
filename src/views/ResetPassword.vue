@@ -16,7 +16,7 @@
           @click="handleStepClick(idx + 1)"
         >
           <div class="dot">
-            <span class="step-num">{{ item }}</span>
+            <span class="step-num">{{ idx + 1 }}</span>
           </div>
         </div>
       </div>
@@ -28,11 +28,20 @@
                 class="input__field"
                 v-model="account"
                 id="account"
-                required
                 :data-has-value="!!account"
               />
               <label class="input__label" for="account">
-                <span class="input__label-content">邮箱或手机号</span>
+                <span class="input__label-content">
+                  <img
+                    :src="
+                      utils.getAssetsFile(
+                        'icon/resetPassword/accountNumber.svg'
+                      )
+                    "
+                    alt="accountNumber"
+                  />
+                  邮箱或手机号</span
+                >
               </label>
             </span>
           </div>
@@ -42,21 +51,29 @@
                 class="input__field"
                 v-model="code"
                 id="code"
-                required
                 :data-has-value="!!code"
               />
               <label class="input__label" for="code">
-                <span class="input__label-content">请输入验证码</span>
+                <span class="input__label-content">
+                  <img
+                    :src="
+                      utils.getAssetsFile('icon/resetPassword/verification.svg')
+                    "
+                    alt="verification"
+                  />
+                  请输入验证码</span
+                >
               </label>
             </span>
-            <button
+            <!-- 验证码 -->
+            <a-button
               type="button"
               class="send-code-btn"
               :disabled="countdown > 0 || !validateAccount(account)"
-              @click="sendCode"
+              @click="() => sendCode('success')"
             >
               {{ countdown > 0 ? `${countdown}s重发` : "验证码" }}
-            </button>
+            </a-button>
           </div>
           <div class="input-group">
             <span class="input">
@@ -64,12 +81,20 @@
                 class="input__field"
                 id="captchaInput"
                 maxlength="4"
-                required
                 v-model="captchaInput"
                 :data-has-value="!!captchaInput"
               />
               <label class="input__label" for="captchaInput">
-                <span class="input__label-content">图形验证码</span>
+                <span class="input__label-content">
+                  <img
+                    :src="
+                      utils.getAssetsFile(
+                        'icon/resetPassword/imgVerification.svg'
+                      )
+                    "
+                    alt="imgVerification"
+                  />图形验证码</span
+                >
               </label>
             </span>
             <span
@@ -93,11 +118,18 @@
                 class="input__field"
                 type="password"
                 id="newPassword"
-                placeholder="请输入新密码"
-                required
+                :data-has-value="!!newPassword"
               />
-              <label class="input__label" for="captchaInput">
-                <span class="input__label-content">新密码</span>
+              <label class="input__label" for="newPassword">
+                <span class="input__label-content">
+                  <img
+                    :src="
+                      utils.getAssetsFile('icon/resetPassword/password.svg')
+                    "
+                    alt="password"
+                  />
+                  新密码</span
+                >
               </label>
             </span>
           </div>
@@ -108,11 +140,18 @@
                 class="input__field"
                 type="password"
                 id="confirmPassword"
-                placeholder="请再次输入新密码"
-                required
+                :data-has-value="!!confirmPassword"
               />
-              <label class="input__label" for="captchaInput">
-                <span class="input__label-content">确认新密码</span>
+              <label class="input__label" for="confirmPassword">
+                <span class="input__label-content">
+                  <img
+                    :src="
+                      utils.getAssetsFile('icon/resetPassword/newPassword.svg')
+                    "
+                    alt="newPassword"
+                  />
+                  确认新密码</span
+                >
               </label>
             </span>
           </div>
@@ -129,7 +168,7 @@
         :class="{ error: isError, success: !isError }"
         class="msg"
       >
-        {{ message }}
+        <!-- {{ codeSent }} -->
       </div>
     </div>
   </div>
@@ -137,6 +176,9 @@
 
 <script setup>
 import { ref } from "vue";
+import { message, notification } from "ant-design-vue";
+import utils from "@/utils/getAssetsFile";
+
 const steps = ["1", "2"];
 const step = ref(1);
 const account = ref("");
@@ -146,11 +188,13 @@ const countdown = ref(0);
 let timer = null;
 const newPassword = ref("");
 const confirmPassword = ref("");
-const message = ref("");
+// const message = ref("");
 const isError = ref(false);
 const captcha = ref("");
 const captchaInput = ref("");
-
+message.config({
+  duration: 3,
+});
 function validateAccount(val) {
   // 简单邮箱或手机号正则
   return (
@@ -159,45 +203,60 @@ function validateAccount(val) {
 }
 
 function onAccountAndCodeSubmit() {
-  message.value = "";
   isError.value = false;
   if (!account.value) {
-    message.value = "请输入邮箱或手机号";
+    message.warning("请输入邮箱或手机号");
     isError.value = true;
     return;
   }
   if (!validateAccount(account.value)) {
-    message.value = "请输入正确的邮箱或手机号";
+    message.warning("请输入正确的邮箱或手机号");
+
     isError.value = true;
     return;
   }
   if (!code.value) {
-    message.value = "请输入验证码";
+    message.warning("请输入验证码");
     isError.value = true;
-    return;
-  }
-  if (
-    !captchaInput.value ||
-    captchaInput.value.toUpperCase() !== captcha.value
-  ) {
-    message.value = "图形验证码错误";
-    isError.value = true;
-    generateCaptcha();
     return;
   }
   if (code.value !== codeSent.value) {
-    message.value = "验证码错误";
+    message.error("验证码错误");
     isError.value = true;
     return;
   }
+  // 如果验证码为空则提示输入验证码
+  if (!captchaInput.value.trim()) {
+    message.warning("请输入图形验证码");
+    isError.value = true;
+    return;
+  }
+  // 如果图形验证码错误则提示错误
+  if (captchaInput.value.toUpperCase() !== captcha.value) {
+    message.error("图形验证码错误");
+    isError.value = true;
+    // generateCaptcha();
+    return;
+  }
+
   step.value = 2;
 }
 
-function sendCode() {
+function sendCode(type) {
   if (countdown.value > 0) return;
   // 生成6位验证码
   codeSent.value = String(Math.floor(100000 + Math.random() * 900000));
-  message.value = `验证码已发送: ${codeSent.value}`;
+  // message.success(`验证码已发送: ${codeSent.value}`);
+  notification[type]({
+    message: "验证码已发送",
+    description: codeSent.value,
+    duration: 6,
+    style: {
+      color: "green",
+      fontFamily: "gtpy",
+    },
+  });
+
   isError.value = false;
   countdown.value = 30;
   timer = setInterval(() => {
@@ -225,22 +284,22 @@ function onSubmit() {
   message.value = "";
   isError.value = false;
   if (!newPassword.value || !confirmPassword.value) {
-    message.value = "请填写所有字段";
+    message.warning("请填写所有字段");
     isError.value = true;
     return;
   }
   if (newPassword.value.length < 6) {
-    message.value = "新密码长度不能少于6位";
+    message.warning("新密码长度不能少于6位");
     isError.value = true;
     return;
   }
   if (newPassword.value !== confirmPassword.value) {
-    message.value = "两次输入的新密码不一致";
+    message.warning("两次输入的新密码不一致");
     isError.value = true;
     return;
   }
   // 实际应后端请求，这里仅本地演示
-  message.value = "密码修改成功！";
+  message.success("密码修改成功");
   isError.value = false;
   step.value = 1;
   account.value = "";
@@ -255,7 +314,7 @@ function canClickStep(targetStep) {
   return targetStep <= step.value + 1;
 }
 function handleStepClick(targetStep) {
-  if (canClickStep(targetStep)) {
+  if (onAccountAndCodeSubmit() && canClickStep(targetStep)) {
     step.value = targetStep;
   }
 }
@@ -342,6 +401,7 @@ function handleStepClick(targetStep) {
           font-size: 0.85rem;
           color: #000000;
           transition: color 0.2s;
+          line-height: 2;
         }
       }
       &.active .dot {
@@ -361,16 +421,6 @@ function handleStepClick(targetStep) {
         }
       }
     }
-    //文字
-    // .label {
-    //   font-size: 0.95rem;
-    //   color: #aaa;
-    //   transition: color 0.2s;
-    // }
-    // &.active .label {
-    //   color: #f76d6d;
-    //   font-weight: bold;
-    // }
     &.clickable {
       cursor: pointer;
     }
@@ -464,8 +514,8 @@ function handleStepClick(targetStep) {
 }
 
 //数字验证码
-.send-code-btn,
-.captcha-img {
+.captcha-img,
+.send-code-btn {
   padding: 0.3rem 0;
   font-family: inherit;
   min-width: 4rem;
@@ -478,13 +528,13 @@ function handleStepClick(targetStep) {
   cursor: pointer;
   transition: background 0.2s;
   font-size: 0.8rem;
+  @include flexCenter(row, center);
   &:disabled {
     background: #eee;
     color: #aaa;
     cursor: not-allowed;
   }
 }
-
 // 图形验证码
 .captcha-img {
   display: inline-block;
