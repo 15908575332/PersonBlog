@@ -1,9 +1,10 @@
 <template>
   <div class="reset-password-container">
+    <div class="backPhoto"></div>
     <div class="navigation">
       <navigation></navigation>
     </div>
-    <div class="reset-password-card">
+    <div class="reset-password-card" v-if="!isSuccess">
       <h2>重置密码</h2>
       <div class="steps" :style="`--step: ${step}; --steps: ${steps.length}`">
         <div class="step-line"></div>
@@ -174,6 +175,16 @@
         <!-- {{ codeSent }} -->
       </div>
     </div>
+    <template v-else>
+      <a-result title="Great, we have done all the operations!">
+        <template #icon>
+          <smile-twoTone />
+        </template>
+        <template #extra>
+          <a-button type="primary">Next</a-button>
+        </template>
+      </a-result>
+    </template>
   </div>
 </template>
 
@@ -192,10 +203,13 @@ const countdown = ref(0);
 let timer = null;
 const newPassword = ref("");
 const confirmPassword = ref("");
-// const message = ref("");
 const isError = ref(false);
 const captcha = ref("");
 const captchaInput = ref("");
+
+//密码修改状态
+const isSuccess = ref(false);
+
 message.config({
   duration: 3,
 });
@@ -304,6 +318,7 @@ function onSubmit() {
   }
   // 实际应后端请求，这里仅本地演示
   message.success("密码修改成功");
+  isSuccess.value = true;
   isError.value = false;
   step.value = 1;
   account.value = "";
@@ -330,260 +345,268 @@ function handleStepClick(targetStep) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  background-image: url("@/assets/img/resetPassword/2.jpeg");
+  background-position: 100% 100%;
   font-size: 1rem;
   font-family: "lmst", sans-serif;
-}
+  //登录ui宽高
+  $formWidth: 600px;
+  $formHeight: 500px;
+  //form表单与卡片的内间距
+  $formPadding: 2rem;
 
-.reset-password-card {
-  background: transparent;
-  border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  width: 450px;
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  padding: 2rem;
-  //标题
-  h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #f76d6d;
-  }
-  // 步骤条
-  .steps {
+  .reset-password-card {
+    background: rgb(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    width: $formWidth;
+    height: $formHeight;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     position: relative;
-    height: 40px;
-    .step-line {
-      position: absolute;
-      top: 50%;
-      left: 18px;
-      right: 18px;
-      height: 4px;
-      background: #eee;
-      z-index: 0;
-      transform: translateY(-50%);
-      &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 4px;
-        width: calc(50% * var(--step));
-        background: #f76d6d;
-        z-index: 1;
-        transition: width 0.3s;
-        pointer-events: none;
-      }
+    padding: $formPadding;
+    //标题
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #f76d6d;
     }
-    .step-dot {
-      position: relative;
-      z-index: 1;
+    // 步骤条
+    .steps {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      cursor: pointer;
-      width: 100%;
-      //圆点
-      .dot {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
+      justify-content: center;
+      position: relative;
+      height: 40px;
+      .step-line {
+        position: absolute;
+        top: 50%;
+        left: 18px;
+        right: 18px;
+        height: 4px;
         background: #eee;
-        border: 2px solid #eee;
-        transition: background 0.2s, border-color 0.2s;
-        position: relative;
-        .step-num {
+        z-index: 0;
+        transform: translateY(-50%);
+        &::before {
+          content: "";
           position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 0.85rem;
-          color: #f0107a;
-          transition: color 0.2s;
-          line-height: 2;
+          top: 0;
+          left: 0;
+          height: 4px;
+          width: calc(50% * var(--step));
+          background: #f76d6d;
+          z-index: 1;
+          transition: width 0.3s;
+          pointer-events: none;
         }
       }
-      &.active .dot {
-        background: #f76d6d;
-        border-color: #f76d6d;
-        .step-num {
-          color: #fff;
+      .step-dot {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        width: 100%;
+        //圆点
+        .dot {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #eee;
+          border: 2px solid #eee;
+          transition: background 0.2s, border-color 0.2s;
+          position: relative;
+          .step-num {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.85rem;
+            color: #f0107a;
+            transition: color 0.2s;
+            line-height: 2;
+          }
+        }
+        &.active .dot {
+          background: #f76d6d;
+          border-color: #f76d6d;
+          .step-num {
+            color: #fff;
+          }
+        }
+        // 新增：高亮所有已完成（当前及之前）圆点
+        &.active .dot,
+        &.completed .dot {
+          background: #f76d6d;
+          border-color: #f76d6d;
+          .step-num {
+            color: #fff;
+          }
         }
       }
-      // 新增：高亮所有已完成（当前及之前）圆点
-      &.active .dot,
-      &.completed .dot {
-        background: #f76d6d;
-        border-color: #f76d6d;
-        .step-num {
-          color: #fff;
-        }
+      &.clickable {
+        cursor: pointer;
       }
-    }
-    &.clickable {
-      cursor: pointer;
     }
   }
-}
 
-// 表单样式
-.form-content {
-  @include flexCenter(column, space-between);
-  gap: 1rem;
-  align-items: flex-start;
-  padding: 2rem 0;
+  // 表单样式
+  .form-content {
+    @include flexCenter(column, space-between);
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 2rem 0;
 
-  .input-group {
-    @include flexCenter(row, space-between);
-    width: 100%;
-    .input {
-      position: relative;
-      display: block;
+    .input-group {
+      @include flexCenter(row, space-between);
       width: 100%;
-      input {
+      .input {
+        position: relative;
+        display: block;
         width: 100%;
-        padding: 1.2rem 0 0.2rem 0.5rem;
-        border: none;
-        border-bottom: 2px solid #918278;
-        border-radius: 0;
-        background: transparent;
-        transition: border-color 0.2s;
-        box-shadow: none;
-        font-family: inherit;
-        letter-spacing: 1px;
-        color: #1a1f1f;
-        &::placeholder {
-          color: transparent;
+        input {
+          width: 100%;
+          padding: 1.2rem 0 0.2rem 0.5rem;
+          border: none;
+          border-bottom: 2px solid #918278;
+          border-radius: 0;
+          background: transparent;
+          transition: border-color 0.2s;
+          box-shadow: none;
+          font-family: inherit;
+          letter-spacing: 1px;
+          color: #1a1f1f;
+          &::placeholder {
+            color: transparent;
+          }
+          &:focus {
+            border-bottom: 2px solid #f77b7b;
+            outline: none;
+          }
+          &:focus + .input__label,
+          &[data-has-value="true"] + .input__label {
+            color: #f77b7b;
+            transform: translateY(-1.5em) scale(0.9);
+          }
         }
-        &:focus {
-          border-bottom: 2px solid #f77b7b;
-          outline: none;
-        }
-        &:focus + .input__label,
-        &[data-has-value="true"] + .input__label {
-          color: #f77b7b;
-          transform: translateY(-1.3em) scale(0.9);
-        }
-      }
-      .input__label {
-        position: absolute;
-        left: 0;
-        bottom: 0rem;
-        color: #918278;
-        pointer-events: none;
-        transition: color 0.2s, transform 0.2s;
-        transform-origin: left bottom;
-        padding: 0.2em;
-        .input__label-content {
-          text-align: center;
-          @include flexCenter(row, center);
-          img {
-            width: 24px;
-            height: 22px;
-            margin-right: 0.5rem;
+        .input__label {
+          position: absolute;
+          left: 0;
+          bottom: 0rem;
+          color: #918278;
+          pointer-events: none;
+          transition: color 0.2s, transform 0.2s;
+          transform-origin: left bottom;
+          padding: 0.2em;
+          .input__label-content {
+            text-align: center;
+            @include flexCenter(row, center);
+            img {
+              width: 24px;
+              height: 22px;
+              margin-right: 0.5rem;
+            }
           }
         }
       }
     }
   }
-}
 
-//按钮组
-.btn-row {
-  display: flex;
-  justify-content: space-around;
-  gap: 2rem;
-  width: 370px;
-  position: absolute;
-  bottom: 2rem;
+  //按钮组
+  .btn-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    width: calc($formWidth - ($formPadding * 2));
+    position: absolute;
+    bottom: 2rem;
 
-  button {
-    padding: 0.4rem 0;
-    width: 40%;
-    background: linear-gradient(90deg, #fda085, #f6d365);
-    color: #fff;
+    button {
+      padding: 0.4rem 0;
+      width: 40%;
+      background: linear-gradient(90deg, #fda085, #f6d365);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: "gtpy";
+      transition: background 0.2s;
+      &:hover {
+        background: linear-gradient(90deg, #f6d365, #fda085);
+      }
+    }
+    //确认修改
+    .confirm-modification {
+      background: #0483ec;
+      &:hover {
+        background: #0366c9;
+      }
+    }
+  }
+
+  //数字验证码
+  .captcha-img,
+  .send-code-btn {
+    padding: 0.3rem 0;
+    font-family: inherit;
+    min-width: 4rem;
+    text-align: center;
+    max-width: 4rem;
     border: none;
     border-radius: 6px;
-    font-weight: bold;
+    background: #f7787b;
+    color: #fff;
     cursor: pointer;
-    font-family: "gtpy";
     transition: background 0.2s;
-    &:hover {
-      background: linear-gradient(90deg, #f6d365, #fda085);
+    font-size: 0.85rem;
+    font-weight: bold;
+    @include flexCenter(row, center);
+    &:disabled {
+      background: #eee;
+      color: #aaa;
+      cursor: not-allowed;
     }
   }
-  //确认修改
-  .confirm-modification {
-    background: #0483ec;
-    &:hover {
-      background: #0366c9;
-    }
-  }
-}
-
-//数字验证码
-.captcha-img,
-.send-code-btn {
-  padding: 0.3rem 0;
-  font-family: inherit;
-  min-width: 4rem;
-  text-align: center;
-  max-width: 4rem;
-  border: none;
-  border-radius: 6px;
-  background: #f7787b;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-size: 0.8rem;
-  @include flexCenter(row, center);
-  &:disabled {
-    background: #eee;
-    color: #aaa;
-    cursor: not-allowed;
-  }
-}
-// 图形验证码
-.captcha-img {
-  display: inline-block;
-  letter-spacing: 2px;
-  background: repeating-linear-gradient(
-    135deg,
-    #f6d365,
-    #fda085 10px,
-    #fff 20px
-  );
-
-  color: #f0057a;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  border: 1px solid #fda085;
-  transition: background 0.2s;
-  &:hover {
+  // 图形验证码
+  .captcha-img {
+    display: inline-block;
+    letter-spacing: 2px;
     background: repeating-linear-gradient(
       135deg,
-      #fda085,
-      #f6d365 10px,
+      #f6d365,
+      #fda085 10px,
       #fff 20px
     );
-  }
-}
 
-.msg {
-  position: absolute;
-  bottom: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  &.error {
-    color: #e74c3c;
+    color: #f0057a;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    border: 1px solid #fda085;
+    transition: background 0.2s;
+    &:hover {
+      background: repeating-linear-gradient(
+        135deg,
+        #fda085,
+        #f6d365 10px,
+        #fff 20px
+      );
+    }
   }
-  &.success {
-    color: #27ae60;
+
+  .msg {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    &.error {
+      color: #e74c3c;
+    }
+    &.success {
+      color: #27ae60;
+    }
   }
 }
 </style>
