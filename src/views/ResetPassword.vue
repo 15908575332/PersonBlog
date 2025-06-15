@@ -110,7 +110,7 @@
           </div>
         </section>
         <div class="btn-row">
-          <button type="submit">下一步</button>
+          <button type="submit" class="button05">下一步</button>
         </div>
       </form>
       <form v-else @submit.prevent="onSubmit">
@@ -162,8 +162,10 @@
 
           <!-- 按钮 -->
           <div class="btn-row">
-            <button type="button" @click="step = 1">上一步</button>
-            <button class="confirm-modification" type="submit">确认修改</button>
+            <button @click="step = 1" class="button05">上一步 ►</button>
+            <button class="button05" type="submit">确认修改 ♥</button>
+            <!-- <button type="button" @click="step = 1">上一步</button> -->
+            <!-- <button class="confirm-modification" type="submit">确认修改</button> -->
           </div>
         </section>
       </form>
@@ -346,17 +348,18 @@ function handleStepClick(targetStep) {
   align-items: center;
   justify-content: center;
   background-image: url("@/assets/img/resetPassword/2.jpeg");
-  background-position: 100% 100%;
+  background-position: center;
+  background-size: cover;
   font-size: 1rem;
   font-family: "lmst", sans-serif;
   //登录ui宽高
-  $formWidth: 600px;
-  $formHeight: 500px;
+  $formWidth: 500px;
+  $formHeight: 450px;
   //form表单与卡片的内间距
   $formPadding: 2rem;
 
   .reset-password-card {
-    background: rgb(255, 255, 255, 0.3);
+    background: rgb(254, 254, 254, 0.6);
     backdrop-filter: blur(10px);
     border-radius: 12px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
@@ -369,8 +372,8 @@ function handleStepClick(targetStep) {
     //标题
     h2 {
       text-align: center;
-      margin-bottom: 1.5rem;
-      color: #f76d6d;
+      margin-bottom: 1rem;
+      color: #2585db;
     }
     // 步骤条
     .steps {
@@ -395,7 +398,7 @@ function handleStepClick(targetStep) {
           left: 0;
           height: 4px;
           width: calc(50% * var(--step));
-          background: #f76d6d;
+          background: #2585db;
           z-index: 1;
           transition: width 0.3s;
           pointer-events: none;
@@ -424,25 +427,25 @@ function handleStepClick(targetStep) {
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 0.85rem;
-            color: #f0107a;
+            color: #eb1558;
             transition: color 0.2s;
             line-height: 2;
           }
         }
-        &.active .dot {
-          background: #f76d6d;
-          border-color: #f76d6d;
-          .step-num {
-            color: #fff;
-          }
-        }
+        // &.active .dot {
+        //   background: #2585db;
+        //   border-color: #2585db;
+        //   .step-num {
+        //     color: #fff;
+        //   }
+        // }
         // 新增：高亮所有已完成（当前及之前）圆点
         &.active .dot,
         &.completed .dot {
-          background: #f76d6d;
-          border-color: #f76d6d;
+          background: #2585db;
+          border-color: #2585db;
           .step-num {
-            color: #fff;
+            color: #fdfdfd;
           }
         }
       }
@@ -457,7 +460,7 @@ function handleStepClick(targetStep) {
     @include flexCenter(column, space-between);
     gap: 1rem;
     align-items: flex-start;
-    padding: 2rem 0;
+    padding-top: 1rem;
 
     .input-group {
       @include flexCenter(row, space-between);
@@ -470,7 +473,7 @@ function handleStepClick(targetStep) {
           width: 100%;
           padding: 1.2rem 0 0.2rem 0.5rem;
           border: none;
-          border-bottom: 2px solid #918278;
+          border-bottom: 2px solid #586365;
           border-radius: 0;
           background: transparent;
           transition: border-color 0.2s;
@@ -482,12 +485,12 @@ function handleStepClick(targetStep) {
             color: transparent;
           }
           &:focus {
-            border-bottom: 2px solid #f77b7b;
+            border-bottom: 2px solid #4096e1;
             outline: none;
           }
           &:focus + .input__label,
           &[data-has-value="true"] + .input__label {
-            color: #f77b7b;
+            color: #4096e1;
             transform: translateY(-1.5em) scale(0.9);
           }
         }
@@ -495,7 +498,7 @@ function handleStepClick(targetStep) {
           position: absolute;
           left: 0;
           bottom: 0rem;
-          color: #918278;
+          color: #101c28;
           pointer-events: none;
           transition: color 0.2s, transform 0.2s;
           transform-origin: left bottom;
@@ -518,31 +521,117 @@ function handleStepClick(targetStep) {
   .btn-row {
     display: flex;
     justify-content: space-around;
-    gap: 2rem;
     width: calc($formWidth - ($formPadding * 2));
     position: absolute;
     bottom: 2rem;
 
-    button {
-      padding: 0.4rem 0;
-      width: 40%;
-      background: linear-gradient(90deg, #fda085, #f6d365);
+    .button05 {
+      position: relative;
+      display: inline-block;
+      font-family: inherit;
+      font-size: 0.9rem;
+      min-width: 100px;
+      padding: 0.4rem 0.75rem;
+      background-color: #2585db;
+      background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+
+        color-stop(0, rgb(112, 181, 242)),
+        color-stop(0.49, rgb(84, 164, 238)),
+        color-stop(0.5, rgb(54, 144, 240)),
+        color-stop(1, rgb(26, 97, 219))
+      );
+
+      background-image: -moz-linear-gradient(
+        center top,
+
+        rgb(112, 181, 242) 0%,
+
+        rgb(84, 164, 238) 49%,
+
+        rgb(54, 144, 240) 50%,
+
+        rgb(26, 97, 219) 100%
+      );
+
       color: #fff;
-      border: none;
-      border-radius: 6px;
       font-weight: bold;
-      cursor: pointer;
-      font-family: "gtpy";
-      transition: background 0.2s;
+      text-decoration: none;
+      text-align: center;
+      line-height: 1;
+      text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
+      border: 1px solid;
+      border-color: #2f71a3 #265a82 #1e4766 #265a82;
+      border-radius: 8px;
+      -moz-border-radius: 8px;
+      -webkit-border-radius: 8px;
+      box-shadow: inset 0px -4px 5px rgba(255, 255, 255, 0.2),
+        inset 0px 1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+        0px 4px 0px #1e4766, 0px 6px 0px #1e4766,
+        /**/ 0px 8px 5px rgba(0, 0, 0, 0.5);
+
+      -moz-box-shadow: inset 0px -4px 5px rgba(255, 255, 255, 0.2),
+        inset 0px 1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+        0px 4px 0px #1e4766, 0px 6px 0px #1e4766,
+        /**/ 0px 8px 5px rgba(0, 0, 0, 0.5);
+
+      -webkit-box-shadow: inset 0px -4px 5px rgba(255, 255, 255, 0.2),
+        inset 0px 1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+        0px 4px 0px #1e4766, 0px 6px 0px #1e4766,
+        /**/ 0px 8px 5px rgba(0, 0, 0, 0.5);
+
       &:hover {
-        background: linear-gradient(90deg, #f6d365, #fda085);
+        background-color: #87effa;
+
+        background-image: -webkit-gradient(
+          linear,
+          left top,
+
+          left bottom,
+
+          color-stop(0, rgb(134, 193, 253)),
+          color-stop(0.49, rgb(153, 213, 255)),
+          color-stop(0.5, rgb(130, 194, 253)),
+          color-stop(1, rgb(108, 170, 229))
+        );
+
+        background-image: -moz-linear-gradient(
+          center top,
+
+          rgb(134, 193, 253) 0%,
+
+          rgb(153, 213, 255) 49%,
+
+          rgb(130, 194, 253) 50%,
+
+          rgb(108, 170, 229) 100%
+        );
+      }
+
+      &:active {
+        top: 4px;
+        box-shadow: inset 0px 4px 5px rgba(255, 255, 255, 0.4),
+          inset 0px -1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+          /**/ 0px 4px 5px rgba(0, 0, 0, 0.5);
+
+        -moz-box-shadow: inset 0px 4px 5px rgba(255, 255, 255, 0.4),
+          inset 0px -1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+          /**/ 0px 4px 5px rgba(0, 0, 0, 0.5);
+
+        -webkit-box-shadow: inset 0px 4px 5px rgba(255, 255, 255, 0.4),
+          inset 0px -1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+          /**/ 0px 4px 5px rgba(0, 0, 0, 0.5);
       }
     }
-    //确认修改
-    .confirm-modification {
-      background: #0483ec;
+    button {
+      transition-duration: 0.4s, 0.5s;
+      transition-property: background-color, color;
+      transition-timing-function: ease, ease;
       &:hover {
-        background: #0366c9;
+        color: #155fde;
+        text-decoration: underline;
       }
     }
   }
@@ -557,7 +646,7 @@ function handleStepClick(targetStep) {
     max-width: 4rem;
     border: none;
     border-radius: 6px;
-    background: #f7787b;
+    background: #f13470;
     color: #fff;
     cursor: pointer;
     transition: background 0.2s;
@@ -581,7 +670,7 @@ function handleStepClick(targetStep) {
       #fff 20px
     );
 
-    color: #f0057a;
+    color: #eb1558;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     border: 1px solid #fda085;
     transition: background 0.2s;
