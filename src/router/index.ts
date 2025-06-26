@@ -22,7 +22,20 @@ const router = createRouter({
         },
 
         {
-            path: "/InformalEssay", component: () => import('@/views/InformalEssay.vue')
+            path: "/InformalEssay", component: () => import('@/views/InformalEssay.vue'),
+            children: [
+                {
+                    path: "commemorate",
+                    name: "commemorate",
+                    component: () => import('@/views/informalEssay/Commemorate.vue')
+                },
+                {
+                    path: "timeline",
+                    name: "timeline",
+                    component: () => import('@/views/informalEssay/Timeline.vue')
+                },
+
+            ]
         },
         {
             path: "/recordList",

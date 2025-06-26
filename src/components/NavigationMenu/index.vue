@@ -32,7 +32,7 @@
               <!-- 底部横线 -->
               <div class="br"></div>
             </li>
-            <li class="nav-item record">
+            <li class="nav-item">
               <a href="/family">
                 <img
                   src="@/components/NavigationMenu/icon/family-icon.svg"
@@ -84,7 +84,7 @@
               </div>
               <div class="br"></div>
             </li>
-            <li class="nav-item">
+            <li class="nav-item record">
               <a href="/InformalEssay">
                 <img
                   src="@/components/NavigationMenu/icon/informalEssay-icon.svg"
@@ -92,6 +92,11 @@
                 />
                 <span>随笔</span>
               </a>
+              <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
+                <DropdoenMenu :options="essay_options"></DropdoenMenu>
+                <!-- 移动端使用下面组件 -->
+                <TreeMenu></TreeMenu>
+              </div>
               <div class="br"></div>
             </li>
             <li class="nav-item">
@@ -259,6 +264,7 @@ const record_options = ref([
     engTitle: "country",
   },
 ]);
+//百宝箱二级目录
 const treasureBox_options = ref([
   {
     value: "option1",
@@ -279,6 +285,22 @@ const treasureBox_options = ref([
     iconUrl: utils.getAssetsFile("icon/helpLink_navigate_icon.svg"),
   },
 ]);
+// 随笔二级目录
+const essay_options = ref([
+  {
+    value: "option1",
+    text: "纪念",
+    router: "InformalEssay/commemorate",
+    iconUrl: utils.getAssetsFile("icon/music_navigate_icon.svg"),
+  },
+  {
+    value: "option2",
+    text: "时间线",
+    router: "InformalEssay/timeline",
+    iconUrl: utils.getAssetsFile("icon/favorites_navigate_icon.svg"),
+  },
+]);
+
 const showModalFun = () => {
   isVisible.value = true;
 };
