@@ -541,9 +541,8 @@ onUnmounted(() => {
     .wedding_animation {
       width: 100vw;
       height: 100vh;
-      @include flexCenter(column, center);
+      @include flexCenter(column, flex-start);
       position: relative;
-      margin: 0;
       // background-color: black;
       /* 烟花 和 文字*/
       .w-t {
@@ -560,8 +559,9 @@ onUnmounted(() => {
           letter-spacing: 5px;
           opacity: 0;
           animation: titleBloom 1s linear 1s both;
-          font-size: 26px;
+          font-size: 30px;
           margin-left: -125px;
+          font-weight: 700;
           @keyframes titleBloom {
             0% {
               transform: translate(-50px);
@@ -597,7 +597,7 @@ onUnmounted(() => {
       }
       /*人物类 */
       .w-p {
-        margin: -50px auto;
+        // margin: 50px auto;
         width: 1000px;
         overflow: hidden;
       }
@@ -674,7 +674,7 @@ onUnmounted(() => {
         width: 820px;
         margin: 0 auto;
         position: absolute;
-        bottom: 0;
+        bottom:20%;
       }
       .w-fls img {
         height: 120px;
