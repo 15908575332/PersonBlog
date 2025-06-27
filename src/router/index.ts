@@ -22,7 +22,8 @@ const router = createRouter({
         },
 
         {
-            path: "/InformalEssay", component: () => import('@/views/InformalEssay.vue'),
+            path: "/InformalEssay",
+            redirect: "/InformalEssay/commemorate",
             children: [
                 {
                     path: "commemorate",

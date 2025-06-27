@@ -1,5 +1,8 @@
 <template>
   <div class="reset-password-container">
+    <div class="meihua-svg-container">
+      <MeihuaSvg>1</MeihuaSvg>
+    </div>
     <div class="backPhoto"></div>
     <div class="navigation">
       <navigation></navigation>
@@ -195,6 +198,7 @@ import { ref } from "vue";
 import { message, notification } from "ant-design-vue";
 import utils from "@/utils/getAssetsFile";
 import Navigation from "@/components/NavigationMenu/index.vue";
+import MeihuaSvg from "../components/MeihuaSvg/MeihuaSvg.vue";
 
 const steps = ["1", "2"];
 const step = ref(1);
@@ -348,7 +352,7 @@ function handleStepClick(targetStep) {
   align-items: center;
   justify-content: center;
   background-image: url("@/assets/img/resetPassword/2.jpeg");
-  background-position: center;
+  // background-position: right;
   background-size: cover;
   font-size: 1rem;
   font-family: "lmst", sans-serif;
@@ -357,7 +361,14 @@ function handleStepClick(targetStep) {
   $formHeight: 450px;
   //form表单与卡片的内间距
   $formPadding: 2rem;
-
+  .meihua-svg-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+   z-index: 1;
+  }
   .reset-password-card {
     background: rgb(254, 254, 254, 0.6);
     backdrop-filter: blur(10px);
@@ -369,6 +380,7 @@ function handleStepClick(targetStep) {
     flex-direction: column;
     position: relative;
     padding: $formPadding;
+    z-index: 2;
     //标题
     h2 {
       text-align: center;
@@ -432,13 +444,6 @@ function handleStepClick(targetStep) {
             line-height: 2;
           }
         }
-        // &.active .dot {
-        //   background: #2585db;
-        //   border-color: #2585db;
-        //   .step-num {
-        //     color: #fff;
-        //   }
-        // }
         // 新增：高亮所有已完成（当前及之前）圆点
         &.active .dot,
         &.completed .dot {
