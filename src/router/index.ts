@@ -23,8 +23,13 @@ const router = createRouter({
 
         {
             path: "/InformalEssay",
-            redirect: "/InformalEssay/commemorate",
+            redirect: "/InformalEssay/InfContent",
             children: [
+                {
+                    path: "InfContent",
+                    name: "InfContent",
+                    component: () => import('@/views/informalEssay/InformalEssay.vue')
+                },
                 {
                     path: "commemorate",
                     name: "commemorate",

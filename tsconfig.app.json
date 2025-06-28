@@ -22,11 +22,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/utils/debounce.js",
-    "src/main.ts"
-, "src/utils/aos.js"  ]
+"include": [
+  "src/**/*.ts",
+  "src/**/*.tsx",
+  "src/utils/debounce.js",
+  "src/main.ts",
+  "src/utils/aos.js"
+]
 }

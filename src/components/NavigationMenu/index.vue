@@ -288,6 +288,12 @@ const treasureBox_options = ref([
 // 随笔二级目录
 const essay_options = ref([
   {
+    value: "option0",
+    text: "记录",
+    router: "InformalEssay/InfContent",
+    iconUrl: utils.getAssetsFile("icon/music_navigate_icon.svg"),
+  },
+  {
     value: "option1",
     text: "纪念",
     router: "InformalEssay/commemorate",
