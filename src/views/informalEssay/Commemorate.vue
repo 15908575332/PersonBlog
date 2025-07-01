@@ -45,6 +45,7 @@ import utils from "@/utils/getAssetsFile";
   @include flexCenter(column, center);
   position: relative;
   // background-color: black;
+  overflow: hidden;
   /* 烟花 和 文字*/
   .w-t {
     margin: 100px auto;
