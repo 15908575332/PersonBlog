@@ -81,3 +81,18 @@ span.cc-cmd {
         }
     }
 }
+// Ant Design Vue 浮动按钮样式重写
+.ant-float-btn {
+    position: relative;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    box-shadow: none;
+    height: 2.5rem;
+    border-top: 1px solid #f0f0f0;
+    .ant-float-btn-icon {
+        @include flexCenter(center, center);
+        width: 100% !important;
+        position: relative;
+        display: block;
+    }
+}

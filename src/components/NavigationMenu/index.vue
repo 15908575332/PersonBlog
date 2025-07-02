@@ -94,8 +94,6 @@
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
                 <DropdoenMenu :options="essay_options"></DropdoenMenu>
-                <!-- 移动端使用下面组件 -->
-                <TreeMenu></TreeMenu>
               </div>
               <div class="br"></div>
             </li>
@@ -270,19 +268,21 @@ const treasureBox_options = ref([
     value: "option1",
     text: "音乐",
     router: "treasureBox/music",
-    iconUrl: utils.getAssetsFile("icon/music_navigate_icon.svg"),
+    iconUrl: utils.getAssetsFile("icon/treasureBox/music_navigate_icon.svg"),
   },
   {
     value: "option2",
     text: "收藏夹",
     router: "treasureBox/favorites",
-    iconUrl: utils.getAssetsFile("icon/favorites_navigate_icon.svg"),
+    iconUrl: utils.getAssetsFile(
+      "icon/treasureBox/favorites_navigate_icon.svg"
+    ),
   },
   {
     value: "option3",
-    text: "友链",
+    text: "友情链接",
     router: "treasureBox/friendshipLink",
-    iconUrl: utils.getAssetsFile("icon/helpLink_navigate_icon.svg"),
+    iconUrl: utils.getAssetsFile("icon/treasureBox/helpLink_navigate_icon.svg"),
   },
 ]);
 // 随笔二级目录
@@ -291,19 +291,19 @@ const essay_options = ref([
     value: "option0",
     text: "记录",
     router: "InformalEssay/InfContent",
-    iconUrl: utils.getAssetsFile("icon/music_navigate_icon.svg"),
+    iconUrl: utils.getAssetsFile("icon/informalEssay/record.svg"),
   },
   {
     value: "option1",
     text: "纪念",
     router: "InformalEssay/commemorate",
-    iconUrl: utils.getAssetsFile("icon/music_navigate_icon.svg"),
+    iconUrl: utils.getAssetsFile("icon/informalEssay/commemorate.svg"),
   },
   {
     value: "option2",
     text: "时间线",
     router: "InformalEssay/timeline",
-    iconUrl: utils.getAssetsFile("icon/favorites_navigate_icon.svg"),
+    iconUrl: utils.getAssetsFile("icon/informalEssay/timeline.svg"),
   },
 ]);
 
