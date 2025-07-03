@@ -58,7 +58,7 @@
               <!-- 音量控制 -->
               <div class="volume-control">
                 <img
-                  :src="(!muted && Math.round(volume) > 0) ? volumeImg : mutedImg"
+                  :src="!muted && Math.round(volume) > 0 ? volumeImg : mutedImg"
                   alt="ismute"
                   @click="toggleMute"
                 />
@@ -79,7 +79,9 @@
                     ></div>
                   </div>
                 </div>
-                <span class="volume-number">{{ muted ? 0 : Math.round(volume) }}%</span>
+                <span class="volume-number"
+                  >{{ muted ? 0 : Math.round(volume) }}%</span
+                >
               </div>
             </div>
           </div>
@@ -595,7 +597,7 @@ onMounted(async () => {
             gap: 0.4rem;
             min-width: 167px;
             overflow: hidden;
-            // background-color: rebeccapurple;  
+            // background-color: rebeccapurple;
             span {
               font-size: 16px;
             }
