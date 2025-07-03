@@ -49,17 +49,34 @@
               </div>
               <!-- 随机/循环 -->
               <div class="order-change" @click="togglePlayMode">
-                <img :src="playMode === 'order' ? cycleImg : randomImg" alt="playMode" />
+                <img
+                  :src="playMode === 'order' ? cycleImg : randomImg"
+                  alt="playMode"
+                />
                 <!-- <img src="@/assets/icon/treasureBox/random_default.svg" alt="random"> -->
               </div>
               <!-- 音量控制 -->
               <div class="volume-control">
-                <img src="@/assets/icon/treasureBox/volume.png" alt="" @click="toggleMute" />
-                <div class="custom-volume" ref="volumeContainer" @click="setVolume">
+                <img
+                  src="@/assets/icon/treasureBox/volume.png"
+                  alt=""
+                  @click="toggleMute"
+                />
+                <div
+                  class="custom-volume"
+                  ref="volumeContainer"
+                  @click="setVolume"
+                >
                   <div class="volume-bar">
-                    <div class="current-volume" :style="{ width: muted ? '0%' : volume + '%' }"></div>
-                    <div class="volume-handle" :style="{ left: muted ? '0%' : volume + '%' }" @mousedown="startDrag">
-                    </div>
+                    <div
+                      class="current-volume"
+                      :style="{ width: muted ? '0%' : volume + '%' }"
+                    ></div>
+                    <div
+                      class="volume-handle"
+                      :style="{ left: muted ? '0%' : volume + '%' }"
+                      @mousedown="startDrag"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -69,12 +86,22 @@
 
         <!-- 播放列表 -->
         <div class="playlist">
-          <div v-for="(song, index) in playlist" :key="index" class="playlist-item"
-            :class="{ active: currentSongIndex === index }" @click="playSong(index)">
+          <div
+            v-for="(song, index) in playlist"
+            :key="index"
+            class="playlist-item"
+            :class="{ active: currentSongIndex === index }"
+            @click="playSong(index)"
+          >
             <div class="music-introduce">
               <span>
-                <img v-if="currentSongIndex === index" :class="{ 'play-active': isPlaying }"
-                  src="@/assets/icon/treasureBox/music-play.png" class="icon-playing" alt="播放按钮" />
+                <img
+                  v-if="currentSongIndex === index"
+                  :class="{ 'play-active': isPlaying }"
+                  src="@/assets/icon/treasureBox/music-play.png"
+                  class="icon-playing"
+                  alt="播放按钮"
+                />
                 {{ song.title }} - {{ song.artist }}
               </span>
               <span> {{ formatTime(song.duration) }}</span>
@@ -82,13 +109,21 @@
           </div>
         </div>
         <!-- 频谱组件 -->
-        <Spectrum :audio-element="audioElement" :is-playing="isPlaying"></Spectrum>
+        <Spectrum
+          :audio-element="audioElement"
+          :is-playing="isPlaying"
+        ></Spectrum>
       </div>
       <!-- 歌词 -->
       <div class="lyrics-container">
         <div class="lyrics-wrapper" ref="lyricsWrapper">
-          <div v-for="(line, index) in currentLyrics" :key="index" ref="lyricLine" class="lyric-line"
-            :class="{ active: currentLyricIndex === index }">
+          <div
+            v-for="(line, index) in currentLyrics"
+            :key="index"
+            ref="lyricLine"
+            class="lyric-line"
+            :class="{ active: currentLyricIndex === index }"
+          >
             {{ line.text }}
           </div>
           <div v-if="!currentLyrics.length" class="no-lyrics">暂无歌词</div>
@@ -117,7 +152,6 @@ import pauseImg from "@/assets/icon/treasureBox/pause.png";
 import randomImg from "@/assets/icon/treasureBox/random.svg";
 import cycleImg from "@/assets/icon/treasureBox/cycle.svg";
 
-const audio = ref();
 const audioElement = ref("");
 const isPlaying = ref(false);
 const currentTime = ref(0);
@@ -426,10 +460,9 @@ onMounted(async () => {
   height: 100vh;
   background-image: url("@/assets/img/treasureBox/banner.jpg");
   background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
+  @include flexCenter(column, center);
+  overflow: hidden;
+  position: relative;
   //导航
   .navigate {
     position: fixed;
