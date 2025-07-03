@@ -40,7 +40,7 @@
                   <img src="@/assets/icon/treasureBox/rewind.png" alt="" />
                 </div>
                 <div @click="togglePlay">
-                  <img :src="isPlaying ? pauseImg : playImg" alt="" />
+                  <img :src="isPlaying ? pauseImg : playImg" alt="isplay" />
                 </div>
                 <div @click="nextSong">
                   <img src="" alt="" />
@@ -58,8 +58,8 @@
               <!-- 音量控制 -->
               <div class="volume-control">
                 <img
-                  src="@/assets/icon/treasureBox/volume.png"
-                  alt=""
+                  :src="(!muted && Math.round(volume) > 0) ? volumeImg : mutedImg"
+                  alt="ismute"
                   @click="toggleMute"
                 />
                 <div
@@ -79,6 +79,7 @@
                     ></div>
                   </div>
                 </div>
+                <span class="volume-number">{{ muted ? 0 : Math.round(volume) }}%</span>
               </div>
             </div>
           </div>
@@ -152,6 +153,9 @@ import pauseImg from "@/assets/icon/treasureBox/pause.png";
 import randomImg from "@/assets/icon/treasureBox/random.svg";
 import cycleImg from "@/assets/icon/treasureBox/cycle.svg";
 
+//静音/取消静音图标
+import volumeImg from "@/assets/icon/treasureBox/volume.png";
+import mutedImg from "@/assets/icon/treasureBox/mute.png";
 const audioElement = ref("");
 const isPlaying = ref(false);
 const currentTime = ref(0);
@@ -588,9 +592,13 @@ onMounted(async () => {
           .volume-control {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            // width: 50%;
-
+            gap: 0.4rem;
+            min-width: 167px;
+            overflow: hidden;
+            // background-color: rebeccapurple;  
+            span {
+              font-size: 16px;
+            }
             .custom-volume {
               position: relative;
               width: 5rem;

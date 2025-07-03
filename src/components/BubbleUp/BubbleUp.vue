@@ -43,7 +43,7 @@ const balloons = Array.from({ length: balloonCount }, (_, i) => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Courgette&display=swap");
 
 .baloon {
@@ -86,11 +86,11 @@ const balloons = Array.from({ length: balloonCount }, (_, i) => {
   right: 4px;
   border-right: calc(var(--width) * 0.15) solid #000000;
 }
-
+/* 底部线条 */
 .baloon span {
   display: inline-flex;
   position: absolute;
-  height: calc(0.4 * var(--width));
+  height: calc(0.6 * var(--width));
   width: calc(0.04 * var(--width));
   top: 100%;
   left: 0;
