@@ -4,9 +4,6 @@
         <div class="backPhoto" :style=videoSrc></div>
         <!-- 遮罩 -->
         <div class="mask"></div>
-        <div class="navigate">
-            <Navigation></Navigation>
-        </div>
         <div class="main" v-if="startRes">
             <!-- 注册 sign up -->
             <div class="container a-container" id="a-container">
@@ -73,9 +70,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
-// import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import Navigation from '../components/NavigationMenu/index.vue';
 
 const route = useRouter();
 const startRes = ref(true); //登录界面展示
@@ -237,7 +232,7 @@ onBeforeUnmount(() => {
     width: 40rem;
     height: 30rem;
     border-radius: 0.75rem;
-    margin: 10vh auto;
+    margin: 18vh auto;
 }
 
 // 按钮公共样式
