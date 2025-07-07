@@ -95,7 +95,7 @@ onMounted(() => {
       vx: Math.random() - 0.5, // x方向速度（影响发射角度）
       vy: -(Math.random() + 4), // y方向速度（影响发射速度/高度）
       ax: Math.random() * 0.06 - 0.03, // x方向加速度
-      delay: Math.round(Math.random() * range) + range * 4, // 延迟爆炸
+      delay: Math.round(Math.random() * range) + range * 10, // 延迟爆炸
       hold: false,
       alpha: 1,
       far: Math.random() * range + (center.y - range), // 爆炸高度
@@ -116,7 +116,7 @@ onMounted(() => {
 
   // define array position of text
   // 文字粒子相关
-  var textString = "happylunarnewyear2025"; // 显示的文字内容
+  var textString = "happynewyear2025"; // 显示的文字内容
   var textMatrix = [
     4.5, 0, 5.5, 0, 6.5, 0, 7.5, 0, 8.5, 0, 0, 1, 1, 1, 2, 1, 3, 1, 4, 1, 6, 1,
     7, 1, 8, 1, 10, 1, 11, 1, 12, 1, 13, 1, 5, 2, 6, 2, 7, 2, 8, 2,
@@ -255,16 +255,29 @@ onMounted(() => {
     }
   }
 
-  // 随机生成烟花颜色
+  // 随机生成烟花颜色（根据背景自动适配：白色背景时生成深色，深色背景时生成亮色）
   function randColor() {
-    var r = Math.floor(Math.random() * 256);
-    var g = Math.floor(Math.random() * 256);
-    var b = Math.floor(Math.random() * 256);
-    var color = "rgb($r, $g, $b)";
-    color = color.replace("$r", r);
-    color = color.replace("$g", g);
-    color = color.replace("$b", b);
-    return color;
+    // 获取当前背景色
+    let bg = ctx.fillStyle;
+    // 简单判断是否为白色背景
+    let isWhite = false;
+    if (typeof bg === "string") {
+      isWhite =
+        bg === "#fff" || bg === "#ffffff" || bg.toLowerCase() === "white";
+    }
+    // 白色背景时生成深色烟花，否则生成亮色烟花
+    if (isWhite) {
+      // 深色系：r/g/b均在0~100
+      var r = Math.floor(Math.random() * 100);
+      var g = Math.floor(Math.random() * 100);
+      var b = Math.floor(Math.random() * 100);
+    } else {
+      // 亮色系：r/g/b均在150~255
+      var r = Math.floor(Math.random() * 105) + 150;
+      var g = Math.floor(Math.random() * 105) + 150;
+      var b = Math.floor(Math.random() * 105) + 150;
+    }
+    return `rgb(${r},${g},${b})`;
   }
 
   // function playExpSound() {
@@ -847,7 +860,7 @@ onMounted(() => {
     // 清空画布，背景色可在此处调整
     ctx.globalCompositeOperation = "source-over";
     ctx.globalAlpha = 0.2;
-    ctx.fillStyle = "black"; // 烟花背景色
+    ctx.fillStyle = "#000"; // 烟花背景色（白色，自动适配烟花为深色）
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // re-draw
@@ -951,6 +964,10 @@ onBeforeUnmount(() => {
 <style>
 canvas {
   display: block;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+
 }
 .block-audio {
   display: none;
