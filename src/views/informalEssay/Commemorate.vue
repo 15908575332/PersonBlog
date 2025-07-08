@@ -80,7 +80,7 @@ import Navigation from "@/components/NavigationMenu/index.vue";
 import FireWorks from "@/components/FireWorks/index.vue";
 </script>
 <style lang="scss" scoped>
-//求婚动画
+
 .wedding_animation {
   @include flexCenter(column, center);
   overflow: hidden;

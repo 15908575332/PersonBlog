@@ -362,10 +362,10 @@ $contentWidth: 65rem; // 内容宽度
   // 背景图
   .backPhoto {
     width: 100vw;
-    height: 100%;
+    height: 50%;
     background-size: cover;
     z-index: -2;
-    background-position: center;
+    background-position:center;
     position: fixed;
     animation: zoomInDown 0.6s ease-out forwards;
   }
