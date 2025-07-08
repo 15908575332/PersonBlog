@@ -301,7 +301,7 @@ const essay_options = ref([
   },
   {
     value: "option2",
-    text: "卡片",
+    text: "生活卡片",
     router: "InformalEssay/lifeCard",
     iconUrl: utils.getAssetsFile("icon/informalEssay/lifeCard.svg"),
   },
