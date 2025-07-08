@@ -4,13 +4,15 @@
     <router-view></router-view>
   </div>
   <div class="floot_right">
-    <!-- <div class="backTop"> <a-back-top /></div> -->
+    <!-- 鼠标左键特效切换 -->
     <div class="ripple__toggle" @click="rippleStore.toggle">
       {{ rippleStore.enabled ? "🍃" : "🍂" }}
     </div>
+    <!-- 占位gif -->
     <div class="ripple__toggle secBtn">
       <img :src="utils.getAssetsFile('icon/1479.gif')" alt="" />
     </div>
+    <!-- 返回顶部 -->
     <a-back-top shape="">
       <template #icon>
         <svg
