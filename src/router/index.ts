@@ -36,9 +36,9 @@ const router = createRouter({
                     component: () => import('@/views/informalEssay/Commemorate.vue')
                 },
                 {
-                    path: "timeline",
-                    name: "timeline",
-                    component: () => import('@/views/informalEssay/Timeline.vue')
+                    path: "lifeCard",
+                    name: "lifeCard",
+                    component: () => import('@/views/informalEssay/LifeCard.vue')
                 },
 
             ]

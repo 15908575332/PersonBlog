@@ -183,7 +183,8 @@ onMounted(() => {
 }
 
 .sb-container div:last-child {
-  background: #111 url(../images/dark_leather.jpg) repeat center center;
+  background: #111 url(@/views/informalEssay/img/dark_leather.jpg) repeat center
+    center;
   box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.2),
     12px 12px 20px rgba(0, 0, 0, 0.6), inset 2px 2px 0 rgba(255, 255, 255, 0.1);
 }

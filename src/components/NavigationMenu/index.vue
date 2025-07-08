@@ -245,7 +245,7 @@ const record_options = ref([
   },
   {
     value: "option1",
-    text: "资源",
+    text: "资源合集",
     router: "recordList/resource",
     engTitle: "resource",
   },
@@ -289,21 +289,21 @@ const treasureBox_options = ref([
 const essay_options = ref([
   {
     value: "option0",
-    text: "记录",
+    text: "博客",
     router: "InformalEssay/InfContent",
     iconUrl: utils.getAssetsFile("icon/informalEssay/record.svg"),
   },
   {
     value: "option1",
-    text: "纪念",
+    text: "纪念日",
     router: "InformalEssay/commemorate",
     iconUrl: utils.getAssetsFile("icon/informalEssay/commemorate.svg"),
   },
   {
     value: "option2",
-    text: "时间线",
-    router: "InformalEssay/timeline",
-    iconUrl: utils.getAssetsFile("icon/informalEssay/timeline.svg"),
+    text: "卡片",
+    router: "InformalEssay/lifeCard",
+    iconUrl: utils.getAssetsFile("icon/informalEssay/lifeCard.svg"),
   },
 ]);
 

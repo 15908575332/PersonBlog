@@ -189,7 +189,7 @@
         </div>
         <!-- 模块一 -->
         <section class="main" v-if="changeModule === 'module1'">
-          <ul class="timeline">
+          <ul class="lifeCard">
             <li class="event">
               <input type="radio" name="tl-group" checked />
               <label></label>
@@ -494,7 +494,7 @@ onUnmounted(() => {
     z-index: 1;
     width: $content_container_width;
     @include flexCenter(column, flex-start);
- 
+
     // 头像
     .profile__picture {
       background-color: rgb(255, 255, 255, 0.1);
@@ -914,7 +914,7 @@ onUnmounted(() => {
         padding: 4rem 0;
         @include flexCenter(column, center);
 
-        .timeline {
+        .lifeCard {
           position: relative;
           list-style-type: none;
           font-family: "Gorditas", Arial, sans-serif;
