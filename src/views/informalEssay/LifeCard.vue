@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" id="life-card">
     <div id="sb-container" ref="sbContainer" class="sb-container">
       <div>
         <span class="sb-icon icon-cog"></span>
@@ -46,8 +46,7 @@
         <h4><span>Login SYstem</span></h4>
       </div>
       <div>
-        <h4><span>Profile</span></h4>
-        <span class="sb-toggle">Click to open</span>
+        <h4><span>Click me</span></h4>
       </div>
     </div>
   </div>
@@ -289,19 +288,6 @@ onMounted(() => {
   user-select: none;
 }
 
-span.sb-toggle {
-  padding: 5px;
-  margin: 10px;
-  display: block;
-  color: #000;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  line-height: 14px;
-  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.1);
-  text-align: center;
-}
-
 span.sb-icon {
   display: block;
   height: 70px;
@@ -319,7 +305,6 @@ span.sb-icon:before {
   font-family: "icons";
   font-style: normal;
   font-weight: normal;
-  speak: none;
   display: block;
   text-decoration: inherit;
   text-align: center;
@@ -382,7 +367,7 @@ span.sb-icon:before {
 
 /* 'B' */
 .icon-camera:before {
-  content: "\33";
+  content: "\43";
 }
 
 /* '3' */
