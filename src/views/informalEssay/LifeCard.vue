@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div id="sb-container" class="sb-container">
+    <div id="sb-container" ref="sbContainer" class="sb-container">
       <div>
         <span class="sb-icon icon-cog"></span>
         <h4><span>All Settings</span></h4>
@@ -53,25 +53,26 @@
   </div>
 </template>
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import { swatchbook } from "@/utils/swatchbook-native"; // 引入 swatchbook-native 原生动画菜单工具
+
+const sbContainer = ref(null);
+
 onMounted(() => {
-  // 动态引入 swatchbook-native 原生动画菜单工具
-  import("@/utils/swatchbook-native").then(({ swatchbook }) => {
-    // 获取菜单容器 DOM 元素
-    const el = document.getElementById("sb-container");
-    if (el) {
-      // 初始化 swatchbook 动画菜单
-      swatchbook(el, {
-        angleInc: 15, // 每个菜单项之间的角度
-        neighbor: 15, //展开时相邻菜单项的角度间隔
-        initclosed: true, //是否初始为关闭状态
-        closeIdx: 11, //点击第几个菜单项时触发开合
-      });
-    }
-  });
+  const el = sbContainer.value;
+  if (el) {
+    // 初始化 swatchbook 动画菜单
+    swatchbook(el, {
+      angleInc: 15, // 每个菜单项之间的角度
+      neighbor: 15, //展开时相邻菜单项的角度间隔
+      initclosed: true, //是否初始为关闭状态
+      closeIdx: 11, //点击第几个菜单项时触发开合
+    });
+  }
 });
 </script>
-<style>
+
+<style scoped lang="scss">
 @font-face {
   font-family: "icons";
   src: url("@/assets/fonts/icons.ttf") format("truetype");

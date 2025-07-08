@@ -7,7 +7,7 @@
 // 从 vue 中导入 ref 和 onMounted 函数
 // ref 用于创建响应式数据，onMounted 是生命周期钩子，在组件挂载完成后执行
 import { ref, onMounted } from 'vue';
-import { debounce } from '@/utils/debounce.js'; // 导入防抖函数
+import { debounce } from '@/utils/debounce'; // 导入防抖函数
 
 import { rippleStore } from '@/store/isEnabledRipple'; // 动画显示与否
 

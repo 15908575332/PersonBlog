@@ -310,7 +310,7 @@ const videoSrc = computed(() => {
     backgroundImage: `url('${imgUrls.value[0].imgSrc}')`,
   };
 });
-import { debounce } from "@/utils/debounce.js"; // 导入防抖函数
+import { debounce } from "@/utils/debounce"; // 导入防抖函数
 const isNavHidden = ref(false);
 const scrollThreshold = 200; // 滚动阈值
 // 处理滚动事件的函数
