@@ -1,4 +1,10 @@
 import { defineStore } from 'pinia';
+/**
+ @isContent 是否需要评论，内容才可见true/false
+ @text 主体文本内容 string
+ @timeAxis 是否展示时间轴 '不为空' / ' ' / null
+ @code 是否展示源代码模块 '不为空' / ' ' / null
+ */
 import utils from '@/utils/getAssetsFile';
 let text = `在这个纷繁复杂的世界里，我曾无数次幻想过，有那么一个人，能与我并肩站在时光之岸，看潮起潮落，云卷云舒。
             而今，你就这样悄然走进我的世界，带着温暖的光芒，照亮了我所有的阴霾。我们不需多言，一个眼神便能读懂彼此的心意。未来的路，或许会有风雨，但有你相伴，每一天都将是晴天。让我们携手，共渡这漫长而又美好的余生。`;
@@ -8,7 +14,7 @@ let text2 = `眼前的美景如同一幅精致的画卷，碧波荡漾的湖面�
 const localizedDateString = (new Date()).toLocaleString();
 export const useListDetail = defineStore('data', {
     state: () => ({
-        // 标题
+        // 内容
         dataContent: [
             {
                 id: 'lifeReflection',
@@ -18,15 +24,15 @@ export const useListDetail = defineStore('data', {
                 content: [
                     {
                         contentId: 'detail/001',
-                        author: 'xxy159',
+                        author: '用户xxy159',
                         backImage: utils.getAssetsFile('img/recordList/listDetailImg001.jpg'),
                         mainUrl: utils.getAssetsFile('img/recordList/listDetailImg001.jpg'),
                         mediaType: 'image',
-                        timeAxis: '存在', // 时间轴
-                        code: '存在', // 源码展示
+                        timeAxis: '1', // 时间轴
+                        code: '1', // 源码展示
                         isContent: false, // 是否显示内容
                         release__time: localizedDateString,
-                        title: '潮起潮落，云卷云舒',
+                        title: '生活是一张巨大的画布',
                         heat: 3963,
                         like: 255,
                         text: false,
@@ -113,7 +119,7 @@ export const useListDetail = defineStore('data', {
                         mediaType: 'video',
                         release__time: localizedDateString,
                         isContent: false, // 是否显示内容
-                        title: '潮起潮落，云卷云舒',
+                        title: '静',
                         heat: 3963,
                         like: 255,
                         text: [text, text1, text2],
@@ -189,7 +195,7 @@ export const useListDetail = defineStore('data', {
                         mainUrl: utils.getAssetsFile('videos/video-back20.mp4'),
                         mediaType: 'video',
                         release__time: localizedDateString,
-                        title: '潮起潮落，云卷云舒',
+                        title: '聆听海的声音',
                         heat: 3963,
                         like: 255,
                         text: [text, text1, text2],
@@ -266,8 +272,8 @@ export const useListDetail = defineStore('data', {
                         mediaType: 'video',
                         release__time: localizedDateString,
                         title: '潮起潮落，云卷云舒',
-                        heat: 3963,
-                        like: 255,
+                        heat: 63,
+                        like: 25,
                         text: [text, text1, text2],
                         tag1: '视听盛宴',
                         tag2: '生活',
@@ -303,9 +309,9 @@ export const useListDetail = defineStore('data', {
                         mainUrl: utils.getAssetsFile('img/recordList/listDetailImg003.jpg'),
                         mediaType: 'image',
                         release__time: localizedDateString,
-                        title: '潮起潮落，云卷云舒',
-                        heat: 3963,
-                        like: 255,
+                        title: '乐趣',
+                        heat: 963,
+                        like: 55,
                         text: [text, text1, text2],
                         tag1: '生活倒影',
                         tag2: '生活',
@@ -1445,6 +1451,7 @@ export const useListDetail = defineStore('data', {
                         title: '前端 | CSS代码可视化',
                         heat: 63,
                         like: 25,
+                        isContent: true,
                         text: [
                             '前端常见形状、动画、布局、CSS样式等可视化代码，可直接复制使用'
                         ],
