@@ -1,41 +1,5 @@
 <template>
   <canvas id="canvas" ref="canvasRef"></canvas>
-  <!-- <div class="block-audio">
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="launch" src="m/launch1.mp3" controls></audio>
-    <audio class="launch" src="m/launch1.mp3" controls></audio>
-    <audio class="launch" src="m/launch2.mp3" controls></audio>
-    <audio class="launch" src="m/launch2.mp3" controls></audio>
-    <audio class="launch" src="m/launch3.mp3" controls></audio>
-    <audio class="launch" src="m/launch3.mp3" controls></audio>
-    <audio class="launch" src="m/launch4.mp3" controls></audio>
-    <audio class="launch" src="m/launch4.mp3" controls></audio>
-    <audio class="launch" src="m/launch5.mp3" controls></audio>
-    <audio class="launch" src="m/launch5.mp3" controls></audio>
-  </div> -->
 </template>
 
 <script setup>
@@ -63,19 +27,45 @@ onMounted(() => {
   // 初始化参数
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   // 烟花相关对象数组
-  var listFire = []; // 发射上升的火箭
-  var listFirework = []; // 爆炸后的烟花粒子
-  var listText = []; // 文字粒子
-  var listSpecial = []; // 特殊效果粒子
-  var listSpark = []; // 火花链
-  var lights = []; // 光晕效果
-  var fireNumber = 10; // 同时存在的火箭数量（烟花数量，影响整体密度）
+  var listFire = [];
+  var listFirework = [];
+  var listText = [];
+  var listSpecial = [];
+  var listSpark = [];
+  var lights = [];
+  var fireNumber = 10;
   var center = { x: canvas.width / 2, y: canvas.height / 2 };
-  var range = 150; // 控制烟花发射/爆炸的范围
+  var range = 150;
   var fired = 0;
   var onHold = 0;
   var supprise = false;
   var textIndex = 0;
+  // 星空星星数组
+  var stars = [];
+  var starCount = Math.floor((canvas.width * canvas.height) / 3500); // 星星数量与屏幕面积相关
+  function initStars() {
+    stars = [];
+    for (var i = 0; i < starCount; i++) {
+      // 30%概率为闪烁星星
+      var twinkle = Math.random() < 0.3;
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: twinkle ? Math.random() * 1.2 + 1.0 : Math.random() * 0.7 + 0.3,
+        alpha: Math.random() * 0.5 + 0.5,
+        twinkle: twinkle,
+        twinklePhase: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.05 + 0.01, // 闪烁速度
+      });
+    }
+  }
+  initStars();
+  // 监听窗口变化时重建星星
+  window.addEventListener("resize", () => {
+    setCanvasSize();
+    starCount = Math.floor((canvas.width * canvas.height) / 3500);
+    initStars();
+  });
   var actions = [
     makeDoubleFullCircleFirework,
     makePlanetCircleFirework,
@@ -90,12 +80,12 @@ onMounted(() => {
     var fire = {
       x: (Math.random() * range) / 2 - range / 4 + center.x, // 起始x
       y: Math.random() * range * 2.5 + canvas.height, // 起始y
-      size: Math.random() + 0.5, // 火箭/粒子大小
+      size: Math.random() + 1, // 火箭/粒子大小
       fill: randColor(), // 颜色（可自定义）
       vx: Math.random() - 0.5, // x方向速度（影响发射角度）
       vy: -(Math.random() + 4), // y方向速度（影响发射速度/高度）
       ax: Math.random() * 0.06 - 0.03, // x方向加速度
-      delay: Math.round(Math.random() * range) + range * 10, // 延迟爆炸
+      delay: Math.round(Math.random() * range) + range * 5, // 延迟爆炸
       hold: false,
       alpha: 1,
       far: Math.random() * range + (center.y - range), // 爆炸高度
@@ -107,16 +97,16 @@ onMounted(() => {
       vy: fire.vy,
     };
     listFire.push(fire);
-    playLaunchSound();
+    // playLaunchSound();
   }
   // define array of sound
   // 音效数组（如需可自定义）
   // var listExpSound = Array.from(document.querySelectorAll("audio.exp"));
-  var listLaunchSound = Array.from(document.querySelectorAll("audio.launch"));
+  // var listLaunchSound = Array.from(document.querySelectorAll("audio.launch"));
 
   // define array position of text
   // 文字粒子相关
-  var textString = "happynewyear2025"; // 显示的文字内容
+  var textString = "happylunarnewyear2025"; // 显示的文字内容
   var textMatrix = [
     4.5, 0, 5.5, 0, 6.5, 0, 7.5, 0, 8.5, 0, 0, 1, 1, 1, 2, 1, 3, 1, 4, 1, 6, 1,
     7, 1, 8, 1, 10, 1, 11, 1, 12, 1, 13, 1, 5, 2, 6, 2, 7, 2, 8, 2,
@@ -170,14 +160,58 @@ onMounted(() => {
       0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 1, 0, 2, 0, 3, 0, 4, 0, 1, 7, 2, 7, 3,
       7, 4, 7, 5, 1, 5, 2, 5, 3, 5, 4, 5, 5, 5, 6,
     ],
-    1: [
-      1, 2, 2, 2, 2, 1, 3, 1, 3, 0, 4, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4, 5, 4, 6, 4,
-      7, 1, 7, 2, 7, 3, 7, 5, 7,
+    2: [
+      0, 1, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 5, 1, 5, 2, 5, 3, 4, 3, 3, 3, 2,
+      3, 2, 4, 1, 4, 1, 5, 0, 5, 0, 6, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 5, 6,
     ],
-    7: [
-      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 5, 1, 5, 2, 5, 3, 4, 3, 4, 4, 3, 4, 3,
-      5, 3, 6, 3, 7,
+    5: [
+      1,
+      0,
+      2,
+      0,
+      3,
+      0,
+      4,
+      0,
+      5,
+      0, // 顶横
+      0,
+      1,
+      0,
+      2, // 左上竖
+      1,
+      3,
+      2,
+      3,
+      3,
+      3,
+      4,
+      3,
+      5,
+      3, // 中横
+      5,
+      4,
+      5,
+      5, // 右下竖
+      1,
+      6,
+      2,
+      6,
+      3,
+      6,
+      4,
+      6,
+      5,
+      6, // 底横
     ],
+    // 1: [
+    //   1, 2, 2, 2, 2, 1, 3, 1, 3, 0, 4, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4, 5, 4, 6, 4,
+    //   7, 1, 7, 2, 7, 3, 7, 5, 7,
+    // ],
+    // 7: [
+    //   0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 5, 1, 5, 2, 5, 3, 4, 3, 4, 4, 3, 4, 3,
+    //   5, 3, 6, 3, 7,
+    // ],
   };
 
   function initText() {
@@ -251,33 +285,20 @@ onMounted(() => {
       special.far = far - (special.y - canvas.height);
       listSpecial.push(special);
       // play sound
-      playLaunchSound();
+      // playLaunchSound();
     }
   }
 
-  // 随机生成烟花颜色（根据背景自动适配：白色背景时生成深色，深色背景时生成亮色）
+  // 随机生成烟花颜色
   function randColor() {
-    // 获取当前背景色
-    let bg = ctx.fillStyle;
-    // 简单判断是否为白色背景
-    let isWhite = false;
-    if (typeof bg === "string") {
-      isWhite =
-        bg === "#fff" || bg === "#ffffff" || bg.toLowerCase() === "white";
-    }
-    // 白色背景时生成深色烟花，否则生成亮色烟花
-    if (isWhite) {
-      // 深色系：r/g/b均在0~100
-      var r = Math.floor(Math.random() * 100);
-      var g = Math.floor(Math.random() * 100);
-      var b = Math.floor(Math.random() * 100);
-    } else {
-      // 亮色系：r/g/b均在150~255
-      var r = Math.floor(Math.random() * 105) + 150;
-      var g = Math.floor(Math.random() * 105) + 150;
-      var b = Math.floor(Math.random() * 105) + 150;
-    }
-    return `rgb(${r},${g},${b})`;
+    var r = Math.floor(Math.random() * 256);
+    var g = Math.floor(Math.random() * 256);
+    var b = Math.floor(Math.random() * 256);
+    var color = "rgb($r, $g, $b)";
+    color = color.replace("$r", r);
+    color = color.replace("$g", g);
+    color = color.replace("$b", b);
+    return color;
   }
 
   // function playExpSound() {
@@ -286,14 +307,14 @@ onMounted(() => {
   //   sound.play();
   // }
 
-  function playLaunchSound() {
-    setTimeout(function () {
-      var sound =
-        listLaunchSound[Math.floor(Math.random() * listLaunchSound.length)];
-      // sound.volume = 0.05;
-      // sound.play();
-    }, 200);
-  }
+  // function playLaunchSound() {
+  //   setTimeout(function () {
+  //     var sound =
+  //       listLaunchSound[Math.floor(Math.random() * listLaunchSound.length)];
+  //     // sound.volume = 0.05;
+  //     // sound.play();
+  //   }, 200);
+  // }
 
   // 生成圆形烟花爆炸效果
   function makeCircleFirework(fire) {
@@ -477,7 +498,7 @@ onMounted(() => {
         vy: Math.sin(rad) * velocity * Math.random(),
         ay: 0.06,
         alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
+        life: Math.round((Math.random() * range) / 2) + range / 2,
       };
       firework.base = {
         life: firework.life,
@@ -737,7 +758,7 @@ onMounted(() => {
           fire.vy = fire.base.vy;
           fire.ax = Math.random() * 0.06 - 0.03;
           // play sound
-          playLaunchSound();
+          // playLaunchSound();
         }
       }
       //
@@ -750,7 +771,7 @@ onMounted(() => {
         fire.ax = Math.random() * 0.06 - 0.03;
         fire.alpha = 1;
         // play sound
-        playLaunchSound();
+        // playLaunchSound();
       } else if (fire.hold && fire.delay > 0) {
         fire.delay--;
       } else {
@@ -859,9 +880,29 @@ onMounted(() => {
   function draw() {
     // 清空画布，背景色可在此处调整
     ctx.globalCompositeOperation = "source-over";
-    ctx.globalAlpha = 0.2;
-    ctx.fillStyle = "#000"; // 烟花背景色（白色，自动适配烟花为深色）
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "black"; // 背景
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // 绘制星空星星
+    for (var i = 0; i < stars.length; i++) {
+      var star = stars[i];
+      // 闪烁星星动态调整 alpha
+      if (star.twinkle) {
+        star.twinklePhase += star.twinkleSpeed;
+        // 让闪烁星星亮度在0.2~1之间变化
+        star.alpha = 0.2 + 0.8 * Math.abs(Math.sin(star.twinklePhase));
+      }
+      ctx.save();
+      ctx.globalAlpha = star.alpha;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.fillStyle = "#dde6ff";
+      ctx.shadowColor = "#dde6ff";
+      ctx.shadowBlur = 6;
+      ctx.fill();
+      ctx.restore();
+    }
 
     // re-draw
     ctx.globalCompositeOperation = "screen";
@@ -870,7 +911,7 @@ onMounted(() => {
       var fire = listFire[i];
       ctx.globalAlpha = fire.alpha;
       ctx.beginPath();
-      ctx.arc(fire.x, fire.y, fire.size, 0, Math.PI * 2); // fire.size 控制火箭大小
+      ctx.arc(fire.x, fire.y, fire.size, 0, Math.PI * 1); // fire.size 控制火箭大小
       ctx.closePath();
       ctx.fillStyle = fire.fill; // fire.fill 控制火箭颜色
       ctx.fill();
@@ -968,6 +1009,7 @@ canvas {
   top: 0;
   z-index: -1;
 }
+
 .block-audio {
   display: none;
 }
