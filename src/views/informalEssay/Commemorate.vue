@@ -2,75 +2,75 @@
   <!-- 导航 -->
   <div id="commemorate">
     <Navigation />
-  </div>
-  <!-- 烟花 -->
-  <FireWorks />
-  <!-- 灯笼 -->
-  <div class="denglo">
-    <div class="deng-box1">
-      <div class="deng">
-        <div class="xian"></div>
-        <div class="deng-a">
-          <div class="deng-b"><div class="deng-t">春</div></div>
+    <!-- 烟花 -->
+    <FireWorks />
+    <!-- 灯笼 -->
+    <div class="denglo">
+      <div class="deng-box1">
+        <div class="deng">
+          <div class="xian"></div>
+          <div class="deng-a">
+            <div class="deng-b"><div class="deng-t">春</div></div>
+          </div>
+          <div class="shui shui-a">
+            <div class="shui-c"></div>
+            <div class="shui-b"></div>
+          </div>
         </div>
-        <div class="shui shui-a">
-          <div class="shui-c"></div>
-          <div class="shui-b"></div>
+      </div>
+      <div class="deng-box2">
+        <div class="deng">
+          <div class="xian"></div>
+          <div class="deng-a">
+            <div class="deng-b"><div class="deng-t">节</div></div>
+          </div>
+          <div class="shui shui-a">
+            <div class="shui-c"></div>
+            <div class="shui-b"></div>
+          </div>
+        </div>
+      </div>
+      <div class="deng-box3">
+        <div class="deng">
+          <div class="xian"></div>
+          <div class="deng-a">
+            <div class="deng-b"><div class="deng-t">乐</div></div>
+          </div>
+          <div class="shui shui-a">
+            <div class="shui-c"></div>
+            <div class="shui-b"></div>
+          </div>
+        </div>
+      </div>
+      <div class="deng-box4">
+        <div class="deng">
+          <div class="xian"></div>
+          <div class="deng-a">
+            <div class="deng-b"><div class="deng-t">快</div></div>
+          </div>
+          <div class="shui shui-a">
+            <div class="shui-c"></div>
+            <div class="shui-b"></div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="deng-box2">
-      <div class="deng">
-        <div class="xian"></div>
-        <div class="deng-a">
-          <div class="deng-b"><div class="deng-t">节</div></div>
-        </div>
-        <div class="shui shui-a">
-          <div class="shui-c"></div>
-          <div class="shui-b"></div>
-        </div>
+    <!-- 求婚动画 -->
+    <div class="wedding_animation">
+      <div class="w-fls">
+        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
+        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
+        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
+        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
+        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
+        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
       </div>
-    </div>
-    <div class="deng-box3">
-      <div class="deng">
-        <div class="xian"></div>
-        <div class="deng-a">
-          <div class="deng-b"><div class="deng-t">乐</div></div>
-        </div>
-        <div class="shui shui-a">
-          <div class="shui-c"></div>
-          <div class="shui-b"></div>
-        </div>
+      <div class="w-fls w-2">
+        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
+        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
+        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
+        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
       </div>
-    </div>
-    <div class="deng-box4">
-      <div class="deng">
-        <div class="xian"></div>
-        <div class="deng-a">
-          <div class="deng-b"><div class="deng-t">快</div></div>
-        </div>
-        <div class="shui shui-a">
-          <div class="shui-c"></div>
-          <div class="shui-b"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 求婚动画 -->
-  <div class="wedding_animation">
-    <div class="w-fls">
-      <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-      <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-      <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-      <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-      <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-      <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-    </div>
-    <div class="w-fls w-2">
-      <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-      <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-      <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-      <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
     </div>
   </div>
 </template>
@@ -80,7 +80,9 @@ import Navigation from "@/components/NavigationMenu/index.vue";
 import FireWorks from "@/components/FireWorks/index.vue";
 </script>
 <style lang="scss" scoped>
+#commemorate {
 
+}
 .wedding_animation {
   @include flexCenter(column, center);
   overflow: hidden;

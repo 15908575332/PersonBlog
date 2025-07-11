@@ -967,7 +967,6 @@ canvas {
   position: absolute;
   top: 0;
   z-index: -1;
-
 }
 .block-audio {
   display: none;

@@ -1,80 +1,69 @@
 <template>
   <div class="container" id="life-card">
+    <!--导航栏 -->
+    <Navigation />
+    <!-- 内容 -->
     <div id="sb-container" ref="sbContainer" class="sb-container">
-      <div>
-        <span class="sb-icon icon-cog"></span>
-        <h4><span>All Settings</span></h4>
+      <div v-for="(item, idx) in sbItems" :key="idx">
+        <span v-if="item.icon" class="sb-icon" :class="item.icon"></span>
+        <h4>
+          <span>{{ item.label }}</span>
+        </h4>
       </div>
-      <div>
-        <span class="sb-icon icon-flight"></span>
-        <h4><span>User Modes</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-eye"></span>
-        <h4><span>Browse All</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-install"></span>
-        <h4><span>Install App</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-bag"></span>
-        <h4><span>Productivity</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-globe"></span>
-        <h4><span>All Options</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-picture"></span>
-        <h4><span>User Images</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-video"></span>
-        <h4><span>User Videos</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-download"></span>
-        <h4><span>Download App</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-mobile"></span>
-        <h4><span>Mobile Theme</span></h4>
-      </div>
-      <div>
-        <span class="sb-icon icon-camera"></span>
-        <h4><span>Login SYstem</span></h4>
-      </div>
-      <div>
-        <h4><span>Click me</span></h4>
-      </div>
+    </div>
+    <!-- logo -->
+    <div class="leftBottom" ref="leftBottom">
+      <span>放置相关文字</span>
+      <span class="closeBtn" @click="closeCard">x</span>
     </div>
   </div>
 </template>
+// ...existing code...
 <script setup>
 import { onMounted, ref } from "vue";
-import { swatchbook } from "@/utils/swatchbook-native"; // 引入 swatchbook-native 原生动画菜单工具
-
+import { swatchbook } from "@/utils/swatchbook-native";
+import Navigation from "@/components/NavigationMenu/index.vue";
+import utils from "@/utils/getAssetsFile";
+const leftBottom = ref(null);
 const sbContainer = ref(null);
-
+const sbItems = [
+  { icon: "icon-cog", label: "所有设置" },
+  { icon: "icon-flight", label: "用户模式" },
+  { icon: "icon-eye", label: "浏览全部" },
+  { icon: "icon-install", label: "软件安装" },
+  { icon: "icon-bag", label: "Productivity" },
+  { icon: "icon-globe", label: "所有选项" },
+  { icon: "icon-picture", label: "用户图片" },
+  { icon: "icon-video", label: "用户视频" },
+  { icon: "icon-download", label: "软件下载" },
+  { icon: "icon-mobile", label: "手机主题" },
+  { icon: "icon-camera", label: "登录系统" },
+  { icon: "", label: "Click me" },
+];
+const closeCard = () => {
+  leftBottom.value.style.opacity = "0";
+};
 onMounted(() => {
   const el = sbContainer.value;
   if (el) {
-    // 初始化 swatchbook 动画菜单
     swatchbook(el, {
-      angleInc: 15, // 每个菜单项之间的角度
-      neighbor: 15, //展开时相邻菜单项的角度间隔
-      initclosed: true, //是否初始为关闭状态
-      closeIdx: 11, //点击第几个菜单项时触发开合
+      angleInc: 15,
+      neighbor: 15,
+      initclosed: true,
+      closeIdx: 11,
     });
   }
 });
 </script>
 
 <style scoped lang="scss">
+#life-card {
+  // background: url("./img/egg_shell.png") repeat center;
+  height: 100vh;
+}
 @font-face {
   font-family: "icons";
-  src: url("@/assets/fonts/icons.ttf") format("truetype");
+  src: url("./fonts/icons.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -84,8 +73,8 @@ onMounted(() => {
   position: relative;
   width: 150px;
   height: 400px;
-  margin: 30px auto 0 auto;
   z-index: 21;
+  margin: 15vh auto;
 }
 
 .sb-container div {
@@ -105,7 +94,6 @@ onMounted(() => {
   -o-transform-origin: 25% 90%;
   -ms-transform-origin: 25% 90%;
   transform-origin: 25% 90%;
-
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   -ms-backface-visibility: hidden;
@@ -116,75 +104,39 @@ onMounted(() => {
   z-index: 20;
 }
 
-.sb-container div:nth-child(1) {
-  background-color: #ea2a29;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 1px 1px 1px rgba(0, 0, 0, 0.1),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
+// 简化彩色卡片样式，使用循环生成不同颜色和阴影
+@for $i from 1 through 11 {
+  .sb-container div:nth-child(#{$i}) {
+    background-color: nth(
+      (
+        #ea2a29,
+        #f16729,
+        #f89322,
+        #ffcf14,
+        #ffea0d,
+        #87b11d,
+        #008253,
+        #3277b5,
+        #4c549f,
+        #764394,
+        #ca0d86
+      ),
+      $i
+    );
+    box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1),
+      #{$i}px
+        #{$i}px
+        #{($i * 2 - 1)}px
+        rgba(0, 0, 0, if($i < 4, 0.1 + $i * 0.05, 0.1 + $i * 0.1)),
+      inset 0 3px 0 rgba(255, 255, 255, 0.2);
+    &:hover {
+      translate: 0 -1rem;
+    }
+  }
 }
-
-.sb-container div:nth-child(2) {
-  background-color: #f16729;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 2px 2px 1px rgba(0, 0, 0, 0.1),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(3) {
-  background-color: #f89322;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 3px 3px 2px rgba(0, 0, 0, 0.2),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(4) {
-  background-color: #ffcf14;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 4px 4px 4px rgba(0, 0, 0, 0.2),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(5) {
-  background-color: #ffea0d;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 5px 5px 6px rgba(0, 0, 0, 0.3),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(6) {
-  background-color: #87b11d;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 6px 6px 8px rgba(0, 0, 0, 0.3),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(7) {
-  background-color: #008253;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 7px 7px 10px rgba(0, 0, 0, 0.4),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(8) {
-  background-color: #3277b5;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 8px 8px 12px rgba(0, 0, 0, 0.4),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(9) {
-  background-color: #4c549f;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1), 9px 9px 14px rgba(0, 0, 0, 0.4),
-    inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(10) {
-  background-color: #764394;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1),
-    10px 10px 16px rgba(0, 0, 0, 0.4), inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
-.sb-container div:nth-child(11) {
-  background-color: #ca0d86;
-  box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1),
-    11px 11px 18px rgba(0, 0, 0, 0.4), inset 0 3px 0 rgba(255, 255, 255, 0.2);
-}
-
 .sb-container div:last-child {
-  background: #111 url(@/views/informalEssay/img/dark_leather.jpg) repeat center
-    center;
+  background: #111 url("/src/assets/img/infomalEssay/dark_leather.jpg") repeat
+    center center;
   box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.2),
     12px 12px 20px rgba(0, 0, 0, 0.6), inset 2px 2px 0 rgba(255, 255, 255, 0.1);
 }
@@ -253,7 +205,10 @@ onMounted(() => {
   background: rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 1px rgba(255, 255, 255, 0.1);
 }
-
+span {
+  color: white;
+  font-family: "gtpy";
+}
 .sb-container div:last-child h5 {
   font-size: 50px;
   white-space: nowrap;
@@ -367,8 +322,27 @@ span.sb-icon:before {
 
 /* 'B' */
 .icon-camera:before {
-  content: "\43";
+  content: "\33";
 }
 
-/* '3' */
+.leftBottom {
+  position: fixed;
+  width: 298px;
+  height: 73px;
+  bottom: 0;
+  left: 0;
+  opacity: 1;
+  transition: opacity 0.4s ease-in-out;
+  @include flexCenter(row, center);
+  margin: 1rem;
+  background-image: url("/src/assets/img/infomalEssay/smoke.png");
+  .closeBtn {
+    position: absolute;
+    right: 0.4rem;
+    top: 0.2rem;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
 </style>
