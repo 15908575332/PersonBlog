@@ -30,7 +30,6 @@ export const useListDetail = defineStore('data', {
                         mediaType: 'image',
                         timeAxis: '1', // 时间轴
                         code: '1', // 源码展示
-                        isContent: false, // 是否显示内容
                         release__time: localizedDateString,
                         title: '生活是一张巨大的画布',
                         heat: 3963,
@@ -118,7 +117,7 @@ export const useListDetail = defineStore('data', {
                         mainUrl: utils.getAssetsFile('videos/video-back10.mp4'),
                         mediaType: 'video',
                         release__time: localizedDateString,
-                        isContent: false, // 是否显示内容
+                        isContent: true,
                         title: '静',
                         heat: 3963,
                         like: 255,
@@ -126,15 +125,6 @@ export const useListDetail = defineStore('data', {
                         tag1: '视听盛宴',
                         tag2: '生活',
                         comment: [
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar01.webp'),
-                                nickname: 'xxy159',
-                                level: 'lv1',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '测试自定义数据格式是否正确',
-                                tag1: '资源',
-                                tag2: '测试付费专栏'
-                            },
                             {
                                 profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
                                 nickname: 'Sara',
@@ -164,29 +154,6 @@ export const useListDetail = defineStore('data', {
                         tag1: '生活倒影',
                         tag2: '生活',
                         comment: [
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar01.webp'),
-                                nickname: 'xxy159',
-                                level: 'lv1',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '测试自定义数据格式是否正确',
-                                tag1: '资源',
-                                tag2: '测试付费专栏'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
-                                nickname: '城北吕公',
-                                level: 'lv4',
-                                timestamp: '2024/11/26 13:11:50',
-                                content: '测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
                         ]
                     },
                     {
@@ -198,6 +165,7 @@ export const useListDetail = defineStore('data', {
                         title: '聆听海的声音',
                         heat: 3963,
                         like: 255,
+                        isContent: true,
                         text: [text, text1, text2],
                         tag1: '视听盛宴',
                         tag2: '生活',
@@ -210,13 +178,6 @@ export const useListDetail = defineStore('data', {
                                 content: '测试自定义数据格式是否正确',
                                 tag1: '资源',
                                 tag2: '测试付费专栏'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
                             },
                             {
                                 profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
@@ -249,13 +210,7 @@ export const useListDetail = defineStore('data', {
                                 tag1: '资源',
                                 tag2: '测试付费专栏'
                             },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
+
                             {
                                 profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
                                 nickname: '城北吕公',
@@ -278,29 +233,6 @@ export const useListDetail = defineStore('data', {
                         tag1: '视听盛宴',
                         tag2: '生活',
                         comment: [
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar01.webp'),
-                                nickname: 'xxy159',
-                                level: 'lv1',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '测试自定义数据格式是否正确',
-                                tag1: '资源',
-                                tag2: '测试付费专栏'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
-                                nickname: '城北吕公',
-                                level: 'lv4',
-                                timestamp: '2024/11/26 13:11:50',
-                                content: '测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
                         ]
                     },
                     {
@@ -1409,22 +1341,6 @@ export const useListDetail = defineStore('data', {
                         tag2: '生活',
                         comment: [
                             {
-                                profile__picture: utils.getAssetsFile('img/public/avatar01.webp'),
-                                nickname: 'xxy159',
-                                level: 'lv1',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '测试自定义数据格式是否正确',
-                                tag1: '资源',
-                                tag2: '测试付费专栏'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
-                            {
                                 profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
                                 nickname: '城北吕公',
                                 level: 'lv4',
@@ -1449,9 +1365,9 @@ export const useListDetail = defineStore('data', {
                         mediaType: 'image',
                         release__time: '2025/1/04 10:46:50',
                         title: '前端 | CSS代码可视化',
+                        isContent: true,
                         heat: 63,
                         like: 25,
-                        isContent: true,
                         text: [
                             '前端常见形状、动画、布局、CSS样式等可视化代码，可直接复制使用'
                         ],
@@ -1499,29 +1415,6 @@ export const useListDetail = defineStore('data', {
                         tag1: '资源',
                         tag2: '动画',
                         comment: [
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar01.webp'),
-                                nickname: 'xxy159',
-                                level: 'lv1',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '测试自定义数据格式是否正确',
-                                tag1: '资源',
-                                tag2: '测试付费专栏'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
-                                nickname: '城北吕公',
-                                level: 'lv4',
-                                timestamp: '2024/11/26 13:11:50',
-                                content: '测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
                         ]
                     },
                     {
@@ -1539,29 +1432,6 @@ export const useListDetail = defineStore('data', {
                         tag1: '资源',
                         tag2: 'vue3组件',
                         comment: [
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar01.webp'),
-                                nickname: 'xxy159',
-                                level: 'lv1',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '测试自定义数据格式是否正确',
-                                tag1: '资源',
-                                tag2: '测试付费专栏'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
-                                nickname: '城北吕公',
-                                level: 'lv4',
-                                timestamp: '2024/11/26 13:11:50',
-                                content: '测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
                         ]
                     },
                     {
@@ -1580,22 +1450,6 @@ export const useListDetail = defineStore('data', {
                         tag1: '资源',
                         tag2: '生活',
                         comment: [
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar01.webp'),
-                                nickname: 'xxy159',
-                                level: 'lv1',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '测试自定义数据格式是否正确',
-                                tag1: '资源',
-                                tag2: '测试付费专栏'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
                             {
                                 profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
                                 nickname: '城北吕公',
@@ -1662,29 +1516,7 @@ export const useListDetail = defineStore('data', {
                         tag1: '资源',
                         tag2: '插图',
                         comment: [
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar01.webp'),
-                                nickname: 'xxy159',
-                                level: 'lv1',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '测试自定义数据格式是否正确',
-                                tag1: '资源',
-                                tag2: '测试付费专栏'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar02.webp'),
-                                nickname: 'Sara',
-                                level: 'lv6',
-                                timestamp: '2020/10/16 13:11:50',
-                                content: '😁😁测试数据超出内容区域后是否自动换行是否正常，测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
-                            {
-                                profile__picture: utils.getAssetsFile('img/public/avatar03.webp'),
-                                nickname: '城北吕公',
-                                level: 'lv4',
-                                timestamp: '2024/11/26 13:11:50',
-                                content: '测试接收表情数据是否正常测试接收表情数据是否正常'
-                            },
+
                         ]
                     }
                 ],

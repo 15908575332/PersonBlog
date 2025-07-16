@@ -141,14 +141,14 @@
         return;
         }' />
             </div>
-            <div class="introduce" v-if="recordDetailList.text && recordDetailList.isContent">
+            <div class="introduce" v-if="recordDetailList.text && !recordDetailList.isContent">
                 <span v-for="text in recordDetailList.text">
                     {{ text }}
                 </span>
             </div>
             <!-- 评论可见 -->
-            <div class="comment__show" v-if="recordDetailList.text && !recordDetailList.isContent">
-                <div class="text">评论可见</div>
+            <div class="comment__show" v-if="recordDetailList.isContent">
+                <div class=" text">评论可见</div>
                 <div class="warring">
                     <img src="./icon/warring-icon.svg" alt="warring">
                     <span>此处内容已隐藏</span>
@@ -265,7 +265,7 @@
             </div>
             <!-- 留言记录 -->
             <div class="comment__moudle">
-                <div class="sum">Comments | {{ selectComment.length }}条留言</div>
+                <div class="sum" v-if="selectComment.length">Comments | {{ selectComment.length }}条留言</div>
                 <ul v-if="selectComment.length">
                     <li class="comment__item" v-for="(message, index) in paginatedItems" :key="index">
                         <div>
@@ -317,13 +317,13 @@
                             </div>
                         </div>
                     </li>
-
                 </ul>
-                <template v-else>
-                    <a-skeleton />
-                </template>
+                <div class="noComment" v-else>
+                    <span>没有更多留言，去留言吧~</span>
+                    <!-- <img src="./img/NoComment.png" alt="noComment"> -->
+                </div>
                 <!-- 分页 -->
-                <div class="paginate">
+                <div class="paginate" v-if="totalItems">
                     <vue-awesome-paginate :total-items="totalItems" v-model="currentPage" :items-per-page="pageSize"
                         :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
                         :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
@@ -454,7 +454,6 @@ import ModalBox from '@/components/ModalBox/index.vue'
 import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
 
-import hljsVuePlugin from "@highlightjs/vue-plugin";
 // 获取store定义的公共数组
 import { useListDetail } from '@/store/listDetailStore';
 const recordStore = useListDetail();
@@ -1564,6 +1563,14 @@ onMounted(() => {
 
             }
 
+            //没有留言
+            .noComment {
+                // background: red;
+                margin: 1rem 0;
+                border-top: dashed 1px #ccc;
+                text-align: center;
+                padding: 2rem 0;
+            }
 
             .paginate {
                 @include flexCenter(row, center);
