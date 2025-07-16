@@ -43,29 +43,29 @@ onMounted(() => {
   // 星空星星数组
   var stars = [];
   var starCount = Math.floor((canvas.width * canvas.height) / 3500); // 星星数量与屏幕面积相关
-  function initStars() {
-    stars = [];
-    for (var i = 0; i < starCount; i++) {
-      // 30%概率为闪烁星星
-      var twinkle = Math.random() < 0.3;
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: twinkle ? Math.random() * 1.2 + 1.0 : Math.random() * 0.7 + 0.3,
-        alpha: Math.random() * 0.5 + 0.5,
-        twinkle: twinkle,
-        twinklePhase: Math.random() * Math.PI * 2,
-        twinkleSpeed: Math.random() * 0.05 + 0.01, // 闪烁速度
-      });
-    }
-  }
-  initStars();
+  // function initStars() {
+  //   stars = [];
+  //   for (var i = 0; i < starCount; i++) {
+  //     // 30%概率为闪烁星星
+  //     var twinkle = Math.random() < 0.3;
+  //     stars.push({
+  //       x: Math.random() * canvas.width,
+  //       y: Math.random() * canvas.height,
+  //       r: twinkle ? Math.random() * 1.2 + 1.0 : Math.random() * 0.7 + 0.3,
+  //       alpha: Math.random() * 0.5 + 0.5,
+  //       twinkle: twinkle,
+  //       twinklePhase: Math.random() * Math.PI * 2,
+  //       twinkleSpeed: Math.random() * 0.05 + 0.01, // 闪烁速度
+  //     });
+  //   }
+  // }
+  // initStars();
   // 监听窗口变化时重建星星
-  window.addEventListener("resize", () => {
-    setCanvasSize();
-    starCount = Math.floor((canvas.width * canvas.height) / 3500);
-    initStars();
-  });
+  // window.addEventListener("resize", () => {
+  //   setCanvasSize();
+  //   starCount = Math.floor((canvas.width * canvas.height) / 3500);
+  //   initStars();
+  // });
   var actions = [
     makeDoubleFullCircleFirework,
     makePlanetCircleFirework,
@@ -80,14 +80,14 @@ onMounted(() => {
     var fire = {
       x: (Math.random() * range) / 2 - range / 4 + center.x, // 起始x
       y: Math.random() * range * 2.5 + canvas.height, // 起始y
-      size: Math.random() + 1, // 火箭/粒子大小
+      size: Math.random() + 1.2, // 火箭/粒子大小
       fill: randColor(), // 颜色（可自定义）
       vx: Math.random() - 0.5, // x方向速度（影响发射角度）
       vy: -(Math.random() + 4), // y方向速度（影响发射速度/高度）
       ax: Math.random() * 0.06 - 0.03, // x方向加速度
       delay: Math.round(Math.random() * range) + range * 5, // 延迟爆炸
       hold: false,
-      alpha: 1,
+      // alpha: 1,
       far: Math.random() * range + (center.y - range), // 爆炸高度
     };
     fire.base = {
@@ -319,7 +319,7 @@ onMounted(() => {
   // 生成圆形烟花爆炸效果
   function makeCircleFirework(fire) {
     var color = randColor(); // 爆炸颜色
-    var velocity = Math.random() * 2 + 6; // 爆炸速度（影响扩散速度）
+    var velocity = Math.random() * 2 + 10; // 爆炸速度（影响扩散速度）
     var max = fireNumber * 5; // 粒子数量（影响烟花密度）
     for (var i = 0; i < max; i++) {
       var rad = (i * Math.PI * 2) / max;
