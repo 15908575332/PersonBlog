@@ -1,41 +1,5 @@
 <template>
   <canvas id="canvas" ref="canvasRef"></canvas>
-  <!-- <div class="block-audio">
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="launch" src="m/launch1.mp3" controls></audio>
-    <audio class="launch" src="m/launch1.mp3" controls></audio>
-    <audio class="launch" src="m/launch2.mp3" controls></audio>
-    <audio class="launch" src="m/launch2.mp3" controls></audio>
-    <audio class="launch" src="m/launch3.mp3" controls></audio>
-    <audio class="launch" src="m/launch3.mp3" controls></audio>
-    <audio class="launch" src="m/launch4.mp3" controls></audio>
-    <audio class="launch" src="m/launch4.mp3" controls></audio>
-    <audio class="launch" src="m/launch5.mp3" controls></audio>
-    <audio class="launch" src="m/launch5.mp3" controls></audio>
-  </div> -->
 </template>
 
 <script setup>
@@ -95,7 +59,7 @@ onMounted(() => {
       vx: Math.random() - 0.5, // x方向速度（影响发射角度）
       vy: -(Math.random() + 4), // y方向速度（影响发射速度/高度）
       ax: Math.random() * 0.06 - 0.03, // x方向加速度
-      delay: Math.round(Math.random() * range) + range * 10, // 延迟爆炸
+      delay: Math.round(Math.random() * range) + range * 4, // 延迟爆炸
       hold: false,
       alpha: 1,
       far: Math.random() * range + (center.y - range), // 爆炸高度
@@ -116,7 +80,7 @@ onMounted(() => {
 
   // define array position of text
   // 文字粒子相关
-  var textString = "happynewyear2025"; // 显示的文字内容
+  var textString = "happylunarnewyear2025"; // 显示的文字内容
   var textMatrix = [
     4.5, 0, 5.5, 0, 6.5, 0, 7.5, 0, 8.5, 0, 0, 1, 1, 1, 2, 1, 3, 1, 4, 1, 6, 1,
     7, 1, 8, 1, 10, 1, 11, 1, 12, 1, 13, 1, 5, 2, 6, 2, 7, 2, 8, 2,
@@ -220,446 +184,565 @@ onMounted(() => {
       y: center.y + top,
       color: text.fill,
       radius: range * 2,
-    });
-    if (++textIndex < textString.length) {
+      if(++textIndex < textString.length) {
       setTimeout(initText, 30);
     } else {
       textIndex = 0;
     }
-  }
+  });
 
-  function initSpark() {
-    var x = Math.random() * range * 3 - range * 1.5 + center.x;
-    var vx = Math.random() - 0.5;
-    var vy = -(Math.random() + 4);
-    var ax = Math.random() * 0.04 - 0.02;
-    var far = Math.random() * range * 4 - range + center.y;
-    var direct = ax * 10 * Math.PI;
-    var max = fireNumber * 0.5;
-    for (var i = 0; i < max; i++) {
-      var special = {
-        x: x,
-        y: Math.random() * range * 0.25 + canvas.height,
-        size: Math.random() + 2,
-        fill: "#ff3",
-        vx: vx,
-        vy: vy,
-        ax: ax,
-        direct: direct,
-        alpha: 1,
-      };
-      special.far = far - (special.y - canvas.height);
-      listSpecial.push(special);
-      // play sound
-      playLaunchSound();
-    }
+function initSpark() {
+  var x = Math.random() * range * 3 - range * 1.5 + center.x;
+  var vx = Math.random() - 0.5;
+  var vy = -(Math.random() + 4);
+  var ax = Math.random() * 0.04 - 0.02;
+  var far = Math.random() * range * 4 - range + center.y;
+  var direct = ax * 10 * Math.PI;
+  var max = fireNumber * 0.5;
+  for (var i = 0; i < max; i++) {
+    var special = {
+      x: x,
+      y: Math.random() * range * 0.25 + canvas.height,
+      size: Math.random() + 2,
+      fill: "#ff3",
+      vx: vx,
+      vy: vy,
+      ax: ax,
+      direct: direct,
+      alpha: 1,
+    };
+    special.far = far - (special.y - canvas.height);
+    listSpecial.push(special);
+    // play sound
+    playLaunchSound();
   }
+}
 
-  // 随机生成烟花颜色（根据背景自动适配：白色背景时生成深色，深色背景时生成亮色）
-  function randColor() {
-    // 获取当前背景色
-    let bg = ctx.fillStyle;
-    // 简单判断是否为白色背景
-    let isWhite = false;
-    if (typeof bg === "string") {
-      isWhite =
-        bg === "#fff" || bg === "#ffffff" || bg.toLowerCase() === "white";
-    }
-    // 白色背景时生成深色烟花，否则生成亮色烟花
-    if (isWhite) {
-      // 深色系：r/g/b均在0~100
-      var r = Math.floor(Math.random() * 100);
-      var g = Math.floor(Math.random() * 100);
-      var b = Math.floor(Math.random() * 100);
+// 随机生成烟花颜色（根据背景自动适配：白色背景时生成深色，深色背景时生成亮色）
+function randColor() {
+  // 获取当前背景色
+  let bg = ctx.fillStyle;
+  // 简单判断是否为白色背景
+  let isWhite = false;
+  if (typeof bg === "string") {
+    isWhite =
+      bg === "#fff" || bg === "#ffffff" || bg.toLowerCase() === "white";
+  }
+  // 白色背景时生成深色烟花，否则生成亮色烟花
+  if (isWhite) {
+    // 深色系：r/g/b均在0~100
+    var r = Math.floor(Math.random() * 100);
+    var g = Math.floor(Math.random() * 100);
+    var b = Math.floor(Math.random() * 100);
+  } else {
+    // 亮色系：r/g/b均在150~255
+    var r = Math.floor(Math.random() * 105) + 150;
+    var g = Math.floor(Math.random() * 105) + 150;
+    var b = Math.floor(Math.random() * 105) + 150;
+  }
+  return `rgb(${r},${g},${b})`;
+}
+
+// function playExpSound() {
+//   var sound = listExpSound[Math.floor(Math.random() * listExpSound.length)];
+//   sound.volume = Math.random() * 0.4 + 0.1;
+//   sound.play();
+// }
+
+function playLaunchSound() {
+  setTimeout(function () {
+    var sound =
+      listLaunchSound[Math.floor(Math.random() * listLaunchSound.length)];
+    // sound.volume = 0.05;
+    // sound.play();
+  }, 200);
+}
+
+// 生成圆形烟花爆炸效果
+function makeCircleFirework(fire) {
+  var color = randColor(); // 爆炸颜色
+  var velocity = Math.random() * 2 + 6; // 爆炸速度（影响扩散速度）
+  var max = fireNumber * 5; // 粒子数量（影响烟花密度）
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      ay: 0.04,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 2,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  return color;
+}
+
+function makeDoubleCircleFirework(fire) {
+  var color = randColor();
+  var velocity = Math.random() * 2 + 8;
+  var max = fireNumber * 3;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      ay: 0.04,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  color = randColor();
+  velocity = Math.random() * 3 + 4;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      ay: 0.04,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  return color;
+}
+
+function makePlanetCircleFirework(fire) {
+  var color = "#aa0609";
+  var velocity = Math.random() * 2 + 4;
+  var max = fireNumber * 2;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      ay: 0.04,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  max = fireNumber * 4;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity * Math.random(),
+      vy: Math.sin(rad) * velocity * Math.random(),
+      ay: 0.04,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  max = fireNumber * 3;
+  color = "#ff9";
+  var rotate = Math.random() * Math.PI * 2;
+  var vx = velocity * (Math.random() + 2);
+  var vy = velocity * 0.6;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    // calc x, y for ellipse
+    var cx = Math.cos(rad) * vx + (Math.random() - 0.5) * 0.5;
+    var cy = Math.sin(rad) * vy + (Math.random() - 0.5) * 0.5;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: cx * Math.cos(rotate) - cy * Math.sin(rotate), // rotate x ellipse
+      vy: cx * Math.sin(rotate) + cy * Math.cos(rotate), // rotate y ellipse
+      ay: 0.02,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  return "#aa0609";
+}
+
+function makeFullCircleFirework(fire) {
+  var color = randColor();
+  var velocity = Math.random() * 8 + 8;
+  var max = fireNumber * 3;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      ay: 0.06,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  max = fireNumber * Math.round(Math.random() * 4 + 4);
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity * Math.random(),
+      vy: Math.sin(rad) * velocity * Math.random(),
+      ay: 0.06,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  return color;
+}
+
+function makeDoubleFullCircleFirework(fire) {
+  var color = randColor();
+  var velocity = Math.random() * 8 + 8;
+  var max = fireNumber * 3;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      ay: 0.04,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  color = randColor();
+  velocity = Math.random() * 3 + 4;
+  max = fireNumber * 2;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+      ay: 0.06,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  max = fireNumber * 4;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * velocity * Math.random(),
+      vy: Math.sin(rad) * velocity * Math.random(),
+      ay: 0.06,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
+  }
+  return color;
+}
+
+function makeHeartFirework(fire) {
+  var color = randColor();
+  var velocity = Math.random() * 3 + 3;
+  var max = fireNumber * 5;
+  var rotate = Math.random() * Math.PI * 2;
+  for (var i = 0; i < max; i++) {
+    var rad = (i * Math.PI * 2) / max + rotate;
+    var v, p;
+    if (rad - rotate < Math.PI * 0.5) {
+      p = (rad - rotate) / (Math.PI * 0.5);
+      v = velocity + velocity * p;
+    } else if (rad - rotate > Math.PI * 0.5 && rad - rotate < Math.PI) {
+      p = (rad - rotate - Math.PI * 0.5) / (Math.PI * 0.5);
+      v = velocity * (2 - p);
+    } else if (rad - rotate > Math.PI && rad - rotate < Math.PI * 1.5) {
+      p = (rad - rotate - Math.PI) / (Math.PI * 0.5);
+      v = velocity * (1 - p);
+    } else if (rad - rotate > Math.PI * 1.5 && rad - rotate < Math.PI * 2) {
+      p = (rad - rotate - Math.PI * 1.5) / (Math.PI * 0.5);
+      v = velocity * p;
     } else {
-      // 亮色系：r/g/b均在150~255
-      var r = Math.floor(Math.random() * 105) + 150;
-      var g = Math.floor(Math.random() * 105) + 150;
-      var b = Math.floor(Math.random() * 105) + 150;
-    }
-    return `rgb(${r},${g},${b})`;
-  }
-
-  // function playExpSound() {
-  //   var sound = listExpSound[Math.floor(Math.random() * listExpSound.length)];
-  //   sound.volume = Math.random() * 0.4 + 0.1;
-  //   sound.play();
-  // }
-
-  function playLaunchSound() {
-    setTimeout(function () {
-      var sound =
-        listLaunchSound[Math.floor(Math.random() * listLaunchSound.length)];
-      // sound.volume = 0.05;
-      // sound.play();
-    }, 200);
-  }
-
-  // 生成圆形烟花爆炸效果
-  function makeCircleFirework(fire) {
-    var color = randColor(); // 爆炸颜色
-    var velocity = Math.random() * 2 + 6; // 爆炸速度（影响扩散速度）
-    var max = fireNumber * 5; // 粒子数量（影响烟花密度）
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        ay: 0.04,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 2,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    return color;
-  }
-
-  function makeDoubleCircleFirework(fire) {
-    var color = randColor();
-    var velocity = Math.random() * 2 + 8;
-    var max = fireNumber * 3;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        ay: 0.04,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    color = randColor();
-    velocity = Math.random() * 3 + 4;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        ay: 0.04,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    return color;
-  }
-
-  function makePlanetCircleFirework(fire) {
-    var color = "#aa0609";
-    var velocity = Math.random() * 2 + 4;
-    var max = fireNumber * 2;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        ay: 0.04,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    max = fireNumber * 4;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity * Math.random(),
-        vy: Math.sin(rad) * velocity * Math.random(),
-        ay: 0.04,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    max = fireNumber * 3;
-    color = "#ff9";
-    var rotate = Math.random() * Math.PI * 2;
-    var vx = velocity * (Math.random() + 2);
-    var vy = velocity * 0.6;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      // calc x, y for ellipse
-      var cx = Math.cos(rad) * vx + (Math.random() - 0.5) * 0.5;
-      var cy = Math.sin(rad) * vy + (Math.random() - 0.5) * 0.5;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: cx * Math.cos(rotate) - cy * Math.sin(rotate), // rotate x ellipse
-        vy: cx * Math.sin(rotate) + cy * Math.cos(rotate), // rotate y ellipse
-        ay: 0.02,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    return "#aa0609";
-  }
-
-  function makeFullCircleFirework(fire) {
-    var color = randColor();
-    var velocity = Math.random() * 8 + 8;
-    var max = fireNumber * 3;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        ay: 0.06,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    max = fireNumber * Math.round(Math.random() * 4 + 4);
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity * Math.random(),
-        vy: Math.sin(rad) * velocity * Math.random(),
-        ay: 0.06,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    return color;
-  }
-
-  function makeDoubleFullCircleFirework(fire) {
-    var color = randColor();
-    var velocity = Math.random() * 8 + 8;
-    var max = fireNumber * 3;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        ay: 0.04,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    color = randColor();
-    velocity = Math.random() * 3 + 4;
-    max = fireNumber * 2;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
-        ay: 0.06,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    max = fireNumber * 4;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * velocity * Math.random(),
-        vy: Math.sin(rad) * velocity * Math.random(),
-        ay: 0.06,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
-    }
-    return color;
-  }
-
-  function makeHeartFirework(fire) {
-    var color = randColor();
-    var velocity = Math.random() * 3 + 3;
-    var max = fireNumber * 5;
-    var rotate = Math.random() * Math.PI * 2;
-    for (var i = 0; i < max; i++) {
-      var rad = (i * Math.PI * 2) / max + rotate;
-      var v, p;
-      if (rad - rotate < Math.PI * 0.5) {
-        p = (rad - rotate) / (Math.PI * 0.5);
-        v = velocity + velocity * p;
-      } else if (rad - rotate > Math.PI * 0.5 && rad - rotate < Math.PI) {
-        p = (rad - rotate - Math.PI * 0.5) / (Math.PI * 0.5);
-        v = velocity * (2 - p);
-      } else if (rad - rotate > Math.PI && rad - rotate < Math.PI * 1.5) {
-        p = (rad - rotate - Math.PI) / (Math.PI * 0.5);
-        v = velocity * (1 - p);
-      } else if (rad - rotate > Math.PI * 1.5 && rad - rotate < Math.PI * 2) {
-        p = (rad - rotate - Math.PI * 1.5) / (Math.PI * 0.5);
-        v = velocity * p;
-      } else {
-        v = velocity;
+      var color = randColor();
+      var velocity = Math.random() * 3 + 3;
+      var max = fireNumber * 5;
+      var rotate = Math.random() * Math.PI * 2;
+      for (var i = 0; i < max; i++) {
+        var rad = (i * Math.PI * 2) / max + rotate;
+        var v, p;
+        if (rad - rotate < Math.PI * 0.5) {
+          p = (rad - rotate) / (Math.PI * 0.5);
+          v = velocity + velocity * p;
+        } else if (rad - rotate > Math.PI * 0.5 && rad - rotate < Math.PI) {
+          p = (rad - rotate - Math.PI * 0.5) / (Math.PI * 0.5);
+          v = velocity * (2 - p);
+        } else if (rad - rotate > Math.PI && rad - rotate < Math.PI * 1.5) {
+          p = (rad - rotate - Math.PI) / (Math.PI * 0.5);
+          v = velocity * (1 - p);
+        } else if (rad - rotate > Math.PI * 1.5 && rad - rotate < Math.PI * 2) {
+          p = (rad - rotate - Math.PI * 1.5) / (Math.PI * 0.5);
+          v = velocity * p;
+        } else {
+          v = velocity;
+        }
+        v = v + (Math.random() - 0.5) * 0.25;
+        var firework = {
+          x: fire.x,
+          y: fire.y,
+          size: Math.random() + 1.5,
+          fill: color,
+          vx: Math.cos(rad) * v,
+          vy: Math.sin(rad) * v,
+          ay: 0.02,
+          alpha: 1,
+          life: Math.round((Math.random() * range) / 2) + range / 1.5,
+        };
+        firework.base = {
+          life: firework.life,
+          size: firework.size,
+        };
+        listFirework.push(firework);
       }
-      v = v + (Math.random() - 0.5) * 0.25;
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.cos(rad) * v,
-        vy: Math.sin(rad) * v,
-        ay: 0.02,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 1.5,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
+      v = velocity;
     }
-    return color;
+    v = v + (Math.random() - 0.5) * 0.25;
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.cos(rad) * v,
+      vy: Math.sin(rad) * v,
+      ay: 0.02,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 1.5,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+    };
+    listFirework.push(firework);
   }
+  return color;
+}
 
-  function makeRandomFirework(fire) {
-    var color = randColor();
-    for (var i = 0; i < fireNumber * 5; i++) {
-      var firework = {
-        x: fire.x,
-        y: fire.y,
-        size: Math.random() + 1.5,
-        fill: color,
-        vx: Math.random() * 15 - 7.5,
-        vy: Math.random() * -15 + 5,
-        ay: 0.05,
-        alpha: 1,
-        life: Math.round((Math.random() * range) / 2) + range / 2,
-      };
-      firework.base = {
-        life: firework.life,
-        size: firework.size,
-      };
-      listFirework.push(firework);
+function makeRandomFirework(fire) {
+  var color = randColor();
+  for (var i = 0; i < fireNumber * 5; i++) {
+    var firework = {
+      x: fire.x,
+      y: fire.y,
+      size: Math.random() + 1.5,
+      fill: color,
+      vx: Math.random() * 15 - 7.5,
+      vy: Math.random() * -15 + 5,
+      ay: 0.05,
+      alpha: 1,
+      life: Math.round((Math.random() * range) / 2) + range / 2,
+    };
+    firework.base = {
+      life: firework.life,
+      size: firework.size,
+      return color;
     }
-    return color;
-  }
 
-  function makeSpark(special) {
-    var color = special.fill;
-    var velocity = Math.random() * 6 + 12;
-    var max = fireNumber;
+    function makeRandomFirework(fire) {
+      var color = randColor();
+      for (var i = 0; i < fireNumber * 5; i++) {
+        var firework = {
+          x: fire.x,
+          y: fire.y,
+          size: Math.random() + 1.5,
+          fill: color,
+          vx: Math.random() * 15 - 7.5,
+          vy: Math.random() * -15 + 5,
+          ay: 0.05,
+          alpha: 1,
+          life: Math.round((Math.random() * range) / 2) + range / 2,
+        };
+        firework.base = {
+          life: firework.life,
+          size: firework.size,
+        };
+        listFirework.push(firework);
+      }
+      return color;
+    }
+
+    function makeSpark(special) {
+      var color = special.fill;
+      var velocity = Math.random() * 6 + 12;
+      var max = fireNumber;
+      for (var i = 0; i < max; i++) {
+        var rad =
+          Math.random() * Math.PI * 0.3 +
+          Math.PI * 0.35 +
+          Math.PI +
+          special.direct;
+        var spark = {
+          x: special.x,
+          y: special.y,
+          size: Math.random() + 1,
+        };
+        listFirework.push(firework);
+      }
+      return color;
+    }
+
+    function makeSpark(special) {
+      var color = special.fill;
+      var velocity = Math.random() * 6 + 12;
+      var max = fireNumber;
+      for (var i = 0; i < max; i++) {
+        var rad =
+          Math.random() * Math.PI * 0.3 +
+          Math.PI * 0.35 +
+          Math.PI +
+          special.direct;
+        var spark = {
+          x: special.x,
+          y: special.y,
+          size: Math.random() + 1,
+          fill: color,
+          vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+          vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+          ay: 0.02,
+          alpha: 1,
+          rad: rad,
+          direct: special.direct,
+          chain: Math.round(Math.random() * 2) + 2,
+          life: Math.round((Math.random() * range) / 2) + range / 2,
+        };
+        spark.base = {
+          life: spark.life,
+          velocity: velocity,
+        };
+        listSpark.push(spark);
+      }
+      return color;
+    }
+
+    function chainSpark(parentSpark) {
+      fill: color,
+        vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+          vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+            ay: 0.02,
+              alpha: 1,
+                rad: rad,
+                  direct: special.direct,
+                    chain: Math.round(Math.random() * 2) + 2,
+                      life: Math.round((Math.random() * range) / 2) + range / 2,
+      };
+    spark.base = {
+      life: spark.life,
+      velocity: velocity,
+    };
+    listSpark.push(spark);
+  }
+  return color;
+}
+
+function chainSpark(parentSpark) {
+  var color = parentSpark.fill;
+  if (parentSpark.chain > 0) {
+    var velocity = parentSpark.base.velocity * 0.6;
+    var max = Math.round(Math.random() * 5);
     for (var i = 0; i < max; i++) {
       var rad =
-        Math.random() * Math.PI * 0.3 +
-        Math.PI * 0.35 +
-        Math.PI +
-        special.direct;
+        Math.random() * Math.PI * 0.3 -
+        Math.PI * 0.15 +
+        parentSpark.rad +
+        parentSpark.direct;
       var spark = {
-        x: special.x,
-        y: special.y,
-        size: Math.random() + 1,
+        x: parentSpark.x,
+        y: parentSpark.y,
+        size: parentSpark.size * 0.6,
         fill: color,
         vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
         vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
         ay: 0.02,
         alpha: 1,
         rad: rad,
-        direct: special.direct,
-        chain: Math.round(Math.random() * 2) + 2,
-        life: Math.round((Math.random() * range) / 2) + range / 2,
-      };
-      spark.base = {
-        life: spark.life,
-        velocity: velocity,
-      };
-      listSpark.push(spark);
-    }
-    return color;
-  }
-
-  function chainSpark(parentSpark) {
-    var color = parentSpark.fill;
-    if (parentSpark.chain > 0) {
-      var velocity = parentSpark.base.velocity * 0.6;
+        var color = parentSpark.fill;
+        if(parentSpark.chain > 0) {
+          var velocity = parentSpark.base.velocity * 0.6;
       var max = Math.round(Math.random() * 5);
       for (var i = 0; i < max; i++) {
         var rad =
@@ -697,262 +780,282 @@ onMounted(() => {
     return color;
   }
 
-  function loop() {
-    animationId = requestAnimationFrame(loop);
-    update();
-    draw();
-  }
-  loop();
-
-  function update() {
-    // update fire logic
-    for (var i = 0; i < listFire.length; i++) {
-      var fire = listFire[i];
-      //
-      if (fire.y <= fire.far) {
-        // play sound
-        // playExpSound();
-        // case add firework
-        fired++;
-        var color = actions[Math.floor(Math.random() * actions.length)](fire);
-        // light
-        lights.push({ x: fire.x, y: fire.y, color: color, radius: range * 2 });
-        // reset
-        fire.y = fire.base.y;
-        fire.x = fire.base.x;
-        // special
-        if (fired % 33 == 0) {
-          initSpark();
-        }
-        // on hold
-        supprise = fired % 100 == 0 ? true : supprise;
-        if (supprise) {
-          fire.vx = 0;
-          fire.vy = 0;
-          fire.ax = 0;
-          fire.hold = true;
-          onHold++;
-        } else {
-          fire.vx = fire.base.vx;
-          fire.vy = fire.base.vy;
-          fire.ax = Math.random() * 0.06 - 0.03;
-          // play sound
-          playLaunchSound();
-        }
+  direct: parentSpark.direct,
+    chain: parentSpark.chain,
+      life: parentSpark.base.life * 0.8,
+        };
+spark.base = {
+  life: spark.life,
+  size: spark.size,
+  velocity: velocity,
+};
+listSpark.push(spark);
       }
-      //
-      if (fire.hold && fire.delay <= 0) {
-        onHold--;
-        fire.hold = false;
-        fire.delay = Math.round(Math.random() * range) + range * 4;
+
+if (Math.random() > 0.9 && parentSpark.chain > 1) {
+  // play sound
+  // playExpSound();
+}
+    }
+return color;
+  }
+
+function loop() {
+  animationId = requestAnimationFrame(loop);
+  update();
+  draw();
+}
+loop();
+
+function update() {
+  // update fire logic
+  for (var i = 0; i < listFire.length; i++) {
+    var fire = listFire[i];
+    //
+    if (fire.y <= fire.far) {
+      // play sound
+      // playExpSound();
+      // case add firework
+      fired++;
+      var color = actions[Math.floor(Math.random() * actions.length)](fire);
+      // light
+      lights.push({ x: fire.x, y: fire.y, color: color, radius: range * 2 });
+      // reset
+      fire.y = fire.base.y;
+      fire.x = fire.base.x;
+      // special
+      if (fired % 33 == 0) {
+        initSpark();
+      }
+      // on hold
+      supprise = fired % 100 == 0 ? true : supprise;
+      if (supprise) {
+        fire.vx = 0;
+        fire.vy = 0;
+        fire.ax = 0;
+        fire.hold = true;
+        onHold++;
+      } else {
         fire.vx = fire.base.vx;
         fire.vy = fire.base.vy;
         fire.ax = Math.random() * 0.06 - 0.03;
-        fire.alpha = 1;
         // play sound
         playLaunchSound();
-      } else if (fire.hold && fire.delay > 0) {
-        fire.delay--;
-      } else {
-        fire.x += fire.vx;
-        fire.y += fire.vy;
-        fire.vx += fire.ax;
-        fire.alpha = (fire.y - fire.far) / fire.far;
       }
     }
-
-    // update firework logic
-    for (var i = listFirework.length - 1; i >= 0; i--) {
-      var firework = listFirework[i];
-      if (firework) {
-        firework.vx *= 0.9;
-        firework.vy *= 0.9;
-        firework.x += firework.vx;
-        firework.y += firework.vy;
-        firework.vy += firework.ay;
-        firework.alpha = firework.life / firework.base.life;
-        firework.size = firework.alpha * firework.base.size;
-        firework.alpha = firework.alpha > 0.6 ? 1 : firework.alpha;
-        //
-        firework.life--;
-        if (firework.life <= 0) {
-          listFirework.splice(i, 1);
-        }
-      }
+    //
+    if (fire.hold && fire.delay <= 0) {
+      onHold--;
+      fire.hold = false;
+      fire.delay = Math.round(Math.random() * range) + range * 4;
+      fire.vx = fire.base.vx;
+      fire.vy = fire.base.vy;
+      fire.ax = Math.random() * 0.06 - 0.03;
+      fire.alpha = 1;
+      // play sound
+      playLaunchSound();
+    } else if (fire.hold && fire.delay > 0) {
+      fire.delay--;
+    } else {
+      fire.x += fire.vx;
+      fire.y += fire.vy;
+      fire.vx += fire.ax;
+      fire.alpha = (fire.y - fire.far) / fire.far;
     }
+  }
 
-    // supprise happy new year!
-    if (supprise && onHold == 10) {
-      supprise = false;
-      setTimeout(initText, 3000);
-    }
-
-    // update text logic
-    for (var i = listText.length - 1; i >= 0; i--) {
-      var text = listText[i];
-      text.vx *= 0.9;
-      text.vy *= 0.9;
-      text.direct *= 0.9;
-      text.x += text.vx + text.direct;
-      text.y += text.vy;
-      text.vy += text.ay;
-      text.alpha = text.life / text.base.life;
-      text.size = text.alpha * text.base.size;
-      text.alpha = text.alpha > 0.6 ? 1 : text.alpha;
+  // update firework logic
+  for (var i = listFirework.length - 1; i >= 0; i--) {
+    var firework = listFirework[i];
+    if (firework) {
+      firework.vx *= 0.9;
+      firework.vy *= 0.9;
+      firework.x += firework.vx;
+      firework.y += firework.vy;
+      firework.vy += firework.ay;
+      firework.alpha = firework.life / firework.base.life;
+      firework.size = firework.alpha * firework.base.size;
+      firework.alpha = firework.alpha > 0.6 ? 1 : firework.alpha;
       //
-      text.life--;
-      if (text.life <= 0) {
-        listText.splice(i, 1);
-      }
-    }
-
-    // update special logic
-    for (var i = listSpecial.length - 1; i >= 0; i--) {
-      var special = listSpecial[i];
-      if (special.y <= special.far) {
-        // play sound
-        // playExpSound();
-        // light
-        lights.push({
-          x: special.x,
-          y: special.y,
-          color: special.fill,
-          alpha: 0.02,
-          radius: range * 2,
-        });
-        //
-        makeSpark(special);
-        // remove from list
-        listSpecial.splice(i, 1);
-      } else {
-        special.x += special.vx;
-        special.y += special.vy;
-        special.vx += special.ax;
-        special.alpha = (special.y - special.far) / special.far;
-      }
-    }
-
-    // update spark logic
-    for (var i = listSpark.length - 1; i >= 0; i--) {
-      var spark = listSpark[i];
-      if (spark) {
-        spark.vx *= 0.9;
-        spark.vy *= 0.9;
-        spark.x += spark.vx;
-        spark.y += spark.vy;
-        spark.vy += spark.ay;
-        spark.alpha = spark.life / spark.base.life + 0.2;
-        //
-        spark.life--;
-        if (spark.life < spark.base.life * 0.8 && spark.life > 0) {
-          //
-          spark.chain--;
-          chainSpark(spark);
-        }
-        if (spark.life <= 0) {
-          listSpark.splice(i, 1);
-        }
+      firework.life--;
+      if (firework.life <= 0) {
+        listFirework.splice(i, 1);
       }
     }
   }
 
-  function draw() {
-    // 清空画布，背景色可在此处调整
-    ctx.globalCompositeOperation = "source-over";
-    ctx.globalAlpha = 0.2;
-    ctx.fillStyle = "#000"; // 烟花背景色（白色，自动适配烟花为深色）
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // supprise happy new year!
+  if (supprise && onHold == 10) {
+    supprise = false;
+    setTimeout(initText, 3000);
+  }
 
-    // re-draw
-    ctx.globalCompositeOperation = "screen";
-    // 绘制上升火箭
-    for (var i = 0; i < listFire.length; i++) {
-      var fire = listFire[i];
-      ctx.globalAlpha = fire.alpha;
-      ctx.beginPath();
-      ctx.arc(fire.x, fire.y, fire.size, 0, Math.PI * 2); // fire.size 控制火箭大小
-      ctx.closePath();
-      ctx.fillStyle = fire.fill; // fire.fill 控制火箭颜色
-      ctx.fill();
-    }
-
-    // 绘制爆炸烟花粒子
-    for (var i = 0; i < listFirework.length; i++) {
-      var firework = listFirework[i];
-      ctx.globalAlpha = firework.alpha;
-      ctx.beginPath();
-      ctx.arc(firework.x, firework.y, firework.size, 0, Math.PI * 2); // firework.size 控制粒子大小
-      ctx.closePath();
-      ctx.fillStyle = firework.fill; // firework.fill 控制粒子颜色
-      ctx.fill();
-    }
-
-    // 绘制特殊粒子（如火花链）
-    for (var i = 0; i < listSpecial.length; i++) {
-      var special = listSpecial[i];
-      ctx.globalAlpha = special.alpha;
-      ctx.fillStyle = special.fill;
-      ctx.fillRect(
-        special.x - special.size,
-        special.y - special.size,
-        special.size * 2,
-        special.size * 2
-      ); // special.size 控制特殊粒子大小
-    }
-
-    // 绘制火花链
-    for (var i = 0; i < listSpark.length; i++) {
-      var spark = listSpark[i];
-      ctx.globalAlpha = spark.alpha;
-      ctx.fillStyle = spark.fill;
-      ctx.fillRect(
-        spark.x - spark.size,
-        spark.y - spark.size,
-        spark.size * 2,
-        spark.size * 2
-      ); // spark.size 控制火花大小
-    }
-
-    // light effect
-    // 绘制光晕效果
-    while (lights.length) {
-      var light = lights.pop();
-      var gradient = ctx.createRadialGradient(
-        light.x,
-        light.y,
-        0,
-        light.x,
-        light.y,
-        light.radius
-      );
-      gradient.addColorStop(0, "#fff");
-      gradient.addColorStop(0.2, light.color); // light.color 控制光晕主色
-      gradient.addColorStop(0.8, "rgba(0, 0, 0, 0)");
-      gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.globalAlpha = light.alpha ? light.alpha : 0.25;
-      ctx.fillStyle = gradient;
-      ctx.fillRect(
-        light.x - light.radius,
-        light.y - light.radius,
-        light.radius * 2,
-        light.radius * 2
-      ); // light.radius 控制光晕大小
-    }
-
-    // supprise: HAPPY LUNAR NEW YEAR 2025!
-    // 绘制文字粒子
-    for (var i = 0; i < listText.length; i++) {
-      var text = listText[i];
-      ctx.globalAlpha = text.alpha;
-      ctx.fillStyle = text.fill; // text.fill 控制文字粒子颜色
-      ctx.fillRect(
-        text.x - text.size,
-        text.y - text.size,
-        text.size * 2,
-        text.size * 2
-      ); // text.size 控制文字粒子大小
+  // update text logic
+  for (var i = listText.length - 1; i >= 0; i--) {
+    var text = listText[i];
+    text.vx *= 0.9;
+    text.vy *= 0.9;
+    text.direct *= 0.9;
+    text.x += text.vx + text.direct;
+    text.y += text.vy;
+    text.vy += text.ay;
+    text.alpha = text.life / text.base.life;
+    text.size = text.alpha * text.base.size;
+    text.alpha = text.alpha > 0.6 ? 1 : text.alpha;
+    //
+    text.life--;
+    if (text.life <= 0) {
+      listText.splice(i, 1);
     }
   }
+
+  // update special logic
+  for (var i = listSpecial.length - 1; i >= 0; i--) {
+    var special = listSpecial[i];
+    if (special.y <= special.far) {
+      // play sound
+      // playExpSound();
+      // light
+      lights.push({
+        x: special.x,
+        y: special.y,
+        color: special.fill,
+        alpha: 0.02,
+        radius: range * 2,
+      });
+      //
+      makeSpark(special);
+      // remove from list
+      listSpecial.splice(i, 1);
+    } else {
+      special.x += special.vx;
+      special.y += special.vy;
+      special.vx += special.ax;
+      special.alpha = (special.y - special.far) / special.far;
+    }
+  }
+
+  // update spark logic
+  for (var i = listSpark.length - 1; i >= 0; i--) {
+    var spark = listSpark[i];
+    if (spark) {
+      spark.vx *= 0.9;
+      spark.vy *= 0.9;
+      spark.x += spark.vx;
+      spark.y += spark.vy;
+      spark.vy += spark.ay;
+      spark.alpha = spark.life / spark.base.life + 0.2;
+      //
+      spark.life--;
+      if (spark.life < spark.base.life * 0.8 && spark.life > 0) {
+        //
+        spark.chain--;
+        chainSpark(spark);
+      }
+      if (spark.life <= 0) {
+        listSpark.splice(i, 1);
+      }
+    }
+  }
+}
+
+function draw() {
+  // 清空画布，背景色可在此处调整
+  ctx.globalCompositeOperation = "source-over";
+  ctx.globalAlpha = 0.2;
+  ctx.fillStyle = "#000"; // 烟花背景色（白色，自动适配烟花为深色）
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // re-draw
+  ctx.globalCompositeOperation = "screen";
+  // 绘制上升火箭
+  for (var i = 0; i < listFire.length; i++) {
+    var fire = listFire[i];
+    ctx.globalAlpha = fire.alpha;
+    ctx.beginPath();
+    ctx.arc(fire.x, fire.y, fire.size, 0, Math.PI * 2); // fire.size 控制火箭大小
+    ctx.closePath();
+    ctx.fillStyle = fire.fill; // fire.fill 控制火箭颜色
+    ctx.fill();
+  }
+
+  // 绘制爆炸烟花粒子
+  for (var i = 0; i < listFirework.length; i++) {
+    var firework = listFirework[i];
+    ctx.globalAlpha = firework.alpha;
+    ctx.beginPath();
+    ctx.arc(firework.x, firework.y, firework.size, 0, Math.PI * 2); // firework.size 控制粒子大小
+    ctx.closePath();
+    ctx.fillStyle = firework.fill; // firework.fill 控制粒子颜色
+    ctx.fill();
+  }
+
+  // 绘制特殊粒子（如火花链）
+  for (var i = 0; i < listSpecial.length; i++) {
+    var special = listSpecial[i];
+    ctx.globalAlpha = special.alpha;
+    ctx.fillStyle = special.fill;
+    ctx.fillRect(
+      special.x - special.size,
+      special.y - special.size,
+      special.size * 2,
+      special.size * 2
+    ); // special.size 控制特殊粒子大小
+  }
+
+  // 绘制火花链
+  for (var i = 0; i < listSpark.length; i++) {
+    var spark = listSpark[i];
+    ctx.globalAlpha = spark.alpha;
+    ctx.fillStyle = spark.fill;
+    ctx.fillRect(
+      spark.x - spark.size,
+      spark.y - spark.size,
+      spark.size * 2,
+      spark.size * 2
+    ); // spark.size 控制火花大小
+  }
+
+  // light effect
+  // 绘制光晕效果
+  while (lights.length) {
+    var light = lights.pop();
+    var gradient = ctx.createRadialGradient(
+      light.x,
+      light.y,
+      0,
+      light.x,
+      light.y,
+      light.radius
+    );
+    gradient.addColorStop(0, "#fff");
+    gradient.addColorStop(0.2, light.color); // light.color 控制光晕主色
+    gradient.addColorStop(0.8, "rgba(0, 0, 0, 0)");
+    gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.globalAlpha = light.alpha ? light.alpha : 0.25;
+    ctx.fillStyle = gradient;
+    ctx.fillRect(
+      light.x - light.radius,
+      light.y - light.radius,
+      light.radius * 2,
+      light.radius * 2
+    ); // light.radius 控制光晕大小
+  }
+
+  // supprise: HAPPY LUNAR NEW YEAR 2025!
+  // 绘制文字粒子
+  for (var i = 0; i < listText.length; i++) {
+    var text = listText[i];
+    ctx.globalAlpha = text.alpha;
+    ctx.fillStyle = text.fill; // text.fill 控制文字粒子颜色
+    ctx.fillRect(
+      text.x - text.size,
+      text.y - text.size,
+      text.size * 2,
+      text.size * 2
+    ); // text.size 控制文字粒子大小
+  }
+}
 
   // End of onMounted
 });
