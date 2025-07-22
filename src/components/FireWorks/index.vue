@@ -1,41 +1,5 @@
 <template>
   <canvas id="canvas" ref="canvasRef"></canvas>
-  <!-- <div class="block-audio">
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp1.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp2.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp3.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp4.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp5.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp6.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp7.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="exp" src="m/exp8.mp3" controls></audio>
-    <audio class="launch" src="m/launch1.mp3" controls></audio>
-    <audio class="launch" src="m/launch1.mp3" controls></audio>
-    <audio class="launch" src="m/launch2.mp3" controls></audio>
-    <audio class="launch" src="m/launch2.mp3" controls></audio>
-    <audio class="launch" src="m/launch3.mp3" controls></audio>
-    <audio class="launch" src="m/launch3.mp3" controls></audio>
-    <audio class="launch" src="m/launch4.mp3" controls></audio>
-    <audio class="launch" src="m/launch4.mp3" controls></audio>
-    <audio class="launch" src="m/launch5.mp3" controls></audio>
-    <audio class="launch" src="m/launch5.mp3" controls></audio>
-  </div> -->
 </template>
 
 <script setup>
@@ -96,7 +60,7 @@ onMounted(() => {
   var listSpecial = []; // 特殊效果粒子
   var listSpark = []; // 火花链
   var lights = []; // 光晕效果
-  var fireNumber = 10; // 同时存在的火箭数量（烟花数量，影响整体密度）
+  var fireNumber = 15; // 同时存在的火箭数量（烟花数量，影响整体密度）
   var center = { x: canvas.width / 2, y: canvas.height / 2 };
   var range = 150; // 控制烟花发射/爆炸的范围
   var fired = 0;
@@ -125,7 +89,7 @@ onMounted(() => {
       delay: Math.round(Math.random() * range) + range * 10, // 延迟爆炸
       hold: false,
       alpha: 1,
-      far: Math.random() * range + (center.y - range), // 爆炸高度
+      far: Math.random() * range + (center.y - range) - 100, // 爆炸高度
     };
     fire.base = {
       x: fire.x,
@@ -148,64 +112,141 @@ onMounted(() => {
     4.5, 0, 5.5, 0, 6.5, 0, 7.5, 0, 8.5, 0, 0, 1, 1, 1, 2, 1, 3, 1, 4, 1, 6, 1,
     7, 1, 8, 1, 10, 1, 11, 1, 12, 1, 13, 1, 5, 2, 6, 2, 7, 2, 8, 2,
   ];
-  var chars = {
+  const chars = {
+    // h: 左侧竖列 + 右侧竖列 + 中间横桥
     h: [
-      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 3, 2, 3, 3, 3, 4, 3, 5,
-      0, 5, 1, 5, 2, 5, 3, 5, 4, 5, 5, 5, 6, 5, 7,
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列（x=0，y=0-7）
+      7, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7,  // 右侧竖列（x=7，y=0-7）
+      3, 3, 4, 3, 3, 4, 4, 4                         // 中间横桥（x=3-4，y=3-4）
     ],
+    // a: 类似 h 但中间横桥下移，底部加短横
     a: [
-      2, 0, 2, 1, 2, 2, 1, 2, 1, 3, 1, 4, 1, 5, 0, 5, 0, 6, 0, 7, 2, 5, 3, 0, 3,
-      1, 3, 2, 4, 2, 4, 3, 4, 4, 4, 1, 5, 5, 5, 6, 5, 7, 3, 5,
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列
+      7, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7,  // 右侧竖列
+      3, 5, 4, 5, 3, 6, 4, 6, 2, 7, 5, 7              // 中间横桥（y=5）+ 底部短横（y=7）
     ],
+    // p: 左侧竖列 + 中间横桥 + 右侧上半竖桥
     p: [
-      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 0, 2, 0, 3, 0, 4, 1, 5,
-      2, 4, 3, 3, 4, 2, 4, 1, 4,
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列
+      3, 2, 4, 2, 3, 3, 4, 3,                        // 中间横桥（y=2-3）
+      5, 0, 5, 1, 5, 2, 5, 3, 6, 0, 6, 1, 6, 2, 6, 3     // 右侧上半竖桥（x=5-6，y=0-3）
     ],
-    y: [
-      0, 0, 0, 1, 1, 1, 1, 2, 1, 3, 2, 3, 2, 4, 2, 5, 2, 6, 2, 7, 3, 2, 3, 3, 4,
-      1, 4, 2, 5, 0, 5, 1,
+    // p（重复字符）
+    p: [
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,
+      3, 2, 4, 2, 3, 3, 4, 3,
+      5, 0, 5, 1, 5, 2, 5, 3, 6, 0, 6, 1, 6, 2, 6, 3
     ],
+    // l: 左侧竖列 + 底部短横
     l: [
-      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5,
-      7,
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列
+      0, 6, 1, 6, 2, 6, 3, 6, 4, 6, 5, 6, 6, 6, 7, 6     // 底部短横（y=6）
     ],
-    u: [
-      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 1, 7, 2, 7, 3, 7, 4, 7, 5, 0, 5,
-      1, 5, 2, 5, 3, 5, 4, 5, 5, 5, 6,
-    ],
-    n: [
-      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 1, 1, 2, 2, 2, 2, 3, 2,
-      4, 3, 4, 3, 5, 4, 5, 4, 6, 5, 0, 5, 1, 5, 2, 5, 3, 5, 4, 5, 5, 5, 6, 5, 7,
-    ],
+    // e: 类似 a 但右侧封闭，中间横桥居中
     e: [
-      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 0, 2, 0, 3, 0, 4, 0, 5,
-      0, 1, 3, 2, 3, 3, 3, 4, 3, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7,
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列
+      7, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7,  // 右侧竖列
+      3, 3, 4, 3, 3, 4, 4, 4, 3, 5, 4, 5,              // 中间横桥（y=3-4）
+      3, 6, 4, 6, 5, 6, 6, 6, 7, 6                    // 底部横桥（y=6）
     ],
+    // 空格（无亮点）
+    ' ': [],
+    // n: 左侧竖列 + 斜桥 + 右侧竖列
+    n: [
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列
+      1, 0, 2, 1, 3, 2, 4, 3, 5, 4, 6, 5, 7, 0, 7, 1,  // 斜桥（x=1-7，y=0-5）
+      7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7               // 右侧竖列
+    ],
+    // e（重复字符）
+    e: [
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,
+      7, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7,
+      3, 3, 4, 3, 3, 4, 4, 4, 3, 5, 4, 5,
+      3, 6, 4, 6, 5, 6, 6, 6, 7, 6
+    ],
+    // w: 类似 n 但斜桥更宽
     w: [
-      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 1, 6, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5, 2,
-      6, 2, 7, 3, 7, 5, 0, 5, 1, 5, 2, 5, 3, 5, 4, 5, 5, 4, 5, 4, 6,
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列
+      1, 0, 2, 1, 3, 2, 4, 3, 5, 4, 6, 5, 7, 0, 7, 1,  // 斜桥（x=1-7，y=0-5）
+      1, 6, 2, 5, 3, 4, 4, 3, 5, 2, 6, 1, 7, 6         // 右侧斜桥（x=1-7，y=1-6）
     ],
+    // 空格（无亮点）
+    ' ': [],
+    // y: 左侧竖列 + 斜桥 + 底部短横
+    y: [
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列
+      1, 0, 2, 1, 3, 2, 4, 3,                        // 斜桥（x=1-4，y=0-3）
+      3, 6, 4, 6, 5, 6, 6, 6                         // 底部短横（y=6）
+    ],
+    // e（重复字符）
+    e: [
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,
+      7, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7,
+      3, 3, 4, 3, 3, 4, 4, 4, 3, 5, 4, 5,
+      3, 6, 4, 6, 5, 6, 6, 6, 7, 6
+    ],
+    // a（重复字符）
+    a: [
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,
+      7, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7,
+      3, 5, 4, 5, 3, 6, 4, 6, 2, 7, 5, 7
+    ],
+    // r: 左侧竖列 + 斜桥 + 右侧短横
     r: [
-      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 0, 2, 0, 3, 0, 4, 1, 5,
-      2, 4, 3, 3, 4, 2, 4, 1, 4, 1, 5, 2, 5, 3, 6, 4, 6, 5, 7,
+      0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7,  // 左侧竖列
+      1, 0, 2, 1, 3, 2, 4, 3,                        // 斜桥（x=1-4，y=0-3）
+      5, 0, 5, 1, 5, 2, 5, 3, 6, 0, 6, 1, 6, 2          // 右侧短横（y=0-2）
     ],
-    2: [
-      0, 1, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 5, 1, 5, 2, 5, 3, 4, 3, 3, 3, 2,
-      3, 2, 4, 1, 4, 1, 5, 0, 5, 0, 6, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 5, 6,
+    // 空格（无亮点）
+    ' ': [],
+    // 2: 顶部横线 + 右上竖线 + 中间横线 + 左下竖线 + 底部横线
+    '2': [
+      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0,  // 顶部横线（y=0）
+      5, 1, 6, 1, 7, 1,                             // 右上竖线（x=5-7，y=1）
+      3, 2, 4, 2, 5, 2, 6, 2, 7, 2,                   // 中间横线（y=2）
+      1, 5, 2, 5, 3, 5,                             // 左下竖线（x=1-3，y=5）
+      0, 6, 1, 6, 2, 6, 3, 6, 4, 6, 5, 6, 6, 6, 7, 6    // 底部横线（y=6）
     ],
-    0: [
-      0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 1, 0, 2, 0, 3, 0, 4, 0, 1, 7, 2, 7, 3,
-      7, 4, 7, 5, 1, 5, 2, 5, 3, 5, 4, 5, 5, 5, 6,
+    // 0: 方框
+    '0': [
+      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0,  // 顶部横线（y=0）
+      7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6,             // 右侧竖线（x=7，y=1-6）
+      0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7, 7,  // 底部横线（y=7）
+      0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6              // 左侧竖线（x=0，y=1-6）
     ],
-    1: [
-      1, 2, 2, 2, 2, 1, 3, 1, 3, 0, 4, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4, 5, 4, 6, 4,
-      7, 1, 7, 2, 7, 3, 7, 5, 7,
+    // 2（重复字符）
+    '2': [
+      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0,
+      5, 1, 6, 1, 7, 1,
+      3, 2, 4, 2, 5, 2, 6, 2, 7, 2,
+      1, 5, 2, 5, 3, 5,
+      0, 6, 1, 6, 2, 6, 3, 6, 4, 6, 5, 6, 6, 6, 7, 6
     ],
-    7: [
-      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 5, 1, 5, 2, 5, 3, 4, 3, 4, 4, 3, 4, 3,
-      5, 3, 6, 3, 7,
+    // 0（重复字符）
+    '0': [
+      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0,
+      7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6,
+      0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 6, 7, 7, 7,
+      0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6
     ],
+    // 2（重复字符）
+    '2': [
+      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0,
+      5, 1, 6, 1, 7, 1,
+      3, 2, 4, 2, 5, 2, 6, 2, 7, 2,
+      1, 5, 2, 5, 3, 5,
+      0, 6, 1, 6, 2, 6, 3, 6, 4, 6, 5, 6, 6, 6, 7, 6
+    ],
+    // 5: 顶部横线 + 左上竖线 + 中间横线 + 右下竖线 + 底部横线
+    '5': [
+      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0,  // 顶部横线（y=0）
+      0, 1, 1, 1, 2, 1, 3, 1,                        // 左上竖线（x=0-3，y=1）
+      3, 2, 4, 2, 5, 2, 6, 2, 7, 2,                   // 中间横线（y=2）
+      5, 5, 6, 5, 7, 5,                             // 右下竖线（x=5-7，y=5）
+      0, 6, 1, 6, 2, 6, 3, 6, 4, 6, 5, 6, 6, 6, 7, 6    // 底部横线（y=6）
+    ]
   };
+
 
   function initText() {
     var i = textIndex;
@@ -326,7 +367,7 @@ onMounted(() => {
   function makeCircleFirework(fire) {
     var color = randColor(); // 爆炸颜色
     var velocity = Math.random() * 2 + 6; // 爆炸速度（影响扩散速度）
-    var max = fireNumber * 5; // 粒子数量（影响烟花密度）
+    var max = fireNumber * 2; // 粒子数量（影响烟花密度）
     for (var i = 0; i < max; i++) {
       var rad = (i * Math.PI * 2) / max;
       var firework = {
@@ -653,7 +694,7 @@ onMounted(() => {
   function makeSpark(special) {
     var color = special.fill;
     var velocity = Math.random() * 6 + 12;
-    var max = fireNumber;
+    var max = fireNumber * 2;
     for (var i = 0; i < max; i++) {
       var rad =
         Math.random() * Math.PI * 0.3 +
@@ -884,12 +925,39 @@ onMounted(() => {
   }
 
   function draw() {
-
     // 清空画布，背景色可在此处调整
     ctx.globalCompositeOperation = "source-over";
     ctx.globalAlpha = 0.2;
     ctx.fillStyle = "#000"; // 烟花背景色（白色，自动适配烟花为深色）
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 绘制右上角满月
+    const moonRadius = Math.min(canvas.width, canvas.height) * 0.04; //大小
+
+    const moonX = canvas.width - (canvas.width / 3);
+    const moonY = moonRadius + 100;
+    ctx.save();
+    ctx.globalAlpha = 0.95;
+    // 满月主体
+    const moonGradient = ctx.createRadialGradient(
+      moonX,
+      moonY,
+      moonRadius * 0.5,
+      moonX,
+      moonY,
+      moonRadius
+    );
+    moonGradient.addColorStop(0, "#fffbe8");
+    moonGradient.addColorStop(0.5, "#fff9d1");
+    moonGradient.addColorStop(1, "#f6e7b7");
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fillStyle = moonGradient;
+    ctx.shadowColor = "#fffbe8";
+    ctx.shadowBlur = 30;
+    ctx.fill();
+    ctx.restore();
 
     // 绘制星空星星
     for (var i = 0; i < stars.length; i++) {
@@ -988,7 +1056,7 @@ onMounted(() => {
       ); // light.radius 控制光晕大小
     }
 
-    // supprise: HAPPY LUNAR NEW YEAR 2025!
+    // supprise: HAPPY LUNAR NEW YEAR 2017!
     // 绘制文字粒子
     for (var i = 0; i < listText.length; i++) {
       var text = listText[i];

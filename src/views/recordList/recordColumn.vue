@@ -68,31 +68,31 @@ const recordStore = useListDetail();
 const specialColumn = recordStore.specialColumn;
 const carousel = ref([
     {
-        img: utils.getAssetsFile("img/travelAlbum/cover-1.jpeg"),
+        img: utils.getAssetsFile("img/albumCollection/cover-1.jpeg"),
         title: 'POTTE-最美博客',
         cat: 31521,
         message: 47,
     },
     {
-        img: utils.getAssetsFile("img/travelAlbum/cover-2.jpeg"),
+        img: utils.getAssetsFile("img/albumCollection/cover-2.jpeg"),
         title: 'POTTE-最美博客',
         cat: 31521,
         message: 47,
     },
     {
-        img: utils.getAssetsFile("img/travelAlbum/cover-3.jpeg"),
+        img: utils.getAssetsFile("img/albumCollection/cover-3.jpeg"),
         title: 'POTTE-最美博客',
         cat: 31521,
         message: 47,
     },
     {
-        img: utils.getAssetsFile("img/travelAlbum/cover-4.jpeg"),
+        img: utils.getAssetsFile("img/albumCollection/cover-4.jpeg"),
         title: 'POTTE-最美博客',
         cat: 31521,
         message: 47,
     },
     {
-        img: utils.getAssetsFile("img/travelAlbum/cover-5.jpeg"),
+        img: utils.getAssetsFile("img/albumCollection/cover-5.jpeg"),
         title: 'POTTE-最美博客',
         cat: 31521,
         message: 47,

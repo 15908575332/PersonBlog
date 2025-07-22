@@ -1532,13 +1532,13 @@ export const useListDetail = defineStore('data', {
                     {
                         contentId: 'column/001',
                         title: '部署文档',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10003.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10003.jpg'),
                         count: 9,
                     },
                     {
                         contentId: 'column/002',
                         title: '使用指南',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10004.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10004.jpg'),
                         count: 12,
                     }
                 ]
@@ -1550,13 +1550,13 @@ export const useListDetail = defineStore('data', {
                     {
                         contentId: 'column/001',
                         title: '部署文档',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10006.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10006.jpg'),
                         count: 6,
                     },
                     {
                         contentId: 'column/002',
                         title: '使用指南',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10007.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10007.jpg'),
                         count: 9,
                     }
                 ]
@@ -1568,37 +1568,37 @@ export const useListDetail = defineStore('data', {
                     {
                         contentId: 'column/001',
                         title: '部署文档',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10009.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10009.jpg'),
                         count: 6,
                     },
                     {
                         contentId: 'column/002',
                         title: '使用指南',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10010.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10010.jpg'),
                         count: 9,
                     },
                     {
                         contentId: 'column/001',
                         title: '部署文档',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10013.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10013.jpg'),
                         count: 6,
                     },
                     {
                         contentId: 'column/002',
                         title: '使用指南',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10014.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10014.jpg'),
                         count: 9,
                     },
                     {
                         contentId: 'column/001',
                         title: '部署文档',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10003.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10003.jpg'),
                         count: 9,
                     },
                     {
                         contentId: 'column/002',
                         title: '使用指南',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10004.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10004.jpg'),
                         count: 12,
                     }
                 ]
@@ -1610,25 +1610,25 @@ export const useListDetail = defineStore('data', {
                     {
                         contentId: 'column/001',
                         title: '部署文档',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10006.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10006.jpg'),
                         count: 6,
                     },
                     {
                         contentId: 'column/002',
                         title: '使用指南',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10007.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10007.jpg'),
                         count: 9,
                     },
                     {
                         contentId: 'column/001',
                         title: '部署文档',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10006.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10006.jpg'),
                         count: 6,
                     },
                     {
                         contentId: 'column/002',
                         title: '使用指南',
-                        tagsImg: utils.getAssetsFile('img/travelAlbum/10007.jpg'),
+                        tagsImg: utils.getAssetsFile('img/albumCollection/10007.jpg'),
                         count: 9,
                     }
                 ]

@@ -9,24 +9,13 @@
       <div @click="toggleSidebar" class="button phone-none">
         <img src="@/assets/icon/phone/phone-navigateMenu.svg" alt="navi" />
       </div>
-      <div
-        class="phone__menu"
-        :class="{ visible: isSidebarVisible }"
-        @click="isInOutSide"
-      >
+      <div class="phone__menu" :class="{ visible: isSidebarVisible }" @click="isInOutSide">
         <div class="min200">
-          <ul
-            class="nav-btn"
-            ref="navBtn"
-            :class="{ visible: isSidebarVisible }"
-          >
+          <ul class="nav-btn" ref="navBtn" :class="{ visible: isSidebarVisible }">
             <h1 class="phone__navigate-title phone-none">手机端导航</h1>
             <li class="nav-item">
               <a href="/home">
-                <img
-                  src="@/components/NavigationMenu/icon/home-icon.svg"
-                  alt="home"
-                />
+                <img src="@/components/NavigationMenu/icon/home-icon.svg" alt="home" />
                 <span>首页</span>
               </a>
               <!-- 底部横线 -->
@@ -34,10 +23,7 @@
             </li>
             <li class="nav-item">
               <a href="/family">
-                <img
-                  src="@/components/NavigationMenu/icon/family-icon.svg"
-                  alt="family"
-                />
+                <img src="@/components/NavigationMenu/icon/family-icon.svg" alt="family" />
                 <span>家</span>
               </a>
 
@@ -45,10 +31,7 @@
             </li>
             <li class="nav-item record">
               <a href="#">
-                <img
-                  src="@/components/NavigationMenu/icon/record-icon.svg"
-                  alt="record"
-                />
+                <img src="@/components/NavigationMenu/icon/record-icon.svg" alt="record" />
                 <span>记录</span>
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
@@ -59,22 +42,16 @@
               <div class="br"></div>
             </li>
             <li class="nav-item">
-              <a href="/travelAlbum">
-                <img
-                  src="@/components/NavigationMenu/icon/album-icon.svg"
-                  alt="album"
-                />
-                <span>相册</span>
+              <a href="/albumCollection">
+                <img src="@/components/NavigationMenu/icon/album-icon.svg" alt="album" />
+                <span>相册集</span>
               </a>
               <div class="br"></div>
             </li>
             <li class="nav-item record">
               <a href="#">
-                <img
-                  src="@/components/NavigationMenu/icon/treasureBox-icon.svg"
-                  alt="treasureBox"
-                  style="width: 0.9rem"
-                />
+                <img src="@/components/NavigationMenu/icon/treasureBox-icon.svg" alt="treasureBox"
+                  style="width: 0.9rem" />
                 <span>百宝箱</span>
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
@@ -86,10 +63,7 @@
             </li>
             <li class="nav-item record">
               <a href="/InformalEssay">
-                <img
-                  src="@/components/NavigationMenu/icon/informalEssay-icon.svg"
-                  alt="informalEssay"
-                />
+                <img src="@/components/NavigationMenu/icon/informalEssay-icon.svg" alt="informalEssay" />
                 <span>随笔</span>
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
@@ -99,10 +73,7 @@
             </li>
             <li class="nav-item">
               <a href="/message">
-                <img
-                  src="@/components/NavigationMenu/icon/message-icon.svg"
-                  alt="message"
-                />
+                <img src="@/components/NavigationMenu/icon/message-icon.svg" alt="message" />
                 <span>留言</span>
               </a>
               <div class="br"></div>
@@ -111,32 +82,18 @@
             <li v-if="LoginStatus" class="loginSuccess">
               <!-- <a-tooltip color="pink"> -->
               <!-- <template #title>个人</template> -->
-              <div
-                class="profilePicture"
-                @click="showModalFun"
-                @mouseleave="dropLeave"
-              >
-                <img
-                  :src="utils.getAssetsFile('img/profile_picture/10020.png')"
-                  alt="头像"
-                />
+              <div class="profilePicture" @click="showModalFun" @mouseleave="dropLeave">
+                <img :src="utils.getAssetsFile('img/profile_picture/10020.png')" alt="头像" />
               </div>
               <!-- </a-tooltip> -->
-              <div
-                v-if="isVisible"
-                class="modal-overlay"
-                @click.self="closeModal"
-              >
+              <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
                 <div class="modal-content" @click.stop>
                   <button @click="closeModal">
                     <img src="./icon/close.svg" alt="close" />
                   </button>
                   <div class="info">
                     <span>测试hxc</span>
-                    <img
-                      :src="utils.getAssetsFile('icon/level/lv5.svg')"
-                      alt="level"
-                    />
+                    <img :src="utils.getAssetsFile('icon/level/lv5.svg')" alt="level" />
                   </div>
                   <ul>
                     <li class="item" @click="changeRouter('/personalCenter')">
@@ -172,22 +129,14 @@
                       <span>退出登录</span>
                     </li>
                   </ul>
-                  <img
-                    class="decoration"
-                    src="./img/SantaDeers.gif"
-                    alt="logo"
-                  />
+                  <img class="decoration" src="./img/SantaDeers.gif" alt="logo" />
                 </div>
               </div>
             </li>
             <!-- 未登录 -->
             <li v-else class="nav-item login">
               <a href="/userInfo ">
-                <img
-                  class="phone-none"
-                  src="@/assets/icon/phone/PhongLogin-icon.svg"
-                  alt="login"
-                />
+                <img class="phone-none" src="@/assets/icon/phone/PhongLogin-icon.svg" alt="login" />
                 <span>登录</span>
               </a>
             </li>
@@ -330,7 +279,7 @@ const isInOutSide = (event) => {
     isSidebarVisible.value = false;
   }
 };
-onMounted(() => {});
+onMounted(() => { });
 </script>
 <style scoped lang="scss">
 .phone-none {
@@ -465,8 +414,7 @@ onMounted(() => {});
           border-radius: 0.5rem;
           min-height: 18rem;
           box-shadow: 1px 1px 3px #b9b7b7;
-          animation: fadeOutBottomRight 0.8s cubic-bezier(0.215, 0.61, 0.355, 1)
-            forwards;
+          animation: fadeOutBottomRight 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
 
           button {
             position: absolute;

@@ -50,7 +50,7 @@ Blog
 │  │  │  ├─ 📁profile_picture
 │  │  │  ├─ 📁public
 │  │  │  ├─ 📁recordList
-│  │  │  ├─ 📁travelAlbum
+│  │  │  ├─ 📁albumCollection
 │  │  │  ├─ 📁treasureBox
 │  │  │  ├─ 📁wave
 │  │  ├─ 📁live2d_moc3
@@ -132,7 +132,7 @@ Blog
 │  │  ├─ 📄PersonalCenter.vue
 │  │  ├─ 📄RecordDetail.vue //记录->资源
 │  │  ├─ 📄RegisterLogin.vue //登录注册
-│  │  ├─ 📄TravelAlbum.vue
+│  │  ├─ 📄AlbumCollection.vue
 │  │  ├─ 📁recordList
 │  │  └─ 📁treasureBox
 │  ├─ 📄App.vue

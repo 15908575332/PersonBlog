@@ -115,7 +115,7 @@ const router = createRouter({
             path: '/resetPassword', component: () => import('@/views/ResetPassword.vue')
         },
         {
-            path: "/travelAlbum", component: () => import('@/views/TravelAlbum.vue')
+            path: "/albumCollection", component: () => import('@/views/AlbumCollection.vue')
         },
         {
             path: "/debug", component: () => import('@/views/debugDemo.vue')

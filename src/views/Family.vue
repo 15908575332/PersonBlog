@@ -68,93 +68,52 @@
           <h1>飞车传信</h1>
           <!-- 图标 -->
           <span>
-            <svg
-              data-v-16b23934=""
-              viewBox="0 0 1024 1024"
-              width="40"
-              height="40"
-            >
-              <path
-                data-v-16b23934=""
+            <svg data-v-16b23934="" viewBox="0 0 1024 1024" width="40" height="40">
+              <path data-v-16b23934=""
                 d="M399.502 655.103c0 7.902-6.665 14.311-14.88 14.311H72.188c-8.215 0-14.875-6.407-14.875-14.311v-28.634c0-7.913 6.66-14.315 14.875-14.315h312.435c8.217 0 14.88 6.402 14.88 14.315l-0.001 28.634zM968.167 655.103c0 7.902-6.664 14.311-14.882 14.311H640.851c-8.216 0-14.877-6.407-14.877-14.311v-28.634c0-7.913 6.661-14.315 14.877-14.315h312.436c8.218 0 14.882 6.402 14.882 14.315l-0.002 28.634z"
-                fill="#EA0606"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#EA0606"></path>
+              <path data-v-16b23934=""
                 d="M968.097 624.008c0 11.563-17.723 20.937-39.583 20.937H97.263c-21.858 0-39.579-9.372-39.579-20.937v-41.876c0-11.562 17.72-20.935 39.579-20.935h831.25c21.86 0 39.583 9.373 39.583 20.935v41.876zM855.003 526.553h-12c0-161.793-151.025-293.421-336.66-293.421-185.633 0-336.656 131.628-336.656 293.421h-12c0-41.334 9.261-81.425 27.527-119.161 17.612-36.384 42.807-69.046 74.886-97.079 65.813-57.509 153.264-89.181 246.243-89.181 92.981 0 180.434 31.672 246.247 89.181 32.079 28.032 57.274 60.693 74.887 97.079 18.264 37.734 27.526 77.826 27.526 119.161z"
-                fill="#EA0606"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#EA0606"></path>
+              <path data-v-16b23934=""
                 d="M1001.996 588.091c-121.146 13.91-980.875 0-980.875 0s-30.62-203.887 241.944-144.555c171.281-1.178 273.436 0 489.644 0 193.07-59.332 283.186 108.642 249.287 144.555z"
-                fill="#EA0606"
-              ></path>
-              <path
-                data-v-16b23934=""
-                d="M500.343 214.379h12v330.342h-12z"
-                fill="#EA0606"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#EA0606"></path>
+              <path data-v-16b23934="" d="M500.343 214.379h12v330.342h-12z" fill="#EA0606"></path>
+              <path data-v-16b23934=""
                 d="M333.217 657.192c0 46.174-38.961 83.602-87.029 83.602-48.056 0-87.021-37.428-87.021-83.602 0-46.172 38.963-83.588 87.021-83.588 48.067 0 87.029 37.417 87.029 83.588z"
-                fill="#FFFFFF"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#FFFFFF"></path>
+              <path data-v-16b23934=""
                 d="M246.188 743.794c-49.638 0-90.021-38.85-90.021-86.602 0-47.745 40.383-86.588 90.021-86.588 49.642 0 90.029 38.843 90.029 86.588 0 47.752-40.387 86.602-90.029 86.602z m0-167.19c-46.329 0-84.021 36.151-84.021 80.588 0 44.444 37.692 80.602 84.021 80.602 46.333 0 84.029-36.157 84.029-80.602 0-44.436-37.696-80.588-84.029-80.588z"
-                fill="#440A0A"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#440A0A"></path>
+              <path data-v-16b23934=""
                 d="M309.872 656.757c0 33.159-27.986 60.035-62.491 60.035-34.51 0-62.487-26.876-62.487-60.035 0-33.16 27.977-60.022 62.487-60.022 34.505 0.001 62.491 26.862 62.491 60.022z"
-                fill="#440A0A"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#440A0A"></path>
+              <path data-v-16b23934=""
                 d="M271.322 657.558c0 11.747-9.918 21.282-22.151 21.282-12.237 0-22.152-9.535-22.152-21.282 0-11.758 9.916-21.277 22.152-21.277 12.233-0.002 22.151 9.519 22.151 21.277z"
-                fill="#FFFFFF"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#FFFFFF"></path>
+              <path data-v-16b23934=""
                 d="M875.521 642.811c0 46.175-38.963 83.603-87.027 83.603-48.061 0-87.021-37.428-87.021-83.603 0-46.173 38.962-83.587 87.021-83.587 48.066 0 87.027 37.414 87.027 83.587z"
-                fill="#FFFFFF"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#FFFFFF"></path>
+              <path data-v-16b23934=""
                 d="M788.494 729.413c-49.638 0-90.021-38.85-90.021-86.603 0-47.744 40.384-86.587 90.021-86.587 49.642 0 90.027 38.843 90.027 86.587 0 47.753-40.385 86.603-90.027 86.603z m0-167.189c-46.33 0-84.021 36.151-84.021 80.587 0 44.444 37.691 80.603 84.021 80.603 46.333 0 84.027-36.158 84.027-80.603 0-44.436-37.694-80.587-84.027-80.587z"
-                fill="#440A0A"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#440A0A"></path>
+              <path data-v-16b23934=""
                 d="M852.174 642.374c0 33.159-27.979 60.037-62.486 60.037-34.512 0-62.487-26.878-62.487-60.037 0-33.161 27.977-60.023 62.487-60.023 34.506-0.001 62.486 26.862 62.486 60.023z"
-                fill="#440A0A"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#440A0A"></path>
+              <path data-v-16b23934=""
                 d="M813.628 643.173c0 11.75-9.919 21.278-22.153 21.278-12.233 0-22.151-9.528-22.151-21.278 0-11.759 9.919-21.275 22.151-21.275 12.235-0.002 22.153 9.516 22.153 21.275z"
-                fill="#FFFFFF"
-              ></path>
-              <path
-                data-v-16b23934=""
-                d="M518.135 469.838h56.847v12.556h-56.847z"
-                fill="#FFFFFF"
-              ></path>
-              <path
-                data-v-16b23934=""
+                fill="#FFFFFF"></path>
+              <path data-v-16b23934="" d="M518.135 469.838h56.847v12.556h-56.847z" fill="#FFFFFF"></path>
+              <path data-v-16b23934=""
                 d="M522.818 468.694c0 7.902-0.648 14.309-1.445 14.309h-30.37c-0.799 0-1.446-6.406-1.446-14.309V440.06c0-7.912 0.647-14.315 1.446-14.315h30.37c0.797 0 1.445 6.403 1.445 14.315v28.634z"
-                fill="#EA0606"
-              ></path>
+                fill="#EA0606"></path>
             </svg>
           </span>
         </div>
         <!-- 模块导航 -->
         <div class="module">
           <ul>
-            <li
-              v-for="(item, index) in module_data"
-              @click="changeModule = item.id"
-              :key="item.id"
-            >
+            <li v-for="(item, index) in module_data" @click="changeModule = item.id" :key="item.id">
               <div class="card__left">
                 <img :src="item.img" alt="image" />
               </div>
@@ -271,13 +230,13 @@
         <div v-else-if="changeModule === 'module2'">
           <div class="gallery">
             <div class="gallery__image">
-              <img src="@/assets/img/travelAlbum/travel2.jpg" alt="1" />
+              <img src="@/assets/img/albumCollection/travel2.jpg" alt="1" />
             </div>
             <div class="gallery__image">
-              <img src="@/assets/img/travelAlbum/travel3.jpg" alt="2" />
+              <img src="@/assets/img/albumCollection/travel3.jpg" alt="2" />
             </div>
             <div class="gallery__image">
-              <img src="@/assets/img/travelAlbum/travel4.jpg" alt="3" />
+              <img src="@/assets/img/albumCollection/travel4.jpg" alt="3" />
             </div>
           </div>
         </div>
@@ -446,8 +405,7 @@ onUnmounted(() => {
       height: 100%;
       top: 0;
       left: 0;
-      background: url(@/assets/img/family/poster-drop-animate2.png) repeat-x 0px
-        0px;
+      background: url(@/assets/img/family/poster-drop-animate2.png) repeat-x 0px 0px;
       background-size: cover;
       animation: posterDrop1 6000s linear infinite;
     }
@@ -468,8 +426,7 @@ onUnmounted(() => {
       height: 100%;
       top: 0;
       left: 0;
-      background: url(@/assets/img/family/poster-drop-animate1.png) repeat-x 0px
-        0px;
+      background: url(@/assets/img/family/poster-drop-animate1.png) repeat-x 0px 0px;
       background-size: cover;
       animation: posterDrop2 8000s linear infinite;
     }
@@ -533,6 +490,7 @@ onUnmounted(() => {
           transform: rotate(135deg) scale(0.9);
           animation: love 2s infinite;
           box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7);
+
           &:before,
           &:after {
             content: "";
@@ -543,20 +501,25 @@ onUnmounted(() => {
             background-color: #f00;
             box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7);
           }
+
           &:after {
             left: -36px;
           }
+
           &:before {
             top: 36px;
           }
         }
+
         @keyframes love {
           0% {
             transform: rotate(135deg) scale(0.85);
           }
+
           50% {
             transform: rotate(135deg) scale(1);
           }
+
           100% {
             transform: rotate(135deg) scale(0.85);
           }
@@ -586,18 +549,16 @@ onUnmounted(() => {
           letter-spacing: 0.2rem;
           line-height: 3rem;
           text-align: center;
-          background-image: linear-gradient(
-            270deg,
-            #ff4500,
-            orange,
-            gold,
-            #90ee90,
-            #0ff,
-            #1e90ff,
-            #9370db,
-            #ff69b4,
-            #ff4500
-          );
+          background-image: linear-gradient(270deg,
+              #ff4500,
+              orange,
+              gold,
+              #90ee90,
+              #0ff,
+              #1e90ff,
+              #9370db,
+              #ff69b4,
+              #ff4500);
           background-clip: text;
           /* Chrome 需要前缀 */
           -webkit-background-clip: text;
@@ -705,6 +666,7 @@ onUnmounted(() => {
             box-shadow: 1px 1px 3px rgb(0, 0, 0, 0.5);
             transition: all 0.3s ease-in-out;
             cursor: pointer;
+
             &:hover {
               cursor: pointer;
               transform: translateY(-0.5rem);
@@ -736,6 +698,7 @@ onUnmounted(() => {
 
               padding-left: 1rem;
             }
+
             // 风车
             .windmill {
               --color1: #fa8073;
@@ -745,6 +708,7 @@ onUnmounted(() => {
               position: absolute;
               top: 0.5rem;
               right: 2rem;
+
               .case {
                 width: 60px;
                 height: 60px;
@@ -758,6 +722,7 @@ onUnmounted(() => {
                 margin: auto;
                 animation: rotateC 1.8s linear 0s infinite reverse forwards;
               }
+
               .dot {
                 width: calc(100% / 10);
                 height: calc(100% / 10);
@@ -771,6 +736,7 @@ onUnmounted(() => {
                 border-radius: 50%;
                 z-index: 1;
               }
+
               .one,
               .two,
               .three,
@@ -778,10 +744,12 @@ onUnmounted(() => {
                 width: 50%;
                 height: 50%;
               }
+
               .one {
                 position: absolute;
                 left: 0;
                 top: 0;
+
                 .leaf {
                   width: calc(50% - 2px);
                   height: calc(100% - 2px);
@@ -794,6 +762,7 @@ onUnmounted(() => {
                   top: 0;
                   z-index: 1;
                 }
+
                 .square {
                   width: calc(50% - 2px);
                   height: 50%;
@@ -806,10 +775,12 @@ onUnmounted(() => {
                   z-index: 0;
                 }
               }
+
               .two {
                 position: absolute;
                 right: 0;
                 top: 0;
+
                 .leaf {
                   width: calc(100% - 2px);
                   height: calc(50% - 2px);
@@ -822,6 +793,7 @@ onUnmounted(() => {
                   bottom: 0;
                   z-index: 1;
                 }
+
                 .square {
                   width: 50%;
                   height: calc(50% - 2px);
@@ -834,6 +806,7 @@ onUnmounted(() => {
                   z-index: 0;
                 }
               }
+
               .three {
                 position: absolute;
                 left: 0;
@@ -851,6 +824,7 @@ onUnmounted(() => {
                   top: 0;
                   z-index: 1;
                 }
+
                 .square {
                   width: 50%;
                   height: calc(50% - 2px);
@@ -863,6 +837,7 @@ onUnmounted(() => {
                   z-index: 0;
                 }
               }
+
               .four {
                 position: absolute;
                 right: 0;
@@ -880,6 +855,7 @@ onUnmounted(() => {
                   top: 0;
                   z-index: 1;
                 }
+
                 .square {
                   width: calc(50% - 2px);
                   height: 50%;
@@ -897,6 +873,7 @@ onUnmounted(() => {
                 0% {
                   transform: rotateZ(0deg);
                 }
+
                 100% {
                   transform: rotateZ(360deg);
                 }
@@ -962,8 +939,7 @@ onUnmounted(() => {
                 position: absolute;
                 height: 0.4rem;
                 z-index: -1;
-                background: transparent
-                  url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPElEQVQYV2NkQAP/gYARCNDFUQRgirAphitEl0TngxXisg5ZnBGXIpgbYfIYjkb3BNxGbBLYxIgyEaQRAA8KKAWYsZtjAAAAAElFTkSuQmCC);
+                background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPElEQVQYV2NkQAP/gYARCNDFUQRgirAphitEl0TngxXisg5ZnBGXIpgbYfIYjkb3BNxGbBLYxIgyEaQRAA8KKAWYsZtjAAAAAElFTkSuQmCC);
                 width: 3rem;
                 top: 2.1rem;
                 left: 4rem;
@@ -991,8 +967,7 @@ onUnmounted(() => {
                 transform: rotateY(12deg);
                 transform-origin: 0 0;
                 transform-style: preserve-3d;
-                transition: transform 0.8s cubic-bezier(0.59, 1.45, 0.69, 0.98)
-                  0.2s;
+                transition: transform 0.8s cubic-bezier(0.59, 1.45, 0.69, 0.98) 0.2s;
 
                 .content-inner {
                   position: relative;
@@ -1112,21 +1087,17 @@ onUnmounted(() => {
 
         /* Checked */
 
-        .event input[type="radio"]:checked + label:after {
+        .event input[type="radio"]:checked+label:after {
           content: "\2714";
           color: #f26328;
           box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8);
         }
 
-        .event input[type="radio"]:checked ~ .content-perspective:before {
+        .event input[type="radio"]:checked~.content-perspective:before {
           background: #f26328;
         }
 
-        .event
-          input[type="radio"]:checked
-          ~ .content-perspective
-          .content-inner
-          h3 {
+        .event input[type="radio"]:checked~.content-perspective .content-inner h3 {
           color: #f26328;
 
           span {
@@ -1149,7 +1120,7 @@ onUnmounted(() => {
           }
         }
 
-        .event input[type="radio"]:checked ~ .content-perspective .content {
+        .event input[type="radio"]:checked~.content-perspective .content {
           -webkit-transform: rotateY(-5deg);
           -moz-transform: rotateY(-5deg);
           -o-transform: rotateY(-5deg);
@@ -1157,19 +1128,12 @@ onUnmounted(() => {
           transform: rotateY(-5deg);
         }
 
-        .event
-          input[type="radio"]:checked
-          ~ .content-perspective
-          .content-inner {
+        .event input[type="radio"]:checked~.content-perspective .content-inner {
           border-color: #f26328;
           box-shadow: 10px 0px 10px -6px rgba(0, 0, 0, 0.1);
         }
 
-        .event
-          input[type="radio"]:checked
-          ~ .content-perspective
-          .content-inner
-          p {
+        .event input[type="radio"]:checked~.content-perspective .content-inner p {
           max-height: 13rem;
           /* Add media queries */
           color: rgba(0, 0, 0, 0.8);
@@ -1180,27 +1144,23 @@ onUnmounted(() => {
           transition-delay: 0s, 0.6s;
         }
 
-        .event
-          input[type="radio"]:checked
-          ~ .content-perspective
-          .content-inner:before {
+        .event input[type="radio"]:checked~.content-perspective .content-inner:before {
           color: #f26328;
         }
 
-        .event input[type="radio"]:checked ~ .thumb {
+        .event input[type="radio"]:checked~.thumb {
           transform: scale(0.9);
           transform: translateX(10px);
           box-shadow: 0 0 0 2px rgba(242, 99, 40, 1),
             0 1px 1px rgba(255, 255, 255, 0.5);
         }
 
-        .event input[type="radio"]:checked ~ .thumb span {
+        .event input[type="radio"]:checked~.thumb span {
           color: #f26328;
         }
 
-        .event input[type="radio"]:checked ~ .thumb:before {
-          background: transparent
-            url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPUlEQVQYV2NkQAOfUjX+882+wYgujiIAU4RNMVwhuiQ6H6wQl3XI4oy4FMHcCJPHcDS6J2A2EqUQpJhohQBbNyaHFmzEqgAAAABJRU5ErkJggg==);
+        .event input[type="radio"]:checked~.thumb:before {
+          background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPUlEQVQYV2NkQAOfUjX+882+wYgujiIAU4RNMVwhuiQ6H6wQl3XI4oy4FMHcCJPHcDS6J2A2EqUQpJhohQBbNyaHFmzEqgAAAABJRU5ErkJggg==);
         }
       }
 
@@ -1312,7 +1272,7 @@ onUnmounted(() => {
           }
         }
 
-        @for $i from 1 to $count + 1 {
+        @for $i from 1 to $count +1 {
           .g-item:nth-child(#{$i}) {
             height: #{randomNum(300, 50)}px;
             background: randomColor();

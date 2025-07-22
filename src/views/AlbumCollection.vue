@@ -1,5 +1,5 @@
 <template>
-  <div class="active-page1" id="TravelAlbum">
+  <div class="active-page1" id="AlbumCollection">
     <!-- 导航栏 -->
     <div class="navigation">
       <Navigation></Navigation>
@@ -11,24 +11,16 @@
         <Navigation></Navigation>
       </div>
       <div class="content">
-        <h1>La Patisserie Belle</h1>
+        <h1>人生就像一场旅行，不在于目的地，而在于沿途的风景</h1>
         <p>
-          我是一个热爱生活、喜欢分享的人。这个博客是我记录自己生活点滴、感悟和思考的地方，也是我和读者交流的平台。
-          我喜欢读书、旅行、美食和电影。我会在博客中分享我心仪的书籍、旅行中的美景和美食佳肴，同时也会和大家探讨电影艺术和社会现象。
-          除此之外，我还会分享我个人的成长经历和经验，包括工作、学习和生活的点滴，希望能够和大家一起成长，共同探索人生的意义。
-          感谢你们来到我的博客主页，希望我们可以一起交流、分享和成长。
+          青春的我们，站在时代充满诱惑的阳光地带高喊我心飞翔；青春的我们，站在历史回眸的特定角落审视无限江山；青春的我们，站在大浪淘沙的长江口岸展露风流人生。于是，美丽的梦带走美丽的忧伤，留下美丽的向往。心在远方，梦也在远方。
         </p>
         <button class="btn">查看更多</button>
       </div>
       <div class="stack" ref="stackRef">
-        <div
-          v-for="(img, idx) in cards"
-          :key="img"
-          class="card"
-          :class="{ swap: idx === cards.length - 1 && !isFirstRun }"
-          @click="onCardClick(idx)"
-          :style="{ zIndex: idx + 1 }"
-        >
+        <div v-for="(img, idx) in cards" :key="img" class="card"
+          :class="{ swap: idx === cards.length - 1 && !isFirstRun }" @click="onCardClick(idx)"
+          :style="{ zIndex: idx + 1 }">
           <img :src="img" alt="" />
         </div>
       </div>
@@ -39,16 +31,10 @@
       <!-- 无限滚动 -->
       <div class="carousel">
         <div class="carousel__left">
-          <CarouselImage
-            :images="imageList_left"
-            scrollDirection="left"
-          ></CarouselImage>
+          <CarouselImage :images="imageList_left" scrollDirection="left"></CarouselImage>
         </div>
         <div class="carousel__right">
-          <CarouselImage
-            :images="imageList_right"
-            scrollDirection="right"
-          ></CarouselImage>
+          <CarouselImage :images="imageList_right" scrollDirection="right"></CarouselImage>
         </div>
       </div>
       <!-- <div class="carouselBg"></div> -->
@@ -97,14 +83,8 @@
       </div>
 
       <div class="carousel_body">
-        <carousel-3d
-          :controlsVisible="true"
-          :height="280"
-          :width="450"
-          :autoplay="isPageVisible"
-          :autoplayTimeout="4000"
-          :autoplayHoverPause="true"
-        >
+        <carousel-3d :controlsVisible="true" :height="280" :width="450" :autoplay="isPageVisible"
+          :autoplayTimeout="4000" :autoplayHoverPause="true">
           <slide v-for="(slide, i) in carousel_images" :index="i" :key="i">
             <img :src="slide" alt="carouselImg" style="height: 100%" />
           </slide>
@@ -128,44 +108,28 @@
           <!-- 图片层 -->
           <div class="imgWrap">
             <div class="img img1">
-              <img
-                :src="utils.getAssetsFile('img/travelAlbum/inverted1.png')"
-              />
+              <img :src="utils.getAssetsFile('img/albumCollection/inverted1.png')" />
             </div>
             <div class="img img2">
-              <img
-                :src="utils.getAssetsFile('img/travelAlbum/inverted2.png')"
-              />
+              <img :src="utils.getAssetsFile('img/albumCollection/inverted2.png')" />
             </div>
             <div class="img img3">
-              <img
-                :src="utils.getAssetsFile('img/travelAlbum/inverted3.png')"
-              />
+              <img :src="utils.getAssetsFile('img/albumCollection/inverted3.png')" />
             </div>
             <div class="img img4">
-              <img
-                :src="utils.getAssetsFile('img/travelAlbum/inverted4.png')"
-              />
+              <img :src="utils.getAssetsFile('img/albumCollection/inverted4.png')" />
             </div>
             <div class="img img5">
-              <img
-                :src="utils.getAssetsFile('img/travelAlbum/inverted5.png')"
-              />
+              <img :src="utils.getAssetsFile('img/albumCollection/inverted5.png')" />
             </div>
             <div class="img img6">
-              <img
-                :src="utils.getAssetsFile('img/travelAlbum/inverted6.png')"
-              />
+              <img :src="utils.getAssetsFile('img/albumCollection/inverted6.png')" />
             </div>
             <div class="img img7">
-              <img
-                :src="utils.getAssetsFile('img/travelAlbum/inverted7.png')"
-              />
+              <img :src="utils.getAssetsFile('img/albumCollection/inverted7.png')" />
             </div>
             <div class="img img8">
-              <img
-                :src="utils.getAssetsFile('img/travelAlbum/inverted8.png')"
-              />
+              <img :src="utils.getAssetsFile('img/albumCollection/inverted8.png')" />
             </div>
           </div>
         </div>
@@ -197,12 +161,13 @@ import utils from "@/utils/getAssetsFile";
 
 //堆叠切换
 const cardImages = [
-  "https://www.jq22.com/newjs/nns1.jpg",
-  "https://www.jq22.com/newjs/nns2.jpg",
-  "https://www.jq22.com/newjs/nns3.jpg",
-  "https://www.jq22.com/newjs/nns4.jpg",
-  "https://www.jq22.com/newjs/nns5.jpg",
-  "https://www.jq22.com/newjs/nns6.jpg",
+  utils.getAssetsFile("img/albumCollection/nns1.jpg"),
+  utils.getAssetsFile("img/albumCollection/nns2.jpg"),
+  utils.getAssetsFile("img/albumCollection/nns3.jpg"),
+  utils.getAssetsFile("img/albumCollection/nns4.jpg"),
+  utils.getAssetsFile("img/albumCollection/nns5.jpg"),
+  utils.getAssetsFile("img/albumCollection/nns6.jpg"),
+  utils.getAssetsFile("img/albumCollection/nns7.jpg"),
 ];
 const cards = ref([...cardImages]);
 const stackRef = ref(null);
@@ -227,21 +192,21 @@ function onCardClick(idx) {
 
 // 连续+缩略
 const imageList_left = ref([
-  utils.getAssetsFile("img/travelAlbum/10003.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10004.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10006.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10007.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10009.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10010.jpg"),
+  utils.getAssetsFile("img/albumCollection/10003.jpg"),
+  utils.getAssetsFile("img/albumCollection/10004.jpg"),
+  utils.getAssetsFile("img/albumCollection/10006.jpg"),
+  utils.getAssetsFile("img/albumCollection/10007.jpg"),
+  utils.getAssetsFile("img/albumCollection/10009.jpg"),
+  utils.getAssetsFile("img/albumCollection/10010.jpg"),
 ]);
 
 const imageList_right = ref([
-  utils.getAssetsFile("img/travelAlbum/10013.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10014.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10016.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10017.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10019.jpg"),
-  utils.getAssetsFile("img/travelAlbum/10020.jpg"),
+  utils.getAssetsFile("img/albumCollection/10013.jpg"),
+  utils.getAssetsFile("img/albumCollection/10014.jpg"),
+  utils.getAssetsFile("img/albumCollection/10016.jpg"),
+  utils.getAssetsFile("img/albumCollection/10017.jpg"),
+  utils.getAssetsFile("img/albumCollection/10019.jpg"),
+  utils.getAssetsFile("img/albumCollection/10020.jpg"),
 ]);
 
 // 常见布局
@@ -287,19 +252,19 @@ const navs = ref([
 const travels = ref([
   {
     id: 2,
-    src: utils.getAssetsFile("img/travelAlbum/travel2.jpg"),
+    src: utils.getAssetsFile("img/albumCollection/travel2.jpg"),
   },
   {
     id: 3,
-    src: utils.getAssetsFile("img/travelAlbum/travel3.jpg"),
+    src: utils.getAssetsFile("img/albumCollection/travel3.jpg"),
   },
   {
     id: 4,
-    src: utils.getAssetsFile("img/travelAlbum/travel4.jpg"),
+    src: utils.getAssetsFile("img/albumCollection/travel4.jpg"),
   },
   {
     id: 5,
-    src: utils.getAssetsFile("img/travelAlbum/travel5.jpg"),
+    src: utils.getAssetsFile("img/albumCollection/travel5.jpg"),
   },
 ]);
 
@@ -315,11 +280,11 @@ const handleVisibilityChange = () => {
   }
 };
 const carousel_images = ref([
-  utils.getAssetsFile("img/travelAlbum/cover1.jpg"),
-  utils.getAssetsFile("img/travelAlbum/cover2.jpg"),
-  utils.getAssetsFile("img/travelAlbum/cover3.jpg"),
-  utils.getAssetsFile("img/travelAlbum/cover4.jpg"),
-  utils.getAssetsFile("img/travelAlbum/cover5.jpg"),
+  utils.getAssetsFile("img/albumCollection/cover1.jpg"),
+  utils.getAssetsFile("img/albumCollection/cover2.jpg"),
+  utils.getAssetsFile("img/albumCollection/cover3.jpg"),
+  utils.getAssetsFile("img/albumCollection/cover4.jpg"),
+  utils.getAssetsFile("img/albumCollection/cover5.jpg"),
 ]);
 
 onMounted(() => {
@@ -333,7 +298,7 @@ onBeforeUnmount(() => {
 });
 // 监听页面可见性变化
 $(document).ready(function () {
-  var $wrap = $("#TravelAlbum"),
+  var $wrap = $("#AlbumCollection"),
     pages = $(".page").length,
     scrolling = false,
     currentPage = 1,
@@ -420,10 +385,10 @@ $(document).ready(function () {
   font-style: normal;
   font-weight: 400;
   src: local("Vampiro One"), local("VampiroOne-Regular"),
-    url("@/assets/fonts/Ho2Xld8UbQyBA8XLxF1_NYbN6UDyHWBl620a-IRfuBk.woff")
-      format("woff");
+    url("@/assets/fonts/Ho2Xld8UbQyBA8XLxF1_NYbN6UDyHWBl620a-IRfuBk.woff") format("woff");
 }
-#TravelAlbum {
+
+#AlbumCollection {
   $pagesCount: 10; // 页面数量
   position: absolute;
   top: 0;
@@ -449,8 +414,8 @@ $(document).ready(function () {
       padding-left: 10vw;
 
       h1 {
-        font-family: "Dancing Script", cursive;
-        font-size: clamp(2.5rem, 4vw, 6rem);
+        font-family: 'gtpy';
+        font-size: clamp(2rem, 4vw, 2.5rem);
         font-weight: 700;
         background: -webkit-linear-gradient(0deg, #f76591, #ffc16f);
         background-clip: text;
@@ -490,6 +455,7 @@ $(document).ready(function () {
         -webkit-user-select: none;
         pointer-events: auto;
         font-family: 'lmst';
+
         &:hover {
           box-shadow: 0 4px 10px rgba(247, 101, 145, 0.5);
           transform: scale(0.98);
@@ -560,8 +526,7 @@ $(document).ready(function () {
 
     @keyframes swap {
       30% {
-        transform: translate(calc(var(--x) - 250px), -50%) scale(0.85)
-          rotate(-5deg) rotateY(65deg);
+        transform: translate(calc(var(--x) - 250px), -50%) scale(0.85) rotate(-5deg) rotateY(65deg);
       }
 
       100% {
@@ -583,20 +548,21 @@ $(document).ready(function () {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
+
       .carousel__right {
         padding: 1rem 0;
       }
     }
+
     .carouselBg {
       width: 100%;
       height: 100%;
-      background-image: linear-gradient(
-        0deg,
-        rgba(211, 196, 252, 0.9),
-        rgba(147, 197, 252, 0.2)
-      );
+      background-image: linear-gradient(0deg,
+          rgba(211, 196, 252, 0.9),
+          rgba(147, 197, 252, 0.2));
       position: absolute;
     }
+
     // 缩略轮播
     .thumbnail__carousel {
       position: absolute;
@@ -613,6 +579,7 @@ $(document).ready(function () {
     .nav {
       // width: 100%;
       padding: 2rem 0;
+
       ul {
         display: flex;
 
@@ -636,7 +603,7 @@ $(document).ready(function () {
             padding: 0;
             border: none;
 
-            & > span {
+            &>span {
               position: relative;
               display: block;
               border-radius: 5px;
@@ -647,8 +614,8 @@ $(document).ready(function () {
 
             &::before,
             &::after,
-            & > span::before,
-            & > span::after {
+            &>span::before,
+            &>span::after {
               position: absolute;
               content: "";
               right: 0;
@@ -661,20 +628,20 @@ $(document).ready(function () {
               transition: all 0.3s ease;
             }
 
-            & > span::before,
-            & > span::after {
+            &>span::before,
+            &>span::after {
               left: 0;
               top: 0;
             }
 
             &::before,
-            & > span::before {
+            &>span::before {
               height: 0%;
               width: 2px;
             }
 
             &::after,
-            & > span::after {
+            &>span::after {
               width: 0%;
               height: 2px;
             }
@@ -684,12 +651,12 @@ $(document).ready(function () {
               background: transparent !important;
 
               &::before,
-              & > span::before {
+              &>span::before {
                 height: 100%;
               }
 
               &::after,
-              & > span::after {
+              &>span::after {
                 width: 100%;
               }
             }
@@ -764,6 +731,7 @@ $(document).ready(function () {
   .vue3-carousel-3d {
     @include flexCenter(column, center);
     margin: 0;
+
     .carousel_title {
       transform: translateY(-15vh);
 
@@ -771,6 +739,7 @@ $(document).ready(function () {
         font-size: 38px;
         padding: 1.5rem 0;
       }
+
       .thisLogo {
         @include flexCenter(row, center);
 
@@ -783,9 +752,11 @@ $(document).ready(function () {
         }
       }
     }
+
     .carousel_body {
       width: 85vw;
       margin: 0;
+
       .carousel-3d-container {
         margin: 0;
       }
@@ -802,12 +773,13 @@ $(document).ready(function () {
     @include flexCenter(column, center);
 
     .inverted_title {
-      transform: translateY(-15vh);
+      transform: translateY(-20vh);
 
       h1 {
         font-size: 38px;
         padding: 1.5rem 0;
       }
+
       .thisLogo {
         @include flexCenter(row, center);
 
@@ -820,6 +792,7 @@ $(document).ready(function () {
         }
       }
     }
+
     .stage {
       position: relative;
       width: 1400px;
@@ -827,8 +800,7 @@ $(document).ready(function () {
       margin: 0 auto;
       perspective: 2000px;
       transform-style: preserve-3d;
-      -webkit-box-reflect: below 0
-        linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+      -webkit-box-reflect: below 0 linear-gradient(transparent, rgba(0, 0, 0, 0.5));
 
       .control {
         position: relative;
@@ -936,6 +908,7 @@ $(document).ready(function () {
   top: 50%;
   left: 50%;
 }
+
 .nav-panel {
   position: fixed;
   top: 50%;
@@ -949,15 +922,18 @@ $(document).ready(function () {
   transition: opacity 0.5s, transform 0.5s cubic-bezier(0.57, 1.2, 0.68, 2.6);
   will-change: transform, opacity;
 }
+
 .nav-panel.invisible {
   opacity: 0;
   -webkit-transform: translateY(-50%) scale(0.5);
   -ms-transform: translateY(-50%) scale(0.5);
   transform: translateY(-50%) scale(0.5);
 }
+
 .nav-panel ul {
   list-style-type: none;
 }
+
 .nav-panel ul .nav-btn {
   position: relative;
   overflow: hidden;
@@ -971,6 +947,7 @@ $(document).ready(function () {
   transition: border-color, transform 0.3s;
   will-change: border-color, transform;
 }
+
 //中心圆点
 .nav-panel ul .nav-btn:after {
   width: 100%;
@@ -985,6 +962,7 @@ $(document).ready(function () {
   transition: transform, opacity 0.3s;
   will-change: transform, opacity;
 }
+
 // 圆点激活时
 .nav-panel ul .nav-btn.active:after,
 .nav-panel ul .nav-btn:hover:after {
@@ -995,15 +973,18 @@ $(document).ready(function () {
   left: 0;
   opacity: 1;
 }
+
 .nav-panel ul .nav-btn:hover {
   border-color: #eb1e5e;
   -webkit-transform: scale(1.2);
   -ms-transform: scale(1.2);
   transform: scale(1.2);
 }
+
 .nav-panel ul .nav-btn:hover:after {
   background-color: #eb1e5e;
 }
+
 .nav-panel .scroll-btn {
   position: absolute;
   left: 0;
@@ -1019,6 +1000,7 @@ $(document).ready(function () {
   -webkit-transition: border-color 0.3s;
   transition: border-color 0.3s;
 }
+
 //上箭头
 .nav-panel .scroll-btn.up {
   top: -1.6em;
@@ -1026,6 +1008,7 @@ $(document).ready(function () {
   -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
+
 //下箭头
 .nav-panel .scroll-btn.down {
   bottom: -1.2em;
@@ -1033,9 +1016,11 @@ $(document).ready(function () {
   -ms-transform: rotate(135deg);
   transform: rotate(135deg);
 }
+
 .nav-panel .scroll-btn:hover {
   border-color: #1c1601;
 }
+
 .check-out {
   position: absolute;
   bottom: 1rem;
@@ -1046,6 +1031,7 @@ $(document).ready(function () {
   font-size: 2rem;
   color: #fff;
 }
+
 .check-out a {
   color: #ffaaaa;
   text-decoration: none;
