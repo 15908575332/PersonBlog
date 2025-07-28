@@ -1,39 +1,36 @@
 <template>
-  <div class="recordContent">
+  <div class="recordContent" :class="{ 'overflow-hidden': isInputOpen }">
     <div class="navigate">
       <Navigation></Navigation>
     </div>
     <div class="backVideo">
       <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video>
-      <div class="search">
-        <form class="search__form">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="请输入搜索内容"
-          />
-          <img
-            src=" @/assets/icon/informalEssay/informalEssaySearch.svg"
-            alt=""
-          />
-        </form>
+
+    </div>
+
+    <div class="search" :class="{ search__open: isInputOpen }">
+      <span class="closeInput" @click="inputBlur">×</span>
+      <form class="search__form">
+        <input type="text" ref="inputSearch" v-model="searchQuery" placeholder="请输入搜索内容" @focus="inputFocus" />
+        <img src=" @/assets/icon/informalEssay/informalEssaySearch.svg" alt="" />
+      </form>
+      <div class="search__suggestion">
+        <h3>一些有用的建议</h3>
+        <div class="suggestion-tags">
+          <span v-for="tag in suggestionTags" :key="tag" class="suggestion-tag" @click="setTagToInput(tag)">#{{ tag
+          }}</span>
+        </div>
       </div>
     </div>
+
+
     <div class="main__content">
       <!-- 导航栏 -->
       <div class="nav__card">
         <ul>
-          <li
-            class="nav__item"
-            v-for="(module, index) in dataContent"
-            :key="module.id"
-            @click="toggleMoudle(index, module.id)"
-            :class="{ nav__itemActive: isActive == index }"
-          >
-            <div
-              class="hoverBanner"
-              :style="{ opacity: isActive == index ? 1 : 0 }"
-            ></div>
+          <li class="nav__item" v-for="(module, index) in dataContent" :key="module.id"
+            @click="toggleMoudle(index, module.id)" :class="{ nav__itemActive: isActive == index }">
+            <div class="hoverBanner" :style="{ opacity: isActive == index ? 1 : 0 }"></div>
             <a href="#">
               <div class="profile__picture">
                 <img :src="module.profile_picture" alt="头像" />
@@ -52,57 +49,31 @@
         <section>
           <div class="menu">
             <div class="flex__layout">
-              <img
-                src=" @/assets/icon/informalEssay/informalEssayMenu.svg"
-                alt=""
-              />
+              <img src=" @/assets/icon/informalEssay/informalEssayMenu.svg" alt="" />
               <span>{{ selectContent.navBtntitle }}</span>
             </div>
             <div class="flex__layout">
-              <img
-                src=" @/assets/icon/informalEssay/informalEssayMore.svg"
-                alt=""
-              />
+              <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="" />
               <span>MORE</span>
             </div>
           </div>
           <div class="content_aera">
-            <div
-              class="specific__content"
-              v-for="(item, index) in paginatedItems"
-              :key="index"
-            >
-              <a
-                class="image"
-                @click="listDetail(item.contentId)"
-                data-aos="zoom-in"
-              >
+            <div class="specific__content" v-for="(item, index) in paginatedItems" :key="index">
+              <a class="image" @click="listDetail(item.contentId)" data-aos="zoom-in">
                 <img v-lazy="item.backImage" alt="Image" />
-                <button
-                  v-if="item.mediaType === 'video'"
-                  class="play-button"
-                ></button>
+                <button v-if="item.mediaType === 'video'" class="play-button"></button>
                 <div class="item__count">
                   <ul>
                     <li v-if="item.mediaType === 'video'">
-                      <img
-                        src="@/assets/icon/recordList/countPlay-icon.svg"
-                        alt="play"
-                      />
+                      <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
                       <span>3</span>
                     </li>
                     <li>
-                      <img
-                        src="@/assets/icon/recordList/countCat-icon.svg"
-                        alt="cat"
-                      />
+                      <img src="@/assets/icon/recordList/countCat-icon.svg" alt="cat" />
                       <span>9999</span>
                     </li>
                     <li>
-                      <img
-                        src="@/assets/icon/recordList/countMessage-icon.svg"
-                        alt="message"
-                      />
+                      <img src="@/assets/icon/recordList/countMessage-icon.svg" alt="message" />
                       <span>123</span>
                     </li>
                   </ul>
@@ -119,23 +90,12 @@
           </div>
         </section>
         <div class="paginate">
-          <vue-awesome-paginate
-            :total-items="totalItems"
-            v-model="currentPage"
-            :items-per-page="pageSize"
-            :max-pages-shown="5"
-            back-button-class="back-btn"
-            next-button-class="next-btn"
-            :show-ending-buttons="true"
-            :show-breakpoint-buttons="true"
-            @click="onClickHandler"
-          >
+          <vue-awesome-paginate :total-items="totalItems" v-model="currentPage" :items-per-page="pageSize"
+            :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn" :show-ending-buttons="true"
+            :show-breakpoint-buttons="true" @click="onClickHandler">
             <template #prev-button>
               <span>
-                <img
-                  src="@/assets/icon/recordList/previousPage.svg"
-                  height="25"
-                />
+                <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
               </span>
             </template>
 
@@ -161,7 +121,29 @@ import {
   onMounted,
   computed,
   ref,
+  nextTick
 } from "vue";
+//搜素框
+const isInputOpen = ref(false); // 控制搜索框的打开状态
+const searchQuery = ref("");
+const suggestionTags = [
+  "无人机", "搞笑", "catgif", "破碎", "失落", "爱", "好", "红", "蓝", "不", "为什么", "是", "外星人", "绿色", "花式", "裤子", "树"
+];
+const inputBlur = () => {
+  isInputOpen.value = false;
+};
+const inputFocus = () => {
+  isInputOpen.value = true;
+};
+const inputSearch = ref(null); // 用于获取input元素
+function setTagToInput(tag) {
+  searchQuery.value = tag;
+  isInputOpen.value = true;
+  nextTick(() => {
+    inputSearch.value && inputSearch.value.focus(); // 确保input元素存在后再聚焦
+  })
+}
+
 const recordStore = useListDetail();
 const dataContent = recordStore.dataContent;
 const isActive = ref();
@@ -223,11 +205,9 @@ onMounted(() => {
 <style lang="scss">
 .recordContent {
   font-family: "gtpy";
-  background: linear-gradient(
-    to right,
-    rgba(221, 222, 233, 0.77) 0%,
-    rgba(181, 255, 252, 0.56) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(221, 222, 233, 0.77) 0%,
+      rgba(181, 255, 252, 0.56) 100%);
   user-select: none;
   //内容盒子宽度
   $main_content_width: 60rem;
@@ -243,63 +223,174 @@ onMounted(() => {
     width: 100%;
     height: 18rem;
     overflow: hidden;
-    position: relative;
+    background-color: #4dd5cc;
     animation: zoomInDown 0.6s ease-out;
+    border-bottom: none;
+    position: relative;
 
     video {
-      // width: 100vw;
+      width: 100vw;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      background-color: rgb(233, 208, 208);
+      background-color: #4dd5cc;
+      display: block;
     }
 
-    .search {
-      width: 16rem;
-      border-radius: 10px;
-      padding: 0.9rem;
-      margin-top: 1.5rem;
+
+  }
+
+  .search {
+    @include flexCenter(column, center);
+
+    .closeInput {
       position: absolute;
-      top: 5rem;
+      top: 20vh;
+      right: 25vw;
+      color: #51c492;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 2;
+      opacity: 0;
+    }
+
+    .search__form {
+      position: absolute;
+      top: 15%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: scale3d(0.9, 0.9, 1) translateX(-60%);
+      transition: transform 0.5s;
+      transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
       z-index: 2;
 
-      .search__form {
-        position: relative;
+      input {
+        border-radius: 1rem;
+        border: 2px solid #4dd5cc;
+        padding: 0.2rem 1rem;
+        padding-right: 2rem;
+        width: 20rem;
+        color: #f3efef;
+        font-size: 0.9rem;
+        display: flex;
+        font-family: "gtpy";
+        align-items: center;
+        background-color: transparent;
 
-        input {
-          border-radius: 1rem;
-          border: 2px solid #4dd5cc;
-          padding: 0.2rem 1rem;
-          padding-right: 2rem;
-          width: 100%;
+        &::placeholder {
           color: #f3efef;
-          font-size: 0.9rem;
-          display: flex;
-          font-family: "gtpy";
-          align-items: center;
-          background-color: transparent;
-
-          &::placeholder {
-            color: #f3efef;
-            font-size: 0.8rem;
-          }
-        }
-
-        img {
-          width: 1.2rem;
-          transition: all 0.3s;
-          position: absolute;
-          top: 0.2rem;
-          right: 0.5rem;
-
-          &:hover {
-            cursor: pointer;
-            transform: scale(1.1);
-          }
+          font-size: 0.8rem;
         }
       }
+
+      img {
+        width: 1.2rem;
+        transition: all 0.3s;
+        position: absolute;
+        top: 0.2rem;
+        right: 0.5rem;
+
+        &:hover {
+          cursor: pointer;
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    .search__suggestion {
+      .suggestion-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .suggestion-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid #4dd5cc;
+        color: #fff;
+        border-radius: 1rem;
+        padding: 0.2rem 0.8rem;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+        opacity: 0;
+        transform: translate3d(0, 100px, 0);
+        transition: opacity 0.2s, transform 0.5s;
+        transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+      }
+
+      .suggestion-tag:hover {
+        background: #e85454;
+        color: #fff;
+      }
+
+      width: 40vw;
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+
+      h3,
+      .suggestion-tag {
+        opacity: 0;
+        transform: translate3d(0, 100px, 0);
+        transition: opacity 0.2s, transform 0.5s;
+        transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        color: #ffffff;
+      }
+
+      h3 {
+        color: #4dd5cc;
+        padding: 1rem 0;
+        font-size: 1.2rem;
+      }
+    }
+
+    &::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: auto;
+      background: rgba(1, 1, 1, 0.9);
+      opacity: 0;
+      transition: opacity 0.5s;
+      transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+      z-index: 1;
+    }
+  }
+
+  // 搜索框激活时
+  .search__open {
+    .closeInput {
+      opacity: 1;
+      transition: opacity 0.5s;
+      transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+    }
+
+    .search__form {
+      transform: translate3d(0, 30vh, 0) translate3d(-50%, -50%, 0) scale3d(1.2, 1.2, 1);
+    }
+
+    .search__suggestion {
+
+      .suggestion-tag,
+      h3 {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        transition: opacity 0.5s, transform 0.5s;
+        transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+      }
+
+      .suggestion-tag {
+        transition-delay: 0.1s;
+      }
+    }
+
+    &::before {
+      opacity: 1;
     }
   }
 
@@ -308,6 +399,10 @@ onMounted(() => {
     width: $main_content_width;
     margin: 0 auto;
     animation: zoomInUp 0.6s ease-out;
+    background: transparent;
+    margin-top: -1px;
+    border-top: none;
+
 
     .nav__card {
       ul {
@@ -590,6 +685,11 @@ onMounted(() => {
       }
     }
   }
+}
+
+.recordContent.overflow-hidden {
+  overflow: hidden;
+  height: 100vh;
 }
 
 @keyframes flipInX {
