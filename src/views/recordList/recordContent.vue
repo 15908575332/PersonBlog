@@ -5,7 +5,6 @@
     </div>
     <div class="backVideo">
       <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video>
-
     </div>
 
     <div class="search" :class="{ search__open: isInputOpen }">
@@ -18,7 +17,7 @@
         <h3>一些有用的建议</h3>
         <div class="suggestion-tags">
           <span v-for="tag in suggestionTags" :key="tag" class="suggestion-tag" @click="setTagToInput(tag)">#{{ tag
-          }}</span>
+            }}</span>
         </div>
       </div>
     </div>
@@ -49,11 +48,11 @@
         <section>
           <div class="menu">
             <div class="flex__layout">
-              <img src=" @/assets/icon/informalEssay/informalEssayMenu.svg" alt="" />
+              <img src=" @/assets/icon/informalEssay/informalEssayMenu.svg" alt="informalEssayMenu" />
               <span>{{ selectContent.navBtntitle }}</span>
             </div>
             <div class="flex__layout">
-              <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="" />
+              <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
               <span>MORE</span>
             </div>
           </div>
@@ -89,6 +88,7 @@
             </div>
           </div>
         </section>
+        <!-- 分页 -->
         <div class="paginate">
           <vue-awesome-paginate :total-items="totalItems" v-model="currentPage" :items-per-page="pageSize"
             :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn" :show-ending-buttons="true"
