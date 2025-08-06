@@ -26,7 +26,6 @@ const goHome = () => {
 
         img {
             height: 120%;
-            // width: 100%;
         }
     }
 
