@@ -297,6 +297,11 @@ onMounted(() => {
     }
 
     .search__suggestion {
+      width: 40vw;
+      position: absolute;
+      top: 50%;
+      z-index: 0;
+
       .suggestion-tags {
         display: flex;
         flex-wrap: wrap;
@@ -318,6 +323,7 @@ onMounted(() => {
         transform: translate3d(0, 100px, 0);
         transition: opacity 0.2s, transform 0.5s;
         transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        pointer-events: none;
       }
 
       .suggestion-tag:hover {
@@ -325,10 +331,6 @@ onMounted(() => {
         color: #fff;
       }
 
-      width: 40vw;
-      position: absolute;
-      top: 50%;
-      z-index: 2;
 
       h3,
       .suggestion-tag {
@@ -353,7 +355,7 @@ onMounted(() => {
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: auto;
+      pointer-events: none; // 默认不拦截点击
       background: rgba(1, 1, 1, 0.9);
       opacity: 0;
       transition: opacity 0.5s;
@@ -375,6 +377,8 @@ onMounted(() => {
     }
 
     .search__suggestion {
+      display: block;
+      z-index: 2;
 
       .suggestion-tag,
       h3 {
@@ -382,6 +386,7 @@ onMounted(() => {
         transform: translate3d(0, 0, 0);
         transition: opacity 0.5s, transform 0.5s;
         transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        pointer-events: auto;
       }
 
       .suggestion-tag {
@@ -391,6 +396,7 @@ onMounted(() => {
 
     &::before {
       opacity: 1;
+      pointer-events: auto; // 激活时才拦截点击
     }
   }
 
@@ -690,6 +696,7 @@ onMounted(() => {
 .recordContent.overflow-hidden {
   overflow: hidden;
   height: 100vh;
+  // background-color: red;
 }
 
 @keyframes flipInX {
