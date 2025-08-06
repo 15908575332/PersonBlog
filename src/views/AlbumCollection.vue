@@ -1,5 +1,5 @@
 <template>
-  <div class="active-page1" id="AlbumCollection">
+  <div class="active-page1" id="AlbumCollection" ref="AlbumCollection">
     <!-- 导航栏 -->
     <div class="navigation">
       <Navigation></Navigation>
@@ -7,9 +7,6 @@
 
     <!-- 堆叠切换 -->
     <div class="stacking_switch page page1">
-      <div class="navigation">
-        <Navigation></Navigation>
-      </div>
       <div class="content">
         <h1>人生就像一场旅行，不在于目的地，而在于沿途的风景</h1>
         <p>
@@ -107,34 +104,14 @@
         <div class="control">
           <!-- 图片层 -->
           <div class="imgWrap">
-            <div class="img img1">
-              <img :src="utils.getAssetsFile('img/albumCollection/inverted1.png')" />
-            </div>
-            <div class="img img2">
-              <img :src="utils.getAssetsFile('img/albumCollection/inverted2.png')" />
-            </div>
-            <div class="img img3">
-              <img :src="utils.getAssetsFile('img/albumCollection/inverted3.png')" />
-            </div>
-            <div class="img img4">
-              <img :src="utils.getAssetsFile('img/albumCollection/inverted4.png')" />
-            </div>
-            <div class="img img5">
-              <img :src="utils.getAssetsFile('img/albumCollection/inverted5.png')" />
-            </div>
-            <div class="img img6">
-              <img :src="utils.getAssetsFile('img/albumCollection/inverted6.png')" />
-            </div>
-            <div class="img img7">
-              <img :src="utils.getAssetsFile('img/albumCollection/inverted7.png')" />
-            </div>
-            <div class="img img8">
-              <img :src="utils.getAssetsFile('img/albumCollection/inverted8.png')" />
+            <div v-for="i in 8" :key="i" :class="`img img${i}`">
+              <img :src="utils.getAssetsFile(`img/albumCollection/inverted${i}.png`) " />
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
   <!-- 右侧导航栏 -->
   <div class="nav-panel">
@@ -142,33 +119,21 @@
     <div class="scroll-btn down"></div>
     <nav>
       <ul>
-        <li data-target="1" class="nav-btn nav-page1 active"></li>
-        <li data-target="2" class="nav-btn nav-page2"></li>
-        <li data-target="3" class="nav-btn nav-page3"></li>
-        <li data-target="4" class="nav-btn nav-page4"></li>
-        <li data-target="5" class="nav-btn nav-page5"></li>
+        <li v-for="i in 5" :key="i" :data-target="i" :class="['nav-btn', `nav-page${i}`, { active: i === 1 }]"></li>
       </ul>
     </nav>
   </div>
 </template>
 <script setup>
-import $ from "jquery";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import CarouselImage from "@/components/CarouselImage/index.vue";
 import ThumbnailCarousel from "@/components/ThumbnailCarousel/index.vue";
 import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
 
-//堆叠切换
-const cardImages = [
-  utils.getAssetsFile("img/albumCollection/nns1.jpg"),
-  utils.getAssetsFile("img/albumCollection/nns2.jpg"),
-  utils.getAssetsFile("img/albumCollection/nns3.jpg"),
-  utils.getAssetsFile("img/albumCollection/nns4.jpg"),
-  utils.getAssetsFile("img/albumCollection/nns5.jpg"),
-  utils.getAssetsFile("img/albumCollection/nns6.jpg"),
-  utils.getAssetsFile("img/albumCollection/nns7.jpg"),
-];
+const cardImages = Array.from({ length: 7 }, (_, i) =>
+  utils.getAssetsFile(`img/albumCollection/nns${i + 1}.jpg`)
+);
 const cards = ref([...cardImages]);
 const stackRef = ref(null);
 let autoplayInterval = null;
@@ -192,22 +157,14 @@ function onCardClick(idx) {
 
 // 连续+缩略
 const imageList_left = ref([
-  utils.getAssetsFile("img/albumCollection/10003.jpg"),
-  utils.getAssetsFile("img/albumCollection/10004.jpg"),
-  utils.getAssetsFile("img/albumCollection/10006.jpg"),
-  utils.getAssetsFile("img/albumCollection/10007.jpg"),
-  utils.getAssetsFile("img/albumCollection/10009.jpg"),
-  utils.getAssetsFile("img/albumCollection/10010.jpg"),
-]);
+  10003, 10004, 10006, 10007, 10009, 10010
+].map(num => utils.getAssetsFile(`img/albumCollection/${num}.jpg`)));
 
 const imageList_right = ref([
-  utils.getAssetsFile("img/albumCollection/10013.jpg"),
-  utils.getAssetsFile("img/albumCollection/10014.jpg"),
-  utils.getAssetsFile("img/albumCollection/10016.jpg"),
-  utils.getAssetsFile("img/albumCollection/10017.jpg"),
-  utils.getAssetsFile("img/albumCollection/10019.jpg"),
-  utils.getAssetsFile("img/albumCollection/10020.jpg"),
-]);
+  10013, 10014, 10015, 10016, 10017, 10019, 10020
+].map(num => utils.getAssetsFile(`img/albumCollection/${num}.jpg`)));
+
+
 
 // 常见布局
 const colors = ref([
@@ -279,104 +236,74 @@ const handleVisibilityChange = () => {
     // 例如，重新启动一个计时器或触发轮播的继续播放
   }
 };
-const carousel_images = ref([
-  utils.getAssetsFile("img/albumCollection/cover1.jpg"),
-  utils.getAssetsFile("img/albumCollection/cover2.jpg"),
-  utils.getAssetsFile("img/albumCollection/cover3.jpg"),
-  utils.getAssetsFile("img/albumCollection/cover4.jpg"),
-  utils.getAssetsFile("img/albumCollection/cover5.jpg"),
-]);
 
+const carousel_images = Array.from({ length: 5 }, (_, i) =>
+  utils.getAssetsFile(`img/albumCollection/cover${i + 1}.jpg`)
+);
 onMounted(() => {
   // 只设置定时器，不主动执行 moveCard，且首次定时器触发时跳过
   isFirstRun = true;
   autoplayInterval = setInterval(moveCard, 4000);
-});
 
-onBeforeUnmount(() => {
-  clearInterval(autoplayInterval);
-});
-// 监听页面可见性变化
-$(document).ready(function () {
-  var $wrap = $("#AlbumCollection"),
-    pages = $(".page").length,
-    scrolling = false,
-    currentPage = 1,
-    $navPanel = $(".nav-panel"),
-    $scrollBtn = $(".scroll-btn"),
-    $navBtn = $(".nav-btn");
+  // 页面切换导航
+  const wrap = document.getElementById("AlbumCollection");
+  const pages = document.querySelectorAll(".page").length;
+  let scrolling = false;
+  let currentPage = 1;
+  const navPanel = document.querySelector(".nav-panel");
+  const navBtns = document.querySelectorAll(".nav-btn");
   function manageClasses() {
-    $wrap.removeClass(function (index, css) {
-      return (css.match(/(^|\s)active-page\S+/g) || []).join(" ");
-    });
-    $wrap.addClass("active-page" + currentPage);
-    $navBtn.removeClass("active");
-    $(".nav-btn.nav-page" + currentPage).addClass("active");
-    $navPanel.addClass("invisible");
+    wrap.className = wrap.className.replace(/(^|\s)active-page\S+/g, "").trim();
+    wrap.classList.add("active-page" + currentPage);
+    navBtns.forEach(btn => btn.classList.remove("active"));
+    document.querySelector(".nav-btn.nav-page" + currentPage)?.classList.add("active");
+    navPanel.classList.add("invisible");
     scrolling = true;
-    setTimeout(function () {
-      $navPanel.removeClass("invisible");
+    setTimeout(() => {
+      navPanel.classList.remove("invisible");
       scrolling = false;
     }, 1000);
   }
   function navigateUp() {
     if (currentPage > 1) {
       currentPage--;
-      if (Modernizr.csstransforms) {
-        manageClasses();
-      } else {
-        $wrap.animate({ top: "-" + (currentPage - 1) * 100 + "%" }, 1000);
-      }
+      manageClasses();
     }
   }
   function navigateDown() {
     if (currentPage < pages) {
       currentPage++;
-      if (Modernizr.csstransforms) {
-        manageClasses();
-      } else {
-        $wrap.animate({ top: "-" + (currentPage - 1) * 100 + "%" }, 1000);
-      }
+      manageClasses();
     }
   }
-  $(document).on("mousewheel DOMMouseScroll", function (e) {
+  // 鼠标滚轮切换
+  document.addEventListener("wheel", (e) => {
     if (!scrolling) {
-      if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
+      if (e.deltaY < 0) {
         navigateUp();
       } else {
         navigateDown();
       }
     }
   });
-  $(".nav-panel").on("click", ".scroll-btn", function () {
-    if ($(this).hasClass("up")) {
-      navigateUp();
-    } else {
-      navigateDown();
-    }
-  });
-  $(".nav-panel").on("click", ".nav-btn:not(.active)", function () {
-    if (!scrolling) {
-      var target = $(this).attr("data-target");
-      if (Modernizr.csstransforms) {
-        $wrap.removeClass(function (index, css) {
-          return (css.match(/(^|\s)active-page\S+/g) || []).join(" ");
-        });
-        $wrap.addClass("active-page" + target);
-        $navBtn.removeClass("active");
-        $(this).addClass("active");
-        $navPanel.addClass("invisible");
+  // 上下按钮点击
+  navPanel.querySelector(".scroll-btn.up")?.addEventListener("click", navigateUp);
+  navPanel.querySelector(".scroll-btn.down")?.addEventListener("click", navigateDown);
+  // 右侧导航圆点点击
+  navBtns.forEach(btn => {
+    btn.addEventListener("click", function () {
+      if (!scrolling && !this.classList.contains("active")) {
+        const target = Number(this.getAttribute("data-target"));
         currentPage = target;
-        scrolling = true;
-        setTimeout(function () {
-          $navPanel.removeClass("invisible");
-          scrolling = false;
-        }, 1000);
-      } else {
-        $wrap.animate({ top: "-" + (target - 1) * 100 + "%" }, 1000);
+        manageClasses();
       }
-    }
+    });
   });
+});
+
+onBeforeUnmount(() => {
+  clearInterval(autoplayInterval);
+  // 其它事件无需移除（页面卸载自动清理），如需更严格可记录事件并移除。
 });
 </script>
 <style scoped lang="scss">
@@ -407,7 +334,13 @@ $(document).ready(function () {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
-    place-items: center;
+    place-items: center; // 现代浏览器
+
+    // 兼容性写法
+    >* {
+      justify-self: center;
+      align-self: center;
+    }
 
     .content {
       user-select: none;
