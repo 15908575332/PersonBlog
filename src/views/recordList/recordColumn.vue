@@ -119,9 +119,22 @@ onMounted(() => {
 <style scoped lang="scss">
 #recordColumn {
     font-family: 'gtpy';
-    background-color: #f0f4f5;
+    width: 100%;
+    height: 100%;
     //内容盒子宽度
     $category_content_width: 60rem;
+    @include flexCenter(column, center);
+
+    &::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #f0f4f5;
+        z-index: -1;
+    }
 
     //导航
     .navigation {
@@ -131,8 +144,7 @@ onMounted(() => {
     //内容
     .category__content {
         width: $category_content_width;
-        margin: auto;
-        padding-bottom: 2rem;
+        margin: 4rem 0;
 
         .carousel {
             animation: clipDiamondIn 1s both;
