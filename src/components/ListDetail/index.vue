@@ -320,7 +320,6 @@
                 </ul>
                 <div class="noComment" v-else>
                     <span>没有更多留言，去留言吧~</span>
-                    <!-- <img src="./img/NoComment.png" alt="noComment"> -->
                 </div>
                 <!-- 分页 -->
                 <div class="paginate" v-if="totalItems">
@@ -1565,7 +1564,6 @@ onMounted(() => {
 
             //没有留言
             .noComment {
-                // background: red;
                 margin: 1rem 0;
                 border-top: dashed 1px #ccc;
                 text-align: center;
