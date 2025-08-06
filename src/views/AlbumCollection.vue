@@ -105,7 +105,7 @@
           <!-- 图片层 -->
           <div class="imgWrap">
             <div v-for="i in 8" :key="i" :class="`img img${i}`">
-              <img :src="utils.getAssetsFile(`img/albumCollection/inverted${i}.png`) " />
+              <img :src="utils.getAssetsFile(`img/albumCollection/inverted${i}.png`)" />
             </div>
           </div>
         </div>
@@ -115,13 +115,16 @@
   </div>
   <!-- 右侧导航栏 -->
   <div class="nav-panel">
-    <div class="scroll-btn up"></div>
-    <div class="scroll-btn down"></div>
-    <nav>
-      <ul>
-        <li v-for="i in 5" :key="i" :data-target="i" :class="['nav-btn', `nav-page${i}`, { active: i === 1 }]"></li>
-      </ul>
-    </nav>
+    <div class="up">
+      <img :src="utils.getAssetsFile('icon/albumCollection/upArrow.svg')" alt="upArrow">
+    </div>
+    <div class="middle">
+      <img :src="utils.getAssetsFile('icon/albumCollection/snail.svg')" alt="snail">
+
+    </div>
+    <div class="down">
+      <img :src="utils.getAssetsFile('icon/albumCollection/downArrow.svg')" alt="downArrow">
+    </div>
   </div>
 </template>
 <script setup>
@@ -248,19 +251,14 @@ onMounted(() => {
   // 页面切换导航
   const wrap = document.getElementById("AlbumCollection");
   const pages = document.querySelectorAll(".page").length;
+  const navPanel = document.querySelector(".nav-panel");
   let scrolling = false;
   let currentPage = 1;
-  const navPanel = document.querySelector(".nav-panel");
-  const navBtns = document.querySelectorAll(".nav-btn");
   function manageClasses() {
     wrap.className = wrap.className.replace(/(^|\s)active-page\S+/g, "").trim();
     wrap.classList.add("active-page" + currentPage);
-    navBtns.forEach(btn => btn.classList.remove("active"));
-    document.querySelector(".nav-btn.nav-page" + currentPage)?.classList.add("active");
-    navPanel.classList.add("invisible");
     scrolling = true;
     setTimeout(() => {
-      navPanel.classList.remove("invisible");
       scrolling = false;
     }, 1000);
   }
@@ -287,18 +285,9 @@ onMounted(() => {
     }
   });
   // 上下按钮点击
-  navPanel.querySelector(".scroll-btn.up")?.addEventListener("click", navigateUp);
-  navPanel.querySelector(".scroll-btn.down")?.addEventListener("click", navigateDown);
-  // 右侧导航圆点点击
-  navBtns.forEach(btn => {
-    btn.addEventListener("click", function () {
-      if (!scrolling && !this.classList.contains("active")) {
-        const target = Number(this.getAttribute("data-target"));
-        currentPage = target;
-        manageClasses();
-      }
-    });
-  });
+  navPanel.querySelector(".up")?.addEventListener("click", navigateUp);
+  navPanel.querySelector(".down")?.addEventListener("click", navigateDown);
+
 });
 
 onBeforeUnmount(() => {
@@ -687,7 +676,7 @@ onBeforeUnmount(() => {
     }
 
     .carousel_body {
-      width: 85vw;
+      width: 75vw;
       margin: 0;
 
       .carousel-3d-container {
@@ -834,18 +823,10 @@ onBeforeUnmount(() => {
 }
 
 //右侧导航按钮
-.inner,
-.nav-panel ul .nav-btn:after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-
 .nav-panel {
   position: fixed;
   top: 50%;
-  right: 2%;
+  right: 2vw;
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
@@ -854,121 +835,20 @@ onBeforeUnmount(() => {
     -webkit-transform 0.5s cubic-bezier(0.57, 1.2, 0.68, 2.6);
   transition: opacity 0.5s, transform 0.5s cubic-bezier(0.57, 1.2, 0.68, 2.6);
   will-change: transform, opacity;
-}
+  height: 15vh;
+  background-color: #fff;
+  @include flexCenter(column, space-between);
+  box-shadow: 0px 0px 0.75rem 0px rgba(113, 113, 113, 0.2);
+  border-radius: 10px;
+  padding: 0.5rem 0.2rem;
 
-.nav-panel.invisible {
-  opacity: 0;
-  -webkit-transform: translateY(-50%) scale(0.5);
-  -ms-transform: translateY(-50%) scale(0.5);
-  transform: translateY(-50%) scale(0.5);
-}
-
-.nav-panel ul {
-  list-style-type: none;
-}
-
-.nav-panel ul .nav-btn {
-  position: relative;
-  overflow: hidden;
-  width: 0.8em;
-  height: 0.8em;
-  margin-bottom: 0.5em;
-  border: 0.1rem solid #eb1e5e;
-  border-radius: 50%;
-  cursor: pointer;
-  -webkit-transition: border-color, -webkit-transform 0.3s;
-  transition: border-color, transform 0.3s;
-  will-change: border-color, transform;
-}
-
-//中心圆点
-.nav-panel ul .nav-btn:after {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  position: absolute;
-  top: 10%;
-  left: 10%;
-  transform: scale(0.3);
-  background-color: #eb1e5e;
-  opacity: 0;
-  transition: transform, opacity 0.3s;
-  will-change: transform, opacity;
-}
-
-// 圆点激活时
-.nav-panel ul .nav-btn.active:after,
-.nav-panel ul .nav-btn:hover:after {
-  transform: scale(0.7);
-  // position: absolute;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 1;
-}
-
-.nav-panel ul .nav-btn:hover {
-  border-color: #eb1e5e;
-  -webkit-transform: scale(1.2);
-  -ms-transform: scale(1.2);
-  transform: scale(1.2);
-}
-
-.nav-panel ul .nav-btn:hover:after {
-  background-color: #eb1e5e;
-}
-
-.nav-panel .scroll-btn {
-  position: absolute;
-  left: 0;
-  width: 0.8em;
-  height: 0.8em;
-  border: 0.1em solid #eb1e5e;
-  border-left: none;
-  border-bottom: none;
-  cursor: pointer;
-  -webkit-transform-origin: 50% 50%;
-  -ms-transform-origin: 50% 50%;
-  transform-origin: 50% 50%;
-  -webkit-transition: border-color 0.3s;
-  transition: border-color 0.3s;
-}
-
-//上箭头
-.nav-panel .scroll-btn.up {
-  top: -1.6em;
-  -webkit-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-}
-
-//下箭头
-.nav-panel .scroll-btn.down {
-  bottom: -1.2em;
-  -webkit-transform: rotate(135deg);
-  -ms-transform: rotate(135deg);
-  transform: rotate(135deg);
-}
-
-.nav-panel .scroll-btn:hover {
-  border-color: #1c1601;
-}
-
-.check-out {
-  position: absolute;
-  bottom: 1rem;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
-  font-size: 2rem;
-  color: #fff;
-}
-
-.check-out a {
-  color: #ffaaaa;
-  text-decoration: none;
-  padding-bottom: 0.3rem;
-  border-bottom: 0.2rem solid;
+  //上下箭头
+  .up,
+  .down,
+  .middle {
+    img {
+      width: 1.5rem;
+    }
+  }
 }
 </style>
