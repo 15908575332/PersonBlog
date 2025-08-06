@@ -127,7 +127,12 @@ const router = createRouter({
         {
             path: "/memberCenter", component: () => import("@/views/MemberCenter.vue") //会员中心
         },
-
+        // 404 页面
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'NotFound',
+            component: () => import('@/components/NotFound/index.vue')
+        }
     ],
     // 路由切换时始终滚动到最顶部
     scrollBehavior(to, from, savedPosition) {
