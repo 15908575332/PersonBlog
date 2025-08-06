@@ -30,9 +30,26 @@
 import ClickRipple from "./components/ClickRipple/ClickRipple.vue";
 import { rippleStore } from "@/store/isEnabledRipple";
 import utils from "@/utils/getAssetsFile";
-console.log(`%c ${t} %c ${n} %c`, `background:${vn.typeColor(e)};border:1px solid ${vn.typeColor(e)};
-      padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`, `border:1px solid ${vn.typeColor(e)};
-      padding: 1px; border-radius: 0 4px 4px 0; color: ${vn.typeColor(e)};`, "background:transparent")
+// 示例化参数，避免未定义变量报错
+const t = 'LOG';
+const n = 'App启动';
+const e = 'info';
+const vn = {
+  typeColor(type) {
+    switch (type) {
+      case 'info': return '#39C49E';
+      case 'warn': return '#FFC16F';
+      case 'error': return '#F76591';
+      default: return '#999';
+    }
+  }
+};
+console.log(
+  `%c ${t} %c ${n} %c`,
+  `background:${vn.typeColor(e)};border:1px solid ${vn.typeColor(e)};padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`,
+  `border:1px solid ${vn.typeColor(e)};padding: 1px; border-radius: 0 4px 4px 0; color: ${vn.typeColor(e)};`,
+  "background:transparent"
+);
 </script>
 
 <style scoped lang="scss">
