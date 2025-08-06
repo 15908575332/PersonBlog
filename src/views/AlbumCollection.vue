@@ -660,6 +660,8 @@ onBeforeUnmount(() => {
       h1 {
         font-size: 38px;
         padding: 1.5rem 0;
+        font-family: 'gtpy';
+        font-weight: 700;
       }
 
       .thisLogo {
@@ -700,6 +702,8 @@ onBeforeUnmount(() => {
       h1 {
         font-size: 38px;
         padding: 1.5rem 0;
+        font-family: 'gtpy';
+        font-weight: 700;
       }
 
       .thisLogo {
@@ -846,8 +850,15 @@ onBeforeUnmount(() => {
   .up,
   .down,
   .middle {
+    transition: all 0.3s ease;
+
     img {
       width: 1.5rem;
+    }
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.1);
     }
   }
 }
