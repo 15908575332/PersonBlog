@@ -17,7 +17,7 @@
         <h3>一些有用的建议</h3>
         <div class="suggestion-tags">
           <span v-for="tag in suggestionTags" :key="tag" class="suggestion-tag" @click="setTagToInput(tag)">#{{ tag
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
@@ -44,7 +44,6 @@
       </div>
       <!-- 内容区域 -->
       <div class="content__container">
-        <!-- 生活倒影 -->
         <section>
           <div class="menu">
             <div class="flex__layout">
@@ -59,8 +58,8 @@
           <div class="content_aera">
             <div class="specific__content" v-for="(item, index) in paginatedItems" :key="index">
               <a class="image" @click="listDetail(item.contentId)" data-aos="zoom-in">
-                <img v-lazy="item.backImage" alt="Image" />
-                <button v-if="item.mediaType === 'video'" class="play-button"></button>
+                <img v-lazy="item.backImage" @load="onLoad" @error="onError" alt="Image" />
+                <button v-if="item.mediaType === 'video' && playButtonReview" class="play-button"></button>
                 <div class="item__count">
                   <ul>
                     <li v-if="item.mediaType === 'video'">
@@ -143,6 +142,17 @@ function setTagToInput(tag) {
     inputSearch.value && inputSearch.value.focus(); // 确保input元素存在后再聚焦
   })
 }
+const
+  playButtonReview = ref(false), // 用于控制图片加载状态
+  onLoad = () => {
+    // 图片加载完成后执行的逻辑
+    console.log("图片加载完成");
+    playButtonReview.value = true;
+  },
+  onError = () => {
+    // 图片加载失败后执行的逻辑
+    console.error("图片加载失败");
+  };
 
 const recordStore = useListDetail();
 const dataContent = recordStore.dataContent;
