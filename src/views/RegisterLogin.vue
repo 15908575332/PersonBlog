@@ -7,16 +7,18 @@
         <div class="main" v-if="startRes">
             <!-- 注册 sign up -->
             <div class="container a-container" id="a-container">
-                <form class="form" id="a-form" @submit.prevent="register_handle" :model="registerData">
+                <form class="form" id="a-form" @submit.prevent="UserRegister" :model="registerData">
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
                     <!-- <input class="form__input" type="text" placeholder="Name" required v-model="registerData.username"> -->
-                    <input class="form__input" type="text" placeholder="邮箱" v-model="registerData.email">
-                    <input class="form__input" type="password" placeholder="密码" v-model="registerData.password">
+                    <input class="form__input" type="text" placeholder="邮箱" v-model="email">
+                    <input class="form__input" type="password" placeholder="密码" v-model="password">
                     <input class="form__input" type="password" placeholder="再次输入密码" v-model="rePassword"
                         @input="checkRePassword">
 
-                    <button class="form__button button submit" @click="register"><span>注册</span></button>
+                    <button class="form__button button submit" type="submit"
+                        @click="UserRegister"><span>注册</span></button>
+
                 </form>
             </div>
             <!-- 登录 sign in -->
@@ -24,8 +26,8 @@
                 <form class="form" id="b-form" method="" @submit.prevent="login" :model="registerData">
                     <h2 class="form_title title incline_en"><span>登录</span></h2>
                     <span class="form__span">或者使用你的电子邮箱账户</span>
-                    <input class="form__input" placeholder="用户名/手机号/邮箱" v-model="registerData.email">
-                    <input class="form__input" type="password" placeholder="请输入你的密码" v-model="registerData.password">
+                    <input class="form__input" placeholder="用户名/手机号/邮箱" v-model="email">
+                    <input class="form__input" type="password" placeholder="请输入你的密码" v-model="password">
                     <a href="/resetPassword" class="form__link">忘记密码</a>
                     <button class="form__button button submit" @click="login"><span>登录</span></button>
                 </form>
@@ -71,7 +73,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRouter } from 'vue-router';
-
+import axios from 'axios';
 const route = useRouter();
 const startRes = ref(true); //登录界面展示
 const loginRes = ref(false); //等待界面
@@ -100,19 +102,38 @@ const videoUrls = ref([
     'src/assets/img/homePage/back5.webp',
     'src/assets/img/homePage/back6.webp'
 ]);
+
 const defaultLoginInfo = ref([
     'admin@example.com',
     '123456',
 ])
-const registerData = ref({ //注册数据
-    email: 'admin@example.com',
-    password: '123456',
-})
+//注册
+const email = ref('15908575332@163.com'); //注册数据邮箱
+const password = ref('hxc123456'); //注册数据密码
+async function UserRegister() {
+    try {
+        const response = await axios.post('http://localhost:3000/api/register', {
+            email: email.value,
+            password: password.value
+        });
+        if (response.data.code === '0') {
+            alert('注册成功，请登录');
+            startRes.value = !startRes.value; //切换到登录界面
+        } else {
+            alert(response.data.msg);
+        }
+    } catch (error) {
+        console.error('注册失败:', error);
+        alert('注册失败，请稍后再试');
+    }
+}
+
 const rePassword = ref(null); //注册数据二次密码
 
 //校验密码
 const checkRePassword = () => {
-    if (registerData.value.password !== rePassword.value) {
+    if (password.value !== rePassword.value) {
+
         console.log('密码不一致')
     } else {
         console.log(true)
