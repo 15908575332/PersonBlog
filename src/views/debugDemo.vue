@@ -50,7 +50,21 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
+
+// 定义一个函数，用于发送GET请求
+async function getList() {
+  try {
+    const response = await axios.get('http://localhost:3000/home/getlist');
+
+    console.log(response.data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+getList();
+// 定义一个函数，用于发送POST请求
 const searchContainer = ref(null);
 const inputSearch = ref(null);
 const closeCtrl = ref(null);

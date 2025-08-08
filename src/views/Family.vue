@@ -1272,7 +1272,7 @@ onUnmounted(() => {
           }
         }
 
-        @for $i from 1 to $count +1 {
+        @for $i from 1 through ($count + 1) {
           .g-item:nth-child(#{$i}) {
             height: #{randomNum(300, 50)}px;
             background: randomColor();
