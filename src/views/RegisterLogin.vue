@@ -10,9 +10,9 @@
                 <form class="form" id="a-form" @submit.prevent="UserRegister" :model="registerData">
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
-                    <!-- <input class="form__input" type="text" placeholder="Name" required v-model="registerData.username"> -->
-                    <input class="form__input" type="text" placeholder="邮箱" v-model="email">
-                    <input class="form__input" type="password" placeholder="密码" v-model="password">
+                    <input class="form__input" type="text" placeholder="用户名" required v-model="registerData.userName">
+                    <input class="form__input" type="text" placeholder="邮箱" v-model="registerData.userEmail">
+                    <input class="form__input" type="password" placeholder="密码" v-model="registerData.userPassword">
                     <input class="form__input" type="password" placeholder="再次输入密码" v-model="rePassword"
                         @input="checkRePassword">
 
@@ -108,13 +108,20 @@ const defaultLoginInfo = ref([
     '123456',
 ])
 //注册
+const registerData = ref({
+    userName: 'hexiaocheng',
+    userEmail: '15908575332@163.com',
+    userPassword: '123456'
+});
 const email = ref('15908575332@163.com'); //注册数据邮箱
 const password = ref('hxc123456'); //注册数据密码
 async function UserRegister() {
     try {
-        const response = await axios.post('http://localhost:3000/api/register', {
-            email: email.value,
-            password: password.value
+        const response = await axios.post('http://localhost:3000/user/register', {
+            userName: registerData.value.userName,
+            userEmail: registerData.value.userEmail,
+            userPassword: registerData.value.userPassword
+
         });
         if (response.data.code === '0') {
             alert('注册成功，请登录');

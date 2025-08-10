@@ -1,0 +1,35 @@
+--创建用户信息表
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY comment '用户唯一ID（主键）',      
+  username VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名（唯一）',    
+  password_hash VARCHAR(255) NOT NULL COMMENT '加密密码', 
+  email VARCHAR(100) UNIQUE  COMMENT '邮箱（唯一）',
+  phone VARCHAR(20) COMMENT '手机号（可选）',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',  
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',  
+  status TINYINT DEFAULT 1 COMMENT '账户状态:0:禁用,1:启用'  
+) COMMENT='用户信息表';
+
+-- 创建留言表
+CREATE TABLE messages (
+  id INT AUTO_INCREMENT PRIMARY KEY COMMENT '留言唯一ID',
+  user_id INT NOT NULL COMMENT '关联用户ID',
+  content TEXT NOT NULL COMMENT '留言内容',
+  parent_id INT DEFAULT NULL COMMENT '父留言ID',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '留言时间',
+  status TINYINT DEFAULT 1 COMMENT '状态：0-已删除，1-正常',
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_user_created (user_id, created_at)
+) COMMENT='留言表';
+
+-- 创建回复表
+CREATE TABLE replies (
+  id INT AUTO_INCREMENT PRIMARY KEY COMMENT '回复唯一ID',
+  message_id INT NOT NULL COMMENT '关联留言ID',
+  user_id INT NOT NULL COMMENT '回复用户ID',
+  content TEXT NOT NULL COMMENT '回复内容',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '回复时间',
+  FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_message_created (message_id, created_at)
+) COMMENT='回复表';
