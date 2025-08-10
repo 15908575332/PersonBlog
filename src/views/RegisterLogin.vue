@@ -7,7 +7,7 @@
         <div class="main" v-if="startRes">
             <!-- 注册 sign up -->
             <div class="container a-container" id="a-container">
-                <form class="form" id="a-form" @submit.prevent="UserRegister" :model="registerData">
+                <form class="form" id="a-form" method="post" :model="registerData">
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
                     <input class="form__input" type="text" placeholder="用户名" required v-model="registerData.userName">
@@ -22,7 +22,8 @@
             </div>
             <!-- 登录 sign in -->
             <div class="container b-container" id="b-container">
-                <form class="form" id="b-form" method="" @submit.prevent="login" :model="defaultLoginInfo">
+                <form class="form" id="b-form" method="post" :model="defaultLoginInfo">
+
                     <h2 class="form_title title incline_en"><span>登录</span></h2>
                     <span class="form__span">或者使用你的电子邮箱账户</span>
                     <input class="form__input" placeholder="用户名/手机号/邮箱" v-model="defaultLoginInfo.loginEmail">
@@ -105,7 +106,7 @@ const videoUrls = ref([
 
 var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //邮箱校验规则
 const defaultLoginInfo = ref({
-    loginEmail: '15908575332@163.com',
+    loginEmail: 'henry@163.com',
     loginPassword: '123456',
 })
 //注册
@@ -156,6 +157,12 @@ async function UserRegister() {
 }
 //用户登录
 const login = async () => {
+    //邮箱格式校验
+    if (!emailPattern.test(defaultLoginInfo.value.loginEmail)) {
+        alert('请输入正确的邮箱地址ecample@xxx.com')
+        return false
+    }
+
     if (!defaultLoginInfo.value.loginPassword) {
         alert('密码不能为空')
         return false
@@ -163,6 +170,7 @@ const login = async () => {
     try {
         const response = await axios.post('http://localhost:3000/user/login', {
             loginEmail: defaultLoginInfo.value.loginEmail,
+            loginName: defaultLoginInfo.value.loginName,
             loginPassword: defaultLoginInfo.value.loginPassword
         });
         if (response.data.code === '0') {

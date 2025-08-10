@@ -3,11 +3,6 @@ import express from 'express';
 const router = express.Router();
 import { conn } from '../app.js';
 
-// 连接数据库
-// import mysql from 'mysql2'
-// import * as models from '../db/config.js'
-// var conn = mysql.createConnection(models.mysql)
-
 const saltRounds = 10; // 定义盐的轮数
 const hashPassword = async (userPassword) => {
     const salt = await bcrypt.genSalt(saltRounds);
@@ -60,22 +55,29 @@ const register = async (req, res) => {
 }
 // 登录接口
 const login = async (req, res) => {
-    const { loginEmail, userPassword } = req.body;
+    const { loginEmail, loginPassword } = req.body;
+
     const sql = 'SELECT * FROM users WHERE email = ?';
+
     conn.query(sql, [loginEmail], async (err, results) => {
-        if (err) {
-            console.log(err);
-            res.json({ code: '1', msg: '登录失败' });
-        } else if (results.length === 0) {
-            res.json({ code: '1', msg: '用户不存在' });
-        } else {
-            const user = results[0];
-            const match = await comparePassword(userPassword, user.password_hash);
-            if (match) {
-                res.json({ code: '0', msg: '登录成功' });
+        try {
+            if (err) {
+                console.log(err);
+                res.json({ code: '1', msg: '登录失败' });
+            } else if (results.length === 0) {
+                res.json({ code: '1', msg: '用户不存在' });
             } else {
-                res.json({ code: '1', msg: '密码错误' });
+                const user = results[0];
+                if (!user.password_hash) { // 检查哈希值是否存在
+                    return res.json({ code: '1', msg: '密码哈希异常' });
+                }
+                const match = await comparePassword(loginPassword, user.password_hash);
+                return res.json({ code: match ? '0' : '1', msg: match ? '登录成功' : '密码错误' });
             }
+
+        } catch (err) {
+            console.error('登录查询错误:', err);
+            return res.json({ code: '1', msg: '登录失败' });
         }
     });
 }

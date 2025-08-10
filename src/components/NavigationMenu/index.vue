@@ -151,7 +151,6 @@ import DropdoenMenu from "@/components/DropdownMenu/index.vue";
 import TreeMenu from "@/components/TreeMenu/index.vue";
 import { ref, onMounted, computed } from "vue";
 import utils from "@/utils/getAssetsFile";
-import ModalBox from "@/components/ModalBox/index.vue";
 import { useRoute, useRouter } from "vue-router";
 const route = useRouter();
 // 路由跳转函数
@@ -163,7 +162,6 @@ const quitLogin = () => {
   isVisible.value = false; // 关闭模态框
   sessionStorage.removeItem("simulateUserToken"); // 移除模拟的用户登录状态
   sessionStorage.removeItem("sessionExpiration"); // 移除模拟的用户过期时间
-  route.replace("/userInfo"); // 跳转到登录页面
 };
 const { fontColor } = defineProps({
   fontColor: String,
