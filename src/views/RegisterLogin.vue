@@ -18,16 +18,16 @@
 
                     <button class="form__button button submit" type="submit"
                         @click="UserRegister"><span>注册</span></button>
-
                 </form>
             </div>
             <!-- 登录 sign in -->
             <div class="container b-container" id="b-container">
-                <form class="form" id="b-form" method="" @submit.prevent="login" :model="registerData">
+                <form class="form" id="b-form" method="" @submit.prevent="login" :model="defaultLoginInfo">
                     <h2 class="form_title title incline_en"><span>登录</span></h2>
                     <span class="form__span">或者使用你的电子邮箱账户</span>
-                    <input class="form__input" placeholder="用户名/手机号/邮箱" v-model="email">
-                    <input class="form__input" type="password" placeholder="请输入你的密码" v-model="password">
+                    <input class="form__input" placeholder="用户名/手机号/邮箱" v-model="defaultLoginInfo.loginEmail">
+                    <input class="form__input" type="password" placeholder="请输入你的密码"
+                        v-model="defaultLoginInfo.loginPassword">
                     <a href="/resetPassword" class="form__link">忘记密码</a>
                     <button class="form__button button submit" @click="login"><span>登录</span></button>
                 </form>
@@ -103,19 +103,38 @@ const videoUrls = ref([
     'src/assets/img/homePage/back6.webp'
 ]);
 
-const defaultLoginInfo = ref([
-    'admin@example.com',
-    '123456',
-])
+var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //邮箱校验规则
+const defaultLoginInfo = ref({
+    loginEmail: '15908575332@163.com',
+    loginPassword: '123456',
+})
 //注册
 const registerData = ref({
-    userName: 'hexiaocheng',
-    userEmail: '15908575332@163.com',
-    userPassword: '123456'
+    userName: '',
+    userEmail: '',
+    userPassword: ''
 });
-const email = ref('15908575332@163.com'); //注册数据邮箱
-const password = ref('hxc123456'); //注册数据密码
+const rePassword = ref(''); //校验二次密码
+
+//用户注册
 async function UserRegister() {
+    if (!registerData.value.userName) {
+        alert('用户名不能为空')
+        return false
+    } else if (!registerData.value.userEmail) {
+        alert('邮箱不能为空')
+        return false
+    } else if (!emailPattern.test(registerData.value.userEmail)) {
+        alert('请输入正确的邮箱地址ecample@xxx.com')
+        return false
+    } else if (!registerData.value.userPassword) {
+        alert('密码不能为空')
+        return false
+    }
+    if (registerData.value.userPassword !== rePassword.value) {
+        alert('两次密码不一致')
+        return false
+    }
     try {
         const response = await axios.post('http://localhost:3000/user/register', {
             userName: registerData.value.userName,
@@ -124,8 +143,9 @@ async function UserRegister() {
 
         });
         if (response.data.code === '0') {
-            alert('注册成功，请登录');
-            startRes.value = !startRes.value; //切换到登录界面
+            alert(response.data.msg);
+            route.replace('/userInfo');
+
         } else {
             alert(response.data.msg);
         }
@@ -134,47 +154,37 @@ async function UserRegister() {
         alert('注册失败，请稍后再试');
     }
 }
-
-const rePassword = ref(null); //注册数据二次密码
-
-//校验密码
-const checkRePassword = () => {
-    if (password.value !== rePassword.value) {
-
-        console.log('密码不一致')
-    } else {
-        console.log(true)
-    }
-}
-
+//用户登录
 const login = async () => {
-    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //邮箱校验规则
-    if (!emailPattern.test(registerData.value.email)) {
-        alert('请输入正确的邮箱地址ecample@xxx.com')
-        return false
-    }
-    if (!registerData.value.password) {
+    if (!defaultLoginInfo.value.loginPassword) {
         alert('密码不能为空')
         return false
     }
-    if (registerData.value.email === defaultLoginInfo.value[0] && registerData.value.password === defaultLoginInfo.value[1]) {
-        startRes.value = !startRes.value; //登录界面展示
-        loginRes.value = !loginRes.value; //等待界面
+    try {
+        const response = await axios.post('http://localhost:3000/user/login', {
+            loginEmail: defaultLoginInfo.value.loginEmail,
+            loginPassword: defaultLoginInfo.value.loginPassword
+        });
+        if (response.data.code === '0') {
+            startRes.value = !startRes.value; //登录界面展示
+            loginRes.value = !loginRes.value; //等待界面
+            sessionStorage.setItem('simulateUserToken', defaultLoginInfo.value.loginEmail);
+            sessionStorage.setItem('sessionExpiration', Date.now() + 10000); // 设置session一个小时后过期
+            timer.value = setInterval(() => {
+                if (totalTime.value > 0) {
+                    console.log(totalTime.value)
+                    totalTime.value--;
+                } else {
+                    clearInterval(timer.value);
+                    route.replace('/home');
+                }
+            }, 1000)
+        } else {
+            alert(response.data.msg);
+        }
 
-        sessionStorage.setItem('simulateUserToken', registerData.value.email);
-        sessionStorage.setItem('sessionExpiration', Date.now() + 10000); // 设置session一个小时后过期
-
-        timer.value = setInterval(() => {
-            if (totalTime.value > 0) {
-                console.log(totalTime.value)
-                totalTime.value--;
-            } else {
-                clearInterval(timer.value);
-                route.replace('/home');
-            }
-        }, 1000)
-    } else {
-        alert('用户名或密码错误')
+    } catch {
+        alert('登录失败，请稍后再试');
     }
 
 }

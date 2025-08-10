@@ -1,10 +1,12 @@
 import bcrypt from 'bcrypt';
 import express from 'express';
 const router = express.Router();
+import { conn } from '../app.js';
+
 // 连接数据库
-import mysql from 'mysql2'
-import * as models from '../db/config.js'
-var conn = mysql.createConnection(models.mysql)
+// import mysql from 'mysql2'
+// import * as models from '../db/config.js'
+// var conn = mysql.createConnection(models.mysql)
 
 const saltRounds = 10; // 定义盐的轮数
 const hashPassword = async (userPassword) => {
@@ -58,9 +60,9 @@ const register = async (req, res) => {
 }
 // 登录接口
 const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { loginEmail, userPassword } = req.body;
     const sql = 'SELECT * FROM users WHERE email = ?';
-    conn.query(sql, [email], async (err, results) => {
+    conn.query(sql, [loginEmail], async (err, results) => {
         if (err) {
             console.log(err);
             res.json({ code: '1', msg: '登录失败' });
@@ -68,7 +70,7 @@ const login = async (req, res) => {
             res.json({ code: '1', msg: '用户不存在' });
         } else {
             const user = results[0];
-            const match = await comparePassword(password, user.password);
+            const match = await comparePassword(userPassword, user.password_hash);
             if (match) {
                 res.json({ code: '0', msg: '登录成功' });
             } else {
@@ -77,22 +79,6 @@ const login = async (req, res) => {
         }
     });
 }
-// 获取用户信息接口
-const getUserInfo = async (req, res) => {
-    const { email } = req.body;
-    const sql = 'SELECT * FROM users WHERE email = ?';
-    conn.query(sql, [email], (err, result) => {
-        if (err) {
-            console.log(err);
-            res.json({ code: '1', msg: '获取用户信息失败' });
-        } else {
-            res.json({ code: '0', msg: '获取用户信息成功', data: result[0] });
-        }
-    });
-};
-
 router.post('/register', register);
 router.post('/login', login);
-router.post('/getUserInfo', getUserInfo);
-
 export default router;
