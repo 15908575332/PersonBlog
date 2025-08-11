@@ -4,10 +4,10 @@
         <div class="backPhoto" :style=videoSrc></div>
         <!-- 遮罩 -->
         <div class="mask"></div>
-        <div class="main" v-if="startRes">
+        <div class="main">
             <!-- 注册 sign up -->
             <div class="container a-container" id="a-container">
-                <form class="form" id="a-form" method="post" :model="registerData">
+                <form class="form" id="a-form" :model="registerData">
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
                     <input class="form__input" type="text" placeholder="用户名" required v-model="registerData.userName">
@@ -22,8 +22,7 @@
             </div>
             <!-- 登录 sign in -->
             <div class="container b-container" id="b-container">
-                <form class="form" id="b-form" method="post" :model="defaultLoginInfo">
-
+                <form class="form" id="b-form" method="" :model="defaultLoginInfo">
                     <h2 class="form_title title incline_en"><span>登录</span></h2>
                     <span class="form__span">或者使用你的电子邮箱账户</span>
                     <input class="form__input" placeholder="用户名/手机号/邮箱" v-model="defaultLoginInfo.loginEmail">
@@ -58,15 +57,7 @@
                 </div>
             </div>
         </div>
-        <a-result v-if="loginRes" :title="totalTime + 's'" status="success"
-            title="Successfully Purchased Cloud Server ECS!"
-            sub-title="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait.">
-            <template #extra>
-                <a-button style="font-family: 'gtpy'; font-size: 0.8rem;" key="console" type="primary"
-                    @click="pushHome">前往首页</a-button>
-                <a-button style="font-family: 'gtpy'; font-size: 0.8rem;" key="buy" @click="againLogin">重新登录</a-button>
-            </template>
-        </a-result>
+
 
     </div>
 </template>
@@ -76,9 +67,6 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 const route = useRouter();
-const startRes = ref(true); //登录界面展示
-const loginRes = ref(false); //等待界面
-const totalTime = ref(1); //倒计时
 const timer = ref();
 const randomIndex = ref();
 const videoSrc = computed(() => {
@@ -86,15 +74,6 @@ const videoSrc = computed(() => {
         backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`
     }
 });
-const pushHome = () => {
-    route.replace('/home');
-}
-const againLogin = () => {
-    clearInterval(timer.value);
-    startRes.value = !startRes.value;
-    loginRes.value = !loginRes.value;
-    totalTime.value = 5;
-}
 const videoUrls = ref([
     'src/assets/img/homePage/back1.webp',
     'src/assets/img/homePage/back2.webp',
@@ -104,9 +83,8 @@ const videoUrls = ref([
     'src/assets/img/homePage/back6.webp'
 ]);
 
-var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //邮箱校验规则
 const defaultLoginInfo = ref({
-    loginEmail: 'henry@163.com',
+    loginEmail: '15908575332@163.com',
     loginPassword: '123456',
 })
 //注册
@@ -115,27 +93,19 @@ const registerData = ref({
     userEmail: '',
     userPassword: ''
 });
-const rePassword = ref(''); //校验二次密码
 
+const rePassword = ref(''); //校验二次密码
+//校验密码
+const checkRePassword = () => {
+    if (registerData.value.userPassword !== rePassword.value) {
+
+        console.log('密码不一致')
+    } else {
+        console.log(true)
+    }
+}
 //用户注册
 async function UserRegister() {
-    if (!registerData.value.userName) {
-        alert('用户名不能为空')
-        return false
-    } else if (!registerData.value.userEmail) {
-        alert('邮箱不能为空')
-        return false
-    } else if (!emailPattern.test(registerData.value.userEmail)) {
-        alert('请输入正确的邮箱地址ecample@xxx.com')
-        return false
-    } else if (!registerData.value.userPassword) {
-        alert('密码不能为空')
-        return false
-    }
-    if (registerData.value.userPassword !== rePassword.value) {
-        alert('两次密码不一致')
-        return false
-    }
     try {
         const response = await axios.post('http://localhost:3000/user/register', {
             userName: registerData.value.userName,
@@ -144,9 +114,8 @@ async function UserRegister() {
 
         });
         if (response.data.code === '0') {
-            alert(response.data.msg);
-            route.replace('/userInfo');
-
+            // alert('注册成功，请登录');
+            // startRes.value = !startRes.value; //切换到登录界面
         } else {
             alert(response.data.msg);
         }
@@ -157,12 +126,11 @@ async function UserRegister() {
 }
 //用户登录
 const login = async () => {
-    //邮箱格式校验
-    if (!emailPattern.test(defaultLoginInfo.value.loginEmail)) {
-        alert('请输入正确的邮箱地址ecample@xxx.com')
-        return false
-    }
-
+    // var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //邮箱校验规则
+    // if (!emailPattern.test(registerData.value.email)) {
+    //     alert('请输入正确的邮箱地址ecample@xxx.com')
+    //     return false
+    // }
     if (!defaultLoginInfo.value.loginPassword) {
         alert('密码不能为空')
         return false
@@ -170,31 +138,20 @@ const login = async () => {
     try {
         const response = await axios.post('http://localhost:3000/user/login', {
             loginEmail: defaultLoginInfo.value.loginEmail,
-            loginName: defaultLoginInfo.value.loginName,
             loginPassword: defaultLoginInfo.value.loginPassword
         });
-        if (response.data.code === '0') {
-            startRes.value = !startRes.value; //登录界面展示
-            loginRes.value = !loginRes.value; //等待界面
-            sessionStorage.setItem('simulateUserToken', defaultLoginInfo.value.loginEmail);
-            sessionStorage.setItem('sessionExpiration', Date.now() + 10000); // 设置session一个小时后过期
-            timer.value = setInterval(() => {
-                if (totalTime.value > 0) {
-                    console.log(totalTime.value)
-                    totalTime.value--;
-                } else {
-                    clearInterval(timer.value);
-                    route.replace('/home');
-                }
-            }, 1000)
-        } else {
-            alert(response.data.msg);
+        if (response) {
+            alert('登录成功');
+            console.log(response.data.token);
+
+            localStorage.setItem('token', response.data.token);
+            route.replace('/home');
         }
 
-    } catch {
-        alert('登录失败，请稍后再试');
-    }
+    } catch (error) {
+        alert(error.response.data.msg);
 
+    }
 }
 
 onMounted(() => {

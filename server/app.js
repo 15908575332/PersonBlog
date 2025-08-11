@@ -5,6 +5,9 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import mysql from 'mysql2';
 import * as models from './db/config.js';
+import { config } from 'dotenv';
+config({ path: './.env' });
+import authenticateToken from './routes/registerLoginApi.js'
 
 // body-parser是非常常用的一个express中间件，作用是对http请求体进行解析
 const { json, urlencoded } = bodyParser
@@ -19,6 +22,7 @@ conn.connect((err) => {
 export { conn }; //导出供其它模块使用
 
 // 公共中间件配置
+app.use(authenticateToken)
 app.use(cors());
 app.use(json())
 app.use(urlencoded({ extended: false }))

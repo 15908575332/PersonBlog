@@ -79,11 +79,11 @@
               <div class="br"></div>
             </li>
             <!-- 已登录 -->
-            <li v-if="LoginStatus" class="loginSuccess">
+            <li v-if="userInfo" class="loginSuccess">
               <!-- <a-tooltip color="pink"> -->
               <!-- <template #title>个人</template> -->
               <div class="profilePicture" @click="showModalFun" @mouseleave="dropLeave">
-                <img :src="utils.getAssetsFile('img/profile_picture/10020.png')" alt="头像" />
+                <img :src="userInfo.data.avatar_url" alt="头像" />
               </div>
               <!-- </a-tooltip> -->
               <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
@@ -92,7 +92,7 @@
                     <img src="./icon/close.svg" alt="close" />
                   </button>
                   <div class="info">
-                    <span>测试hxc</span>
+                    <span>{{ userInfo.data.username }}</span>
                     <img :src="utils.getAssetsFile('icon/level/lv5.svg')" alt="level" />
                   </div>
                   <ul>
@@ -152,6 +152,11 @@ import TreeMenu from "@/components/TreeMenu/index.vue";
 import { ref, onMounted, computed } from "vue";
 import utils from "@/utils/getAssetsFile";
 import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from '@/store/userInfo';
+const userStore = useUserStore();
+
+const userInfo = computed(() => userStore.userInfo);
+
 const route = useRouter();
 // 路由跳转函数
 const changeRouter = (routeUrl) => {
@@ -160,20 +165,12 @@ const changeRouter = (routeUrl) => {
 const quitLogin = () => {
   // 退出登录函数
   isVisible.value = false; // 关闭模态框
-  sessionStorage.removeItem("simulateUserToken"); // 移除模拟的用户登录状态
-  sessionStorage.removeItem("sessionExpiration"); // 移除模拟的用户过期时间
+  localStorage.removeItem("token"); // 移除模拟的用户登录状态
 };
 const { fontColor } = defineProps({
   fontColor: String,
 });
-const LoginStatus = computed(() => {
-  // 模拟用户登录状态（这里使用 sessionStorage 来模拟已登录）
-  if (sessionStorage.getItem("simulateUserToken")) {
-    return true;
-  } else {
-    return false;
-  }
-});
+
 const isVisible = ref(false);
 const isHover = ref(false);
 const isSidebarVisible = ref();
@@ -277,7 +274,9 @@ const isInOutSide = (event) => {
     isSidebarVisible.value = false;
   }
 };
-onMounted(() => { });
+onMounted(async () => {
+  await userStore.fetchUserInfo(localStorage.getItem('token'));
+});
 </script>
 <style scoped lang="scss">
 .phone-none {
