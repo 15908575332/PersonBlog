@@ -11,10 +11,12 @@
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
                     <input class="form__input" type="text" placeholder="用户名" required v-model="registerData.userName">
-                    <input class="form__input" type="text" placeholder="邮箱" v-model="registerData.userEmail">
-                    <input class="form__input" type="password" placeholder="密码" v-model="registerData.userPassword">
-                    <input class="form__input" type="password" placeholder="再次输入密码" v-model="rePassword"
-                        @input="checkRePassword">
+                    <input class="form__input" type="text" autocomplete="userEmail" placeholder="邮箱"
+                        v-model="registerData.userEmail">
+                    <input class="form__input" type="password" autocomplete="current-password" placeholder="密码"
+                        v-model="registerData.userPassword">
+                    <input class="form__input" type="password" autocomplete="new-password" placeholder="再次输入密码"
+                        v-model="rePassword" @input="checkRePassword">
 
                     <button class="form__button button submit" type="submit"
                         @click="UserRegister"><span>注册</span></button>
@@ -25,8 +27,9 @@
                 <form class="form" id="b-form" method="" :model="defaultLoginInfo">
                     <h2 class="form_title title incline_en"><span>登录</span></h2>
                     <span class="form__span">或者使用你的电子邮箱账户</span>
-                    <input class="form__input" placeholder="用户名/手机号/邮箱" v-model="defaultLoginInfo.loginEmail">
-                    <input class="form__input" type="password" placeholder="请输入你的密码"
+                    <input class="form__input" autocomplete="username" type="email" required placeholder="电子邮箱"
+                        v-model="defaultLoginInfo.loginEmail">
+                    <input class="form__input" type="password" autocomplete="current-password" placeholder="请输入你的密码"
                         v-model="defaultLoginInfo.loginPassword">
                     <a href="/resetPassword" class="form__link">忘记密码</a>
                     <button class="form__button button submit" @click="login"><span>登录</span></button>
@@ -142,8 +145,6 @@ const login = async () => {
         });
         if (response) {
             alert('登录成功');
-            console.log(response.data.token);
-
             localStorage.setItem('token', response.data.token);
             route.replace('/home');
         }
