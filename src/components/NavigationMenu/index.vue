@@ -166,6 +166,8 @@ const quitLogin = () => {
   // 退出登录函数
   isVisible.value = false; // 关闭模态框
   localStorage.removeItem("token"); // 移除模拟的用户登录状态
+  userStore.userInfo = null; // 清空用户信息
+  route.push('/userInfo');
 };
 const { fontColor } = defineProps({
   fontColor: String,
