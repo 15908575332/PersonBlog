@@ -1,5 +1,5 @@
 // node后端服务器
-import registerLoginApi from './routes/registerLoginApi.js'
+import userRelatedApi from './routes/userRelatedApi.js'
 import express from 'express'; // express框架
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -7,7 +7,7 @@ import mysql from 'mysql2';
 import * as models from './db/config.js';
 import { config } from 'dotenv';
 config({ path: './.env' });
-import authenticateToken from './routes/registerLoginApi.js'
+import authenticateToken from './routes/userRelatedApi.js'
 
 // body-parser是非常常用的一个express中间件，作用是对http请求体进行解析
 const { json, urlencoded } = bodyParser
@@ -28,7 +28,7 @@ app.use(json())
 app.use(urlencoded({ extended: false }))
 
 // 后端api路由
-app.use('/user', registerLoginApi)
+app.use('/user', userRelatedApi)
 
 // 错误处理中间件（放在所有路由之后）
 app.use((err, req, res, next) => {
