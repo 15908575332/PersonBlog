@@ -8,9 +8,10 @@
         <!-- 导航 -->
         <Navigation></Navigation>
         <!-- 会员卡片 -->
-        <div class="personalCard">
+        <div class="personalCard" v-if="userInfo">
+
             <div class="avatar">
-                <img :src="utils.getAssetsFile('img/profile_picture/10020.png')" alt="头像">
+                <img :src="userInfo.data.avatarUrl" alt="头像">
             </div>
             <div class="levelsbox">
                 <img class="level" :src="utils.getAssetsFile('icon/level/member.svg')" alt="icon">
@@ -21,12 +22,12 @@
                 <form>
                     <div class="item">
                         <label for="username">名称：</label>
-                        <input type="text" name="name" id="username" value="测试hxc"></input>
+                        <input type="text" name="name" id="username" v-model="userInfo.data.username"></input>
                     </div>
 
                     <div class="item">
                         <label>邮箱：</label>
-                        <span>15908575332@163.com</span>
+                        <span>{{ userInfo.data.email }}</span>
                         <button class="changeBtn">修改</button>
                     </div>
                     <div class="item">
@@ -39,6 +40,10 @@
                             <span class="box"></span>
                             <span>女</span>
                         </div>
+                    </div>
+                    <div class="item">
+                        <label>注册时间：</label>
+                        <span>{{ userInfo.data.createTime }}</span>
                     </div>
                     <div class="item benefits">
                         <label for="introduce">简介：</label>
@@ -53,15 +58,23 @@
                 </form>
             </div>
         </div>
+        {{ userInfo }}
+
     </div>
 </template>.
 <script setup>
 import utils from '@/utils/getAssetsFile';
 import Navigation from '../components/NavigationMenu/index.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+
 const selected = ref('sex');
 const maxlength = ref(60);
 const inputText = ref('');
+import { useUserStore } from '@/store/userInfo';
+const userStore = useUserStore();
+const userInfo = computed(() => userStore.userInfo);
+
+
 //剩余字数计算
 const remainingChars = computed(() => {
     return maxlength.value - inputText.value.length;
@@ -72,6 +85,10 @@ const handleInput = () => {
         inputText.value = inputText.value.slice(0, maxlength.value);
     }
 };
+onMounted(async () => {
+    await userStore.fetchUserInfo(localStorage.getItem('token'));
+
+});
 </script>
 <style scoped lang="scss">
 #personalCenter {

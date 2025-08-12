@@ -9,7 +9,6 @@ export const useUserStore = defineStore('user', () => {
     const fetchUserInfo = async (token) => {
         if (!userInfo.value) {
             const response = await axios.get('http://localhost:3000/user/getUserInfo', {
-
                 headers: { Authorization: `Bearer ${token}` }
             });
             userInfo.value = await response.data;

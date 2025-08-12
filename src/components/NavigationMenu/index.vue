@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%">
+  <div style="width: 100%" v-if="userInfo">
     <div class="navigate" :class="{ hoverStyle: isHover }">
       <div class="logo">
         <img src="/vite.svg" alt="logo" />
@@ -83,7 +83,8 @@
               <!-- <a-tooltip color="pink"> -->
               <!-- <template #title>个人</template> -->
               <div class="profilePicture" @click="showModalFun" @mouseleave="dropLeave">
-                <img :src="userInfo.data.avatar_url" alt="头像" />
+                <img :src="userInfo.data.avatarUrl" alt="头像" />
+
               </div>
               <!-- </a-tooltip> -->
               <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
@@ -154,7 +155,6 @@ import utils from "@/utils/getAssetsFile";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from '@/store/userInfo';
 const userStore = useUserStore();
-
 const userInfo = computed(() => userStore.userInfo);
 
 const route = useRouter();

@@ -108,7 +108,7 @@ router.get('/getUserInfo', authenticateToken, async (req, res) => {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                avatar_url: user.avatarUrl,
+                avatarUrl: user.avatarUrl,
                 createTime: user.created_at,
             }
         });
