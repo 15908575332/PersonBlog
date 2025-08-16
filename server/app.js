@@ -3,8 +3,6 @@ import userRelatedApi from './routes/userRelatedApi.js'
 import express from 'express'; // express框架
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import mysql from 'mysql2';
-import * as models from './db/config.js';
 import { config } from 'dotenv';
 config({ path: './.env' });
 import authenticateToken from './routes/userRelatedApi.js'
@@ -12,14 +10,6 @@ import authenticateToken from './routes/userRelatedApi.js'
 // body-parser是非常常用的一个express中间件，作用是对http请求体进行解析
 const { json, urlencoded } = bodyParser
 const app = express()
-
-// 创建全局数据库连接（单例模式）
-const conn = mysql.createConnection(models.mysql);
-conn.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to MySQL');
-});
-export { conn }; //导出供其它模块使用
 
 // 公共中间件配置
 app.use(authenticateToken)

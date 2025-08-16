@@ -11,12 +11,13 @@
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
                     <input class="form__input" type="text" placeholder="用户名" required v-model="registerData.userName">
-                    <input class="form__input" type="text" autocomplete="userEmail" placeholder="邮箱"
+                    <input class="form__input" type="email" required autocomplete="userEmail" placeholder="邮箱"
                         v-model="registerData.userEmail">
                     <input class="form__input" type="password" autocomplete="current-password" placeholder="密码"
                         v-model="registerData.userPassword">
                     <input class="form__input" type="password" autocomplete="new-password" placeholder="再次输入密码"
-                        v-model="rePassword" @input="checkRePassword">
+                        v-model="registerData.rePassword">
+
 
                     <button class="form__button button submit" type="submit"
                         @click="UserRegister"><span>注册</span></button>
@@ -72,6 +73,14 @@ import axios from 'axios';
 const route = useRouter();
 const timer = ref();
 const randomIndex = ref();
+import { useUserStore } from '@/store/userInfo';
+import { message } from 'ant-design-vue';
+const userStore = useUserStore();
+// const token = computed(() => userStore.token);
+message.config({
+    duration: 3,
+    maxCount: 1,
+});
 const videoSrc = computed(() => {
     return {
         backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`
@@ -92,39 +101,50 @@ const defaultLoginInfo = ref({
 })
 //注册
 const registerData = ref({
-    userName: '',
-    userEmail: '',
-    userPassword: ''
+    userName: 'qqqq',
+    userEmail: 'test@163.com',
+    userPassword: '123456',
+    rePassword: '' //二次密码
+
 });
 
-const rePassword = ref(''); //校验二次密码
-//校验密码
-const checkRePassword = () => {
-    if (registerData.value.userPassword !== rePassword.value) {
-
-        console.log('密码不一致')
-    } else {
-        console.log(true)
-    }
-}
 //用户注册
-async function UserRegister() {
+async function UserRegister(e) {
+    //防止表单默认提交
+    e.preventDefault()
+    if (!registerData.value.userName) {
+        alert('用户名不能为空')
+        return false
+    }
+    if (!registerData.value.userEmail) {
+        alert('邮箱不能为空')
+        return false
+    }
+    if (!registerData.value.userPassword) {
+        alert('密码不能为空')
+        return false
+    }
+    if (registerData.value.userPassword !== registerData.value.rePassword) {
+        alert('两次密码不一致')
+        return false
+    }
+
     try {
         const response = await axios.post('http://localhost:3000/user/register', {
             userName: registerData.value.userName,
             userEmail: registerData.value.userEmail,
-            userPassword: registerData.value.userPassword
-
+            userPassword: registerData.value.userPassword,
+            avatarUrl: '/src/assets/img/profile_picture/' + registerData.value.userName + '.png'
         });
-        if (response.data.code === '0') {
-            // alert('注册成功，请登录');
-            // startRes.value = !startRes.value; //切换到登录界面
-        } else {
-            alert(response.data.msg);
+        if (response.status === 201) {
+            console.log(response)
+            message.success(response.data.message || '注册成功！正在跳转登录页面...');
+            setTimeout(() => {
+                window.location.href = '/userInfo';
+            }, 2000);
         }
     } catch (error) {
-        console.error('注册失败:', error);
-        alert('注册失败，请稍后再试');
+        message.error(error.response.data.message);
     }
 }
 //用户登录
@@ -145,7 +165,7 @@ const login = async () => {
         });
         if (response) {
             alert('登录成功');
-            localStorage.setItem('token', response.data.token);
+            userStore.updateToken(response.data.token);
             route.replace('/home');
         }
 
