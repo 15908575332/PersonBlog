@@ -73,10 +73,8 @@ import axios from 'axios';
 const route = useRouter();
 const timer = ref();
 const randomIndex = ref();
-import { useUserStore } from '@/store/userInfo';
+
 import { message } from 'ant-design-vue';
-const userStore = useUserStore();
-// const token = computed(() => userStore.token);
 message.config({
     duration: 3,
     maxCount: 1,
@@ -96,16 +94,15 @@ const videoUrls = ref([
 ]);
 
 const defaultLoginInfo = ref({
-    loginEmail: '15908575332@163.com',
+    loginEmail: 'test@163.com',
     loginPassword: '123456',
 })
 //注册
 const registerData = ref({
-    userName: 'qqqq',
-    userEmail: 'test@163.com',
-    userPassword: '123456',
+    userName: '',
+    userEmail: '',
+    userPassword: '',
     rePassword: '' //二次密码
-
 });
 
 //用户注册
@@ -149,11 +146,16 @@ async function UserRegister(e) {
 }
 //用户登录
 const login = async () => {
-    // var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //邮箱校验规则
-    // if (!emailPattern.test(registerData.value.email)) {
-    //     alert('请输入正确的邮箱地址ecample@xxx.com')
-    //     return false
-    // }
+    if (!defaultLoginInfo.value.loginEmail) {
+        alert('邮箱不能为空')
+        return false
+    }
+    // 验证邮箱格式
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(defaultLoginInfo.value.loginEmail)) {
+        alert('请输入有效的邮箱格式');
+        return false;
+    }
     if (!defaultLoginInfo.value.loginPassword) {
         alert('密码不能为空')
         return false
@@ -163,9 +165,11 @@ const login = async () => {
             loginEmail: defaultLoginInfo.value.loginEmail,
             loginPassword: defaultLoginInfo.value.loginPassword
         });
-        if (response) {
-            alert('登录成功');
-            userStore.updateToken(response.data.token);
+        if (response.status === 201) {
+            message.success(response.data.message);
+            localStorage.setItem('user', JSON.stringify(response.data.user))
+            localStorage.setItem('authToken', response.data.token); //token
+            localStorage.setItem('tokenExpiry', response.data.expiresAt); //token过期时间
             route.replace('/home');
         }
 

@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { pool } from '../db/db.js';
 import validateRegister from '../middleware/validateRegisterNotnull.js';
+import validateLoginNotnull from '../middleware/validateLoginNotnull.js';
 const router = express.Router();
 const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -48,22 +49,58 @@ router.post('/register', validateRegister, async (req, res) => {
       VALUES (?, ?, ?, ?, NOW(), NOW())
     `;
         const insertValues = [userName, userEmail, hashedPassword, avatarUrl];
+        await sqlQuery(insertQuery, insertValues);
 
-        const insertResult = await sqlQuery(insertQuery, insertValues);
-        const userId = insertResult.insertId;
+        // 7. 返回成功响应
+        res.status(201).json({
+            message: '注册成功！正在跳转登录页面...',
+        });
 
-        // // 5. 查询新用户信息（排除密码）
+    } catch (err) {
+        console.error('注册失败:', err);
+        res.status(500).json({ message: '服务器内部错误' });
+    }
+});
+
+router.post('/login', validateLoginNotnull, async (req, res) => {
+    const { loginEmail, loginPassword } = req.body;
+    try {
+        // 使用参数化查询防止SQL注入
         const [user] = await sqlQuery(
             `SELECT 
-        id,
-        username,
-        email,
-        avatarUrl, 
-        created_at 
-     FROM users 
-     WHERE id = ?`,
-            [userId]
+                id,
+                username,
+                email,
+                avatarUrl,
+                created_at AS createdAt
+             FROM users 
+             WHERE email = ?`,
+            [loginEmail]
         );
+
+        if (!user) {
+            return res.status(404).json({ message: '用户不存在' });
+        }
+
+        // 获取密码哈希单独查询（增强安全性）
+        const [pwdResult] = await sqlQuery(
+            'SELECT password_hash FROM users WHERE id = ?',
+            [user.id]
+        );
+
+        if (!pwdResult?.password_hash) {
+            return res.status(500).json({ message: '服务器数据异常' });
+        }
+
+        // 密码验证
+        const match = await bcrypt.compare(loginPassword, pwdResult.password_hash);
+        if (!match) {
+            return res.status(401).json({ message: '密码错误' });
+        }
+
+        //计算token过期时间点
+        const expiresInMs = 2 * 60 * 60 * 1000;
+        const expiresAt = new Date(Date.now() + expiresInMs).toISOString();
 
         // 6. 生成 JWT Token
         const token = jwt.sign(
@@ -76,20 +113,20 @@ router.post('/register', validateRegister, async (req, res) => {
         // 7. 返回成功响应
         res.status(201).json({
             token,
-            message: '注册成功！正在跳转登录页面...',
+            message: '登录成功，正在跳转首页...',
+            expiresInMs, // 过期时间毫秒数
+            expiresAt, //过期时间点
             user: {
                 id: user.id,
                 username: user.username,
                 email: user.email,
                 avatarUrl: user.avatarUrl,
-                createdAt: user.created_at
+                createdAt: user.createdAt
             }
         });
-
-    } catch (err) {
-        console.error('注册失败:', err);
+    } catch (error) {
+        console.error('登录失败:', error.message);
         res.status(500).json({ message: '服务器内部错误' });
     }
 });
-
 export default router;
