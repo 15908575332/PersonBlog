@@ -4,6 +4,9 @@ import MessageBoard from "../views/MessageBoard.vue";
 import UserRegisterLogin from "../views/RegisterLogin.vue";
 import recordListDetail from '@/views/recordList/recordResource.vue'
 import { message } from "ant-design-vue";
+// @ts-ignore
+import { useAuthStore } from '@/store/auth';
+
 message.config({
     duration: 1,
 });
@@ -144,20 +147,5 @@ const router = createRouter({
     }
 
 })
-// router.beforeEach((to, from, next) => {
-//     if (to.path === '/userInfo') {
-//         next();
-//     } else {
-//         const token = sessionStorage.getItem('simulateUserToken');
-//         const tokenExpireTime = sessionStorage.getItem('sessionExpiration');
 
-//         if (token || (tokenExpireTime !== null && new Date().getTime() > parseInt(tokenExpireTime))) {
-//             next();
-//         } else {
-//             message.warning('请先登录');
-//             next('/userInfo');
-//             return from;
-//         }
-//     }
-// });
 export default router;

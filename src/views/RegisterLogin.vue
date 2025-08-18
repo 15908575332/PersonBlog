@@ -168,8 +168,9 @@ const login = async () => {
         if (response.status === 201) {
             message.success(response.data.message);
             localStorage.setItem('user', JSON.stringify(response.data.user))
-            localStorage.setItem('authToken', response.data.token); //token
-            localStorage.setItem('tokenExpiry', response.data.expiresAt); //token过期时间
+            localStorage.setItem('token', response.data.token); //token
+            localStorage.setItem('expiresAt', response.data.expiresAt); //token过期时间点
+            localStorage.setItem('expiresInMs', response.data.expiresInMs); //token过期时间毫秒数
             route.replace('/home');
         }
 
