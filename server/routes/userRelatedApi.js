@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { pool } from '../db/db.js';
 import validateRegister from '../middleware/validateRegisterNotnull.js';
 import validateLoginNotnull from '../middleware/validateLoginNotnull.js';
+import validateUpdateInfo from '../middleware/validateUpdateInfo.js';
 const router = express.Router();
 const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -61,7 +62,7 @@ router.post('/register', validateRegister, async (req, res) => {
         res.status(500).json({ message: '服务器内部错误' });
     }
 });
-
+// 用户登录接口
 router.post('/login', validateLoginNotnull, async (req, res) => {
     const { loginEmail, loginPassword } = req.body;
     try {
@@ -127,6 +128,96 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
     } catch (error) {
         console.error('登录失败:', error.message);
         res.status(500).json({ message: '服务器内部错误' });
+    }
+});
+// 用户信息更新接口
+router.post('/updateUserInfo', validateUpdateInfo, async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: '未提供认证令牌' });
+    }
+
+    try {
+        // 验证JWT令牌
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const userId = decoded.userId;
+
+        // 获取更新数据
+        const { username, email, sex, introduce } = req.body;
+
+        // 检查邮箱是否已被其他用户使用
+        if (email) {
+            const existingEmail = await sqlQuery(
+                'SELECT id FROM users WHERE email = ? AND id != ?',
+                [email, userId]
+            );
+            if (existingEmail.length > 0) {
+                return res.status(409).json({ message: '邮箱已被其他用户使用' });
+            }
+        }
+
+        // 构建更新字段
+        const updateFields = [];
+        const updateValues = [];
+
+        if (username) {
+            updateFields.push('username = ?');
+            updateValues.push(username);
+        }
+        if (email) {
+            updateFields.push('email = ?');
+            updateValues.push(email);
+        }
+        if (sex) {
+            updateFields.push('sex = ?');
+            updateValues.push(sex);
+        }
+        if (introduce !== undefined) {
+            updateFields.push('introduce = ?');
+            updateValues.push(introduce);
+        }
+
+        // 添加更新时间
+        updateFields.push('updated_at = NOW()');
+
+        // 执行更新
+        if (updateFields.length > 0) {
+            const updateQuery = `
+        UPDATE users 
+        SET ${updateFields.join(', ')}
+        WHERE id = ?
+      `;
+            await sqlQuery(updateQuery, [...updateValues, userId]);
+        }
+
+        // 返回更新后的用户信息
+        const [updatedUser] = await sqlQuery(
+            `SELECT 
+          id,
+          username,
+          email,
+          avatarUrl,
+          sex,
+          introduce,
+          created_at AS createdAt
+       FROM users 
+       WHERE id = ?`,
+            [userId]
+        );
+
+        res.status(200).json({
+            message: '用户信息更新成功',
+            user: updatedUser
+        });
+
+    } catch (error) {
+        console.error('更新失败:', error.message);
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: '会话已过期，请重新登录' });
+        }
+
+        res.status(500).json({ message: '更新用户信息失败' });
     }
 });
 export default router;

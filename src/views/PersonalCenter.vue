@@ -95,56 +95,82 @@ import { ref, computed, onMounted, reactive, watchEffect } from 'vue';
 const maxlength = ref(110);
 
 import { useAuthStore } from "@/store/auth";
+import { message } from 'ant-design-vue';
 const userStore = useAuthStore();
+
+message.config({
+    duration: 3,
+})
+
+const resetForm = () => {
+    if (userStore.user) {
+        formData.username = userStore.user.username || '';
+        formData.email = userStore.user.email || '';
+        formData.sex = userStore.user.sex || '男';
+        formData.introduce = userStore.user.introduce || '';
+    }
+};
 
 const isEditingAll = ref(false);
 const toggleGlobalEdit = () => {
+    if (isEditingAll.value) {
+        resetForm();
+    }
+
     isEditingAll.value = !isEditingAll.value;
     handleInput();
 };
 
 // 表单数据（使用响应式代理）
 const formData = reactive({
+    username: '',
+    email: '',
+    sex: '',
+    introduce: ''
 
 })
 // 初始化表单数据
 watchEffect(() => {
-    if (userStore.user && !isEditingAll.value) {
-        formData = { ...userStore.user }
+    if (userStore.user) {
+        formData.username = userStore.user.username || '';
+        formData.email = userStore.user.email || '';
+        formData.sex = userStore.user.sex || '男';
+        formData.introduce = userStore.user.introduce || '';
     }
 })
-//剩余字数计算
-// const remainingChars = computed(() => {
-//     return maxlength.value - formData.introduce.length;
+// 剩余字数计算
+const remainingChars = computed(() => {
+    return maxlength.value - (formData.introduce?.length || 0);
+});
 
-// });
-//截取处理 
-// const handleInput = () => {
-//     if (formData.introduce.length > maxlength.value) {
-//         formData.introduce = formData.introduce.slice(0, maxlength.value);
-//     }
-// };
+// 字符截取处理
+const handleInput = () => {
+    if (formData.introduce && formData.introduce.length > maxlength.value) {
+        formData.introduce = formData.introduce.slice(0, maxlength.value);
+    }
+};
 //更新数据
+const isSubmitting = ref(false);
 const handleUpdate = async () => {
+    //避免重复提交
+    if (isSubmitting.value) return;
     try {
-        // 校验数据
-        const errors = userStore.validateUpdateInfo(formData);
-        if (Object.keys(errors).length > 0) {
-            console.error('校验失败:', errors);
-            return;
+        isSubmitting.value = true;
+        const updateData = {
+            username: formData.username,
+            email: formData.email,
+            sex: formData.sex,
+            introduce: formData.introduce,
         }
-        // 发送更新请求
-        await userStore.updateUserProfile(formData);
-        // 刷新数据
-        await userStore.fetchUserInfo();
-
-        // 切换到默认展示区域
+        await userStore.updateUserProfile(updateData);
+        message.success('更新成功');
         isEditingAll.value = false;
     } catch (error) {
-        console.error('更新失败:', error);
+        message.error(`更新失败：${error.message}`);
+    } finally {
+        isSubmitting.value = false;
     }
-}
-
+};
 onMounted(() => { });
 </script>
 <style scoped lang="scss">
