@@ -203,7 +203,6 @@ import { useRoute, useRouter } from "vue-router";
 
 import { useAuthStore } from "@/store/auth";
 const userStore = useAuthStore();
-console.log(userStore.isAuthenticated);
 
 const route = useRouter();
 // 路由跳转函数

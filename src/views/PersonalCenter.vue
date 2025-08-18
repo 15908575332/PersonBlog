@@ -8,10 +8,10 @@
         <!-- 导航 -->
         <Navigation></Navigation>
         <!-- 会员卡片 -->
-        <div class="personalCard" v-if="userInfo">
+        <div class="personalCard" v-if="userStore.user">
 
             <div class="avatar">
-                <img :src="userInfo.data.avatarUrl" alt="头像">
+                <img :src="userStore.user.avatarUrl" alt="头像">
             </div>
             <div class="levelsbox">
                 <img class="level" :src="utils.getAssetsFile('icon/level/member.svg')" alt="icon">
@@ -54,11 +54,11 @@
                         <!-- 默认展示区域 -->
                         <div class="item">
                             <label for="username">名称：</label>
-                            <span>{{ userInfo.data.username }}</span>
+                            <span>{{ userStore.user.username }}</span>
                         </div>
                         <div class="item">
                             <label>邮箱：</label>
-                            <span>{{ userInfo.data.email }}</span>
+                            <span>{{ userStore.user.email }}</span>
                         </div>
                         <div class="item">
                             <label>性别：</label>
@@ -69,11 +69,11 @@
                         </div>
                         <div class="item">
                             <label>注册时间：</label>
-                            <span>{{ userInfo.data.createTime }}</span>
+                            <span>{{ userStore.user.createTime }}</span>
                         </div>
                         <div class="item">
                             <label for="introduce">简介：</label>
-                            <p>{{ userInfo.data.introduce }}</p>
+                            <p>{{ userStore.user.introduce }}</p>
                         </div>
                     </div>
                 </form>
@@ -93,14 +93,13 @@ import utils from '@/utils/getAssetsFile';
 import Navigation from '../components/NavigationMenu/index.vue';
 import { ref, computed, onMounted, reactive, watchEffect } from 'vue';
 const maxlength = ref(110);
-import { useUserStore } from '@/store/userInfo';
-const userStore = useUserStore();
-const userInfo = computed(() => userStore.userInfo);
-const token = localStorage.getItem('token');
+
+import { useAuthStore } from "@/store/auth";
+const userStore = useAuthStore();
+
 const isEditingAll = ref(false);
 const toggleGlobalEdit = () => {
     isEditingAll.value = !isEditingAll.value;
-    console.log(isEditingAll.value);
     handleInput();
 };
 
@@ -108,29 +107,25 @@ const toggleGlobalEdit = () => {
 const formData = reactive({
 
 })
-const originalData = ref({});
 // 初始化表单数据
 watchEffect(() => {
-    if (userInfo.value && !isEditingAll.value) {
-        // 深拷贝并保持响应式
-        Object.assign(formData, JSON.parse(JSON.stringify(userInfo.value.data)))
-        originalData.value = { ...formData }
+    if (userStore.user && !isEditingAll.value) {
+        formData = { ...userStore.user }
     }
 })
 //剩余字数计算
-const remainingChars = computed(() => {
-    return maxlength.value - formData.introduce.length;
+// const remainingChars = computed(() => {
+//     return maxlength.value - formData.introduce.length;
 
-});
+// });
 //截取处理 
-const handleInput = () => {
-    if (formData.introduce.length > maxlength.value) {
-        formData.introduce = formData.introduce.slice(0, maxlength.value);
-    }
-};
+// const handleInput = () => {
+//     if (formData.introduce.length > maxlength.value) {
+//         formData.introduce = formData.introduce.slice(0, maxlength.value);
+//     }
+// };
 //更新数据
 const handleUpdate = async () => {
-
     try {
         // 校验数据
         const errors = userStore.validateUpdateInfo(formData);
