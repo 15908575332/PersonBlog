@@ -145,7 +145,9 @@ async function UserRegister(e) {
     }
 }
 //用户登录
-const login = async () => {
+import { useAuthStore } from '@/store/auth';
+const login = async (e) => {
+    e.preventDefault();
     if (!defaultLoginInfo.value.loginEmail) {
         alert('邮箱不能为空')
         return false
@@ -161,21 +163,16 @@ const login = async () => {
         return false
     }
     try {
-        const response = await axios.post('http://localhost:3000/user/login', {
+        const res = await useAuthStore().login({
             loginEmail: defaultLoginInfo.value.loginEmail,
             loginPassword: defaultLoginInfo.value.loginPassword
-        });
-        if (response.status === 201) {
-            message.success(response.data.message);
-            localStorage.setItem('user', JSON.stringify(response.data.user))
-            localStorage.setItem('token', response.data.token); //token
-            localStorage.setItem('expiresAt', response.data.expiresAt); //token过期时间点
-            localStorage.setItem('expiresInMs', response.data.expiresInMs); //token过期时间毫秒数
-            route.replace('/home');
-        }
+        })
 
+        message.success('登录成功');
+        route.replace('/home');
     } catch (error) {
-        alert(error.response.data.msg);
+        const msg = error.response?.data?.message || error.message;
+        message.error(msg || '登录失败');
 
     }
 }

@@ -3,6 +3,30 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
+
+
+    const login = async (credentials) => {
+        try {
+            const response = await axios.post('http://localhost:3000/user/login', credentials);
+            // 更新状态
+            user.value = response.data.user;
+            token.value = response.data.token;
+            expiresAt.value = response.data.expiresAt;
+            expiresInMs.value = response.data.expiresInMs
+
+            // 保存到本地存储
+            localStorage.setItem('user', JSON.stringify(response.data.user))
+            localStorage.setItem('token', response.data.token); //token
+            localStorage.setItem('expiresAt', response.data.expiresAt); //token过期时间点
+            localStorage.setItem('expiresInMs', response.data.expiresInMs); //token过期时间毫秒数
+            // 其他...
+            return response.data;
+        } catch (error) {
+            // 错误处理
+            throw error;
+        }
+    };
+
     // 从 localStorage 初始化状态
     const user = ref(JSON.parse(localStorage.getItem('user') || null))
     const token = ref(localStorage.getItem('token') || null)
@@ -145,6 +169,8 @@ export const useAuthStore = defineStore('auth', () => {
         isAuthenticated,
         logout,
         updateUserProfile,
-        refreshToken
+        refreshToken,
+        login
+
     }
 })
