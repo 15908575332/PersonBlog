@@ -7,16 +7,21 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref(JSON.parse(localStorage.getItem('user') || null))
     const token = ref(localStorage.getItem('token') || null)
     const expiresAt = ref(localStorage.getItem('expiresAt') || null)
+    const expiresInMs = ref(localStorage.getItem('expiresInMs') || null)
+
     // 注销方法
     const logout = () => {
         user.value = null
         token.value = null
         expiresAt.value = null
+        expiresInMs.value = null
+
 
         // 清除 localStorage
         localStorage.removeItem('user')
         localStorage.removeItem('token')
         localStorage.removeItem('expiresAt')
+        localStorage.removeItem('expiresInMs')
     }
     // 计算属性：检查 token 是否有效（存在且未过期）
     const isTokenValid = computed(() => {
