@@ -79,7 +79,7 @@
               <div class="br"></div>
             </li>
             <!-- 已登录 -->
-            <li v-if="userStore.user" class="loginSuccess">
+            <li v-if="userStore.isAuthenticated && userStore.user" class="loginSuccess">
               <div class="profilePicture" @click="showModalFun" @mouseleave="dropLeave">
                 <img :src="userStore.user.avatarUrl" alt="头像" />
               </div>
@@ -152,7 +152,6 @@ import { useRoute, useRouter } from "vue-router";
 
 import { useAuthStore } from "@/store/auth";
 const userStore = useAuthStore();
-console.log(userStore);
 
 const route = useRouter();
 // 路由跳转函数

@@ -61,8 +61,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </template>
 
@@ -163,18 +161,27 @@ const login = async (e) => {
         return false
     }
     try {
-        const res = await useAuthStore().login({
+        await useAuthStore().login({
             loginEmail: defaultLoginInfo.value.loginEmail,
             loginPassword: defaultLoginInfo.value.loginPassword
         })
+        message.loading({
+            content: '登录成功，正在前往首页...',
 
-        message.success('登录成功');
+            duration: 0
+        });
+
+        // 模拟网络延迟
+        await new Promise(resolve => setTimeout(resolve, 2000));
         route.replace('/home');
+        message.destroy();
     } catch (error) {
         const msg = error.response?.data?.message || error.message;
         message.error(msg || '登录失败');
-
+    } finally {
+        message.destroy();
     }
+
 }
 
 onMounted(() => {
