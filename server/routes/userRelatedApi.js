@@ -73,7 +73,9 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
                 username,
                 email,
                 avatarUrl,
-                created_at AS createdAt
+                created_at AS createdAt,
+                sex,
+                introduce
              FROM users 
              WHERE email = ?`,
             [loginEmail]
@@ -122,7 +124,9 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
                 username: user.username,
                 email: user.email,
                 avatarUrl: user.avatarUrl,
-                createdAt: user.createdAt
+                createdAt: user.createdAt,
+                sex: user.sex,
+                introduce: user.introduce,
             }
         });
     } catch (error) {

@@ -64,12 +64,12 @@
                             <label>性别：</label>
                             <div class="boy">
                                 <span class="box"></span>
-                                <span>男</span>
+                                <span>{{ userStore.user.sex }}</span>
                             </div>
                         </div>
                         <div class="item">
                             <label>注册时间：</label>
-                            <span>{{ userStore.user.createTime }}</span>
+                            <span>{{ userStore.user.createdAt }}</span>
                         </div>
                         <div class="item">
                             <label for="introduce">简介：</label>
