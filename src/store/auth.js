@@ -71,12 +71,75 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    // 刷新token
+    const refreshToken = async () => {
+        try {
+            // 检查当前是否有可用的 token
+            if (!token.value) {
+                throw new Error("No token available for refresh");
+            }
+
+            // 发送刷新 token 的请求
+            const response = await axios.post('http://localhost:3000/user/refresh', {}, {
+                headers: {
+                    'Authorization': `Bearer ${token.value}`
+                }
+            });
+
+            // 检查响应是否有效
+            if (!response.data || !response.data.accessToken) {
+                throw new Error("Invalid refresh token response");
+            }
+
+            // 更新 store 状态
+            token.value = response.data.accessToken;
+            expiresAt.value = response.data.expiresAt || new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 默认1小时
+
+            // 更新本地存储
+            localStorage.setItem('token', token.value);
+            localStorage.setItem('expiresAt', expiresAt.value);
+
+            return true; // 表示刷新成功
+
+        } catch (error) {
+            console.error("Token refresh failed:", error);
+
+            // 刷新失败时清除用户状态
+            logout();
+
+            // 处理不同的错误情况
+            let errorMsg = 'Token refresh failed';
+
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    // 根据 HTTP 状态码细化错误消息
+                    switch (error.response.status) {
+                        case 401:
+                            errorMsg = 'Session expired, please login again';
+                            break;
+                        case 403:
+                            errorMsg = 'Refresh token rejected';
+                            break;
+                        default:
+                            errorMsg = `Server error: ${error.response.status}`;
+                    }
+                } else if (error.request) {
+                    errorMsg = 'No response from server';
+                }
+            } else if (error instanceof Error) {
+                errorMsg = error.message;
+            }
+
+            throw new Error(errorMsg); // 抛出错误以便调用者处理
+        }
+    };
     return {
         user,
         token,
         expiresAt,
         isAuthenticated,
         logout,
-        updateUserProfile
+        updateUserProfile,
+        refreshToken
     }
 })

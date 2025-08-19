@@ -220,4 +220,82 @@ router.post('/updateUserInfo', validateUpdateInfo, async (req, res) => {
         res.status(500).json({ message: '更新用户信息失败' });
     }
 });
+
+// 新增：解析JWT过期时间字符串为毫秒数的辅助函数
+function parseJwtExpiresIn(expiresIn) {
+    if (!expiresIn) return 2 * 60 * 60 * 1000; // 默认2小时
+
+    // 解析类似'2h'、'30m'的字符串
+    const unit = expiresIn.slice(-1);
+    const value = parseInt(expiresIn);
+
+    if (unit === 's') return value * 1000;
+    if (unit === 'm') return value * 60 * 1000;
+    if (unit === 'h') return value * 60 * 60 * 1000;
+    if (unit === 'd') return value * 24 * 60 * 60 * 1000;
+
+    return value * 60 * 60 * 1000; // 默认按小时处理
+}
+
+// 新增：刷新令牌接口
+router.post('/refresh', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: '未提供认证令牌' });
+    }
+
+    try {
+        // 验证令牌（忽略过期时间）
+        const decoded = jwt.verify(token, JWT_SECRET, { ignoreExpiration: true });
+
+        // 获取令牌原始过期时间
+        const originalExp = decoded.exp * 1000; // 转换为毫秒
+        const currentTime = Date.now();
+
+        // 检查令牌是否在可刷新窗口内（过期后5分钟内）
+        const isInRefreshWindow = (currentTime - originalExp) <= 5 * 60 * 1000;
+
+        if (!isInRefreshWindow) {
+            return res.status(401).json({
+                message: '令牌已过期，请重新登录',
+                code: 'TOKEN_EXPIRED'
+            });
+        }
+
+        // 获取新的过期时间设置
+        const expiresIn = process.env.JWT_EXPIRES_IN || '2h';
+        const expiresInMs = parseJwtExpiresIn(expiresIn);
+        const newExpiresAt = new Date(Date.now() + expiresInMs).toISOString();
+
+        // 生成新令牌（使用相同的用户信息）
+        const newToken = jwt.sign(
+            { userId: decoded.userId, userEmail: decoded.userEmail },
+            JWT_SECRET,
+            { expiresIn }
+        );
+
+        // 返回新令牌和过期信息
+        res.status(200).json({
+            token: newToken,
+            expiresInMs,
+            expiresAt: newExpiresAt,
+            message: '令牌已刷新'
+        });
+
+    } catch (error) {
+        console.error('刷新令牌失败:', error.message);
+
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({
+                message: '无效的令牌',
+                code: 'INVALID_TOKEN'
+            });
+        }
+
+        res.status(500).json({
+            message: '刷新令牌失败',
+            code: 'REFRESH_FAILED'
+        });
+    }
+});
 export default router;
