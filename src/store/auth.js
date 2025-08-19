@@ -47,15 +47,26 @@ export const useAuthStore = defineStore('auth', () => {
         localStorage.removeItem('expiresAt')
         localStorage.removeItem('expiresInMs')
     }
+
     // 计算属性：检查 token 是否有效（存在且未过期）
     const isTokenValid = computed(() => {
-        return expiresAt.value && new Date() < new Date(expiresAt.value)
-    })
+        if (!expiresAt.value) return false; // 没有过期时间视为无效
+
+        // 获取当前时间（秒级时间戳）
+        const nowInSeconds = Math.floor(Date.now() / 1000);
+
+        // 确保 expiresAt 是数字类型（处理可能的字符串存储）
+        const expiration = Number(expiresAt.value);
+
+        // 当前时间小于过期时间 = token 有效
+        return nowInSeconds < expiration;
+    });
 
     // 计算属性：用户是否已认证
     const isAuthenticated = computed(() => {
-        return !!token.value && isTokenValid.value
-    })
+        // 同时检查 token 存在且有效
+        return !!token.value && isTokenValid.value;
+    });
 
     // 自动清理过期的 token
     const cleanupExpiredToken = () => {
@@ -68,7 +79,7 @@ export const useAuthStore = defineStore('auth', () => {
     cleanupExpiredToken()
 
     // 监听 expiresAt 变化，自动处理过期
-    watch(expiresAt, cleanupExpiredToken)
+    // watch(expiresAt, cleanupExpiredToken)
 
     //更新用户信息.
     const updateUserProfile = async (updateData) => {
@@ -122,7 +133,8 @@ export const useAuthStore = defineStore('auth', () => {
 
             // 更新 store 状态
             token.value = response.data.accessToken;
-            expiresAt.value = response.data.expiresAt || new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 默认1小时
+            expiresAt.value = response.data.expiresAt || new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(); // 默认2小时
+
 
             // 更新本地存储
             localStorage.setItem('token', token.value);
@@ -166,7 +178,9 @@ export const useAuthStore = defineStore('auth', () => {
         user,
         token,
         expiresAt,
+        expiresInMs,
         isAuthenticated,
+        isTokenValid,
         logout,
         updateUserProfile,
         refreshToken,

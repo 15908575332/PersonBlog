@@ -19,6 +19,9 @@ const router = createRouter({
         },
         {
             path: "/home", component: HomePage,
+            meta: {
+                requiresAuth: true
+            }
         },
         {
             path: "/family", component: () => import('@/views/Family.vue'),
@@ -113,6 +116,10 @@ const router = createRouter({
         },
         {
             path: "/userInfo", component: UserRegisterLogin,
+            meta: {
+                public: true
+            }
+
         },
         {
             path: '/resetPassword', component: () => import('@/views/ResetPassword.vue')
@@ -135,6 +142,10 @@ const router = createRouter({
             path: '/:pathMatch(.*)*',
             name: 'NotFound',
             component: () => import('@/components/NotFound/index.vue')
+            , meta: {
+                public: true
+            }
+
         }
     ],
     // 路由切换时始终滚动到最顶部
@@ -149,64 +160,59 @@ const router = createRouter({
 
 // 添加全局路由守卫
 router.beforeEach(async (to, from, next) => {
-
     const authStore = useAuthStore();
-    const isAuthenticated = authStore.isAuthenticated;
-
-    // 获取当前时间（用于检查token过期）
-    const currentTime = Math.floor(Date.now() / 1000);
-
-    // 定义免校验路由
+    // 路由类型
     const isPublicRoute = to.matched.some(record => record.meta.public);
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
     // 公共路由直接放行
     if (isPublicRoute) {
-        return next();
+        // 已登录用户访问登录页，重定向到首页
+        if (authStore.isAuthenticated) {
+            return next({
+                path: "/home",
+            })
+        }
+        return next(); //放行未登录用户
     }
 
-    // console.log(isAuthenticated)
-    // console.log(authStore)
-    if (!isAuthenticated) {
-        // 检查token是否存在和过期
-        if (authStore.token) {
-            console.log('路由守卫', to, from)
-            // 验证token过期
-            const isTokenExpired = authStore.expireAt ? currentTime >= authStore.expireAt : true;
-
-            if (isTokenExpired) {
-                try {
-                    // 尝试刷新token
-                    await authStore.refreshToken();
-                } catch (error) {
-                    // 刷新失败则清除用户状态
-                    authStore.logout();
-                    message.warning("登录已过期，请重新登录");
-                    // 跳转到登录页，携带原目标路径以便登录后重定向
-                    return next({
-                        path: "/userInfo",
-                        query: { redirect: to.fullPath }
-                    });
-                }
-            }
-
-            // 如果路由需要认证且用户已认证，放行
-            if (requiresAuth && isAuthenticated) {
+    //需要认证的路由处理
+    if (requiresAuth) {
+        //未认证用户直接跳转登录页
+        if (!authStore.isAuthenticated) {
+            message.warning("请先登录");
+            return next({
+                path: "/userInfo",
+                query: { redirect: to.fullPath }
+            })
+        }
+        //处理token过期
+        if (!authStore.isTokenValid) {
+            try {
+                await authStore.refreshToken();
+                //刷新成功继续导航
                 return next();
+            } catch (error) {
+                authStore
+                message.warning("登录过期，请重新登录");
+                return next({
+                    path: "/userInfo",
+                    query: { redirect: to.fullPath }
+                })
             }
         }
     }
-    // 需要认证但未登录/认证失效
-    if (requiresAuth && !isAuthenticated) {
-        message.warning("请先登录访问该页面");
+
+    // 既不是公共路由，也不是需要认证的路由（未标记）
+    // 采用保守策略：默认需要认证
+    if (!authStore.isAuthenticated) {
         return next({
-            path: "/userInfo",
+            path: '/userInfo',
             query: { redirect: to.fullPath }
         });
     }
-
-    // 其他情况放行
+    //404
     next();
-});
+})
 
 export default router;

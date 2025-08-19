@@ -103,7 +103,8 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
 
         //计算token过期时间点
         const expiresInMs = 2 * 60 * 60 * 1000;
-        const expiresAt = new Date(Date.now() + expiresInMs).toISOString();
+        const expiresAt = Math.floor((Date.now() + expiresInMs) / 1000); //秒级时间戳（Unix时间戳）
+
 
         // 6. 生成 JWT Token
         const token = jwt.sign(

@@ -173,18 +173,21 @@ const login = async (e) => {
 
         // 模拟网络延迟
         await new Promise(resolve => setTimeout(resolve, 2000));
+        // useAuthStore().login()
         route.replace('/home');
-        message.destroy();
+        console.log(useAuthStore().isAuthenticated)
+        console.log(useAuthStore().isTokenValid)
     } catch (error) {
         const msg = error.response?.data?.message || error.message;
         message.error(msg || '登录失败');
     } finally {
         message.destroy();
     }
-
 }
 
 onMounted(() => {
+    console.log(useAuthStore().isAuthenticated)
+    console.log(useAuthStore().isTokenValid)
     //背景图索引值
     if (videoUrls.value.length > 0) {
         randomIndex.value = Math.floor(Math.random() * videoUrls.value.length);
