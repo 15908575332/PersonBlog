@@ -1,9 +1,8 @@
 <template>
   <div class="reset-password-container">
     <div class="meihua-svg-container">
-      <MeihuaSvg>1</MeihuaSvg>
+      <MeihuaSvg></MeihuaSvg>
     </div>
-    <div class="backPhoto"></div>
     <div class="navigation">
       <navigation></navigation>
     </div>
@@ -280,7 +279,7 @@ function handleStepClick(targetStep) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("@/assets/img/resetPassword/2.jpeg");
+  background-image: url("@/assets/img/resetPassword/4.jpeg");
   // background-position: right;
   background-size: cover;
   font-size: 1rem;
