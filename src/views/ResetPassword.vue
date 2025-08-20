@@ -11,17 +11,11 @@
       <h2>重置密码</h2>
       <div class="steps" :style="`--step: ${step}; --steps: ${steps.length}`">
         <div class="step-line"></div>
-        <div
-          v-for="(item, idx) in steps"
-          :key="idx"
-          class="step-dot"
-          :class="{
-            active: step === idx + 1,
-            completed: step > idx + 1,
-            clickable: canClickStep(idx + 1),
-          }"
-          @click="handleStepClick(idx + 1)"
-        >
+        <div v-for="(item, idx) in steps" :key="idx" class="step-dot" :class="{
+          active: step === idx + 1,
+          completed: step > idx + 1,
+          clickable: canClickStep(idx + 1),
+        }" @click="handleStepClick(idx + 1)">
           <div class="dot">
             <span class="step-num">{{ idx + 1 }}</span>
           </div>
@@ -31,85 +25,46 @@
         <section class="form-content">
           <div class="input-group">
             <span class="input">
-              <input
-                class="input__field"
-                v-model="account"
-                id="account"
-                :data-has-value="!!account"
-              />
+              <input class="input__field" v-model="account" id="account" :data-has-value="!!account" />
               <label class="input__label" for="account">
                 <span class="input__label-content">
-                  <img
-                    :src="
-                      utils.getAssetsFile(
-                        'icon/resetPassword/accountNumber.svg'
-                      )
-                    "
-                    alt="accountNumber"
-                  />
-                  邮箱或手机号</span
-                >
+                  <img :src="utils.getAssetsFile(
+                    'icon/resetPassword/accountNumber.svg'
+                  )
+                    " alt="accountNumber" />
+                  邮箱或手机号</span>
               </label>
             </span>
           </div>
           <div class="input-group">
             <span class="input">
-              <input
-                class="input__field"
-                v-model="code"
-                id="code"
-                :data-has-value="!!code"
-              />
+              <input class="input__field" v-model="code" id="code" :data-has-value="!!code" />
               <label class="input__label" for="code">
                 <span class="input__label-content">
-                  <img
-                    :src="
-                      utils.getAssetsFile('icon/resetPassword/verification.svg')
-                    "
-                    alt="verification"
-                  />
-                  请输入验证码</span
-                >
+                  <img :src="utils.getAssetsFile('icon/resetPassword/verification.svg')
+                    " alt="verification" />
+                  请输入验证码</span>
               </label>
             </span>
             <!-- 验证码 -->
-            <a-button
-              type="button"
-              class="send-code-btn"
-              :disabled="countdown > 0 || !validateAccount(account)"
-              @click="() => sendCode('success')"
-            >
+            <a-button type="button" class="send-code-btn" :disabled="countdown > 0 || !validateAccount(account)"
+              @click="() => sendCode('success')">
               {{ countdown > 0 ? `${countdown}s重发` : "验证码" }}
             </a-button>
           </div>
           <div class="input-group">
             <span class="input">
-              <input
-                class="input__field"
-                id="captchaInput"
-                maxlength="4"
-                v-model="captchaInput"
-                :data-has-value="!!captchaInput"
-              />
+              <input class="input__field" id="captchaInput" maxlength="4" v-model="captchaInput"
+                :data-has-value="!!captchaInput" />
               <label class="input__label" for="captchaInput">
                 <span class="input__label-content">
-                  <img
-                    :src="
-                      utils.getAssetsFile(
-                        'icon/resetPassword/imgVerification.svg'
-                      )
-                    "
-                    alt="imgVerification"
-                  />图形验证码</span
-                >
+                  <img :src="utils.getAssetsFile(
+                    'icon/resetPassword/imgVerification.svg'
+                  )
+                    " alt="imgVerification" />图形验证码</span>
               </label>
             </span>
-            <span
-              class="captcha-img"
-              @click="generateCaptcha"
-              :title="'点击更换验证码'"
-              >{{ captcha }}</span
-            >
+            <span class="captcha-img" @click="generateCaptcha" :title="'点击更换验证码'">{{ captcha }}</span>
           </div>
         </section>
         <div class="btn-row">
@@ -120,45 +75,25 @@
         <section class="form-content">
           <div class="input-group">
             <span class="input">
-              <input
-                v-model="newPassword"
-                class="input__field"
-                type="password"
-                id="newPassword"
-                :data-has-value="!!newPassword"
-              />
+              <input v-model="newPassword" class="input__field" type="password" id="newPassword"
+                :data-has-value="!!newPassword" />
               <label class="input__label" for="newPassword">
                 <span class="input__label-content">
-                  <img
-                    :src="
-                      utils.getAssetsFile('icon/resetPassword/password.svg')
-                    "
-                    alt="password"
-                  />
-                  新密码</span
-                >
+                  <img :src="utils.getAssetsFile('icon/resetPassword/password.svg')
+                    " alt="password" />
+                  新密码</span>
               </label>
             </span>
           </div>
           <div class="input-group">
             <span class="input">
-              <input
-                v-model="confirmPassword"
-                class="input__field"
-                type="password"
-                id="confirmPassword"
-                :data-has-value="!!confirmPassword"
-              />
+              <input v-model="confirmPassword" class="input__field" type="password" id="confirmPassword"
+                :data-has-value="!!confirmPassword" />
               <label class="input__label" for="confirmPassword">
                 <span class="input__label-content">
-                  <img
-                    :src="
-                      utils.getAssetsFile('icon/resetPassword/newPassword.svg')
-                    "
-                    alt="newPassword"
-                  />
-                  确认新密码</span
-                >
+                  <img :src="utils.getAssetsFile('icon/resetPassword/newPassword.svg')
+                    " alt="newPassword" />
+                  确认新密码</span>
               </label>
             </span>
           </div>
@@ -167,16 +102,10 @@
           <div class="btn-row">
             <button @click="step = 1" class="button05">上一步 ►</button>
             <button class="button05" type="submit">确认修改 ♥</button>
-            <!-- <button type="button" @click="step = 1">上一步</button> -->
-            <!-- <button class="confirm-modification" type="submit">确认修改</button> -->
           </div>
         </section>
       </form>
-      <div
-        v-if="message"
-        :class="{ error: isError, success: !isError }"
-        class="msg"
-      >
+      <div v-if="message" :class="{ error: isError, success: !isError }" class="msg">
         <!-- {{ codeSent }} -->
       </div>
     </div>
@@ -245,7 +174,7 @@ function onAccountAndCodeSubmit() {
     return;
   }
   if (code.value !== codeSent.value) {
-    message.error("验证码错误");
+    message.error("手机验证码错误");
     isError.value = true;
     return;
   }
@@ -361,14 +290,16 @@ function handleStepClick(targetStep) {
   $formHeight: 450px;
   //form表单与卡片的内间距
   $formPadding: 2rem;
+
   .meihua-svg-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-   z-index: 1;
+    z-index: 1;
   }
+
   .reset-password-card {
     background: rgb(254, 254, 254, 0.6);
     backdrop-filter: blur(10px);
@@ -381,12 +312,14 @@ function handleStepClick(targetStep) {
     position: relative;
     padding: $formPadding;
     z-index: 2;
+
     //标题
     h2 {
       text-align: center;
       margin-bottom: 1rem;
       color: #2585db;
     }
+
     // 步骤条
     .steps {
       display: flex;
@@ -394,6 +327,7 @@ function handleStepClick(targetStep) {
       justify-content: center;
       position: relative;
       height: 40px;
+
       .step-line {
         position: absolute;
         top: 50%;
@@ -403,6 +337,7 @@ function handleStepClick(targetStep) {
         background: #eee;
         z-index: 0;
         transform: translateY(-50%);
+
         &::before {
           content: "";
           position: absolute;
@@ -416,6 +351,7 @@ function handleStepClick(targetStep) {
           pointer-events: none;
         }
       }
+
       .step-dot {
         position: relative;
         z-index: 1;
@@ -424,6 +360,7 @@ function handleStepClick(targetStep) {
         align-items: center;
         cursor: pointer;
         width: 100%;
+
         //圆点
         .dot {
           width: 16px;
@@ -433,6 +370,7 @@ function handleStepClick(targetStep) {
           border: 2px solid #eee;
           transition: background 0.2s, border-color 0.2s;
           position: relative;
+
           .step-num {
             position: absolute;
             top: 50%;
@@ -444,16 +382,19 @@ function handleStepClick(targetStep) {
             line-height: 2;
           }
         }
+
         // 新增：高亮所有已完成（当前及之前）圆点
         &.active .dot,
         &.completed .dot {
           background: #2585db;
           border-color: #2585db;
+
           .step-num {
             color: #fdfdfd;
           }
         }
       }
+
       &.clickable {
         cursor: pointer;
       }
@@ -470,10 +411,12 @@ function handleStepClick(targetStep) {
     .input-group {
       @include flexCenter(row, space-between);
       width: 100%;
+
       .input {
         position: relative;
         display: block;
         width: 100%;
+
         input {
           width: 100%;
           padding: 1.2rem 0 0.2rem 0.5rem;
@@ -486,19 +429,23 @@ function handleStepClick(targetStep) {
           font-family: inherit;
           letter-spacing: 1px;
           color: #1a1f1f;
+
           &::placeholder {
             color: transparent;
           }
+
           &:focus {
             border-bottom: 2px solid #4096e1;
             outline: none;
           }
-          &:focus + .input__label,
-          &[data-has-value="true"] + .input__label {
+
+          &:focus+.input__label,
+          &[data-has-value="true"]+.input__label {
             color: #4096e1;
             transform: translateY(-1.5em) scale(0.9);
           }
         }
+
         .input__label {
           position: absolute;
           left: 0;
@@ -508,9 +455,11 @@ function handleStepClick(targetStep) {
           transition: color 0.2s, transform 0.2s;
           transform-origin: left bottom;
           padding: 0.2em;
+
           .input__label-content {
             text-align: center;
             @include flexCenter(row, center);
+
             img {
               width: 24px;
               height: 22px;
@@ -538,28 +487,24 @@ function handleStepClick(targetStep) {
       min-width: 100px;
       padding: 0.4rem 0.75rem;
       background-color: #2585db;
-      background-image: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
+      background-image: -webkit-gradient(linear,
+          left top,
+          left bottom,
 
-        color-stop(0, rgb(112, 181, 242)),
-        color-stop(0.49, rgb(84, 164, 238)),
-        color-stop(0.5, rgb(54, 144, 240)),
-        color-stop(1, rgb(26, 97, 219))
-      );
+          color-stop(0, rgb(112, 181, 242)),
+          color-stop(0.49, rgb(84, 164, 238)),
+          color-stop(0.5, rgb(54, 144, 240)),
+          color-stop(1, rgb(26, 97, 219)));
 
-      background-image: -moz-linear-gradient(
-        center top,
+      background-image: -moz-linear-gradient(center top,
 
-        rgb(112, 181, 242) 0%,
+          rgb(112, 181, 242) 0%,
 
-        rgb(84, 164, 238) 49%,
+          rgb(84, 164, 238) 49%,
 
-        rgb(54, 144, 240) 50%,
+          rgb(54, 144, 240) 50%,
 
-        rgb(26, 97, 219) 100%
-      );
+          rgb(26, 97, 219) 100%);
 
       color: #fff;
       font-weight: bold;
@@ -573,67 +518,83 @@ function handleStepClick(targetStep) {
       -moz-border-radius: 8px;
       -webkit-border-radius: 8px;
       box-shadow: inset 0px -4px 5px rgba(255, 255, 255, 0.2),
-        inset 0px 1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+        inset 0px 1px 5px rgba(255, 255, 255, 0.2),
+        /**/
+        0px 2px 0px #1e4766,
         0px 4px 0px #1e4766, 0px 6px 0px #1e4766,
-        /**/ 0px 8px 5px rgba(0, 0, 0, 0.5);
+        /**/
+        0px 8px 5px rgba(0, 0, 0, 0.5);
 
       -moz-box-shadow: inset 0px -4px 5px rgba(255, 255, 255, 0.2),
-        inset 0px 1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+        inset 0px 1px 5px rgba(255, 255, 255, 0.2),
+        /**/
+        0px 2px 0px #1e4766,
         0px 4px 0px #1e4766, 0px 6px 0px #1e4766,
-        /**/ 0px 8px 5px rgba(0, 0, 0, 0.5);
+        /**/
+        0px 8px 5px rgba(0, 0, 0, 0.5);
 
       -webkit-box-shadow: inset 0px -4px 5px rgba(255, 255, 255, 0.2),
-        inset 0px 1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
+        inset 0px 1px 5px rgba(255, 255, 255, 0.2),
+        /**/
+        0px 2px 0px #1e4766,
         0px 4px 0px #1e4766, 0px 6px 0px #1e4766,
-        /**/ 0px 8px 5px rgba(0, 0, 0, 0.5);
+        /**/
+        0px 8px 5px rgba(0, 0, 0, 0.5);
 
       &:hover {
         background-color: #87effa;
 
-        background-image: -webkit-gradient(
-          linear,
-          left top,
+        background-image: -webkit-gradient(linear,
+            left top,
 
-          left bottom,
+            left bottom,
 
-          color-stop(0, rgb(134, 193, 253)),
-          color-stop(0.49, rgb(153, 213, 255)),
-          color-stop(0.5, rgb(130, 194, 253)),
-          color-stop(1, rgb(108, 170, 229))
-        );
+            color-stop(0, rgb(134, 193, 253)),
+            color-stop(0.49, rgb(153, 213, 255)),
+            color-stop(0.5, rgb(130, 194, 253)),
+            color-stop(1, rgb(108, 170, 229)));
 
-        background-image: -moz-linear-gradient(
-          center top,
+        background-image: -moz-linear-gradient(center top,
 
-          rgb(134, 193, 253) 0%,
+            rgb(134, 193, 253) 0%,
 
-          rgb(153, 213, 255) 49%,
+            rgb(153, 213, 255) 49%,
 
-          rgb(130, 194, 253) 50%,
+            rgb(130, 194, 253) 50%,
 
-          rgb(108, 170, 229) 100%
-        );
+            rgb(108, 170, 229) 100%);
       }
 
       &:active {
         top: 4px;
         box-shadow: inset 0px 4px 5px rgba(255, 255, 255, 0.4),
-          inset 0px -1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
-          /**/ 0px 4px 5px rgba(0, 0, 0, 0.5);
+          inset 0px -1px 5px rgba(255, 255, 255, 0.2),
+          /**/
+          0px 2px 0px #1e4766,
+          /**/
+          0px 4px 5px rgba(0, 0, 0, 0.5);
 
         -moz-box-shadow: inset 0px 4px 5px rgba(255, 255, 255, 0.4),
-          inset 0px -1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
-          /**/ 0px 4px 5px rgba(0, 0, 0, 0.5);
+          inset 0px -1px 5px rgba(255, 255, 255, 0.2),
+          /**/
+          0px 2px 0px #1e4766,
+          /**/
+          0px 4px 5px rgba(0, 0, 0, 0.5);
 
         -webkit-box-shadow: inset 0px 4px 5px rgba(255, 255, 255, 0.4),
-          inset 0px -1px 5px rgba(255, 255, 255, 0.2), /**/ 0px 2px 0px #1e4766,
-          /**/ 0px 4px 5px rgba(0, 0, 0, 0.5);
+          inset 0px -1px 5px rgba(255, 255, 255, 0.2),
+          /**/
+          0px 2px 0px #1e4766,
+          /**/
+          0px 4px 5px rgba(0, 0, 0, 0.5);
       }
     }
+
     button {
       transition-duration: 0.4s, 0.5s;
       transition-property: background-color, color;
       transition-timing-function: ease, ease;
+
       &:hover {
         color: #155fde;
         text-decoration: underline;
@@ -658,34 +619,33 @@ function handleStepClick(targetStep) {
     font-size: 0.85rem;
     font-weight: bold;
     @include flexCenter(row, center);
+
     &:disabled {
       background: #eee;
       color: #aaa;
       cursor: not-allowed;
     }
   }
+
   // 图形验证码
   .captcha-img {
     display: inline-block;
     letter-spacing: 2px;
-    background: repeating-linear-gradient(
-      135deg,
-      #f6d365,
-      #fda085 10px,
-      #fff 20px
-    );
+    background: repeating-linear-gradient(135deg,
+        #f6d365,
+        #fda085 10px,
+        #fff 20px);
 
     color: #eb1558;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     border: 1px solid #fda085;
     transition: background 0.2s;
+
     &:hover {
-      background: repeating-linear-gradient(
-        135deg,
-        #fda085,
-        #f6d365 10px,
-        #fff 20px
-      );
+      background: repeating-linear-gradient(135deg,
+          #fda085,
+          #f6d365 10px,
+          #fff 20px);
     }
   }
 
@@ -695,9 +655,11 @@ function handleStepClick(targetStep) {
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
+
     &.error {
       color: #e74c3c;
     }
+
     &.success {
       color: #27ae60;
     }
