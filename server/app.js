@@ -1,5 +1,6 @@
 // node后端服务器
-import userRelatedApi from './routes/userRelatedApi.js'
+import userRelatedApi from './routes/userRelatedApi.js';
+import messageBoardApi from './routes/messageBoardApi.js';
 import express from 'express'; // express框架
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -18,7 +19,8 @@ app.use(json())
 app.use(urlencoded({ extended: false }))
 
 // 后端api路由
-app.use('/user', userRelatedApi)
+app.use('/user', userRelatedApi);
+app.use('/', messageBoardApi);
 
 // 错误处理中间件（放在所有路由之后）
 app.use((err, req, res, next) => {

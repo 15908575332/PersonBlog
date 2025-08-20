@@ -34,15 +34,18 @@ import { ref, computed, onMounted, nextTick, onUpdated, onUnmounted } from 'vue'
 import Navigation from '../components/NavigationMenu/index.vue';
 import vueDanmaku from 'vue3-danmaku';
 import utils from '@/utils/getAssetsFile';
+import axios from 'axios';
 const danmaku = ref();
 const randomIndex = ref();
 const inputValue = ref();
+import { useAuthStore } from "@/store/auth";
+const authStore = useAuthStore();
+
 const videoSrc = computed(() => {
     return {
         backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`
     }
 });
-
 function getRandomColor() {
     return `hsl(${Math.floor(Math.random() * 360)}, 80%, 55%)`;
 }
@@ -69,14 +72,28 @@ const videoUrls = ref([
 ]);
 
 // 插入留言
-const insertMessage = () => {
-    if (inputValue.value) {
-        danmaku.value.add({ avatar: utils.getAssetsFile('img/profile_picture/10053.png'), name: '测试提交', text: inputValue.value, color: getRandomColor() });
-        message.success('发送成功~~');
-    } else {
+const insertMessage = async () => {
+    if (!inputValue.value) {
         message.warn('你还没有填写呢~~');
+        return;
     }
-    inputValue.value = '';
+    if (inputValue.value.length < 2 || inputValue.value.length > 50) {
+        message.warn('留言内容长度(需2-50字符)');
+        return;
+    }
+    try {
+        const response = await axios.post('http://localhost:3000/setMessgeContent', {
+            userId: authStore.user.id,
+            content: inputValue.value
+        });
+        if (response.status == 201) {
+            message.success(response.data.message);
+            inputValue.value = '';
+
+        }
+    } catch (error) {
+        console.log(error.response.data.message);
+    }
 }
 import { message } from 'ant-design-vue';
 onMounted(() => {
@@ -85,8 +102,8 @@ onMounted(() => {
     };
     // 顶部全局提示
     message.config({
-        duration: 1,
-        maxCount: 1,
+        duration: 2,
+        maxCount: 2,
     });
 
 

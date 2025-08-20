@@ -1,34 +1,14 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { pool } from '../db/db.js';
 import validateRegister from '../middleware/validateRegisterNotnull.js';
 import validateLoginNotnull from '../middleware/validateLoginNotnull.js';
 import validateUpdateInfo from '../middleware/validateUpdateInfo.js';
 const router = express.Router();
 const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
 const JWT_SECRET = process.env.JWT_SECRET;
+import sqlQuery from '../db/sqlQuery.js';
 
-
-// 工具函数：数据库查询（增强版）
-// 修改后的 sqlQuery 函数
-const sqlQuery = (sql, params) => new Promise((resolve, reject) => {
-    pool.query(sql, params, (error, results) => {
-        if (error) {
-            // 增强错误日志
-            console.error('[DB ERROR]', {
-                sql,
-                params,
-                errorCode: error.code,
-                errorMessage: error.message
-            });
-            reject({ code: 'DB_ERROR', ...error });
-        } else {
-            // 安全处理 results 为 undefined 的情况
-            resolve(results);
-        }
-    });
-});
 // 用户注册接口
 router.post('/register', validateRegister, async (req, res) => {
     const { userName, userEmail, userPassword, avatarUrl = '' } = req.body;
