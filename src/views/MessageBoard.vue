@@ -47,22 +47,10 @@ const videoSrc = computed(() => {
     }
 });
 function getRandomColor() {
-    return `hsl(${Math.floor(Math.random() * 360)}, 80%, 55%)`;
+    return `hsl(${Math.floor(Math.random() * 360)}, 60%, 55%)`;
 }
 
-const danmus = ref([
-    { avatar: utils.getAssetsFile('img/profile_picture/10001.png'), name: 'sara', text: '设置一串很长的文字测试留言功能是否正常', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10002.png'), name: 'auther', text: '这里是留言', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10006.png'), name: 'ff', text: '北风卷地白草折，胡天八月即飞雪。', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10053.png'), name: 'homePage', text: '山回路转不见君，雪上空留马行处。', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10054.png'), name: 'back1', text: '轮台东门送君去，去时雪满天山路。', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10055.png'), name: 'webp', text: '纷纷暮雪下辕门，风掣红旗冻不翻。', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10056.png'), name: 'Jqavk', text: '中军置酒饮归客，胡琴琵琶与羌笛。', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10057.png'), name: 'utils', text: '瀚海阑干百丈冰，愁云惨淡万里凝。', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10058.png'), name: 'getAssetsFile', text: '将军角弓不得控，都护铁衣冷难着。', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10059.png'), name: 'randomIndex', text: '散入珠帘湿罗幕，狐裘不暖锦衾薄。', color: getRandomColor() },
-    { avatar: utils.getAssetsFile('img/profile_picture/10060.png'), name: '中文名字', text: '忽如一夜春风来，千树万树梨花开。', color: getRandomColor() },
-])
+const danmus = ref([])
 const videoUrls = ref([
     utils.getAssetsFile('img/homePage/back1.webp'),
     utils.getAssetsFile('img/homePage/back2.webp'),
@@ -70,7 +58,22 @@ const videoUrls = ref([
     utils.getAssetsFile('img/homePage/back4.webp'),
     utils.getAssetsFile('img/homePage/back5.webp'),
 ]);
-
+// 在Vue组件中调用
+const fetchMessages = async () => {
+    try {
+        const response = await axios.get('http://localhost:3000/getMessageList');
+        danmus.value = response.data.data.map(item => ({
+            ...item,
+            avatar: item.avatarUrl,
+            name: item.username,
+            text: item.content,
+            color: getRandomColor() // 前端生成随机颜色
+        }));
+    } catch (error) {
+        console.error('获取留言失败', error);
+        message.error('留言加载失败');
+    }
+}
 // 插入留言
 const insertMessage = async () => {
     if (!inputValue.value) {
@@ -89,7 +92,7 @@ const insertMessage = async () => {
         if (response.status == 201) {
             message.success(response.data.message);
             inputValue.value = '';
-
+            fetchMessages();
         }
     } catch (error) {
         console.log(error.response.data.message);
@@ -105,8 +108,7 @@ onMounted(() => {
         duration: 2,
         maxCount: 2,
     });
-
-
+    fetchMessages();
 })
 onUnmounted(() => {
 

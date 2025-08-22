@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
 
@@ -22,6 +22,9 @@ export const useAuthStore = defineStore('auth', () => {
             // 其他...
             return response.data;
         } catch (error) {
+            if (error.code === 'ERR_NETWORK') {
+                alert('网络错误，后端拒绝连接');
+            }
             // 错误处理
             throw error;
         }

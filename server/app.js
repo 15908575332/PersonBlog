@@ -13,7 +13,7 @@ const { json, urlencoded } = bodyParser
 const app = express()
 
 // 公共中间件配置
-// app.use(authenticateToken)
+app.use(authenticateToken)
 app.use(cors());
 app.use(json())
 app.use(urlencoded({ extended: false }))
