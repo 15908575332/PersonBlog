@@ -37,15 +37,36 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Navigation from '@/components/NavigationMenu/index.vue';
+import axios from 'axios';
 // 获取收藏夹数据
-import { useListDetail } from '@/store/listDetailStore';
-const recordStore = useListDetail();
-const favoriteData = recordStore.favoriteData;
-const openLink = (href) => {
-    window.open(href)
-}
+const favoriteData = ref([]);
+const getFavorites = (async () => {
+    // 调用后端接口获取数据
+    try {
+        const response = await axios.get('http://localhost:3000/treasureBox/favorite-data');
+        if (response.data.code === 200) {
+            console.log('数据获取成功:', response.data.data);
+            favoriteData.value = response.data.data;
+
+        } else {
+            console.error('数据获取失败:', response.data.message);
+        }
+    } catch (error) {
+        console.error('请求失败:', error);
+    };
+});
+
+onMounted(() => {
+    getFavorites();
+})
+// import { useListDetail } from '@/store/listDetailStore';
+// const recordStore = useListDetail();
+// const favoriteData = recordStore.favoriteData;
+// const openLink = (href) => {
+//     window.open(href)
+// }
 </script>
 <style scoped lang="scss">
 // 收藏夹

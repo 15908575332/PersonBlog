@@ -36,10 +36,10 @@
           <div class="left">
             <div class="personCard box__shadow">
               <div class="profilePicture">
-                <img src="@/assets/img/profile_picture/10011.png" alt="profilePicture" />
+                <img :src="authStore.user.avatarUrl" alt="profilePicture" />
               </div>
               <div class="nickname">
-                <h1>Person</h1>
+                <h1>{{ authStore.user.username }}</h1>
               </div>
               <div class="separate">
                 <ul>
@@ -208,6 +208,8 @@ import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import utils from "@/utils/getAssetsFile";
 import Navigation from "@/components/NavigationMenu/index.vue";
 import scrollMessage from "@/components/scrollMessage/index.vue";
+import { useAuthStore } from "@/store/auth";
+const authStore = useAuthStore();
 
 import axios from "axios";
 const messageList = ref([]);
@@ -907,6 +909,10 @@ $contentWidth: 65rem; // 内容宽度
         }
       }
     }
+  }
+
+  .c4-izmir {
+    --image-opacity: 1;
   }
 }
 

@@ -1,12 +1,14 @@
 // node后端服务器
 import userRelatedApi from './routes/userRelatedApi.js';
 import messageBoardApi from './routes/messageBoardApi.js';
+import favoritesApi from './routes/favoritesApi.js';
 import express from 'express'; // express框架
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { config } from 'dotenv';
 config({ path: './.env' });
 import authenticateToken from './routes/userRelatedApi.js'
+
 
 // body-parser是非常常用的一个express中间件，作用是对http请求体进行解析
 const { json, urlencoded } = bodyParser
@@ -19,8 +21,9 @@ app.use(json())
 app.use(urlencoded({ extended: false }))
 
 // 后端api路由
-app.use('/user', userRelatedApi);
-app.use('/', messageBoardApi);
+app.use('/user', userRelatedApi); //用户信息 
+app.use('/', messageBoardApi); //留言
+app.use('/treasureBox', favoritesApi); //收藏夹
 
 // 错误处理中间件（放在所有路由之后）
 app.use((err, req, res, next) => {
