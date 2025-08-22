@@ -29,11 +29,11 @@ const router = createRouter({
 
         {
             path: "/InformalEssay",
-            redirect: "/InformalEssay/InfContent",
+            redirect: "/InformalEssay/InfoContenet",
             children: [
                 {
-                    path: "InfContent",
-                    name: "InfContent",
+                    path: "InfoContenet",
+                    name: "InfoContenet",
                     component: () => import('@/views/informalEssay/InformalEssay.vue')
                 },
                 {

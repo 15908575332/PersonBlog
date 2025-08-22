@@ -231,7 +231,7 @@ const essay_options = ref([
   {
     value: "option0",
     text: "博客",
-    router: "InformalEssay/InfContent",
+    router: "InformalEssay/InfoContenet",
     iconUrl: utils.getAssetsFile("icon/informalEssay/record.svg"),
   },
   {

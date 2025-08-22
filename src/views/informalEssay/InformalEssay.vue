@@ -1,9 +1,6 @@
 <template>
   <div id="informalEssay">
-    <div
-      class="navigate"
-      :class="[isNavHidden ? 'navHiddenZoomOut' : 'navHiddenZoomIn']"
-    >
+    <div class="navigate" :class="[isNavHidden ? 'navHiddenZoomOut' : 'navHiddenZoomIn']">
       <Navigation></Navigation>
     </div>
     <!-- 背景图 -->
@@ -39,10 +36,7 @@
           <div class="left">
             <div class="personCard box__shadow">
               <div class="profilePicture">
-                <img
-                  src="@/assets/img/profile_picture/10011.png"
-                  alt="profilePicture"
-                />
+                <img src="@/assets/img/profile_picture/10011.png" alt="profilePicture" />
               </div>
               <div class="nickname">
                 <h1>Person</h1>
@@ -64,10 +58,7 @@
                 </ul>
               </div>
               <div class="interest">
-                <img
-                  src="@/assets/icon/informalEssay/friend.svg"
-                  alt="friend"
-                />
+                <img src="@/assets/icon/informalEssay/friend.svg" alt="friend" />
                 <span>朋友圈</span>
               </div>
             </div>
@@ -75,15 +66,8 @@
             <div class="search box__shadow">
               <h1>搜索</h1>
               <form class="search__form">
-                <input
-                  type="text"
-                  v-model="searchQuery"
-                  placeholder="搜索文章"
-                />
-                <img
-                  src=" @/assets/icon/informalEssay/informalEssaySearch.svg"
-                  alt=""
-                />
+                <input type="text" v-model="searchQuery" placeholder="搜索文章" />
+                <img src=" @/assets/icon/informalEssay/informalEssaySearch.svg" alt="" />
               </form>
             </div>
             <!-- 友站 -->
@@ -92,17 +76,14 @@
             </div>
             <!-- 留言滚动 -->
             <div class="scrollMessage">
-              <scroll-message :containerWidth="300"></scroll-message>
+              <scroll-message :containerWidth="300" :messages="messageList"></scroll-message>
             </div>
             <!-- 推荐位 -->
             <div class="recommend box__shadow">
               <h1>🍃推荐位</h1>
               <div class="recommend__content">
                 <div class="recommend__content__box">
-                  <img
-                    src="@/assets/img/infomalEssay/infomalEssayPicture.jpg"
-                    alt=""
-                  />
+                  <img src="@/assets/img/infomalEssay/infomalEssayPicture.jpg" alt="" />
                   <div class="recommend__content__text"></div>
                 </div>
               </div>
@@ -114,20 +95,14 @@
             <div class="anchorPointNav">
               <ul class="anchorPointList">
                 <li>
-                  <a
-                    href="#"
-                    @click.prevent="scrollToSection('lifeReflection')"
-                  >
+                  <a href="#" @click.prevent="scrollToSection('lifeReflection')">
                     <p>速览</p>
                     <p>生活倒影</p>
                     <p>记录美好生活</p>
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    @click.prevent="scrollToSection('audiovisualFeast')"
-                  >
+                  <a href="#" @click.prevent="scrollToSection('audiovisualFeast')">
                     <p>速览</p>
                     <p>视听盛宴</p>
                     <p>听音乐、看书、看电影</p>
@@ -153,101 +128,58 @@
           <div class="right">
             <div class="notice">
               <p>
-                <img
-                  src="@/components/ListDetail/icon/notice.svg"
-                  alt="notice"
-                />
-                <span
-                  >公告：本站为个人博客，用于记录个人学习笔记，如有侵权请联系删除</span
-                >
+                <img src="@/components/ListDetail/icon/notice.svg" alt="notice" />
+                <span>公告：本站为个人博客，用于记录个人学习笔记，如有侵权请联系删除</span>
               </p>
             </div>
             <div class="content__container">
               <!-- 生活倒影 -->
-              <section
-                v-for="module in dataContent"
-                :id="module.id"
-                :key="module.id"
-              >
+              <section v-for="module in dataContent" :id="module.id" :key="module.id">
                 <div class="menu">
                   <div class="flex__layout">
-                    <img
-                      src=" @/assets/icon/informalEssay/informalEssayMenu.svg"
-                      alt=""
-                    />
+                    <img src=" @/assets/icon/informalEssay/informalEssayMenu.svg" alt="" />
                     <span>{{ module.navBtntitle }}</span>
                   </div>
                   <div class="flex__layout">
-                    <img
-                      src=" @/assets/icon/informalEssay/informalEssayMore.svg"
-                      alt=""
-                    />
+                    <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="" />
                     <span>MORE</span>
                   </div>
                 </div>
                 <div class="right__content_aera">
-                  <div
-                    class="specific__content box__shadow"
-                    v-for="(item, index) in module.content"
-                    :key="index"
-                  >
-                    <figure
-                      class="image c4-izmir c4-image-pan-down"
-                      @click="listDetail(item.contentId, module.id)"
-                    >
+                  <div class="specific__content box__shadow" v-for="(item, index) in module.content" :key="index">
+                    <figure class="image c4-izmir c4-image-pan-down" @click="listDetail(item.contentId, module.id)">
                       <img v-lazy="item.backImage" alt="Image" />
                       <!-- <video v-else :src="item.mainUrl"></video> -->
-                      <button
-                        v-if="item.mediaType === 'video'"
-                        class="play-button"
-                      ></button>
+                      <button v-if="item.mediaType === 'video'" class="play-button"></button>
                     </figure>
                     <div class="text__content">
                       <!-- 发布 -->
                       <div class="release">
-                        <img
-                          src="@/assets/icon/recordList/release.svg"
-                          alt=""
-                        />
+                        <img src="@/assets/icon/recordList/release.svg" alt="" />
                         <span>发布于{{ item.release__time }}</span>
                       </div>
                       <h1>{{ item.title }}</h1>
                       <ul class="funcition">
                         <li>
-                          <img
-                            src="@/assets/icon/recordList/heat.svg"
-                            alt="heat"
-                          />
+                          <img src="@/assets/icon/recordList/heat.svg" alt="heat" />
                           <span>{{ item.heat }}热度</span>
                         </li>
                         <li>
-                          <img
-                            src="@/assets/icon/recordList/comment.svg"
-                            alt="comment"
-                          />
+                          <img src="@/assets/icon/recordList/comment.svg" alt="comment" />
                           <span>{{ item.comment.length }}评论</span>
                         </li>
                         <li>
-                          <img
-                            src="@/assets/icon/recordList/like.svg"
-                            alt="like"
-                          />
+                          <img src="@/assets/icon/recordList/like.svg" alt="like" />
                           <span>{{ item.like }}赞</span>
                         </li>
                       </ul>
                       <div class="footer__tags">
                         <p>
-                          <img
-                            src="@/assets/icon/recordList/blog.svg"
-                            alt="blog"
-                          />
+                          <img src="@/assets/icon/recordList/blog.svg" alt="blog" />
                           <span>{{ item.tag1 }}</span>
                         </p>
                         <p>
-                          <img
-                            src="@/assets/icon/recordList/arrange.svg"
-                            alt="arrange"
-                          />
+                          <img src="@/assets/icon/recordList/arrange.svg" alt="arrange" />
                           <span>{{ item.tag2 }}</span>
                         </p>
                       </div>
@@ -276,6 +208,24 @@ import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import utils from "@/utils/getAssetsFile";
 import Navigation from "@/components/NavigationMenu/index.vue";
 import scrollMessage from "@/components/scrollMessage/index.vue";
+
+import axios from "axios";
+const messageList = ref([]);
+const getScrollMessageData = (async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/getMessageList');
+    messageList.value = response.data.data.map(item => ({
+      avatar: item.avatarUrl,
+      text: item.message_content,
+      username: item.username
+    }));
+  } catch (error) {
+    console.error('获取留言失败', error);
+    message.error('留言加载失败');
+  }
+});
+getScrollMessageData();
+
 // 获取store定义的公共数组
 import { useListDetail } from "@/store/listDetailStore";
 const recordStore = useListDetail();
@@ -365,7 +315,7 @@ $contentWidth: 65rem; // 内容宽度
     height: 50%;
     background-size: cover;
     z-index: -2;
-    background-position:center;
+    background-position: center;
     position: fixed;
     animation: zoomInDown 0.6s ease-out forwards;
   }
@@ -545,11 +495,9 @@ $contentWidth: 65rem; // 内容宽度
           width: 25%;
 
           .personCard {
-            background-image: linear-gradient(
-              135deg,
-              #a9e0ec 15%,
-              #c0bdf0 100%
-            );
+            background-image: linear-gradient(135deg,
+                #a9e0ec 15%,
+                #c0bdf0 100%);
             border-radius: 10px;
             padding: 1rem 0;
             transition: all 0.3s;
@@ -717,8 +665,7 @@ $contentWidth: 65rem; // 内容宽度
                   height: calc(100% + $count * 2rem);
                   border-radius: $count * $contentWidth / $contentWidth * 10px;
                   animation-name: move_wave;
-                  animation-duration: $count * $contentWidth / $contentWidth *
-                    20s;
+                  animation-duration: $count * $contentWidth / $contentWidth * 20s;
                   animation-timing-function: linear;
                   animation-iteration-count: infinite;
                 }
@@ -737,11 +684,9 @@ $contentWidth: 65rem; // 内容宽度
             .anchorPointList {
               li {
                 border-radius: 0.5rem;
-                background-image: linear-gradient(
-                  100deg,
-                  #348cff 15%,
-                  #17c3ff 100%
-                );
+                background-image: linear-gradient(100deg,
+                    #348cff 15%,
+                    #17c3ff 100%);
                 margin-bottom: 1.5rem;
 
                 a {
@@ -763,27 +708,21 @@ $contentWidth: 65rem; // 内容宽度
                 }
 
                 &:nth-child(2) {
-                  background-image: linear-gradient(
-                    100deg,
-                    #18e7af 15%,
-                    #1eebe9 100%
-                  );
+                  background-image: linear-gradient(100deg,
+                      #18e7af 15%,
+                      #1eebe9 100%);
                 }
 
                 &:nth-child(3) {
-                  background-image: linear-gradient(
-                    100deg,
-                    #ff6954 15%,
-                    #ffbc38 100%
-                  );
+                  background-image: linear-gradient(100deg,
+                      #ff6954 15%,
+                      #ffbc38 100%);
                 }
 
                 &:nth-child(4) {
-                  background-image: linear-gradient(
-                    100deg,
-                    #ff2cda 15%,
-                    #ff7816 100%
-                  );
+                  background-image: linear-gradient(100deg,
+                      #ff2cda 15%,
+                      #ff7816 100%);
                 }
               }
             }

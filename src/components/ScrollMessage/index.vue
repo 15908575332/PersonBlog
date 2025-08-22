@@ -1,10 +1,9 @@
-
 <template>
     <div class="bg">
         <div class="title">
             <h3>🧨滚动消息</h3>
         </div>
-        <div class="scroll-container" @mouseenter="pause" @mouseleave="resume"
+        <div v-if="duplicatedMessages" class="scroll-container" @mouseenter="pause" @mouseleave="resume"
             :style="{ width: `${containerWidth}px `, height: `${containerHeight}px` }">
 
             <div ref="listRef" class="message-list" :style="{ transform: `translateY(${offset}px)` }">
@@ -23,20 +22,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import utils from '@/utils/getAssetsFile'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 const props = defineProps({
     messages: {
         type: Array,
-        default: () => [
-            { username: '用户A', text: '这个效果不错！用户A：这个效果不错用123123123123121212121212户A：这个效果不错用户A：这个效果不错', avatar: utils.getAssetsFile('img/profile_picture/10022.png') },
-            { username: '用户B', text: '实现了无缝滚动', avatar: utils.getAssetsFile('img/profile_picture/10023.png') },
-            { username: '用户C', text: '支持鼠标悬停暂停', avatar: utils.getAssetsFile('img/profile_picture/10024.png') },
-            { username: '用户D', text: 'Vue3实现很棒', avatar: utils.getAssetsFile('img/profile_picture/10025.png') },
-            { username: '用户E', text: '可以自定义滚动速度', avatar: utils.getAssetsFile('img/profile_picture/10026.png') },
-            { username: '用户F', text: '自适应容器高度', avatar: utils.getAssetsFile('img/profile_picture/10031.png') },
-            { username: '用户G123456', text: '自动处理空数据', avatar: utils.getAssetsFile('img/profile_picture/10032.png') },
-        ],
+        default: () => [],
         required: true
     },
     speed: {
@@ -51,8 +41,12 @@ const props = defineProps({
         type: Number,
         default: 350 // 容器高度
     }
-
 })
+
+// // 监听 messages 的变化
+// watch(() => props.messages, (newVal) => {
+//     console.log('子组件接收到新的messages:', newVal);
+// }, { immediate: true, deep: true });
 
 const itemHeight = 50 // 每个消息项的高度
 const offset = ref(0)
@@ -60,7 +54,7 @@ const listRef = ref(null)
 const animationFrame = ref(null)
 const lastTime = ref(0)
 const isPaused = ref(false)
-
+console.log(props.messages)
 // 生成双倍长度的消息数组用于无缝衔接
 const duplicatedMessages = computed(() => [...props.messages, ...props.messages])
 
