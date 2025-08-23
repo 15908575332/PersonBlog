@@ -32,13 +32,28 @@ CREATE TABLE replies (
 ) COMMENT='回复表';
 
 
-SELECT 
-  m.id,
-  m.content,
-  m.created_at,
-  u.nickname,      -- 实时获取最新昵称
-  u.avatar_url     -- 实时获取最新头像
-FROM messages m
-JOIN users u ON m.user_id = u.id  -- 核心关联！
-WHERE m.user_id = 当前用户ID
-ORDER BY m.created_at DESC;
+--收藏夹
+-- 创建主分类表（存储分类标题）
+CREATE TABLE favorite_categories (
+  id INT PRIMARY KEY AUTO_INCREMENT COMMENT '主分类 ID',
+  title VARCHAR(50) NOT NULL UNIQUE COMMENT '分类标题（如 "常用"）',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+);
+-- 创建收藏夹子项表（存储每个分类下的具体条目）
+CREATE TABLE favorite_items (
+  id INT PRIMARY KEY AUTO_INCREMENT COMMENT '子项 ID',
+  category_id INT NOT NULL COMMENT '关联的主分类 ID',
+  imgSrc VARCHAR(255) NOT NULL COMMENT '图片地址',
+  subtitle VARCHAR(50) NOT NULL COMMENT '子项副标题（如 "CSS可视化"）',
+  introduce TEXT NOT NULL COMMENT '子项描述',
+  href VARCHAR(255) NOT NULL COMMENT '跳转链接',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  FOREIGN KEY (category_id) REFERENCES favorite_categories(id) ON DELETE CASCADE
+);
+-- 插入主分类
+INSERT INTO favorite_categories (title) VALUES ('常用');
+-- 假设主分类 "常用" 的 ID 是 1（通过 SELECT id FROM favorite_categories WHERE title = '常用' 获取）
+-- 插入子项
+INSERT INTO favorite_items (category_id, imgSrc, subtitle, introduce, href) VALUES
+(1, 'https://css.bqrdh.com/images/logo.png', 'CSS可视化', '常见不规则形状|其它css样式可视化操作，更直观感受样式的变化及不同', 'https://css.bqrdh.com/css-shape'),
+(1, 'http://www.htmleaf.com/images/logo.svg', 'Jquery之家', '自由分享Jquery、html、css3、vue的免费的插件库', 'http://www.htmleaf.com/#google_vignette');
