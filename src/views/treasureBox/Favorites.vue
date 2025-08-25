@@ -359,10 +359,12 @@ onMounted(() => {
     // 动态栏
     .nav {
         width: 50%;
-        margin: 2rem auto;
+        margin: 15vh auto 0 auto;
         height: 7rem;
         overflow: hidden;
         position: relative;
+        background-color: rgb(189, 189, 189);
+        border-radius: 0.5rem;
 
         h1 {
             position: absolute;
@@ -376,7 +378,6 @@ onMounted(() => {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 0.5rem;
         }
     }
 
@@ -404,22 +405,19 @@ onMounted(() => {
 
             a {
                 width: 13.5rem;
-                // padding: 0 rem;
                 min-height: 3.8rem;
                 overflow: hidden;
                 @include flexCenter(row, space-between);
 
                 .iconImg {
                     height: 3rem;
-                    width: 4rem;
                     margin: 0.5rem;
                     overflow: hidden;
-                    // background-color: #f6f6f6;
                     border-radius: 0.5rem;
                     padding: 0.1rem;
 
                     img {
-                        // width: 50%;
+                        width: 100%;
                         height: 100%;
                     }
 

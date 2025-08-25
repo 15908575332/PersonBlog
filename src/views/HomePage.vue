@@ -90,9 +90,9 @@
               收藏夹
             </h3>
             <ul>
-              <li v-for="(module, index) in favoriteData" :key="index">
+              <li v-for="(module, index) in displayedData" :key="index">
                 <a :href="module.href" style="display: flex; align-items: center">
-                  <div class="profile-picture">
+                  <div class="iconImg">
                     <img onerror="this.src='/logo.png'" :src="module.imgSrc" alt="" />
                   </div>
                   <div class="text-content">
@@ -103,6 +103,9 @@
                 </a>
               </li>
             </ul>
+            <div class="moreBtn">
+              <a href="/treasureBox/favorites">查看更多</a>
+            </div>
           </div>
         </div>
       </transition>
@@ -171,9 +174,9 @@ const dateSring = computed(() => {
   let day = now.getDate();
   return `${month}月${day}日${getCurrentWeekday()}`;
 });
-const updatTime = () => {
-  currentTime.value = new Date();
-};
+// const updatTime = () => {
+//   currentTime.value = new Date();
+// };
 // 输入框失去焦点
 const isFocus = ref(false);
 const focusInput = () => {
@@ -199,7 +202,20 @@ function searchEngine() {
 }
 // 打开收藏夹
 const isOpen = ref(false);
-const favorites = ref();
+const favorites = ref(true);
+//是否显示全部内容
+const isShowAll = computed(() => {
+  return favorites.value.length <= 10;
+})
+console.log(isShowAll);
+// 计算属性控制显示数据
+const displayedData = computed(() => {
+  if (isShowAll.value) {
+    return favoriteData.value
+  } else {
+    return favoriteData.value.slice(0, 10)
+  }
+})
 const openMore = () => {
   isOpen.value = isFocus.value = !isOpen.value;
 };
@@ -475,7 +491,7 @@ onUnmounted(() => {
             background-color: rgb(185, 181, 181, 0.5);
 
             &:hover {
-              .profile-picture {
+              .iconImg {
                 animation: imgNone 0.5s forwards;
               }
             }
@@ -492,8 +508,8 @@ onUnmounted(() => {
               }
             }
 
-            .profile-picture {
-              width: 4rem;
+            .iconImg {
+              // width: 4rem;
               height: 3rem;
               background-size: cover;
               overflow: hidden;
@@ -501,6 +517,7 @@ onUnmounted(() => {
               margin-right: 0.5rem;
 
               img {
+                width: 100%;
                 height: 100%;
               }
             }
@@ -519,7 +536,29 @@ onUnmounted(() => {
             }
           }
         }
+
+        //更多按钮
+        .moreBtn {
+          // background-color: red;
+          padding-top: 1rem;
+          width: 100%;
+          text-align: center;
+
+          a {
+            // background-color: #94ea31;
+            padding: 0.5rem;
+            transition: all 0.3s linear;
+            font-size: 1rem;
+            background-color: #ffa500;
+            border-radius: 0.5rem;
+
+            &:hover {
+              background-color: transparent;
+            }
+          }
+        }
       }
+
     }
   }
 
