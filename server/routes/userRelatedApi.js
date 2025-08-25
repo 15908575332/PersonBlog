@@ -9,7 +9,7 @@ const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
 const JWT_SECRET = process.env.JWT_SECRET;
 import sqlQuery from '../db/sqlQuery.js';
 
-// 用户注册接口
+// 用户注册接口 （需要补充未注册用户的提示，暂时没有）
 router.post('/register', validateRegister, async (req, res) => {
     const { userName, userEmail, userPassword, avatarUrl = '' } = req.body;
     let hashedPassword;

@@ -2,8 +2,8 @@
   <div style="width: 100%" v-if="userStore">
     <div class="navigate" :class="{ hoverStyle: isHover }">
       <div class="logo">
-        <img src="/vite.svg" alt="logo" />
-        <span>BLOG</span>
+        <img src="/logo.png" alt="logo" />
+        <!-- <span>BLOG</span> -->
       </div>
       <!-- 导航控制 -->
       <div @click="toggleSidebar" class="button phone-none">
@@ -305,7 +305,8 @@ onMounted(async () => { });
     align-items: center;
 
     img {
-      width: 1.6rem;
+      // width: 3rem;
+      height: 2.5rem;
     }
 
     span {
