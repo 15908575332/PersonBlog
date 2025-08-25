@@ -2,11 +2,8 @@
   <div id="homePage">
     <div class="blog-container">
       <!-- 背景图 -->
-      <div
-        class="backPhoto"
-        :style="videoSrc"
-        :class="[isFocus ? 'img-background-scale' : 'img-background-reduction']"
-      ></div>
+      <div class="backPhoto" :style="videoSrc" :class="[isFocus ? 'img-background-scale' : 'img-background-reduction']">
+      </div>
       <!-- 遮罩 -->
       <div class="mask" :class="{ 'blur-groud': isFocus }"></div>
       <!-- 内容 -->
@@ -15,11 +12,7 @@
         <Navigation></Navigation>
         <!-- 时钟/搜索 -->
         <transition name="fade">
-          <div
-            v-if="!isOpen"
-            class="clock-search"
-            :style="{ transform: isFocus ? 'translateY(-80%)' : '' }"
-          >
+          <div v-if="!isOpen" class="clock-search" :style="{ transform: isFocus ? 'translateY(-80%)' : '' }">
             <div class="h-minute">
               <div class="hour">
                 {{ hourString }}
@@ -37,26 +30,13 @@
             <div class="day-date">
               {{ dateSring }}
             </div>
-            <div
-              class="search-container"
-              :style="{ transform: isFocus ? 'translateY(4rem)' : '' }"
-            >
+            <div class="search-container" :style="{ transform: isFocus ? 'translateY(4rem)' : '' }">
               <form @submit.prevent="searchEngine">
-                <input
-                  type="text"
-                  @focus="focusInput"
-                  @blur="focusBlur"
-                  ref="inputAutoFocus"
-                  v-model="searchQuery"
-                  placeholder="搜索"
-                />
+                <input type="text" @focus="focusInput" @blur="focusBlur" ref="inputAutoFocus" v-model="searchQuery"
+                  placeholder="搜索" />
               </form>
 
-              <button
-                class="webicon"
-                title="百度图标"
-                @click.stop="ChangeSearchLink"
-              >
+              <button class="webicon" title="百度图标" @click.stop="ChangeSearchLink">
                 <img src="@/assets/icon/homePage/baidu-icon.svg" alt="" />
               </button>
               <button class="seaicon" title="搜索" @click="searchEngine">
@@ -101,35 +81,29 @@
       <transition name="fade">
         <div @click="isOutInside" class="favorites" v-show="isOpen">
           <div class="front-end" ref="favorites">
-            <h3
-              style="
+            <h3 style="
                 text-align: center;
                 margin-bottom: 1rem;
                 font-weight: 700;
                 font-size: 1.8rem;
-              "
-            >
+              ">
               收藏夹
             </h3>
             <ul>
-              <li v-for="item in favoriteData">
-                <a :href="item.href" style="display: flex; align-items: center">
+              <li v-for="(module, index) in favoriteData" :key="index">
+                <a :href="module.href" style="display: flex; align-items: center">
                   <div class="profile-picture">
-                    <img :src="item.imgSrc" alt="" />
+                    <img onerror="this.src='/logo.png'" :src="module.imgSrc" alt="" />
                   </div>
                   <div class="text-content">
-                    <h5>{{ item.title }}</h5>
-                    <a-typography-paragraph
-                      :ellipsis="{ rows: 2, expandable: false }"
-                      :content="item.introduce"
-                      style="margin: 0"
-                    />
+                    <h5>{{ module.subtitle }}</h5>
+                    <a-typography-paragraph :ellipsis="{ rows: 2, expandable: false }" :content="module.introduce"
+                      style="margin: 0" />
                   </div>
                 </a>
               </li>
             </ul>
           </div>
-          <!-- <div class="other">123</div> -->
         </div>
       </transition>
       <div class="weather_info">
@@ -144,8 +118,6 @@ import {
   ref,
   computed,
   onMounted,
-  nextTick,
-  onUpdated,
   onUnmounted,
 } from "vue";
 import WeatherCard from "../components/WeatherCard/index.vue";
@@ -153,6 +125,7 @@ import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
 import { message } from "ant-design-vue";
 const randomIndex = ref();
+import axios from "axios";
 const videoSrc = computed(() => {
   return {
     backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`,
@@ -214,7 +187,7 @@ const focusBlur = () => {
 // 搜索引擎
 const inputAutoFocus = ref("");
 // 切换搜索引擎
-const ChangeSearchLink = () => {};
+const ChangeSearchLink = () => { };
 const searchQuery = ref();
 function searchEngine() {
   // 其中，wd是查询参数，表示搜索的关键词
@@ -237,48 +210,29 @@ const isOutInside = (event) => {
   }
 };
 // 收藏夹数据源
-const favoriteData = ref([
-  {
-    imgSrc: "https://css.bqrdh.com/images/logo.png",
-    title: "CSS可视化",
-    introduce:
-      "常见不规则形状|其它css样式可视化操作，更直观感受样式的变化及不同",
-    href: "https://css.bqrdh.com/css-shape",
-  },
-  {
-    imgSrc: "src/assets/icon/animateCss-icon.png",
-    title: "Animate.css",
-    introduce:
-      "一个现成的跨浏览器动画库，用于 Web 项目。非常适合强调、主页、滑块和注意力引导提示",
-    href: "https://animate.style/",
-  },
-  {
-    imgSrc: "https://aliyuncdn.antdv.com/v2/assets/logo.1ef800a8.svg",
-    title: "Ant Design Vue",
-    introduce: "提供大量的 UI 组件来丰富你的 Web 应用，我们将不断提升组件体验",
-    href: "https://www.antdv.com/components/overview-cn/",
-  },
-  {
-    imgSrc: "http://www.htmleaf.com/images/logo.svg",
-    title: "Jquery之家",
-    introduce: "自由分享Jquery、html、css3、vue的插件库",
-    href: "http://www.htmleaf.com/#google_vignette",
-  },
-  {
-    imgSrc: "https://www.mobanwang.com/images/logo.png",
-    title: "模板王",
-    introduce: "10000+免费网页模板,网站模板下载大全",
-    href: "https://www.mobanwang.com/",
-  },
-  {
-    imgSrc: "https://www.mobanwang.com/images/logo.png",
-    title: "模板王",
-    introduce: "10000+免费网页模板,网站模板下载大全",
-    href: "https://www.mobanwang.com/",
-  },
-]);
+const favoriteData = ref([]);
 
+const getFavorites = (async () => {
+  // 调用后端接口获取数据
+  try {
+    const response = await axios.get('http://localhost:3000/treasureBox/favorite-data');
+    if (response.data.code === 200) {
+      //一步完成映射+展平
+      favoriteData.value = response.data.data.flatMap(item =>
+        item.content.map(subItem => ({
+          ...subItem,          // 保留子对象原有属性
+          title: item.title    // 添加外层 title 字段
+        }))
+      );
+    } else {
+      console.error('数据获取失败:', response.data.message);
+    }
+  } catch (error) {
+    console.error('请求失败:', error);
+  }
+});
 onMounted(() => {
+
   if (videoUrls.value.length > 0) {
     randomIndex.value = Math.floor(Math.random() * videoUrls.value.length); //背景图索引值
   }
@@ -287,7 +241,7 @@ onMounted(() => {
     duration: 2,
     maxCount: 1,
   });
-
+  getFavorites();
   message.success("下午好，欢迎访问本站~");
 });
 onUnmounted(() => {
@@ -571,8 +525,10 @@ onUnmounted(() => {
 
   // 手机端样式
   @include media-to("phone") {
+
     // 时间
     .h-minute {
+
       .hour,
       .minute,
       .blinking-colon {
@@ -584,6 +540,7 @@ onUnmounted(() => {
 
 // 日期组件 : 闪烁动画
 @keyframes blink {
+
   from,
   to {
     color: rgb(255, 255, 255, 0.2);
@@ -596,6 +553,7 @@ onUnmounted(() => {
 
 // 搜索框按钮hover动画
 @keyframes btnhover-bgcolor {
+
   from,
   to {
     color: rgb(66, 61, 70, 0);

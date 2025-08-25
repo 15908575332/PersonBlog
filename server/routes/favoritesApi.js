@@ -24,6 +24,7 @@ router.get('/favorite-data', async (req, res) => {
         const result = categories
             .filter(category => Array.isArray(category.content) && category.content.length > 0)
             .map(({ id, title, content }) => ({
+                id,
                 title,
                 content
             }));

@@ -22,8 +22,9 @@
             <ul>
                 <li v-for="modules in item.content" class="glass-btn" @click.prevent="openLink(modules.href)">
                     <a>
-                        <div class="profile-picture">
-                            <img :src="modules.imgSrc" alt="N">
+                        <div class="iconImg">
+                            <!-- 设置默认图片 -->
+                            <img onerror="this.src='/logo.png'" :src="modules.imgSrc" alt="icon">
                         </div>
                         <div class="text-content">
                             <h5>{{ modules.subtitle }}</h5>
@@ -47,7 +48,6 @@ const getFavorites = (async () => {
     try {
         const response = await axios.get('http://localhost:3000/treasureBox/favorite-data');
         if (response.data.code === 200) {
-            console.log('数据获取成功:', response.data.data);
             favoriteData.value = response.data.data;
 
         } else {
@@ -409,7 +409,7 @@ onMounted(() => {
                 overflow: hidden;
                 @include flexCenter(row, space-between);
 
-                .profile-picture {
+                .iconImg {
                     height: 3rem;
                     width: 4rem;
                     margin: 0.5rem;
