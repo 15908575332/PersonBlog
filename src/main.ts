@@ -36,6 +36,9 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 hljs.registerLanguage('javascript', javascript);
 import utils from '@/utils/getAssetsFile';
+
+//@ts-ignore
+import request from '@/utils/request';
 function setRemUnit() {
     // 获取视口宽度  
     var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
@@ -52,7 +55,7 @@ window.addEventListener('resize', setRemUnit);
 
 // 初始化时调用一次  
 setRemUnit();
-createApp(App)
+const app = createApp(App)
     .use(router)
     .use(pinia)
     .use(Antd)
@@ -69,5 +72,13 @@ createApp(App)
 
     })
     .use(vPreviewImage)
-    .mount('#app')
+// 显式声明全局属性类型
+declare module '@vue/runtime-core' {
+    interface ComponentCustomProperties {
+        $http: typeof request;
+    }
+}
+// 挂载全局属性
+app.config.globalProperties.$http = request;
+app.mount('#app')
 

@@ -38,21 +38,20 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, getCurrentInstance } from 'vue'
+
 import Navigation from '@/components/NavigationMenu/index.vue';
-import axios from 'axios';
+const instance = getCurrentInstance();
+const $http = instance.appContext.config.globalProperties.$http;
+
 // 获取收藏夹数据
 const favoriteData = ref([]);
+
 const getFavorites = (async () => {
     // 调用后端接口获取数据
     try {
-        const response = await axios.get('http://localhost:3000/treasureBox/favorite-data');
-        if (response.data.code === 200) {
-            favoriteData.value = response.data.data;
-
-        } else {
-            console.error('数据获取失败:', response.data.message);
-        }
+        const response = await $http.get('/treasureBox/favorite-data');
+        favoriteData.value = response.data;
     } catch (error) {
         console.error('请求失败:', error);
     };
@@ -61,12 +60,6 @@ const getFavorites = (async () => {
 onMounted(() => {
     getFavorites();
 })
-// import { useListDetail } from '@/store/listDetailStore';
-// const recordStore = useListDetail();
-// const favoriteData = recordStore.favoriteData;
-// const openLink = (href) => {
-//     window.open(href)
-// }
 </script>
 <style scoped lang="scss">
 // 收藏夹

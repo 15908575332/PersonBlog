@@ -19,11 +19,11 @@ export default defineConfig({
     open: false, // 启动后是否浏览器自动打开
     hmr: true, // 热更新
     proxy: { // 本地开发环境通过代理实现跨域，生产环境使用 nginx 转发
-      '/api': {
-        target: 'http://127.0.0.1:8008', // 后端服务实际地址
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
-      }
+      // '/treasureBox': { 
+      //   target: 'http://localhost:3000',
+      //   changeOrigin: true,
+      //   rewrite: path => path.replace(/^\/treasureBox/, '')
+      // }
     }
   },
   plugins: [
