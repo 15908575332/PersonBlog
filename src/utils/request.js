@@ -1,6 +1,8 @@
 // src/utils/request.js
 import axios from 'axios';
-
+import { jwtDecode } from 'jwt-decode';
+import { useAuthStore } from '@/store/auth';
+const useStore = useAuthStore();
 // 创建 Axios 实例（可根据需求配置多个实例）
 const service = axios.create({
     baseURL: 'http://localhost:3000', // 从环境变量获取基础 URL（需配置 Vite 或 Vue CLI）
@@ -11,13 +13,23 @@ const service = axios.create({
 // --------------------------
 // 请求拦截器（发送请求前处理）
 // --------------------------
+//获取token过期时间
+const getTokenExpiration = (token) => {
+    const decoded = jwtDecode(token);
+    return decoded.exp; // ✅ 正确的过期时间（秒级时间戳）
+};
 service.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token'); // 从本地存储获取 token
+
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`; // 示例：JWT 鉴权
+            const expiration = getTokenExpiration(token);
+            const remainingTime = expiration - Math.floor(Date.now() / 1000);
+            if (remainingTime < 300) {
+                return useStore.refreshToken().then(() => config);
+            }
         }
-        return config; // 必须返回 config
+        return config;
     },
     (error) => {
         // 处理请求错误（如网络问题）

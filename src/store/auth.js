@@ -1,26 +1,23 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-
+import { ref, computed, watch } from 'vue'
+import { jwtDecode } from 'jwt-decode'
 export const useAuthStore = defineStore('auth', () => {
-
-
     const login = async (credentials) => {
         try {
             const response = await axios.post('http://localhost:3000/user/login', credentials);
+            console.log(response)
             // 更新状态
             user.value = response.data.user;
             token.value = response.data.token;
-            expiresAt.value = response.data.expiresAt;
-            expiresInMs.value = response.data.expiresInMs
+            iat.value = response.data.user.iat; //生效时间
 
             // 保存到本地存储
             localStorage.setItem('user', JSON.stringify(response.data.user))
             localStorage.setItem('token', response.data.token); //token
-            localStorage.setItem('expiresAt', response.data.expiresAt); //token过期时间点
-            localStorage.setItem('expiresInMs', response.data.expiresInMs); //token过期时间毫秒数
-            // 其他...
+            localStorage.setItem('iat', response.data.user.iat); //生成时间
             return response.data;
+
         } catch (error) {
             if (error.code === 'ERR_NETWORK') {
                 alert('网络错误，后端拒绝连接');
@@ -33,47 +30,43 @@ export const useAuthStore = defineStore('auth', () => {
     // 从 localStorage 初始化状态
     const user = ref(JSON.parse(localStorage.getItem('user') || null))
     const token = ref(localStorage.getItem('token') || null)
-    const expiresAt = ref(localStorage.getItem('expiresAt') || null)
-    const expiresInMs = ref(localStorage.getItem('expiresInMs') || null)
+    const iat = ref(localStorage.getItem('iat') || null)
 
     // 注销方法
     const logout = () => {
         user.value = null
         token.value = null
-        expiresAt.value = null
-        expiresInMs.value = null
-
+        iat.value = null
 
         // 清除 localStorage
         localStorage.removeItem('user')
         localStorage.removeItem('token')
-        localStorage.removeItem('expiresAt')
-        localStorage.removeItem('expiresInMs')
+        localStorage.removeItem('iat')
+
     }
+    //获取token过期时间
+    const getTokenExpiration = (token) => {
+        const decoded = jwtDecode(token);
+        return decoded.exp; // ✅ 正确的过期时间（秒级时间戳）
+    };
 
-    // 计算属性：检查 token 是否有效（存在且未过期）
+    // 计算 Token 有效性
     const isTokenValid = computed(() => {
-        if (!expiresAt.value) return false; // 没有过期时间视为无效
-
-        // 获取当前时间（秒级时间戳）
+        if (!token.value) return false;
+        const expiration = getTokenExpiration(token.value);
         const nowInSeconds = Math.floor(Date.now() / 1000);
-
-        // 确保 expiresAt 是数字类型（处理可能的字符串存储）
-        const expiration = Number(expiresAt.value);
-
-        // 当前时间小于过期时间 = token 有效
-        return nowInSeconds < expiration;
+        return nowInSeconds < expiration; // ✅ 正确比较
     });
 
     // 计算属性：用户是否已认证
     const isAuthenticated = computed(() => {
         // 同时检查 token 存在且有效
-        return !!token.value && isTokenValid.value;
+        return !!token.value;
     });
 
     // 自动清理过期的 token
     const cleanupExpiredToken = () => {
-        if (expiresAt.value && !isTokenValid.value) {
+        if (iat.value && !isTokenValid.value) {
             logout()
         }
     }
@@ -81,8 +74,8 @@ export const useAuthStore = defineStore('auth', () => {
     // 初始化时立即执行一次清理
     cleanupExpiredToken()
 
-    // 监听 expiresAt 变化，自动处理过期
-    // watch(expiresAt, cleanupExpiredToken)
+    // 监听 iat 变化，自动处理过期
+    watch(iat, cleanupExpiredToken)
 
     //更新用户信息.
     const updateUserProfile = async (updateData) => {
@@ -136,12 +129,12 @@ export const useAuthStore = defineStore('auth', () => {
 
             // 更新 store 状态
             token.value = response.data.accessToken;
-            expiresAt.value = response.data.expiresAt || new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(); // 默认2小时
+            iat.value = response.data.iat || new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(); // 默认2小时
 
 
             // 更新本地存储
             localStorage.setItem('token', token.value);
-            localStorage.setItem('expiresAt', expiresAt.value);
+            localStorage.setItem('iat', iat.value);
 
             return true; // 表示刷新成功
 
@@ -180,14 +173,12 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         user,
         token,
-        expiresAt,
-        expiresInMs,
+        iat,
         isAuthenticated,
         isTokenValid,
         logout,
         updateUserProfile,
         refreshToken,
         login
-
     }
 })

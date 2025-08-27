@@ -45,7 +45,7 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
     try {
         // 查询用户信息
         const [user] = await sqlQuery(
-            'SELECT id, email, password_hash FROM users WHERE email = ?',
+            'SELECT id, email, avatarUrl, username, password_hash FROM users WHERE email = ?',
             [loginEmail]
         );
         if (!user) return res.status(404).json({ message: '用户不存在' });
@@ -66,13 +66,15 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
             { algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRES_IN_MS || 7200000 }
         );
 
+
         res.status(200).json({
             token,
             user: {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                avatarUrl: user.avatarUrl
+                avatarUrl: user.avatarUrl,
+                iat: Math.floor(Date.now() / 1000), // 签发时间
             }
         });
 
@@ -153,7 +155,6 @@ router.post('/refresh', async (req, res) => {
         if (decoded.exp - currentTime > 60 * 5) { // 剩余有效期超过5分钟
             return res.status(400).json({ message: '无需刷新令牌' });
         }
-
         // 生成新令牌（固定2小时有效期）
         const newToken = jwt.sign(
             {
