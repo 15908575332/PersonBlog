@@ -16,7 +16,12 @@ const app = express()
 
 // 公共中间件配置
 app.use(authenticateToken)
-app.use(cors());
+app.use(cors({
+    origin: 'https://192.168.0.232:8008',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+
+}));
 app.use(json())
 app.use(urlencoded({ extended: false }))
 

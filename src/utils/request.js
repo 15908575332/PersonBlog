@@ -13,7 +13,6 @@ const service = axios.create({
 // --------------------------
 service.interceptors.request.use(
     (config) => {
-        // 在这里添加公共请求头（如 token）
         const token = localStorage.getItem('token'); // 从本地存储获取 token
         if (token) {
             config.headers.Authorization = `Bearer ${token}`; // 示例：JWT 鉴权

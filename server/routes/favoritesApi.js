@@ -2,8 +2,9 @@
 import express from 'express';
 const router = express.Router();
 import sqlQuery from '../db/sqlQuery.js';
+import authenticateToken from '../middleware/authenticateToken.js';
 
-router.get('/favorite-data', async (req, res) => {
+router.get('/favorite-data', authenticateToken, async (req, res) => {
     try {
         // 获取主分类
         const categories = await sqlQuery('SELECT * FROM favorite_categories');

@@ -43,6 +43,8 @@ import { ref, onMounted, getCurrentInstance } from 'vue'
 import Navigation from '@/components/NavigationMenu/index.vue';
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
+import { useAuthStore } from '@/store/auth';
+const authStore = useAuthStore();
 
 // 获取收藏夹数据
 const favoriteData = ref([]);
@@ -50,13 +52,17 @@ const favoriteData = ref([]);
 const getFavorites = (async () => {
     // 调用后端接口获取数据
     try {
-        const response = await $http.get('/treasureBox/favorite-data');
+        const response = await $http.get('/treasureBox/favorite-data', {
+            headers: {
+                'Authorization': `Bearer ${authStore.token}`
+            }
+        });
         favoriteData.value = response.data;
     } catch (error) {
         console.error('请求失败:', error);
     };
 });
-
+console.log(authStore.token);
 onMounted(() => {
     getFavorites();
 })
