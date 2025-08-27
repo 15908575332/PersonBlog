@@ -6,7 +6,6 @@ export const useAuthStore = defineStore('auth', () => {
     const login = async (credentials) => {
         try {
             const response = await axios.post('http://localhost:3000/user/login', credentials);
-            console.log(response)
             // 更新状态
             user.value = response.data.user;
             token.value = response.data.token;

@@ -56,8 +56,8 @@ window.addEventListener('resize', setRemUnit);
 // 初始化时调用一次  
 setRemUnit();
 const app = createApp(App)
-    .use(router)
     .use(pinia)
+    .use(router)
     .use(Antd)
     .use(Carousel3d)
     .use(VueAwesomePaginate)

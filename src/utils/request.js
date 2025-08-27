@@ -2,7 +2,6 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useAuthStore } from '@/store/auth';
-const useStore = useAuthStore();
 // 创建 Axios 实例（可根据需求配置多个实例）
 const service = axios.create({
     baseURL: 'http://localhost:3000', // 从环境变量获取基础 URL（需配置 Vite 或 Vue CLI）
@@ -19,7 +18,8 @@ const getTokenExpiration = (token) => {
     return decoded.exp; // ✅ 正确的过期时间（秒级时间戳）
 };
 service.interceptors.request.use(
-    (config) => {
+    async (config) => {
+        const useStore = useAuthStore();
         const token = localStorage.getItem('token'); // 从本地存储获取 token
 
         if (token) {
