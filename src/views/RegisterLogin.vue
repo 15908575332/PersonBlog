@@ -65,7 +65,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed, getCurrentInstance } from 'vue';
+const $http = getCurrentInstance().appContext.config.globalProperties.$http;
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 const route = useRouter();
@@ -125,19 +126,17 @@ async function UserRegister(e) {
     }
 
     try {
-        const response = await axios.post('http://localhost:3000/user/register', {
+        const response = await $http.post('/user/register', {
             userName: registerData.value.userName,
             userEmail: registerData.value.userEmail,
             userPassword: registerData.value.userPassword,
             avatarUrl: '/src/assets/img/profile_picture/' + registerData.value.userName + '.png'
         });
-        if (response.status === 201) {
-            console.log(response)
-            message.success(response.data.message || '注册成功！正在跳转登录页面...');
-            setTimeout(() => {
-                window.location.href = '/userInfo';
-            }, 2000);
-        }
+
+        // message.success(response.data.message || '注册成功！正在跳转登录页面...');
+        setTimeout(() => {
+            window.location.href = '/userInfo';
+        }, 2000);
     } catch (error) {
         message.error(error.response.data.message);
     }

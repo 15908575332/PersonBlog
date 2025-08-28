@@ -18,7 +18,7 @@ router.post('/register', validateRegister, async (req, res) => {
             'SELECT 1 FROM users WHERE email = ?',
             [userEmail]
         );
-        if (existingUser.length) {
+        if (existingUser) {
             return res.status(409).json({ message: '邮箱已被注册' });
         }
 
@@ -31,7 +31,7 @@ router.post('/register', validateRegister, async (req, res) => {
             [userName, userEmail, hashedPassword, avatarUrl]
         );
 
-        res.status(201).json({ message: '注册成功' });
+        res.status(200).json({ message: '注册成功' });
 
     } catch (error) {
         console.error('注册失败:', error);

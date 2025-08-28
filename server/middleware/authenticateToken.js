@@ -7,7 +7,6 @@ const authenticateToken = async (req, res, next) => {
 
     // Token格式校验
     const authHeader = req.headers.authorization;
-    console.log(req.headers.authorization)
     if (!authHeader?.startsWith('Bearer ')) {
         return res.status(401).json({
             code: 401,

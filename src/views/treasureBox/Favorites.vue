@@ -39,7 +39,6 @@
 </template>
 <script setup>
 import { ref, onMounted, getCurrentInstance } from 'vue'
-
 import Navigation from '@/components/NavigationMenu/index.vue';
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
@@ -48,7 +47,6 @@ const authStore = useAuthStore();
 
 // 获取收藏夹数据
 const favoriteData = ref([]);
-
 const getFavorites = (async () => {
     // 调用后端接口获取数据
     try {
@@ -62,7 +60,6 @@ const getFavorites = (async () => {
         console.error('请求失败:', error);
     };
 });
-console.log(authStore.token);
 onMounted(() => {
     getFavorites();
 })

@@ -122,13 +122,16 @@ import {
   computed,
   onMounted,
   onUnmounted,
+  getCurrentInstance
 } from "vue";
 import WeatherCard from "../components/WeatherCard/index.vue";
 import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
 import { message } from "ant-design-vue";
 const randomIndex = ref();
-import axios from "axios";
+const instance = getCurrentInstance();
+const $http = instance.appContext.config.globalProperties.$http;
+import { useAuthStore } from "@/store/auth";
 const videoSrc = computed(() => {
   return {
     backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`,
@@ -207,7 +210,6 @@ const favorites = ref(true);
 const isShowAll = computed(() => {
   return favorites.value.length <= 10;
 })
-console.log(isShowAll);
 // 计算属性控制显示数据
 const displayedData = computed(() => {
   if (isShowAll.value) {
@@ -229,20 +231,22 @@ const isOutInside = (event) => {
 const favoriteData = ref([]);
 
 const getFavorites = (async () => {
+  const authStore = useAuthStore();
   // 调用后端接口获取数据
   try {
-    const response = await axios.get('http://localhost:3000/treasureBox/favorite-data');
-    if (response.data.code === 200) {
-      //一步完成映射+展平
-      favoriteData.value = response.data.data.flatMap(item =>
-        item.content.map(subItem => ({
-          ...subItem,          // 保留子对象原有属性
-          title: item.title    // 添加外层 title 字段
-        }))
-      );
-    } else {
-      console.error('数据获取失败:', response.data.message);
-    }
+    const response = await $http.get('/treasureBox/favorite-data', {
+
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`
+      }
+    });
+    //一步完成映射+展平
+    favoriteData.value = response.data.flatMap(item =>
+      item.content.map(subItem => ({
+        ...subItem,          // 保留子对象原有属性
+        title: item.title    // 添加外层 title 字段
+      }))
+    );
   } catch (error) {
     console.error('请求失败:', error);
   }

@@ -43,7 +43,6 @@ service.interceptors.request.use(
 // --------------------------
 service.interceptors.response.use(
     (response) => {
-        console.log(response);
         if (response.status !== 200) {
             // 统一处理错误提示（可使用 Element Plus 的 console 或自定义提示）
             console.error(response.data.message || '请求失败，请稍后重试');
