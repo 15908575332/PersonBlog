@@ -50,7 +50,7 @@ service.interceptors.response.use(
             // 特殊状态码处理（如未登录跳转登录页）
             if (response.status === 401) {
                 localStorage.removeItem('token'); // 清除失效 token
-                window.location.href = '/login'; // 跳转到登录页
+                window.location.href = '/userInfo'; // 跳转到登录页
             }
 
             return Promise.reject(new Error(res.message || '请求失败'));

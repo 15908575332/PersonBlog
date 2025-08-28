@@ -2,10 +2,15 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { jwtDecode } from 'jwt-decode'
+import { message } from 'ant-design-vue'
 export const useAuthStore = defineStore('auth', () => {
     const login = async (credentials) => {
         try {
             const response = await axios.post('http://localhost:3000/user/login', credentials);
+            if (response.status === 401) {
+                message.warning('密码错误')
+            }
+
             // 更新状态
             user.value = response.data.user;
             token.value = response.data.token;

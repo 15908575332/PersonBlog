@@ -68,7 +68,6 @@
 import { ref, onMounted, onBeforeUnmount, computed, getCurrentInstance } from 'vue';
 const $http = getCurrentInstance().appContext.config.globalProperties.$http;
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 const route = useRouter();
 const timer = ref();
 const randomIndex = ref();
@@ -166,17 +165,17 @@ const login = async (e) => {
         })
         message.loading({
             content: '登录成功，正在前往首页...',
-            duration: 0
+            duration: 2
         });
-
         // 模拟网络延迟
         await new Promise(resolve => setTimeout(resolve, 2000));
         route.replace('/home');
     } catch (error) {
-        const msg = error.response?.data?.message || error.message;
-        message.error(msg || '登录失败');
+        if (error.response) {
+            message.error(error.response.data.message)
+        }
     } finally {
-        message.destroy();
+        // message.destroy();
     }
 }
 
