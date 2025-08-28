@@ -38,12 +38,13 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, getCurrentInstance } from 'vue'
+import { ref, onMounted, getCurrentInstance } from 'vue';
 import Navigation from '@/components/NavigationMenu/index.vue';
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
 import { useAuthStore } from '@/store/auth';
 const authStore = useAuthStore();
+
 
 // 获取收藏夹数据
 const favoriteData = ref([]);
@@ -60,6 +61,13 @@ const getFavorites = (async () => {
         console.error('请求失败:', error);
     };
 });
+const openLink = ((url) => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.click();
+})
 onMounted(() => {
     getFavorites();
 })
