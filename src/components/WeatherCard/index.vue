@@ -49,6 +49,7 @@ const positions = {
     '雨': '-210px 0',
     '雾': '-225px -38px',
     '小雨': '-297px 0',
+    '中雨': '-335px 0'
 }
 const iconPosition = (type) => {
     const position = positions[type] || '0 0'; // 默认位置
