@@ -54,7 +54,6 @@ const listRef = ref(null)
 const animationFrame = ref(null)
 const lastTime = ref(0)
 const isPaused = ref(false)
-console.log(props.messages)
 // 生成双倍长度的消息数组用于无缝衔接
 const duplicatedMessages = computed(() => [...props.messages, ...props.messages])
 
@@ -161,7 +160,7 @@ function resume() {
                 border-radius: 50%;
                 overflow: hidden;
                 margin-right: 8px;
-                background-color: rebeccapurple;
+                background-color: #33bafb;
 
                 img {
                     width: 100%;
