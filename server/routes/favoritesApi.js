@@ -1,4 +1,4 @@
-// favoritesApi.js
+// favoritesApi.js 收藏夹数据接口
 import express from 'express';
 const router = express.Router();
 import sqlQuery from '../db/sqlQuery.js';

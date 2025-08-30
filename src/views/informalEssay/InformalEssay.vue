@@ -204,13 +204,13 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance } from "vue";
 import utils from "@/utils/getAssetsFile";
 import Navigation from "@/components/NavigationMenu/index.vue";
 import scrollMessage from "@/components/scrollMessage/index.vue";
 import { useAuthStore } from "@/store/auth";
 const authStore = useAuthStore();
-
+const $http = getCurrentInstance().appContext.config.globalProperties.$http;
 import axios from "axios";
 const messageList = ref([]);
 const getScrollMessageData = (async () => {
@@ -226,8 +226,14 @@ const getScrollMessageData = (async () => {
     message.error('留言加载失败');
   }
 });
-getScrollMessageData();
-
+const getMainContent = (async () => {
+  try {
+    const response = await $http.get("/informalEssay/getMainContent");
+    console.log("获取文章内容", response);
+  } catch (error) {
+    console.error("获取文章内容失败", error);
+  }
+});
 // 获取store定义的公共数组
 import { useListDetail } from "@/store/listDetailStore";
 const recordStore = useListDetail();
@@ -276,6 +282,8 @@ const debouncedHandleScroll = debounce(handleScroll, 100); // 300ms 防抖延迟
 
 onMounted(() => {
   window.addEventListener("scroll", debouncedHandleScroll);
+  getScrollMessageData(); //滚动消息
+  getMainContent(); //获取主要内容模块
 });
 
 onBeforeUnmount(() => {

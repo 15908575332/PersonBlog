@@ -2,6 +2,7 @@
 import userRelatedApi from './routes/userRelatedApi.js';
 import messageBoardApi from './routes/messageBoardApi.js';
 import favoritesApi from './routes/favoritesApi.js';
+import mainContentApi from './routes/mainContentApi.js';
 import express from 'express'; // express框架
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -17,7 +18,7 @@ const app = express()
 // 公共中间件配置
 app.use(authenticateToken)
 app.use(cors({
-    origin: 'https://192.168.0.232:8008',
+    origin: 'https://192.168.0.209:8008',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 
@@ -29,6 +30,7 @@ app.use(urlencoded({ extended: false }))
 app.use('/user', userRelatedApi); //用户信息 
 app.use('/', messageBoardApi); //留言
 app.use('/treasureBox', favoritesApi); //收藏夹
+app.use('/informalEssay', mainContentApi); //主要内容
 
 // 错误处理中间件（放在所有路由之后）
 app.use((err, req, res, next) => {

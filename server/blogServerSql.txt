@@ -1,4 +1,4 @@
---创建用户信息表
+--创建用户信息表(登录/注册)
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY comment '用户唯一ID（主键）',      
   username VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名（唯一）',    
@@ -10,7 +10,7 @@ CREATE TABLE users (
   status TINYINT DEFAULT 1 COMMENT '账户状态:0:禁用,1:启用'  
 ) COMMENT='用户信息表';
 
--- 创建留言表 (messageBoard页面用)
+-- 创建留言板数据表 (messageBoard页面用)
 CREATE TABLE messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT COMMENT '用户ID（可为空，表示用户已删除）', -- 注意去掉NOT NULL
@@ -18,6 +18,7 @@ CREATE TABLE messages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE /*级联删除，user表中用户删除后，message表中id对应的相关数据一起删除*/
 );
+
 
 -- 创建回复表
 CREATE TABLE replies (
@@ -50,10 +51,37 @@ CREATE TABLE favorite_items (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   FOREIGN KEY (category_id) REFERENCES favorite_categories(id) ON DELETE CASCADE
 );
--- 插入主分类
-INSERT INTO favorite_categories (title) VALUES ('常用');
--- 假设主分类 "常用" 的 ID 是 1（通过 SELECT id FROM favorite_categories WHERE title = '常用' 获取）
--- 插入子项
-INSERT INTO favorite_items (category_id, imgSrc, subtitle, introduce, href) VALUES
-(1, 'https://css.bqrdh.com/images/logo.png', 'CSS可视化', '常见不规则形状|其它css样式可视化操作，更直观感受样式的变化及不同', 'https://css.bqrdh.com/css-shape'),
-(1, 'http://www.htmleaf.com/images/logo.svg', 'Jquery之家', '自由分享Jquery、html、css3、vue的免费的插件库', 'http://www.htmleaf.com/#google_vignette');
+
+--博客内容分类表
+CREATE TABLE blog_content_class (
+  id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID（自增）',
+  order_id VARCHAR(36) NOT NULL COMMENT '关联查询ID（如UUID，36位）',
+  title VARCHAR(50) NOT NULL COMMENT '导航标题（最长50字符）',
+  subtitle VARCHAR(50) NOT NULL COMMENT '内容简概（最长50字符）',
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id),
+  INDEX idx_create_time (create_time) COMMENT '创建时间索引（用于按时间范围查询）'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='博客内容分类表';
+--博客内容主体
+CREATE TABLE blog_content_main (
+  id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID（自增，全局唯一标识）',
+  father_id BIGINT UNSIGNED COMMENT '父内容ID（关联自身表id，NULL表示无父级）', -- 移除 NOT NULL
+  biz_id VARCHAR(36) NOT NULL UNIQUE COMMENT '业务自有ID（如UUID，全局唯一）',
+  author_id VARCHAR(50) NOT NULL COMMENT '关联作者ID（最长50字符）',
+  subtitle VARCHAR(500) NOT NULL COMMENT '内容简概（最长500字符）',
+  title VARCHAR(200) NOT NULL COMMENT '文章标题（最长200字符）',
+  heat INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '热度（浏览量，无符号防负数）',
+  like_count INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '点赞数（无符号防负数）',
+  master_tag VARCHAR(100) COMMENT '主标签（最长100字符）',
+  sub_tag VARCHAR(100) COMMENT '副标签（最长100字符）',
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间（自动记录插入时间）',
+  PRIMARY KEY (id),
+  -- 外键约束：关联自身表 id，父表删除时子表 father_id 置为 NULL
+  FOREIGN KEY (father_id) REFERENCES blog_content_main(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  INDEX idx_create_time (create_time),
+  INDEX idx_author_id (author_id),
+  INDEX idx_father_id (father_id),
+  INDEX idx_master_tag (master_tag),
+  UNIQUE INDEX uk_biz_id (biz_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='博客详细内容表';
