@@ -55,13 +55,13 @@
             </div>
           </div>
           <div class="content_aera">
-            <div class="specific__content" v-for="(item, index) in mainContent" :key="index">
+            <div class="specific__content" v-for="(item, index) in paginatedItems" :key="index">
               <a class="image" @click="listDetail(item.contentId)" data-aos="zoom-in">
                 <img v-lazy="item.backimg_url" @load="onLoad" @error="onError" alt="Image" />
-                <button v-if="item.mediaType === 'video' && playButtonReview" class="play-button"></button>
+                <button v-if="item.main_url && playButtonReview" class="play-button"></button>
                 <div class="item__count">
                   <ul>
-                    <li v-if="item.mediaType === 'video'">
+                    <li v-if="item.main_url === 'video'">
                       <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
                       <span>3</span>
                     </li>
@@ -113,7 +113,6 @@
 
 <script setup>
 import Navigation from "@/components/NavigationMenu/index.vue";
-import { useListDetail } from "@/store/listDetailStore";
 import { useRouter } from "vue-router"; //引入路由相关的api
 const route = useRouter(); // 实例化路由
 import { useMainStore } from "@/store/maincontent";
@@ -169,18 +168,14 @@ const mainContent = computed(() => {
 //格式化发布时间
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
-console.log(mainContent)
 const release_time_format = ((date) => {
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
 })
-console.log(release_time_format.value)
-const recordStore = useListDetail();
-// const dataContent = ref(recordStore.dataContent);
+
 const isActive = ref(); //当前激活导航
 const currentId = ref(); //设置当前ID
 const currentIndex = ref(0); // 当前选中的导航索引
-const selectContent = ref([]); // 用于存储当前选中的item的content数组
-const testData = ref([]);
+
 const toggleMoudle = async (id = 'lifeReflection', index) => {
   isActive.value = id;
   currentId.value = id;
@@ -206,9 +201,10 @@ const listDetail = (id) => {
 var currentPage = ref(1); // 当前页码
 var pageSize = ref(10); // 每页显示的项数
 var paginatedItems = ref([]); // 存储分页后的项目列表，实际页面渲染的数据集
+console.log(mainContent.value.length)
 var totalItems = computed(() => {
   // 总项数（通常你会从服务器获取这个值，但在这里我们直接知道）
-  return testData.value.length;
+  return mainContent.value.length;
 });
 const onClickHandler = (page) => {
   currentPage.value = page;
@@ -219,7 +215,7 @@ const calculatePaginatedItems = () => {
   const startIndex = (currentPage.value - 1) * pageSize.value;
   const endIndex = startIndex + pageSize.value;
   //提取数组中从startIndex到endIndex（不包括endIndex）的部分，这部分即为当前页的项目列表
-  paginatedItems.value = testData.value.slice(startIndex, endIndex);
+  paginatedItems.value = mainContent.value.slice(startIndex, endIndex);
 };
 onMounted(() => {
   toggleMoudle();

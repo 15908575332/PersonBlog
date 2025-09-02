@@ -64,7 +64,7 @@ const app = createApp(App)
     .use(hljsVuePlugin)
     .use(VueLazyload, {
         preLoad: 1.3,
-        error: utils.getAssetsFile('img/public/lazyLoading.gif'),
+        error: utils.getAssetsFile('img/public/loadding_error.jpg'),
         loading: utils.getAssetsFile('img/public/lazyLoading.gif'),
         attempt: 1,
         throttleWait: 500,
