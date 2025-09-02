@@ -1,3 +1,4 @@
+//用户信息store 全局
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'

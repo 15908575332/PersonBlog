@@ -226,14 +226,7 @@ const getScrollMessageData = (async () => {
     message.error('留言加载失败');
   }
 });
-const getMainContent = (async () => {
-  try {
-    const response = await $http.get("/informalEssay/getMainContent");
-    console.log("获取文章内容", response);
-  } catch (error) {
-    console.error("获取文章内容失败", error);
-  }
-});
+
 // 获取store定义的公共数组
 import { useListDetail } from "@/store/listDetailStore";
 const recordStore = useListDetail();

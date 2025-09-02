@@ -20,7 +20,7 @@ export const useListDetail = defineStore('data', {
                 id: 'lifeReflection',
                 navBtntitle: '生活倒影',
                 subtitle: '分享生活的乐趣',
-                profile_picture: utils.getAssetsFile('img/recordList/life_profile_pic.jpeg'),
+                profile_picture: utils.getAssetsFile('/src/assets/img/recordList/life_profile_pic.jpeg'),
                 content: [
                     {
                         contentId: 'detail/001',

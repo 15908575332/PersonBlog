@@ -6,7 +6,6 @@
     <div class="backVideo">
       <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video>
     </div>
-
     <div class="search" :class="{ search__open: isInputOpen }">
       <span class="closeInput" @click="inputBlur">×</span>
       <form class="search__form">
@@ -27,15 +26,15 @@
       <!-- 导航栏 -->
       <div class="nav__card">
         <ul>
-          <li class="nav__item" v-for="(module, index) in dataContent" :key="module.id"
-            @click="toggleMoudle(index, module.id)" :class="{ nav__itemActive: isActive == index }">
-            <div class="hoverBanner" :style="{ opacity: isActive == index ? 1 : 0 }"></div>
+          <li class="nav__item" v-for="(module, index) in navContent" :key="module.order_id"
+            @click="toggleMoudle(module.order_id, index)" :class="{ nav__itemActive: isActive == module.order_id }">
+            <div class="hoverBanner" :style="{ opacity: isActive == module.order_id ? 1 : 0 }"></div>
             <a href="#">
               <div class="profile__picture">
-                <img :src="module.profile_picture" alt="头像" />
+                <img :src="module.class_img_url" alt="icon" />
               </div>
               <div>
-                <h1>{{ module.navBtntitle }}</h1>
+                <h1>{{ module.title }}</h1>
                 <p>{{ module.subtitle }}</p>
               </div>
             </a>
@@ -46,9 +45,9 @@
       <div class="content__container">
         <section>
           <div class="menu">
-            <div class="flex__layout">
+            <div class="flex__layout" v-if="navContent.length > 0">
               <img src=" @/assets/icon/informalEssay/informalEssayMenu.svg" alt="informalEssayMenu" />
-              <span>{{ selectContent.navBtntitle }}</span>
+              <span>{{ navContent[currentIndex || 0].title }}</span>
             </div>
             <div class="flex__layout">
               <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
@@ -56,9 +55,9 @@
             </div>
           </div>
           <div class="content_aera">
-            <div class="specific__content" v-for="(item, index) in paginatedItems" :key="index">
+            <div class="specific__content" v-for="(item, index) in mainContent" :key="index">
               <a class="image" @click="listDetail(item.contentId)" data-aos="zoom-in">
-                <img v-lazy="item.backImage" @load="onLoad" @error="onError" alt="Image" />
+                <img v-lazy="item.backimg_url" @load="onLoad" @error="onError" alt="Image" />
                 <button v-if="item.mediaType === 'video' && playButtonReview" class="play-button"></button>
                 <div class="item__count">
                   <ul>
@@ -66,13 +65,15 @@
                       <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
                       <span>3</span>
                     </li>
+                    <!-- 预览量 -->
                     <li>
                       <img src="@/assets/icon/recordList/countCat-icon.svg" alt="cat" />
-                      <span>9999</span>
+                      <span>{{ item.heat }}</span>
                     </li>
+                    <!-- 点赞量 -->
                     <li>
                       <img src="@/assets/icon/recordList/countMessage-icon.svg" alt="message" />
-                      <span>123</span>
+                      <span>{{ item.like_count }}</span>
                     </li>
                   </ul>
                 </div>
@@ -81,7 +82,7 @@
                 <!-- 发布 -->
                 <h1>{{ item.title }}</h1>
                 <div class="release">
-                  <span>Sara·{{ item.release__time }}</span>
+                  <span>{{ item.username }}-{{ release_time_format(item.release_time) }}</span>
                 </div>
               </div>
             </div>
@@ -115,6 +116,8 @@ import Navigation from "@/components/NavigationMenu/index.vue";
 import { useListDetail } from "@/store/listDetailStore";
 import { useRouter } from "vue-router"; //引入路由相关的api
 const route = useRouter(); // 实例化路由
+import { useMainStore } from "@/store/maincontent";
+const mainStore = useMainStore();
 import AOS from "aos";
 import {
   onMounted,
@@ -142,11 +145,11 @@ function setTagToInput(tag) {
     inputSearch.value && inputSearch.value.focus(); // 确保input元素存在后再聚焦
   })
 }
+
 const
   playButtonReview = ref(false), // 用于控制图片加载状态
   onLoad = () => {
     // 图片加载完成后执行的逻辑
-    console.log("图片加载完成");
     playButtonReview.value = true;
   },
   onError = () => {
@@ -154,24 +157,38 @@ const
     console.error("图片加载失败");
   };
 
+
+//导航数据
+const navContent = computed(() => {
+  return mainStore.dataContent?.navContent || [];
+});
+//内容数据
+const mainContent = computed(() => {
+  return mainStore.dataContent?.content || [];
+});
+//格式化发布时间
+import dayjs from "dayjs";
+import 'dayjs/locale/zh-cn';
+console.log(mainContent)
+const release_time_format = ((date) => {
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+})
+console.log(release_time_format.value)
 const recordStore = useListDetail();
-const dataContent = recordStore.dataContent;
-const isActive = ref();
-const currentId = ref();
+// const dataContent = ref(recordStore.dataContent);
+const isActive = ref(); //当前激活导航
+const currentId = ref(); //设置当前ID
+const currentIndex = ref(0); // 当前选中的导航索引
 const selectContent = ref([]); // 用于存储当前选中的item的content数组
 const testData = ref([]);
-const toggleMoudle = (selectBtnIndex = 0, id = "lifeReflection") => {
+const toggleMoudle = async (id = 'lifeReflection', index) => {
+  isActive.value = id;
   currentId.value = id;
-  isActive.value = selectBtnIndex;
-  const item = dataContent.find((item) => item.id === id);
-  if (item) {
-    selectContent.value = item;
-    testData.value = item.content;
-  } else {
-    console.log("未找到对应的内容");
-  }
+  currentIndex.value = index;
+  await mainStore.fetchMainContent(id);
   onClickHandler(1);
 };
+
 //传入需要渲染的id，与查询参数fatherId，跳转到listDetail页面
 const listDetail = (id) => {
   route.push({
@@ -219,6 +236,7 @@ onMounted(() => {
       rgba(221, 222, 233, 0.77) 0%,
       rgba(181, 255, 252, 0.56) 100%);
   user-select: none;
+  min-height: 100vh;
   //内容盒子宽度
   $main_content_width: 60rem;
 

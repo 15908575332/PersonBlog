@@ -131,13 +131,13 @@ import { message } from "ant-design-vue";
 const randomIndex = ref();
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
+
 import { useAuthStore } from "@/store/auth";
 const videoSrc = computed(() => {
   return {
     backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`,
   };
 });
-
 const videoUrls = ref([
   utils.getAssetsFile("img/homePage/back1.webp"),
   utils.getAssetsFile("img/homePage/back2.webp"),
@@ -353,10 +353,12 @@ onUnmounted(() => {
         //搜索框
         .search-container {
           font-size: 0.8rem;
-          width: 33rem;
+          width: 50vw;
           position: relative;
           transform: translateY(5rem);
           transition: all 0.2s linear;
+          max-width: 33rem;
+          min-width: 10rem;
 
           @include media-to("phone") {
             width: 20rem;
