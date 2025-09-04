@@ -128,13 +128,12 @@ onMounted(() => {
 // 卡片进入动画
 @keyframes rotateInDownLeft {
     from {
-        transform: rotate3d(0, 0, 1, -45deg);
-        opacity: 0;
+        transform: translate3d(-100%, 0, 0);
+        visibility: visible;
     }
 
     to {
         transform: translate3d(0, 0, 0);
-        opacity: 1;
     }
 }
 

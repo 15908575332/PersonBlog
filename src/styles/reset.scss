@@ -97,4 +97,32 @@ span.cc-cmd {
         display: block;
     }
 }
-
+//ant-design-vue 通知提醒框组件样式重写
+.ant-notification-notice {
+    font-family: "gtpy";
+    font-weight: 700;
+    top: 3rem;
+    // 通知提醒框宽度
+    width: 20rem;
+    &:hover {
+        cursor: pointer;
+    }
+    //标题
+    .ant-notification-notice-message {
+        font-size: 1.1rem;
+        margin-bottom: 0 !important;
+    }
+    //内容
+    .ant-notification-notice-description {
+        font-size: 0.8rem;
+        color: #ff416c;
+    }
+    //图标
+    .ant-notification-notice-icon {
+        top: 1.2rem;
+    }
+    //关闭按钮
+    .ant-notification-notice-close {
+        top: 0.8rem;
+    }
+}

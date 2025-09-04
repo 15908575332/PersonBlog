@@ -109,7 +109,7 @@
           </div>
         </div>
       </transition>
-      <div class="weather_info">
+      <div class="weather_info" v-if="!hasShownNotification">
         <WeatherCard></WeatherCard>
       </div>
     </div>
@@ -122,16 +122,19 @@ import {
   computed,
   onMounted,
   onUnmounted,
-  getCurrentInstance
+  getCurrentInstance,
+  h
 } from "vue";
 import WeatherCard from "../components/WeatherCard/index.vue";
 import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
-import { message } from "ant-design-vue";
+// 通知
+import { notification, Button } from "ant-design-vue";
+//通知图标
+import { SmileOutlined } from '@ant-design/icons-vue';
 const randomIndex = ref();
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
-
 import { useAuthStore } from "@/store/auth";
 const videoSrc = computed(() => {
   return {
@@ -251,18 +254,31 @@ const getFavorites = (async () => {
     console.error('请求失败:', error);
   }
 });
-onMounted(() => {
 
+//通知卡片
+const hasShownNotification = ref(localStorage.getItem('hasShownNotification'));
+const notificationFun = (() => {
+  if (!hasShownNotification.value) {
+    notification.open({
+      message: `欢迎访问本站`,
+      description: 'Go and discover more exciting things.',
+      placement: 'topLeft',
+      duration: 7,
+      maxCount: 1,
+      icon: h(SmileOutlined, { style: 'color: green' }),
+      onClick: () => {
+        window.open('https://www.baidu.com', '_blank');
+      }
+    });
+    localStorage.setItem('hasShownNotification', 'true');
+  }
+})
+onMounted(() => {
+  notificationFun();
   if (videoUrls.value.length > 0) {
     randomIndex.value = Math.floor(Math.random() * videoUrls.value.length); //背景图索引值
   }
-  // 顶部全局提示
-  message.config({
-    duration: 2,
-    maxCount: 1,
-  });
   getFavorites();
-  message.success("下午好，欢迎访问本站~");
 });
 onUnmounted(() => {
   // clearTimeout(timer.value);
