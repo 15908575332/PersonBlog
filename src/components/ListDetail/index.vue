@@ -1127,7 +1127,7 @@ onMounted(async () => {
             animation: clipDiamondIn 1s forwards both;
 
             span {
-                text-indent: 2em !important;
+                display: inline-block;
                 letter-spacing: 0.1rem;
                 line-height: 1.5;
                 margin-top: 1.2rem;
