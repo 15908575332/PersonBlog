@@ -112,7 +112,10 @@ const router = createRouter({
             path: "/message", component: MessageBoard,
         },
         {
-            path: "/listDetail/:id", name: "listDetail", component: () => import('@/Components/ListDetail/index.vue')
+            path: "/listDetail/:id",
+            name: "listDetail", component: () => import('@/Components/ListDetail/index.vue'),
+            props: true
+
         },
         {
             path: "/userInfo", component: UserRegisterLogin,

@@ -17,6 +17,8 @@ export const useMainStore = defineStore('main', () => {
             });
             if (!response.data) throw new Error("无效数据");
             dataContent.value = response.data;
+            localStorage.removeItem('mainContent');
+            localStorage.setItem('mainContent', JSON.stringify(response.data.content));
         } catch (err) {
             console.error("请求错误:", err);
             error.value = "数据加载失败";

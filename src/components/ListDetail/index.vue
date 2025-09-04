@@ -32,28 +32,28 @@
         <!-- 背景设置 -->
         <div class=" background__img">
             <!-- 背景图 -->
-            <div class=" backPhoto" :style="{ backgroundImage: `url(${recordDetailList.backImage})` }"></div>
+            <div class=" backPhoto" :style="{ backgroundImage: `url(${recordDetail.backimg_url})` }"></div>
             <!-- 遮罩 -->
             <div class="mask"></div>
             <div class="back__text">
                 <!-- 二级标题 -->
                 <div class="subtitle">
-                    <span> {{ recordDetailList.subtitle }}</span>
+                    <span> {{ recordDetail.subtitle }}</span>
                     <div style="display: flex;" class="content">
                         <!-- 作者 -->
                         <div class="auther">
                             <img src='@/assets/icon/recordList/auther.svg' alt="">
-                            <span class="name">{{ recordDetailList.author }} ·</span>
+                            <span class="name">{{ recordDetail.username }} ·</span>
                         </div>
                         <!-- 发布 -->
                         <div class="release">
                             <img src="@/assets/icon/recordList/release.svg" alt="">
-                            <span>发布于{{ recordDetailList.release__time }} ·</span>
+                            <span>发布于{{ release_time_format(recordDetail.release_time) }} ·</span>
                         </div>
                         <ul class="funcition">
                             <li>
                                 <img src="@/assets/icon/recordList/heat.svg" alt="heat">
-                                <span>{{ recordDetailList.heat }}热度 ·</span>
+                                <span>{{ recordDetail.heat }}热度 ·</span>
                             </li>
                             <li>
                                 <img src="@/assets/icon/recordList/comment.svg" alt="comment">
@@ -61,7 +61,7 @@
                             </li>
                             <li>
                                 <img src="@/assets/icon/recordList/like.svg" alt="like">
-                                <span>{{ recordDetailList.like }}赞</span>
+                                <span>{{ recordDetail.like_count }}赞</span>
                             </li>
                         </ul>
                     </div>
@@ -71,18 +71,17 @@
         <!-- 内容主体 -->
         <div class="content__container">
             <div class="image">
-                <img v-if="recordDetailList.mediaType === 'image'" :src="recordDetailList.mainUrl" alt="Image"
-                    @click="$preview(recordDetailList.mainUrl)" />
-                <video v-else :src="recordDetailList.mainUrl" ref="videoRef" controls @play="handlePlay"
-                    @pause="handlePause"></video>
-                <button v-if="recordDetailList.mediaType === 'video' && !isPlaying" class="play-button"
-                    @click="playVideo"></button>
+
+                <video v-if="recordDetail.main_url" :src="recordDetail.main_url" controls ref="videoRef"
+                    @play="handlePlay" @pause="handlePause"></video>
+                <img v-else :src="recordDetail.backimg_url" alt="backimg">
+                <button v-if="recordDetail.main_url && !isPlaying" class="play-button" @click="playVideo"></button>
             </div>
             <div class="moudle__tag">
-                {{ recordDetailList.title }}
+                {{ recordDetail.title }}
             </div>
             <!-- 时间轴 -->
-            <div v-if="recordDetailList.timeAxis" class="time__axis">
+            <div v-if="recordDetail.timeAxis" class="time__axis">
                 <h1><span>#</span>UL timeline cards</h1>
                 <ul class="ul">
                     <li style="--accent-color:#41516C">
@@ -122,7 +121,7 @@
                 </ul>
             </div>
             <!-- 源代码展示 -->
-            <div v-if="recordDetailList.code" class="code__show">
+            <div v-if="recordDetail.code" class="code__show">
                 <h1><span>#</span>源码展示说明</h1>
                 <highlightjs language="js" code='
 // 留言区>表情管理
@@ -141,13 +140,13 @@
         return;
         }' />
             </div>
-            <div class="introduce" v-if="recordDetailList.text && !recordDetailList.isContent">
-                <span v-for="text in recordDetailList.text">
-                    {{ text }}
+            <div class="introduce" v-for="(item, index) in paragraph" :key="index" v-if="!isContent">
+                <span>
+                    {{ item }}
                 </span>
             </div>
             <!-- 评论可见 -->
-            <div class="comment__show" v-if="recordDetailList.isContent">
+            <div class="comment__show" v-else>
                 <div class=" text">评论可见</div>
                 <div class="warring">
                     <img src="./icon/warring-icon.svg" alt="warring">
@@ -155,7 +154,7 @@
                 </div>
             </div>
             <ul class="abstract">
-                <li>作者：{{ recordDetailList.author }}</li>
+                <li>作者：{{ recordDetail.author }}</li>
                 <li>1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(sara@poetize.cn)进行删除处理。</li>
                 <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
                 <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>
@@ -181,7 +180,7 @@
                     <div @click="emojiIs_show" class="emoji__btn">
                         <img src="./img/Rainbow.gif" alt="">
                     </div>
-                    <button class="reMessage" @click="addMessage(recordDetailList.contentId)">提交
+                    <button class="reMessage" @click="addMessage(recordDetail.contentId)">提交
                         <div class="star-1">
                             <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
                                 style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
@@ -359,7 +358,7 @@
                     <div @click="modalIs_show" class="emoji__btn">
                         <img src="./img/Rainbow.gif" alt="">
                     </div>
-                    <button class="modalSubmit" @click="submitReply(recordDetailList.contentId)">提交
+                    <button class="modalSubmit" @click="submitReply(recordDetail.contentId)">提交
                         <div class="star-1">
                             <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
                                 style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
@@ -445,7 +444,7 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref, computed, onBeforeUnmount, reactive, render } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import Navigation from '@/components/NavigationMenu/index.vue';
 import utils from '@/utils/getAssetsFile';
 import { message } from 'ant-design-vue';
@@ -454,14 +453,14 @@ import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
 
 // 获取store定义的公共数组
-import { useListDetail } from '@/store/listDetailStore';
-const recordStore = useListDetail();
-const dataContent = ref(recordStore.dataContent); // 存储dataContent的数据
-const learingLife = ref(recordStore.learingLife); // 存储learingLife的数据
-const country = ref(recordStore.country);// 存储country的数据
+// import { useListDetail } from '@/store/listDetailStore';
+// const recordStore = useListDetail();
+// const dataContent = ref(recordStore.dataContent); // 存储dataContent的数据
+// const learingLife = ref(recordStore.learingLife); // 存储learingLife的数据
+// const country = ref(recordStore.country);// 存储country的数据
 const selectComment = ref(''); // 留言记录
-const selectContent = ref(''); // 主体记录
-const recordDetailList = ref('');// 实际渲染列表
+// const selectContent = ref(''); // 主体记录
+// const recordDetail = ref('');// 实际渲染列表
 const showReplyModal = ref(false); // 控制回复框的显示/隐藏
 const currentReplyId = ref(null); // 当前回复的评论ID
 const replyContent = ref(''); // 回复内容
@@ -548,50 +547,101 @@ const handClose = () => {
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const paramsId = computed(() => {
-    return route.params.id
+    return Number(route.params.id); //默认是字符串类型
 });
 
+// import { useMainStore } from "@/store/maincontent";
+// const mainStore = useMainStore();
 // 获取当前渲染数组里面对应的对象id值,id值是唯一的
-const queryId = computed(() => {
-    return route.query.fatherId
+// const queryId = computed(() => {
+//     return route.query.fatherId
+// });
+const mainContent = computed(() => {
+    return JSON.parse(localStorage.getItem('mainContent'));
 });
+
 //通过id值计算该对象所在的数组
-const getCurrentArray = computed(() => {
-    if (dataContent.value.some(item => item.id === queryId.value)) {
-        return dataContent.value;
-    } else if (learingLife.value.some(item => item.id === queryId.value)) {
-        return learingLife.value;
-    } else if (country.value.some(item => item.id === queryId.value)) {
-        return country.value;
-    } else {
-        return []; // 如果没有找到，返回空数组
+// const getCurrentArray = computed(() => {
+//     if (dataContent.value.some(item => item.id === queryId.value)) {
+//         return dataContent.value;
+//     } else if (learingLife.value.some(item => item.id === queryId.value)) {
+//         return learingLife.value;
+//     } else if (country.value.some(item => item.id === queryId.value)) {
+//         return country.value;
+//     } else {
+//         return []; // 如果没有找到，返回空数组
+//     }
+// });
+
+//段落分割函数（句号/换行）
+function splitParagraphs(text) {
+    // 处理空输入
+    if (typeof text !== 'string' || text.trim() === '') return [];
+    // 按换行符分割为初步段落
+    const lines = text.split(/\n+/).map(line => line.trim());
+    // 过滤空行
+    const validLines = lines.filter(line => line !== '');
+    // 按句号分割段落（处理边界情况）
+    const paragraphs = [];
+    for (const line of validLines) {
+        // 按句号分割，但排除缩写词和数字小数点
+        const parts = line.split(/(?<!\b[A-Za-z]{1,2})\.\s+/);
+        paragraphs.push(...parts);
     }
-});
+    // 过滤空段落
+    return paragraphs.filter(p => p !== '');
+}
+
+//渲染内容
+const recordDetail = ref('');
+//格式化发布时间
+import dayjs from "dayjs";
+import 'dayjs/locale/zh-cn';
+const release_time_format = ((date) => {
+    return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+})
+//获取数据
 const getFatherdata = () => {
     // 遍历dataContent数组，找到与queryId匹配的对象
-    const matchedObject = getCurrentArray.value.find(obj => obj.id === queryId.value);
-    if (matchedObject) {
+    // const recordDetail = mainContent.value.find(obj => obj.id === queryId.value);
+    if (mainContent.value) {
+        // console.log(mainContent.value)
+        // console.log(paramsId.value)
+
+        recordDetail.value = mainContent.value.find(obj => obj.id === paramsId.value);
+
+
         // 将匹配的对象赋值给 selectContent
-        selectContent.value = matchedObject;
+        // selectContent.value = recordDetail;
         // 遍历selectContent数组，找到与paramsId匹配的对象
-        const contentObject = selectContent.value.content.find(obj => obj.contentId === paramsId.value);
-        if (contentObject) {
-            // 将匹配的对象赋值给 recordDetailList
-            recordDetailList.value = contentObject;
-        }
-        // 遍历recordDetailList数组，找到与contentId匹配的comment对象
-        const commentObject = selectContent.value.content.find(obj => obj.contentId === paramsId.value);
-        if (commentObject) {
-            // 将匹配的对象赋值给 selectComment
-            selectComment.value = commentObject.comment;
-        }
-        calculatePaginatedItems();
+        // const contentObject = selectContent.value.content.find(obj => obj.contentId === paramsId.value);
+        // if (contentObject) {
+        // 将匹配的对象赋值给 recordDetail
+        // recordDetail.value = contentObject;
+        // }
+        // 遍历recordDetail数组，找到与contentId匹配的comment对象
+        // const commentObject = selectContent.value.content.find(obj => obj.contentId === paramsId.value);
+        // if (commentObject) {
+        // 将匹配的对象赋值给 selectComment
+        // selectComment.value = commentObject.comment;
+        // }
+        // calculatePaginatedItems();
+        return recordDetail.value;
     } else {
         message.error('未找到匹配的对象');
     }
 }
+getFatherdata();
+//段落内容
+const paragraph = splitParagraphs(recordDetail.value.main_text);
 
-// 留言区>表情管理
+// watch((mainContent), (newVal, oldVal) => {
+//     if (newVal) {
+//         getFatherdata();
+//     };
+//     immediate: true
+// })
+// 留言区>表情管理2
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
 const _ISshow = ref(false);
@@ -614,11 +664,13 @@ const formatTimestamp = (timestamp) => {
     return date.toLocaleString();
 }
 // (提交按钮)留言动态添加函数
+const isContent = ref(false); //内容是否需要评价才可查看
 const addMessage = (contentId) => {
     _ISshow.value = false;
     if (input__message.value.trim() === '') {
         return;
     }
+
     recordStore.updateIsContent(contentId, true);
     // // 更新isContent为true，展示需要留言才能查看的内容
     // recordStore.updateIsContent(contentId, !recordStore.dataContent.some(section =>
@@ -656,8 +708,7 @@ const onClickHandler = (page) => {
     currentPage.value = page;
     calculatePaginatedItems();
 };
-onMounted(() => {
-    getFatherdata();
+onMounted(async () => {
 })
 </script>
 <style lang="scss">
@@ -1076,6 +1127,7 @@ onMounted(() => {
             animation: clipDiamondIn 1s forwards both;
 
             span {
+                text-indent: 2em !important;
                 letter-spacing: 0.1rem;
                 line-height: 1.5;
                 margin-top: 1.2rem;

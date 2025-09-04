@@ -15,7 +15,8 @@
       <div class="search__suggestion">
         <h3>一些有用的建议</h3>
         <div class="suggestion-tags">
-          <span v-for="tag in suggestionTags" :key="tag" class="suggestion-tag" @click="setTagToInput(tag)">#{{ tag
+          <span v-for="tag in mainContent" :key="tag" class="suggestion-tag" @click="setTagToInput(tag.sub_tag)">#{{
+            tag.sub_tag
           }}</span>
         </div>
       </div>
@@ -55,8 +56,8 @@
             </div>
           </div>
           <div class="content_aera">
-            <div class="specific__content" v-for="(item, index) in paginatedItems" :key="index">
-              <a class="image" @click="listDetail(item.contentId)" data-aos="zoom-in">
+            <div class="specific__content" v-for="item in paginatedItems" :key="item.id">
+              <a class="image" @click="listDetail(item.id)" data-aos="zoom-in">
                 <img v-lazy="item.backimg_url" @load="onLoad" @error="onError" alt="Image" />
                 <button v-if="item.main_url && playButtonReview" class="play-button"></button>
                 <div class="item__count">
@@ -90,9 +91,9 @@
         </section>
         <!-- 分页 -->
         <div class="paginate">
-          <vue-awesome-paginate :total-items="totalItems" v-model="currentPage" :items-per-page="pageSize"
-            :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn" :show-ending-buttons="true"
-            :show-breakpoint-buttons="true" @click="onClickHandler">
+          <vue-awesome-paginate v-if="totalItems > 0" :total-items="totalItems" v-model="currentPage"
+            :items-per-page="pageSize" :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
+            :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
             <template #prev-button>
               <span>
                 <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
@@ -127,9 +128,7 @@ import {
 //搜素框
 const isInputOpen = ref(false); // 控制搜索框的打开状态
 const searchQuery = ref("");
-const suggestionTags = [
-  "无人机", "搞笑", "catgif", "破碎", "失落", "爱", "好", "红", "蓝", "不", "为什么", "是", "外星人", "绿色", "花式", "裤子", "树"
-];
+
 const inputBlur = () => {
   isInputOpen.value = false;
 };
@@ -144,18 +143,6 @@ function setTagToInput(tag) {
     inputSearch.value && inputSearch.value.focus(); // 确保input元素存在后再聚焦
   })
 }
-
-const
-  playButtonReview = ref(false), // 用于控制图片加载状态
-  onLoad = () => {
-    // 图片加载完成后执行的逻辑
-    playButtonReview.value = true;
-  },
-  onError = () => {
-    // 图片加载失败后执行的逻辑
-    console.error("图片加载失败");
-  };
-
 
 //导航数据
 const navContent = computed(() => {
@@ -184,14 +171,28 @@ const toggleMoudle = async (id = 'lifeReflection', index) => {
   onClickHandler(1);
 };
 
+const
+  playButtonReview = ref(false), // 用于控制图片加载状态
+  onLoad = () => {
+    if (!mainStore.loading) {
+      // 图片加载完成后执行的逻辑
+      playButtonReview.value = true;
+    }
+  },
+  onError = () => {
+    // 图片加载失败后执行的逻辑
+    console.error("图片加载失败");
+  };
+
+
+
 //传入需要渲染的id，与查询参数fatherId，跳转到listDetail页面
 const listDetail = (id) => {
   route.push({
     name: "listDetail",
-    query: {
-      // fatherId: 'lifeReflection'
-      fatherId: currentId.value,
-    },
+    // query: {
+    //   fatherId: currentId.value,
+    // },
     params: {
       id: id,
     },
@@ -201,7 +202,6 @@ const listDetail = (id) => {
 var currentPage = ref(1); // 当前页码
 var pageSize = ref(10); // 每页显示的项数
 var paginatedItems = ref([]); // 存储分页后的项目列表，实际页面渲染的数据集
-console.log(mainContent.value.length)
 var totalItems = computed(() => {
   // 总项数（通常你会从服务器获取这个值，但在这里我们直接知道）
   return mainContent.value.length;
