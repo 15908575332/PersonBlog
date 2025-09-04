@@ -10,26 +10,45 @@
                 <form class="form" id="a-form" :model="registerData">
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
-                    <input class="form__input" type="text" placeholder="用户名" required v-model="registerData.userName">
-                    <input class="form__input" type="email" required autocomplete="userEmail" placeholder="邮箱"
-                        v-model="registerData.userEmail">
+
+
+
+                    <div class="login_email">
+                        <input class="form__input" type="text" placeholder="用户名" required
+                            v-model="registerData.userName">
+                        <img v-if="registerData.userName" @click="clearFields('userName')"
+                            src="@/assets/icon/registerLogin/input_del.svg" />
+                    </div>
+
+                    <div class="login_email">
+                        <input class="form__input" type="email" required autocomplete="userEmail" placeholder="邮箱"
+                            v-model="registerData.userEmail">
+                        <img v-if="registerData.userEmail" @click="clearFields('userEmail')"
+                            src="@/assets/icon/registerLogin/input_del.svg" />
+                    </div>
+
                     <input class="form__input" type="password" autocomplete="current-password" placeholder="密码"
                         v-model="registerData.userPassword">
                     <input class="form__input" type="password" autocomplete="new-password" placeholder="再次输入密码"
                         v-model="registerData.rePassword">
 
-
                     <button class="form__button button submit" type="submit"
                         @click="UserRegister"><span>注册</span></button>
                 </form>
             </div>
+
             <!-- 登录 sign in -->
             <div class="container b-container" id="b-container">
                 <form class="form" id="b-form" method="" :model="defaultLoginInfo">
                     <h2 class="form_title title incline_en"><span>登录</span></h2>
                     <span class="form__span">或者使用你的电子邮箱账户</span>
-                    <input class="form__input" autocomplete="username" type="email" required placeholder="电子邮箱"
-                        v-model="defaultLoginInfo.loginEmail">
+                    <div class="login_email">
+                        <input class="form__input form__input--email" autocomplete="username" type="email" required
+                            placeholder="电子邮箱" v-model="defaultLoginInfo.loginEmail">
+                        <img v-if="defaultLoginInfo.loginEmail" @click="clearFields('loginEmail')"
+                            src="@/assets/icon/registerLogin/input_del.svg" />
+                    </div>
+
                     <input class="form__input" type="password" autocomplete="current-password" placeholder="请输入你的密码"
                         v-model="defaultLoginInfo.loginPassword">
                     <a href="/resetPassword" class="form__link">忘记密码</a>
@@ -41,17 +60,14 @@
                 <div class="switch__circle"></div>
                 <div class="switch__circle switch__circle--t"></div>
                 <div class="switch__container" id="switch-c1">
-
                     <h2 class="switch__title title incline_en">没有账号？</h2>
                     <p class="switch__description description">
                         <img src="@/assets/icon/registerLogin/register-icon.svg"></img>
                         <span>立即注册吧</span>
                     </p>
-
                     <button class="switch__button button switch-btn"><span>注册</span></button>
                 </div>
                 <div class="switch__container is-hidden" id="switch-c2">
-
                     <h2 class="switch__title title incline_en">已有账号？</h2>
                     <p class="switch__description description">
                         <img src="@/assets/icon/registerLogin/login-icon.svg"></img>
@@ -91,10 +107,26 @@ const videoUrls = ref([
     'src/assets/img/homePage/back6.webp'
 ]);
 
+
 const defaultLoginInfo = ref({
     loginEmail: 'test@163.com',
     loginPassword: '123456',
 })
+//清空邮箱
+const clearFields = (prop) => {
+    switch (prop) {
+        case 'userEmail':
+            registerData.value.userEmail = '';
+            break;
+        case 'userName':
+            registerData.value.userName = '';
+            break;
+        case 'loginEmail':
+            defaultLoginInfo.value.loginEmail = '';
+            break;
+    }
+};
+
 //注册
 const registerData = ref({
     userName: '',
@@ -310,11 +342,24 @@ onBeforeUnmount(() => {
     }
 }
 
+.login_email {
+    position: relative;
+
+    img {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        width: 0.9rem;
+    }
+}
+
 .form__input {
     width: 17rem;
     height: 2.1rem;
     margin: 0.25rem 0;
-    padding-left: 1.56rem;
+    padding: 0 1.4rem;
     font-size: 0.7rem;
     letter-spacing: 0.01rem;
     border: none;
