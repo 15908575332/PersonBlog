@@ -340,6 +340,10 @@
                 </div>
             </div>
         </div>
+        <!-- 点赞按钮 -->
+        <div>
+            <button @click="updateLike(recordDetail.id)">点赞</button>
+        </div>
         <!-- 留言回复回复框 -->
         <div class="reply-modal" v-if="showReplyModal" @click.self="handleReplyClose" @close="handleReplyClose">
             <div class="modal" data-aos="flip-down">
@@ -444,7 +448,7 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref, computed, watch } from 'vue';
+import { onMounted, ref, computed, getCurrentInstance } from 'vue';
 import Navigation from '@/components/NavigationMenu/index.vue';
 import utils from '@/utils/getAssetsFile';
 import { message } from 'ant-design-vue';
@@ -452,12 +456,6 @@ import ModalBox from '@/components/ModalBox/index.vue'
 import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
 
-// 获取store定义的公共数组
-// import { useListDetail } from '@/store/listDetailStore';
-// const recordStore = useListDetail();
-// const dataContent = ref(recordStore.dataContent); // 存储dataContent的数据
-// const learingLife = ref(recordStore.learingLife); // 存储learingLife的数据
-// const country = ref(recordStore.country);// 存储country的数据
 const selectComment = ref(''); // 留言记录
 // const selectContent = ref(''); // 主体记录
 // const recordDetail = ref('');// 实际渲染列表
@@ -543,36 +541,17 @@ const showModal = ref(false);
 const handClose = () => {
     showModal.value = false;
 }
+
+/** ------------------------内容处理------------------------ */
 // 接收组件recordRender传递的路由id
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const paramsId = computed(() => {
     return Number(route.params.id); //默认是字符串类型
 });
-
-// import { useMainStore } from "@/store/maincontent";
-// const mainStore = useMainStore();
-// 获取当前渲染数组里面对应的对象id值,id值是唯一的
-// const queryId = computed(() => {
-//     return route.query.fatherId
-// });
 const mainContent = computed(() => {
     return JSON.parse(localStorage.getItem('mainContent'));
 });
-
-//通过id值计算该对象所在的数组
-// const getCurrentArray = computed(() => {
-//     if (dataContent.value.some(item => item.id === queryId.value)) {
-//         return dataContent.value;
-//     } else if (learingLife.value.some(item => item.id === queryId.value)) {
-//         return learingLife.value;
-//     } else if (country.value.some(item => item.id === queryId.value)) {
-//         return country.value;
-//     } else {
-//         return []; // 如果没有找到，返回空数组
-//     }
-// });
-
 //段落分割函数（句号/换行）
 function splitParagraphs(text) {
     // 处理空输入
@@ -591,7 +570,6 @@ function splitParagraphs(text) {
     // 过滤空段落
     return paragraphs.filter(p => p !== '');
 }
-
 //渲染内容
 const recordDetail = ref('');
 //格式化发布时间
@@ -602,46 +580,40 @@ const release_time_format = ((date) => {
 })
 //获取数据
 const getFatherdata = () => {
-    // 遍历dataContent数组，找到与queryId匹配的对象
-    // const recordDetail = mainContent.value.find(obj => obj.id === queryId.value);
     if (mainContent.value) {
-        // console.log(mainContent.value)
-        // console.log(paramsId.value)
-
         recordDetail.value = mainContent.value.find(obj => obj.id === paramsId.value);
-
-
-        // 将匹配的对象赋值给 selectContent
-        // selectContent.value = recordDetail;
-        // 遍历selectContent数组，找到与paramsId匹配的对象
-        // const contentObject = selectContent.value.content.find(obj => obj.contentId === paramsId.value);
-        // if (contentObject) {
-        // 将匹配的对象赋值给 recordDetail
-        // recordDetail.value = contentObject;
-        // }
-        // 遍历recordDetail数组，找到与contentId匹配的comment对象
-        // const commentObject = selectContent.value.content.find(obj => obj.contentId === paramsId.value);
-        // if (commentObject) {
-        // 将匹配的对象赋值给 selectComment
-        // selectComment.value = commentObject.comment;
-        // }
-        // calculatePaginatedItems();
         return recordDetail.value;
     } else {
         message.error('未找到匹配的对象');
     }
 }
-getFatherdata();
+
 //段落内容
 const paragraph = splitParagraphs(recordDetail.value.main_text);
 
-// watch((mainContent), (newVal, oldVal) => {
-//     if (newVal) {
-//         getFatherdata();
-//     };
-//     immediate: true
-// })
-// 留言区>表情管理2
+/** ------------------------文章浏览量计数------------------------ */
+const instance = getCurrentInstance();
+const $http = instance.appContext.config.globalProperties.$http;
+const updateHeat = async (id) => {
+    try {
+        const response = await $http.post('/main/updateHeat', { id });
+        recordDetail.value.heat = response.heat;
+    } catch (error) {
+        console.error('更新失败:', error);
+    }
+}
+
+/** ------------------------点赞量计数------------------------ */
+const updateLike = (async (id) => {
+    try {
+        const response = await $http.post('/main/updateLike', { id });
+        recordDetail.value.like_count = response.likeCount;
+    } catch (error) {
+        console.error('更新失败:', error);
+    }
+})
+
+/** ------------------------留言区>表情管理2------------------------ */
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
 const _ISshow = ref(false);
@@ -709,6 +681,9 @@ const onClickHandler = (page) => {
     calculatePaginatedItems();
 };
 onMounted(async () => {
+    getFatherdata();
+    console.log(paramsId.value)
+    updateHeat(paramsId.value);
 })
 </script>
 <style lang="scss">

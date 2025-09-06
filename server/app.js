@@ -31,7 +31,6 @@ app.use('/user', userRelatedApi); //用户信息
 app.use('/', messageBoardApi); //留言
 app.use('/treasureBox', favoritesApi); //收藏夹
 app.use('/main', mainContentApi); //主要内容
-
 // 错误处理中间件（放在所有路由之后）
 app.use((err, req, res, next) => {
     console.error(err.stack);
