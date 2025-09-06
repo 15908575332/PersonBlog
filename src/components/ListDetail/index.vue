@@ -153,12 +153,22 @@
                     <span>此处内容已隐藏</span>
                 </div>
             </div>
+            <!-- 提示 -->
             <ul class="abstract">
                 <li>作者：{{ recordDetail.author }}</li>
                 <li>1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(sara@poetize.cn)进行删除处理。</li>
                 <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
                 <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>
             </ul>
+            <!-- 操作按钮 -->
+            <div class="feed">
+                <div class="likeBtn" @click="handleLikeClick">
+                    <p>点赞</p>
+                    <div class="heart" :class="{ 'heartAnimation': isLiked }" :rel="isLiked ? 'unlike:' : 'like'"></div>
+                </div>
+                <div class="shareBtn"></div>
+
+            </div>
             <!-- 评论区 -->
             <div class="comment">
                 <h1 class="title">
@@ -340,10 +350,7 @@
                 </div>
             </div>
         </div>
-        <!-- 点赞按钮 -->
-        <div>
-            <button @click="updateLike(recordDetail.id)">点赞</button>
-        </div>
+
         <!-- 留言回复回复框 -->
         <div class="reply-modal" v-if="showReplyModal" @click.self="handleReplyClose" @close="handleReplyClose">
             <div class="modal" data-aos="flip-down">
@@ -612,6 +619,19 @@ const updateLike = (async (id) => {
         console.error('更新失败:', error);
     }
 })
+const isLiked = ref(false);
+// 点赞按钮点击事件
+const handleLikeClick = async () => {
+    if (isLiked.value) {
+        // 点赞
+        await updateLike(recordDetail.value.id);
+    } else {
+        // 取消点赞
+        await updateLike(recordDetail.value.id);
+    }
+    isLiked.value = !isLiked.value;
+
+}
 
 /** ------------------------留言区>表情管理2------------------------ */
 import EmojiPicker from "vue3-emoji-picker";
@@ -682,7 +702,6 @@ const onClickHandler = (page) => {
 };
 onMounted(async () => {
     getFatherdata();
-    console.log(paramsId.value)
     updateHeat(paramsId.value);
 })
 </script>
@@ -699,7 +718,6 @@ onMounted(async () => {
         .backPhoto {
             width: 100vw;
             height: 19rem;
-
             background-size: cover;
             z-index: -2;
             background-position: center;
@@ -1654,6 +1672,84 @@ onMounted(async () => {
         img {
             width: 100%;
             height: 100%;
+        }
+    }
+
+    //操作按钮
+    .feed {
+        // background-color: black;
+        width: 100%;
+        height: 5rem;
+        @include flexCenter(row, center);
+        gap: 1rem;
+
+        //点赞按钮
+        .likeBtn,
+        .shareBtn {
+            padding: 0 1rem;
+            @include flexCenter(row, left);
+            background-color: #773098;
+            width: 5rem;
+            height: 1.8rem;
+            border-radius: 0.3rem;
+            color: white;
+            position: relative;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            .heart {
+                background: url(./img/web_heart_animation.png);
+                background-position: 0;
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 2.6rem;
+                width: 2.6rem;
+                cursor: pointer;
+                position: absolute;
+                right: 0.1rem;
+                background-size: 2900%;
+                transition: transform 0.3s ease;
+            }
+
+            @-webkit-keyframes heartBlast {
+                0% {
+                    background-position: left;
+                }
+
+                100% {
+                    background-position: right;
+                }
+            }
+
+            @keyframes heartBlast {
+                0% {
+                    background-position: left;
+                }
+
+                100% {
+                    background-position: right;
+                }
+            }
+
+            .heartAnimation {
+                display: inline-block;
+                -webkit-animation-name: heartBlast;
+                animation-name: heartBlast;
+                -webkit-animation-duration: .8s;
+                animation-duration: .8s;
+                -webkit-animation-iteration-count: 1;
+                animation-iteration-count: 1;
+                -webkit-animation-timing-function: steps(28);
+                animation-timing-function: steps(28);
+                background-position: right;
+            }
+        }
+
+        //分享按钮
+        .shareBtn {
+            background-color: #ff416c;
         }
     }
 
