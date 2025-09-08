@@ -468,21 +468,21 @@
                     </div>
                     <!-- 分享时间 -->
                     <p class="dateTime">
-                        {{ new Date() }}
+                        {{ dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss') }}
                     </p>
                     <!-- 分享内容 -->
                     <div class="shareContent">
                         <!-- 内容标题 -->
                         <p class="content_title">
-                            分享内容标题
+                            {{ recordDetail.title }}
                         </p>
                         <!-- 图片展示 -->
                         <div class="content_img">
-                            <img :src="utils.getAssetsFile('img/recordList/listDetailImg007.jpg')" alt="">
+                            <img :src="recordDetail.backimg_url" alt="图片">
                         </div>
                         <!-- 作者 -->
                         <p class="content_author">
-                            Sara
+                            {{ recordDetail.username }}
                         </p>
                         <!-- 二维码生成区域 -->
                         <div class="content_qrcode">
@@ -645,9 +645,11 @@ const getFatherdata = () => {
         message.error('未找到匹配的对象');
     }
 }
+getFatherdata();
 
 //段落内容
 const paragraph = splitParagraphs(recordDetail.value.main_text);
+console.log(paragraph);
 
 /** ------------------------文章浏览量计数------------------------ */
 const instance = getCurrentInstance();
@@ -685,7 +687,7 @@ const handleLikeClick = async () => {
     isLiked.value = !isLiked.value;
 }
 /** ------------------------分享模块------------------------ */
-const showShareModal = ref(true);
+const showShareModal = ref(false);
 const shareLike = () => {
     showShareModal.value = true;
 }
@@ -828,7 +830,6 @@ const onClickHandler = (page) => {
     calculatePaginatedItems();
 };
 onMounted(async () => {
-    getFatherdata();
     updateHeat(paramsId.value);
 })
 </script>
@@ -2213,7 +2214,7 @@ onMounted(async () => {
                 padding-bottom: 1rem;
             }
 
-            //分享内容
+
             .modal__content {
                 background-color: #ffffff;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -2238,8 +2239,9 @@ onMounted(async () => {
 
                 //分享时间
                 .dateTime {
-                    font-size: 14px;
-                    color: #999;
+                    font-size: 0.8rem;
+                    color: #676767;
+                    margin-top: 0.5rem;
                 }
 
                 //分享内容
@@ -2256,19 +2258,21 @@ onMounted(async () => {
                     // 图片展示
                     .content_img {
                         width: 100%;
-                        // height: 15rem;
+                        max-height: 10rem;
                         margin: 0 auto;
+                        overflow: hidden;
 
                         img {
                             width: 100%;
-                            height: auto;
+                            object-fit: cover;
+                            height: 100%;
                         }
                     }
 
                     // 作者
                     .content_author {
-                        font-size: 14px;
-                        color: #999;
+                        font-size: 0.8rem;
+                        color: #676767;
                         padding: 1rem 0;
                         text-align: right;
                     }
