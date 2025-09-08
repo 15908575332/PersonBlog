@@ -47,6 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
         localStorage.removeItem('user')
         localStorage.removeItem('token')
         localStorage.removeItem('iat')
+        localStorage.removeItem('hasShownNotification')
 
     }
     //获取token过期时间

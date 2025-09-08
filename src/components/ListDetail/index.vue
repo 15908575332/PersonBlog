@@ -163,10 +163,13 @@
             <!-- 操作按钮 -->
             <div class="feed">
                 <div class="likeBtn" @click="handleLikeClick">
-                    <p>点赞</p>
+                    <p style="text-wrap: nowrap;">点赞</p>
                     <div class="heart" :class="{ 'heartAnimation': isLiked }" :rel="isLiked ? 'unlike:' : 'like'"></div>
                 </div>
-                <div class="shareBtn"></div>
+                <div class="shareBtn" @click="shareLike">
+                    <p>分享</p>
+                    <img src="./icon/share_icon.svg" alt="">
+                </div>
 
             </div>
             <!-- 评论区 -->
@@ -452,10 +455,60 @@
                 </div>
             </div>
         </div>
+
+        <!-- 分享卡片 -->
+        <div class="share-modal" v-if="showShareModal" @click.self="handleShareClose" @close="handleShareClose">
+            <div class="modal" data-aos="fade-up" ref="shareCard">
+                <!-- 标题 -->
+                <p class="modal_title">卡片分享</p>
+                <div class="modal__content">
+                    <!-- 头像 -->
+                    <div class="modal__avatar">
+                        <img :src="userStore.user.avatarUrl" alt="头像">
+                    </div>
+                    <!-- 分享时间 -->
+                    <p class="dateTime">
+                        {{ new Date() }}
+                    </p>
+                    <!-- 分享内容 -->
+                    <div class="shareContent">
+                        <!-- 内容标题 -->
+                        <p class="content_title">
+                            分享内容标题
+                        </p>
+                        <!-- 图片展示 -->
+                        <div class="content_img">
+                            <img :src="utils.getAssetsFile('img/recordList/listDetailImg007.jpg')" alt="">
+                        </div>
+                        <!-- 作者 -->
+                        <p class="content_author">
+                            Sara
+                        </p>
+                        <!-- 二维码生成区域 -->
+                        <div class="content_qrcode">
+                            <div class="text">
+                                <p>BLOG</p>
+                            </div>
+                            <div class="code">
+                                <Qrcode :value="currentUrl" width="500" hight="500" margin="0"></Qrcode>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- 下载图片按钮 -->
+                <div class="download">
+                    <span class="download-btn" @click="downloadCard">下载卡片</span>
+                    <span class="more" @click="moreShare">更多分享</span>
+
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script setup>
 import { onMounted, ref, computed, getCurrentInstance } from 'vue';
+import { useAuthStore } from '@/store/auth';
 import Navigation from '@/components/NavigationMenu/index.vue';
 import utils from '@/utils/getAssetsFile';
 import { message } from 'ant-design-vue';
@@ -464,8 +517,6 @@ import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
 
 const selectComment = ref(''); // 留言记录
-// const selectContent = ref(''); // 主体记录
-// const recordDetail = ref('');// 实际渲染列表
 const showReplyModal = ref(false); // 控制回复框的显示/隐藏
 const currentReplyId = ref(null); // 当前回复的评论ID
 const replyContent = ref(''); // 回复内容
@@ -611,6 +662,8 @@ const updateHeat = async (id) => {
 }
 
 /** ------------------------点赞量计数------------------------ */
+const userStore = useAuthStore(); //当前登录用户信息
+
 const updateLike = (async (id) => {
     try {
         const response = await $http.post('/main/updateLike', { id });
@@ -630,7 +683,81 @@ const handleLikeClick = async () => {
         await updateLike(recordDetail.value.id);
     }
     isLiked.value = !isLiked.value;
+}
+/** ------------------------分享模块------------------------ */
+const showShareModal = ref(true);
+const shareLike = () => {
+    showShareModal.value = true;
+}
+const handleShareClose = () => {
+    showShareModal.value = false;
+}
+const moreShare = () => {
+    // 例如，使用浏览器的分享 API
+    if (navigator.share) {
+        navigator.share({
+            title: '分享标题',
+            text: '分享内容',
+            url: window.location.href
+        }).then(() => {
+            console.log('分享成功');
+        }).catch((error) => {
+            console.log('分享失败:', error);
+        });
+    } else {
+        // 不支持分享 API 的浏览器
+        // 可以使用其他分享方式，例如复制链接
+        copyToClipboard(window.location.href);
+        message.success('链接已复制到剪贴板');
+    }
+}
 
+/** ------------------------二维码生成/下载按钮------------------------ */
+// 获取当前url
+const currentUrl = window.location.href;
+import Qrcode from 'vue-qrcode';
+import html2canvas from 'html2canvas';//dom转化为图片
+const shareCard = ref(null); //获取元素
+const downloadCard = async () => {
+    if (!shareCard.value) return;
+    try {
+        // 使用 html2canvas 截图（带配置项）
+        const canvas = await html2canvas(shareCard.value, {
+            scale: 2, // 关键：提高分辨率（默认 1，值越大越清晰）
+            useCORS: true, // 允许跨域图片
+            // // backgroundColor: '#ffffff', // 设置背景色（如果原元素背景透明）
+            // logging: false, // 关闭日志输出（生产环境建议关闭）
+            // logging: false, // 调试时可设为 true 查看详细日志
+            // useCORS: true, // 强制跨域图片使用 CORS 加载
+            // allowTaint: false, // 禁止污染画布（跨域图片必须设为 false）
+            // width: 1008, // 显式指定宽度（避免缩放失真）
+            // height: 1336, // 显式指定高度
+            // windowWidth: shareCard.value.offsetWidth, // 窗口宽度（避免响应式布局错乱）
+            // windowHeight: shareCard.value.offsetHeight, // 窗口高度
+        });
+        // 生成图片 Data URL（PNG 格式）
+        const imgUrl = canvas.toDataURL('image/png');
+        // 调用下载方法
+        downloadImage(imgUrl, '分享卡片.png');
+    } catch (error) {
+        console.error('生成分享卡片失败:', error);
+    }
+};
+// 通用下载方法
+const downloadImage = (url, filename) => {
+    // 创建临时 a 标签
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename // 下载文件名
+    a.style.display = 'none'
+
+    // 模拟点击下载
+    document.body.appendChild(a)
+    a.click()
+
+    // 清理资源
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url) // 释放 Blob URL（如果是 Blob 类型需要）
 }
 
 /** ------------------------留言区>表情管理2------------------------ */
@@ -1677,7 +1804,6 @@ onMounted(async () => {
 
     //操作按钮
     .feed {
-        // background-color: black;
         width: 100%;
         height: 5rem;
         @include flexCenter(row, center);
@@ -1687,7 +1813,7 @@ onMounted(async () => {
         .likeBtn,
         .shareBtn {
             padding: 0 1rem;
-            @include flexCenter(row, left);
+            @include flexCenter(row, space-around);
             background-color: #773098;
             width: 5rem;
             height: 1.8rem;
@@ -1704,11 +1830,10 @@ onMounted(async () => {
                 background-position: 0;
                 background-repeat: no-repeat;
                 background-size: cover;
-                height: 2.6rem;
-                width: 2.6rem;
+                height: 1rem;
+                width: 1rem;
+                transform: scale(2.5);
                 cursor: pointer;
-                position: absolute;
-                right: 0.1rem;
                 background-size: 2900%;
                 transition: transform 0.3s ease;
             }
@@ -1750,6 +1875,12 @@ onMounted(async () => {
         //分享按钮
         .shareBtn {
             background-color: #ff416c;
+
+            img {
+                width: 0.9rem;
+                // position: absolute;
+                // right: 1rem;
+            }
         }
     }
 
@@ -2043,6 +2174,155 @@ onMounted(async () => {
                             z-index: 2;
                         }
                     }
+                }
+            }
+        }
+    }
+
+    //分享卡片
+    .share-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        @include flexCenter(row, center);
+        z-index: 998;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+
+
+        .modal {
+            width: 27vw;
+            min-height: 27rem;
+            background-color: #f5f4ce;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: auto;
+            position: relative;
+            user-select: none;
+            padding-bottom: 0;
+            transform: translateY(-10%);
+
+            //标题
+            .modal_title {
+                font-size: 1.1rem;
+                font-weight: 700;
+                text-align: center;
+                padding-bottom: 1rem;
+            }
+
+            //分享内容
+            .modal__content {
+                background-color: #ffffff;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                padding: 1rem;
+                border-radius: 8px;
+                padding-bottom: 0;
+
+                // 头像
+                .modal__avatar {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    background-color: #e84343;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+
+                //分享时间
+                .dateTime {
+                    font-size: 14px;
+                    color: #999;
+                }
+
+                //分享内容
+                .shareContent {
+                    // padding: 1rem 0;
+
+                    // 内容标题
+                    .content_title {
+                        font-size: 1.1rem;
+                        font-weight: 700;
+                        padding: 1rem 0;
+                    }
+
+                    // 图片展示
+                    .content_img {
+                        width: 100%;
+                        // height: 15rem;
+                        margin: 0 auto;
+
+                        img {
+                            width: 100%;
+                            height: auto;
+                        }
+                    }
+
+                    // 作者
+                    .content_author {
+                        font-size: 14px;
+                        color: #999;
+                        padding: 1rem 0;
+                        text-align: right;
+                    }
+
+                    // 二维码生成区域
+                    .content_qrcode {
+                        border-top: 1px solid #ccc;
+                        @include flexCenter(row, space-between);
+
+                        .text {
+                            font-size: 1.2rem;
+                            color: #999;
+                            padding: 1rem 0;
+                            font-weight: 700;
+                            text-align: right;
+                        }
+
+                        .code {
+                            width: 2.5rem;
+                            height: 2.5rem;
+                            // overflow: hidden;
+                            background-color: #999393;
+
+                            img {
+                                width: 100%;
+                                height: auto;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //卡片下载按钮
+            .download {
+                width: 100%;
+                padding: 1rem 0;
+                @include flexCenter(row, center);
+                gap: 1rem;
+
+                span {
+                    display: inline-block;
+                    background-color: #fa9be7;
+                    color: #fff;
+                    border-radius: 1rem;
+                    font-size: 0.8rem;
+                    padding: 0.3rem 0.7rem;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+
+                .more {
+                    background-color: #4400ff6e;
                 }
             }
         }

@@ -97,11 +97,9 @@ const maxlength = ref(110);
 import { useAuthStore } from "@/store/auth";
 import { message } from 'ant-design-vue';
 const userStore = useAuthStore();
-
 message.config({
     duration: 3,
 })
-
 const resetForm = () => {
     if (userStore.user) {
         formData.username = userStore.user.username || '';
