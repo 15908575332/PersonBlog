@@ -19,9 +19,10 @@
     <div class="container-content">
       <!-- 按钮导航 -->
       <div class="button__navigate">
-        <button class="btn-7" v-for="(item, index) in navContent" :key="item.id" @click="toggleMoudle(index, item.id)"
-          :class="{ btn__active: isActive == index }" :style="buttonStyles(index)">
-          <span>{{ item.navBtntitle }}</span>
+        <button class="btn-7" v-for="(item, index) in navContent" :key="item.order_id"
+          @click="toggleMoudle(item.order_id, index)" :class="{ btn__active: isActive == index }"
+          :style="buttonStyles(index)">
+          <span>{{ item.title }}</span>
         </button>
       </div>
       <!-- 主模块 -->
@@ -32,17 +33,17 @@
           <span>发现</span>
         </div>
         <!-- 内容 -->
-        <div v-for="(module, index) in selectContent" data-aos="fade-up" :key="index" class="module-container">
+        <div v-for="(module, index) in mainContent" data-aos="fade-up" :key="index" class="module-container">
           <div :class="['module', getLayoutClass(index)]">
             <a @click="listDetail(module.contentId)" class="image">
-              <img v-if="module.mediaType === 'image'" :src="module.mainUrl" alt="Image" />
-              <video v-else :src="module.mainUrl" controls></video>
+              <img v-if="!module.main_url" :src="module.backimg_url" alt="Image" />
+              <video v-else :src="module.main_url" controls></video>
             </a>
             <div class="text__content">
               <!-- 发布 -->
               <div class="release">
                 <img src="@/assets/icon/recordList/release.svg" alt="" />
-                <span>发布于{{ module.release__time }}</span>
+                <span>发布于{{ release_time_format(module.release_time) }}</span>
               </div>
               <h1>{{ module.title }}</h1>
               <ul class="funcition">
@@ -52,24 +53,25 @@
                 </li>
                 <li>
                   <img src="@/assets/icon/recordList/comment.svg" alt="comment" />
-                  <span>{{ module.comment.length }}评论</span>
+                  <span>{{ 0 }}评论</span>
                 </li>
                 <li>
                   <img src="@/assets/icon/recordList/like.svg" alt="like" />
-                  <span>{{ module.like }}赞</span>
+                  <span>{{ module.like_count }}赞</span>
                 </li>
               </ul>
               <div class="article__container">
-                <p>{{ module.text[0] }}</p>
+                <p v-if="module.main_text">{{ module.main_text }}</p>
+                <p v-else>暂无更多内容</p>
               </div>
               <div class="footer__tags">
                 <p>
                   <img src="@/assets/icon/recordList/blog.svg" alt="blog" />
-                  <span>{{ module.tag1 }}</span>
+                  <span>{{ module.master_tag }}</span>
                 </p>
                 <p>
                   <img src="@/assets/icon/recordList/arrange.svg" alt="arrange" />
-                  <span>{{ module.tag2 }}</span>
+                  <span>{{ module.sub_tag }}</span>
                 </p>
               </div>
             </div>
@@ -92,6 +94,7 @@ import utils from "@/utils/getAssetsFile"; //引入获取静态资源的方法
 import { useRouter, useRoute } from "vue-router"; //引入路由相关的api
 import { useListDetail } from "@/store/listDetailStore"; // 引入store
 import { useMainStore } from "@/store/maincontent"; // 引入store
+const mainStore = useMainStore(); // 实例化store
 
 const recordStore = useListDetail(); // 实例化store
 const dataContent = ref(recordStore.dataContent); // 存储dataContent的数据
@@ -99,7 +102,7 @@ const learingLife = ref(recordStore.learingLife); // 存储learingLife的数据
 const country = ref(recordStore.country); // 存储country的数据
 const routeMeta = ref(); //存储根据路由元信息筛选出的数据
 const route = useRouter(); // 实例化路由
-const isActive = ref(0); // 用于存储当前选中的按钮索引
+const isActiveBtn = ref(0); // 用于存储当前选中的按钮索引
 const currentId = ref(null); // 用于存储当前选中的item的id
 const selectContent = ref([]); // 用于存储当前选中的item的content数组
 var imageContainerRef = ref(null); // 用于存储图片容器的引用
@@ -107,50 +110,55 @@ let observer = null; // 用于存储 IntersectionObserver 实例
 var randomIndex = ref(0); // 用于存储背景选取随机数
 const currentRouter = useRoute();
 
-
-/** ------------------------数据源处理------------------------ */
-const mainStore = useMainStore(); // 实例化store
-const navContent = computed(() => {
-  return mainStore.dataContent?.navContent || []; //导航数据
-});
-const mainContent = computed(() => {
-  return mainStore.dataContent?.content || []; //内容数据
-});
-console.log(mainStore)
-
-// 导航栏按钮切换模块
-const toggleMoudle = (selectBtnIndex = 0, id = routeMeta.value[0].id) => {
-  currentId.value = id;
-  isActive.value = selectBtnIndex;
-  const item = routeMeta.value.find((item) => item.id === id);
-  if (item) {
-    selectContent.value = item.content;
-  } else {
-    console.log("未找到对应的内容");
+/** ------------------------导航数据------------------------ */
+const navContent = ref([]);
+const fetchNavData = async () => {
+  await mainStore.fetchNavData();
+  navContent.value = mainStore.navData;
+  if (navContent.value.length > 0) {
+    toggleMoudle(navContent.value[0].order_id);
   }
+}
+/** ------------------------内容数据------------------------ */
+const mainContent = computed(() => {
+  return mainStore.contentData;
+})
+
+/** ------------------------导航栏按钮切换模块------------------------ */
+const toggleMoudle = async (id = null, index) => {
+  currentId.value = id;
+  isActiveBtn.value = index;
+  await mainStore.fetchMainContent(id);
 };
+
+//格式化发布时间
+import dayjs from "dayjs";
+import 'dayjs/locale/zh-cn';
+const release_time_format = ((date) => {
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+})
 nextTick(() => {
-  toggleMoudle();
+  // toggleMoudle();
 });
-watch(
-  currentRouter,
-  () => {
-    // 根据路由元信息dataKey决定渲染的数据
-    const dataKey = currentRouter.meta.dataKey;
-    if (dataKey === "resource") {
-      routeMeta.value = dataContent.value;
-    } else if (dataKey === "learning") {
-      routeMeta.value = learingLife.value;
-    } else if (dataKey === "country") {
-      routeMeta.value = country.value;
-    }
-    // 在路由改变后调用 toggleMoudle 函数
-    if (routeMeta.value.length > 0) {
-      toggleMoudle(0, routeMeta.value[0].id);
-    }
-  },
-  { immediate: true }
-);
+// watch(
+//   currentRouter,
+//   () => {
+//     // 根据路由元信息dataKey决定渲染的数据
+//     const dataKey = currentRouter.meta.dataKey;
+//     if (dataKey === "resource") {
+//       routeMeta.value = dataContent.value;
+//     } else if (dataKey === "learning") {
+//       routeMeta.value = learingLife.value;
+//     } else if (dataKey === "country") {
+//       routeMeta.value = country.value;
+//     }
+//     // 在路由改变后调用 toggleMoudle 函数
+//     if (routeMeta.value.length > 0) {
+//       toggleMoudle(0, routeMeta.value[0].id);
+//     }
+//   },
+//   { immediate: true }
+// );
 //传入需要渲染的id，与查询参数fatherId，跳转到listDetail页面
 const listDetail = (id) => {
   route.push({
@@ -270,11 +278,12 @@ onMounted(() => {
   if (videoUrls.value.length > 0) {
     randomIndex.value = Math.floor(Math.random() * videoUrls.value.length); //背景图索引值
   }
-  if (routeMeta.value.length > 0) {
-    toggleMoudle(0, routeMeta.value[0].id); // 初始化时选中第一个按钮
-  } else {
-    console.log("未找到对应的内容");
-  }
+  fetchNavData();
+  // if (routeMeta.value.length > 0) {
+  //   toggleMoudle(0, routeMeta.value[0].id); // 初始化时选中第一个按钮
+  // } else {
+  //   console.log("未找到对应的内容");
+  // }
   getLayoutClass(); // 初始化布局类名
   createObserver(); // 初始化 IntersectionObserver
 });

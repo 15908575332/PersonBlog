@@ -21,8 +21,6 @@
         </div>
       </div>
     </div>
-
-
     <div class="main__content">
       <!-- 导航栏 -->
       <div class="nav__card">
@@ -149,7 +147,9 @@ const navContent = ref([]);
 const fetchNavData = async () => {
   await mainStore.fetchNavData();
   navContent.value = mainStore.navData;
-  toggleMoudle(navContent.value[0].order_id);
+  if (navContent.value.length > 0) {
+    toggleMoudle(navContent.value[0].order_id);
+  }
 }
 /** ------------------------内容数据------------------------ */
 const mainContent = computed(() => {
