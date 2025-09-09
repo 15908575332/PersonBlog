@@ -3,7 +3,8 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 export const useMainStore = defineStore('main', () => {
-    const dataContent = ref(null);
+    const navData = ref([]); //导航数据
+    const contentData = ref(''); //主要内容数据
     const loading = ref(false);
     const error = ref(null);
 
@@ -16,16 +17,25 @@ export const useMainStore = defineStore('main', () => {
                 }
             });
             if (!response.data) throw new Error("无效数据");
-            dataContent.value = response.data;
-            localStorage.removeItem('mainContent');
-            localStorage.setItem('mainContent', JSON.stringify(response.data.content));
+            contentData.value = response.data.result;
         } catch (err) {
             console.error("请求错误:", err);
             error.value = "数据加载失败";
-            dataContent.value = []; // 确保错误时清空数据
+            response.data = ''; // 确保错误时清空数据
         } finally {
             loading.value = false;
         }
     };
-    return { dataContent, fetchMainContent, loading, error };
+    const fetchNavData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/main/getNavData');
+            if (!response.data) throw new Error("无效数据");
+            navData.value = response.data.navContent;
+        } catch (err) {
+            console.error("请求错误:", err);
+            error.value = "数据加载失败";
+            navData.value = []; // 确保错误时清空数据
+        }
+    }
+    return { fetchNavData, navData, fetchMainContent, contentData, loading, error };
 });

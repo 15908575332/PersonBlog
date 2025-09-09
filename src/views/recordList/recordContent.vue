@@ -144,14 +144,18 @@ function setTagToInput(tag) {
   })
 }
 
-//导航数据
-const navContent = computed(() => {
-  return mainStore.dataContent?.navContent || [];
-});
-//内容数据
+/** ------------------------导航数据------------------------ */
+const navContent = ref([]);
+const fetchNavData = async () => {
+  await mainStore.fetchNavData();
+  navContent.value = mainStore.navData;
+  toggleMoudle(navContent.value[0].order_id);
+}
+/** ------------------------内容数据------------------------ */
 const mainContent = computed(() => {
-  return mainStore.dataContent?.content || [];
-});
+  return mainStore.contentData;
+})
+
 //格式化发布时间
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
@@ -163,7 +167,7 @@ const isActive = ref(); //当前激活导航
 const currentId = ref(); //设置当前ID
 const currentIndex = ref(0); // 当前选中的导航索引
 
-const toggleMoudle = async (id = 'lifeReflection', index) => {
+const toggleMoudle = async (id = null, index) => {
   isActive.value = id;
   currentId.value = id;
   currentIndex.value = index;
@@ -218,7 +222,7 @@ const calculatePaginatedItems = () => {
   paginatedItems.value = mainContent.value.slice(startIndex, endIndex);
 };
 onMounted(() => {
-  toggleMoudle();
+  fetchNavData();
   AOS.init({
     offset: 110,
   });

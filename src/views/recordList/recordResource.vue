@@ -19,14 +19,8 @@
     <div class="container-content">
       <!-- 按钮导航 -->
       <div class="button__navigate">
-        <button
-          class="btn-7"
-          v-for="(item, index) in routeMeta"
-          :key="item.id"
-          @click="toggleMoudle(index, item.id)"
-          :class="{ btn__active: isActive == index }"
-          :style="buttonStyles(index)"
-        >
+        <button class="btn-7" v-for="(item, index) in navContent" :key="item.id" @click="toggleMoudle(index, item.id)"
+          :class="{ btn__active: isActive == index }" :style="buttonStyles(index)">
           <span>{{ item.navBtntitle }}</span>
         </button>
       </div>
@@ -38,19 +32,10 @@
           <span>发现</span>
         </div>
         <!-- 内容 -->
-        <div
-          v-for="(module, index) in selectContent"
-          data-aos="fade-up"
-          :key="index"
-          class="module-container"
-        >
+        <div v-for="(module, index) in selectContent" data-aos="fade-up" :key="index" class="module-container">
           <div :class="['module', getLayoutClass(index)]">
             <a @click="listDetail(module.contentId)" class="image">
-              <img
-                v-if="module.mediaType === 'image'"
-                :src="module.mainUrl"
-                alt="Image"
-              />
+              <img v-if="module.mediaType === 'image'" :src="module.mainUrl" alt="Image" />
               <video v-else :src="module.mainUrl" controls></video>
             </a>
             <div class="text__content">
@@ -66,10 +51,7 @@
                   <span>{{ module.heat }}热度</span>
                 </li>
                 <li>
-                  <img
-                    src="@/assets/icon/recordList/comment.svg"
-                    alt="comment"
-                  />
+                  <img src="@/assets/icon/recordList/comment.svg" alt="comment" />
                   <span>{{ module.comment.length }}评论</span>
                 </li>
                 <li>
@@ -86,10 +68,7 @@
                   <span>{{ module.tag1 }}</span>
                 </p>
                 <p>
-                  <img
-                    src="@/assets/icon/recordList/arrange.svg"
-                    alt="arrange"
-                  />
+                  <img src="@/assets/icon/recordList/arrange.svg" alt="arrange" />
                   <span>{{ module.tag2 }}</span>
                 </p>
               </div>
@@ -112,6 +91,7 @@ import Navigation from "@/components/NavigationMenu/index.vue"; //引入导航�
 import utils from "@/utils/getAssetsFile"; //引入获取静态资源的方法
 import { useRouter, useRoute } from "vue-router"; //引入路由相关的api
 import { useListDetail } from "@/store/listDetailStore"; // 引入store
+import { useMainStore } from "@/store/maincontent"; // 引入store
 
 const recordStore = useListDetail(); // 实例化store
 const dataContent = ref(recordStore.dataContent); // 存储dataContent的数据
@@ -126,6 +106,18 @@ var imageContainerRef = ref(null); // 用于存储图片容器的引用
 let observer = null; // 用于存储 IntersectionObserver 实例
 var randomIndex = ref(0); // 用于存储背景选取随机数
 const currentRouter = useRoute();
+
+
+/** ------------------------数据源处理------------------------ */
+const mainStore = useMainStore(); // 实例化store
+const navContent = computed(() => {
+  return mainStore.dataContent?.navContent || []; //导航数据
+});
+const mainContent = computed(() => {
+  return mainStore.dataContent?.content || []; //内容数据
+});
+console.log(mainStore)
+
 // 导航栏按钮切换模块
 const toggleMoudle = (selectBtnIndex = 0, id = routeMeta.value[0].id) => {
   currentId.value = id;
@@ -399,7 +391,7 @@ onMounted(() => {
         padding: 0;
         border: none;
 
-        & > span {
+        &>span {
           position: relative;
           display: block;
           border-radius: 5px;
@@ -410,8 +402,8 @@ onMounted(() => {
 
         &::before,
         &::after,
-        & > span::before,
-        & > span::after {
+        &>span::before,
+        &>span::after {
           position: absolute;
           content: "";
           right: 0;
@@ -424,20 +416,20 @@ onMounted(() => {
           transition: all 0.3s ease;
         }
 
-        & > span::before,
-        & > span::after {
+        &>span::before,
+        &>span::after {
           left: 0;
           top: 0;
         }
 
         &::before,
-        & > span::before {
+        &>span::before {
           height: 0%;
           width: 2px;
         }
 
         &::after,
-        & > span::after {
+        &>span::after {
           width: 0%;
           height: 2px;
         }
@@ -447,12 +439,12 @@ onMounted(() => {
           background: transparent !important;
 
           &::before,
-          & > span::before {
+          &>span::before {
             height: 100%;
           }
 
           &::after,
-          & > span::after {
+          &>span::after {
             width: 100%;
           }
         }
