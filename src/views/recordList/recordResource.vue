@@ -183,17 +183,7 @@ const back__text_title = computed(() => {
 const back__text_subtitle = computed(() => {
   return videoUrls.value[randomIndex.value].subtitle;
 });
-// 计算发布时间，默认是当前系统时间
-const updateTime = computed(() => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  const seconds = String(now.getSeconds()).padStart(2, "0");
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-});
+
 // 改变图片与内容的布局关系（图片/内容--> 左/右）
 const getLayoutClass = (index) => {
   // 根据索引的奇偶性返回不同的类名
