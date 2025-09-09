@@ -69,7 +69,7 @@
                         </div>
                         <div class="item">
                             <label>注册时间：</label>
-                            <span>{{ userStore.user.createdAt }}</span>
+                            <span>{{ dayjs(userStore.user.registerTime).format('YYYY-MM-DD HH:mm:ss') }}</span>
                         </div>
                         <div class="item">
                             <label for="introduce">简介：</label>
@@ -93,7 +93,7 @@ import utils from '@/utils/getAssetsFile';
 import Navigation from '../components/NavigationMenu/index.vue';
 import { ref, computed, onMounted, reactive, watchEffect } from 'vue';
 const maxlength = ref(110);
-
+import dayjs from 'dayjs';
 import { useAuthStore } from "@/store/auth";
 import { message } from 'ant-design-vue';
 const userStore = useAuthStore();
@@ -332,7 +332,7 @@ onMounted(() => { });
                 .char-counter {
                     position: absolute;
                     bottom: 0;
-                    right: -2.5rem;
+                    right: -3.5rem;
                     font-size: 14px;
                     text-align: right;
                     transition: color 0.3s;

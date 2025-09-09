@@ -844,7 +844,7 @@ onBeforeUnmount(() => {
   @include flexCenter(column, space-between);
   box-shadow: 0px 0px 0.75rem 0px rgba(113, 113, 113, 0.2);
   border-radius: 10px;
-  padding: 0.5rem 0.2rem;
+  padding: 0.5rem 0.3rem;
 
   //上下箭头
   .up,
@@ -853,7 +853,7 @@ onBeforeUnmount(() => {
     transition: all 0.3s ease;
 
     img {
-      width: 1.5rem;
+      width: 1.2rem;
     }
 
     &:hover {

@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
             user.value = response.data.user;
             token.value = response.data.token;
             iat.value = response.data.user.iat; //生效时间
-
+            console.log(response.data)
             // 保存到本地存储
             localStorage.setItem('user', JSON.stringify(response.data.user))
             localStorage.setItem('token', response.data.token); //token

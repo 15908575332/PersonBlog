@@ -46,7 +46,7 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
     try {
         // 查询用户信息
         const [user] = await sqlQuery(
-            'SELECT id, email, avatarUrl, username, password_hash FROM users WHERE email = ?',
+            'SELECT * FROM users WHERE email = ?',
             [loginEmail]
         );
         if (!user) return res.status(404).json({ message: '用户不存在' });
@@ -75,10 +75,13 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
                 username: user.username,
                 email: user.email,
                 avatarUrl: user.avatarUrl,
+                sex: user.sex,
+                introduce: user.introduce,
+                registerTime: user.created_at,
                 iat: Math.floor(Date.now() / 1000), // 签发时间
             }
         });
-
+        console.log(user)
     } catch (error) {
         console.error('登录失败:', error);
         res.status(500).json({ message: '服务器内部错误' });
