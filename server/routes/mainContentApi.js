@@ -2,9 +2,6 @@
 import express from 'express';
 const router = express.Router();
 import sqlQuery from '../db/sqlQuery.js';
-
-
-
 //获取导航数据
 router.get('/getNavData', async (req, res) => {
     try {
@@ -47,12 +44,12 @@ router.get('/getMainContent', async (req, res) => {
         res.status(200).json({
             code: 200,
             message: '获取主要内容成功',
-            result // 博客列表数组
+            result, // 博客列表数组
         });
     } catch (error) {
         console.error('获取主要内容失败:', error);
         res.status(500).json({ message: '服务器内部错误' });
-    }
+     }
 });
 //内容浏览量
 router.post('/updateHeat', async (req, res) => {

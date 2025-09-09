@@ -293,7 +293,7 @@
                                                 :src="utils.getAssetsFile('icon/level/' + message.level + '.svg')"
                                                 alt="level">
                                         </div>
-                                        <div class="time">{{ formatTimestamp(message.timestamp) }}</div>
+                                        <div class="time">{{ release_time_format(message.timestamp) }}</div>
                                     </div>
                                 </div>
                                 <div class="reply">
@@ -319,7 +319,7 @@
                                                 :src="utils.getAssetsFile('icon/level/' + reply.level + '.svg')"
                                                 alt="level">
                                         </div>
-                                        <div class="time">{{ formatTimestamp(reply.timestamp) }}</div>
+                                        <div class="time">{{ release_time_format(reply.timestamp) }}</div>
                                     </div>
                                 </div>
 
@@ -610,24 +610,24 @@ const paramsId = computed(() => {
 const mainContent = computed(() => {
     return JSON.parse(localStorage.getItem('mainContent'));
 });
-//段落分割函数（句号/换行）
-function splitParagraphs(text) {
-    // 处理空输入
-    if (typeof text !== 'string' || text.trim() === '') return [];
-    // 按换行符分割为初步段落
-    const lines = text.split(/\n+/).map(line => line.trim());
-    // 过滤空行
-    const validLines = lines.filter(line => line !== '');
-    // 按句号分割段落（处理边界情况）
-    const paragraphs = [];
-    for (const line of validLines) {
-        // 按句号分割，但排除缩写词和数字小数点
-        const parts = line.split(/(?<!\b[A-Za-z]{1,2})\.\s+/);
-        paragraphs.push(...parts);
-    }
-    // 过滤空段落
-    return paragraphs.filter(p => p !== '');
-}
+// //段落分割函数（句号/换行）
+// function splitParagraphs(text) {
+//     // 处理空输入
+//     if (typeof text !== 'string' || text.trim() === '') return [];
+//     // 按换行符分割为初步段落
+//     const lines = text.split(/\n+/).map(line => line.trim());
+//     // 过滤空行
+//     const validLines = lines.filter(line => line !== '');
+//     // 按句号分割段落（处理边界情况）
+//     const paragraphs = [];
+//     for (const line of validLines) {
+//         // 按句号分割，但排除缩写词和数字小数点
+//         const parts = line.split(/(?<!\b[A-Za-z]{1,2})\.\s+/);
+//         paragraphs.push(...parts);
+//     }
+//     // 过滤空段落
+//     return paragraphs.filter(p => p !== '');
+// }
 //渲染内容
 const recordDetail = ref('');
 //格式化发布时间
@@ -648,6 +648,7 @@ const getFatherdata = () => {
 getFatherdata();
 
 //段落内容
+import { splitParagraphs } from '@/utils/splitParagraphs';
 const paragraph = splitParagraphs(recordDetail.value.main_text);
 console.log(paragraph);
 
@@ -778,12 +779,12 @@ const onVue3Emoje = (val) => {
 const onChangeText = () => {
     return;
 }
-// 时间格式化函数
-const formatTimestamp = (timestamp) => {
-    // 将时间戳格式化为可读的日期字符串
-    const date = new Date(timestamp);
-    return date.toLocaleString();
-}
+// // 时间格式化函数
+// const release_time_format = (timestamp) => {
+//     // 将时间戳格式化为可读的日期字符串
+//     const date = new Date(timestamp);
+//     return date.toLocaleString();
+// }
 // (提交按钮)留言动态添加函数
 const isContent = ref(false); //内容是否需要评价才可查看
 const addMessage = (contentId) => {

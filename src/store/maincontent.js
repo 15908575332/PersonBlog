@@ -5,6 +5,7 @@ import { ref } from 'vue';
 export const useMainStore = defineStore('main', () => {
     const navData = ref([]); //导航数据
     const contentData = ref(''); //主要内容数据
+    const mainContent = ref([]); //主要内容数据(内存)
     const loading = ref(false);
     const error = ref(null);
 
@@ -18,10 +19,12 @@ export const useMainStore = defineStore('main', () => {
             });
             if (!response.data) throw new Error("无效数据");
             contentData.value = response.data.result;
+            mainContent.value = response.data.result;
+            localStorage.setItem('mainContent', JSON.stringify(mainContent.value));
         } catch (err) {
             console.error("请求错误:", err);
             error.value = "数据加载失败";
-            response.data = ''; // 确保错误时清空数据
+            mainContent.value = []; // 确保错误时清空数据
         } finally {
             loading.value = false;
         }

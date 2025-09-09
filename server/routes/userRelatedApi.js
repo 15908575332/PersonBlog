@@ -81,7 +81,6 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
                 iat: Math.floor(Date.now() / 1000), // 签发时间
             }
         });
-        console.log(user)
     } catch (error) {
         console.error('登录失败:', error);
         res.status(500).json({ message: '服务器内部错误' });

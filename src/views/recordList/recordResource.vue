@@ -545,6 +545,7 @@ onMounted(() => {
             overflow: hidden;
             color: black;
             font-size: 0.8rem;
+            text-indent: 2em
           }
         }
 
