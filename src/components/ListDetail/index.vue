@@ -608,7 +608,19 @@ const paramsId = computed(() => {
     return Number(route.params.id); //默认是字符串类型
 });
 const mainContent = computed(() => {
-    return JSON.parse(localStorage.getItem('mainContent'));
+    try {
+        const storedValue = localStorage.getItem('mainContent');
+        // 情况1：无存储值，返回默认值（根据业务需求调整）
+        if (storedValue === null) {
+            return null; // 或返回 {}、'' 等默认值
+        }
+        // 情况2：尝试解析JSON（捕获可能的解析错误）
+        return JSON.parse(storedValue);
+    } catch (error) {
+        console.error('解析localStorage中的mainContent失败:', error);
+        // 返回安全值（如空对象、空字符串，或根据业务逻辑处理）
+        return null; // 或 {}、''
+    }
 });
 // //段落分割函数（句号/换行）
 // function splitParagraphs(text) {
@@ -650,7 +662,6 @@ getFatherdata();
 //段落内容
 import { splitParagraphs } from '@/utils/splitParagraphs';
 const paragraph = splitParagraphs(recordDetail.value.main_text);
-console.log(paragraph);
 
 /** ------------------------文章浏览量计数------------------------ */
 const instance = getCurrentInstance();

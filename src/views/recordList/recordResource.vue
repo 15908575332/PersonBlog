@@ -20,7 +20,7 @@
       <!-- 按钮导航 -->
       <div class="button__navigate">
         <button class="btn-7" v-for="(item, index) in navContent" :key="item.order_id"
-          @click="toggleMoudle(item.order_id, index)" :class="{ btn__active: isActive == index }"
+          @click="toggleMoudle(item.order_id, index)" :class="{ btn__active: isActiveBtn == index }"
           :style="buttonStyles(index)">
           <span>{{ item.title }}</span>
         </button>
@@ -35,8 +35,8 @@
         <!-- 内容 -->
         <div v-for="(module, index) in mainContent" data-aos="fade-up" :key="index" class="module-container">
           <div :class="['module', getLayoutClass(index)]">
-            <a @click="listDetail(module.contentId)" class="image">
-              <img v-if="!module.main_url" :src="module.backimg_url" alt="Image" />
+            <a @click="listDetail(module.id)" class="image">
+              <img v-if="!module.main_url" v-lazy="module.backimg_url" alt="Image" />
               <video v-else :src="module.main_url" controls></video>
             </a>
             <div class="text__content">
@@ -110,14 +110,14 @@ const fetchNavData = async () => {
   if (navContent.value.length > 0) {
     toggleMoudle(navContent.value[0].order_id);
   }
-}
+};
 /** ------------------------内容数据------------------------ */
 const mainContent = computed(() => {
   return mainStore.contentData;
-})
+});
 
 /** ------------------------导航栏按钮切换模块------------------------ */
-const toggleMoudle = async (id = null, index) => {
+const toggleMoudle = async (id = null, index = 0) => {
   currentId.value = id;
   isActiveBtn.value = index;
   await mainStore.fetchMainContent(id);
@@ -125,18 +125,17 @@ const toggleMoudle = async (id = null, index) => {
 
 //格式化发布时间
 import dayjs from "dayjs";
-import 'dayjs/locale/zh-cn';
-const release_time_format = ((date) => {
-  return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
-})
+import "dayjs/locale/zh-cn";
+const release_time_format = (date) => {
+  return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
+};
 //传入需要渲染的id，与查询参数fatherId，跳转到listDetail页面
 const listDetail = (id) => {
   route.push({
     name: "listDetail",
-    query: {
-      // fatherId: 'lifeReflection'
-      fatherId: currentId.value,
-    },
+    // query: {
+    //   fatherId: currentId.value,
+    // },
     params: {
       id: id,
     },
@@ -545,7 +544,7 @@ onMounted(() => {
             overflow: hidden;
             color: black;
             font-size: 0.8rem;
-            text-indent: 2em
+            text-indent: 2em;
           }
         }
 
@@ -585,5 +584,15 @@ onMounted(() => {
 .btn__active {
   color: rgba(251, 75, 2, 1) !important;
   background: transparent !important;
+
+  &::before,
+  &>span::before {
+    height: 100% !important;
+  }
+
+  &::after,
+  &>span::after {
+    width: 100% !important;
+  }
 }
 </style>

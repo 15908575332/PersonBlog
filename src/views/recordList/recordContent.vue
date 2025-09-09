@@ -194,9 +194,6 @@ const
 const listDetail = (id) => {
   route.push({
     name: "listDetail",
-    // query: {
-    //   fatherId: currentId.value,
-    // },
     params: {
       id: id,
     },

@@ -9,6 +9,7 @@ export const useMainStore = defineStore('main', () => {
     const loading = ref(false);
     const error = ref(null);
 
+
     const fetchMainContent = async (id) => {
         loading.value = true;
         try {
@@ -20,7 +21,7 @@ export const useMainStore = defineStore('main', () => {
             if (!response.data) throw new Error("无效数据");
             contentData.value = response.data.result;
             mainContent.value = response.data.result;
-            localStorage.setItem('mainContent', JSON.stringify(mainContent.value));
+            localStorage.setItem('mainContent', mainContent.value);
         } catch (err) {
             console.error("请求错误:", err);
             error.value = "数据加载失败";
