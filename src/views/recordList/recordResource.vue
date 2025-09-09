@@ -87,28 +87,20 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, computed, watch, nextTick } from "vue"; //引入vue相关的api
+import { onMounted, ref, computed } from "vue"; //引入vue相关的api
 import Live2d from "@/components/Live2d/index.vue"; //引入live2d组件
 import Navigation from "@/components/NavigationMenu/index.vue"; //引入导航组件
 import utils from "@/utils/getAssetsFile"; //引入获取静态资源的方法
-import { useRouter, useRoute } from "vue-router"; //引入路由相关的api
-import { useListDetail } from "@/store/listDetailStore"; // 引入store
+import { useRouter } from "vue-router"; //引入路由相关的api
 import { useMainStore } from "@/store/maincontent"; // 引入store
-const mainStore = useMainStore(); // 实例化store
 
-const recordStore = useListDetail(); // 实例化store
-const dataContent = ref(recordStore.dataContent); // 存储dataContent的数据
-const learingLife = ref(recordStore.learingLife); // 存储learingLife的数据
-const country = ref(recordStore.country); // 存储country的数据
-const routeMeta = ref(); //存储根据路由元信息筛选出的数据
+const mainStore = useMainStore(); // 实例化store
 const route = useRouter(); // 实例化路由
 const isActiveBtn = ref(0); // 用于存储当前选中的按钮索引
 const currentId = ref(null); // 用于存储当前选中的item的id
-const selectContent = ref([]); // 用于存储当前选中的item的content数组
 var imageContainerRef = ref(null); // 用于存储图片容器的引用
 let observer = null; // 用于存储 IntersectionObserver 实例
 var randomIndex = ref(0); // 用于存储背景选取随机数
-const currentRouter = useRoute();
 
 /** ------------------------导航数据------------------------ */
 const navContent = ref([]);
@@ -137,28 +129,6 @@ import 'dayjs/locale/zh-cn';
 const release_time_format = ((date) => {
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
 })
-nextTick(() => {
-  // toggleMoudle();
-});
-// watch(
-//   currentRouter,
-//   () => {
-//     // 根据路由元信息dataKey决定渲染的数据
-//     const dataKey = currentRouter.meta.dataKey;
-//     if (dataKey === "resource") {
-//       routeMeta.value = dataContent.value;
-//     } else if (dataKey === "learning") {
-//       routeMeta.value = learingLife.value;
-//     } else if (dataKey === "country") {
-//       routeMeta.value = country.value;
-//     }
-//     // 在路由改变后调用 toggleMoudle 函数
-//     if (routeMeta.value.length > 0) {
-//       toggleMoudle(0, routeMeta.value[0].id);
-//     }
-//   },
-//   { immediate: true }
-// );
 //传入需要渲染的id，与查询参数fatherId，跳转到listDetail页面
 const listDetail = (id) => {
   route.push({
@@ -279,11 +249,6 @@ onMounted(() => {
     randomIndex.value = Math.floor(Math.random() * videoUrls.value.length); //背景图索引值
   }
   fetchNavData();
-  // if (routeMeta.value.length > 0) {
-  //   toggleMoudle(0, routeMeta.value[0].id); // 初始化时选中第一个按钮
-  // } else {
-  //   console.log("未找到对应的内容");
-  // }
   getLayoutClass(); // 初始化布局类名
   createObserver(); // 初始化 IntersectionObserver
 });
