@@ -3,6 +3,7 @@ import userRelatedApi from './routes/userRelatedApi.js';
 import messageBoardApi from './routes/messageBoardApi.js';
 import favoritesApi from './routes/favoritesApi.js';
 import mainContentApi from './routes/mainContentApi.js';
+import blogMessagesApi from './routes/blogMessagesApi.js'
 import express from 'express'; // express框架
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -28,9 +29,12 @@ app.use(urlencoded({ extended: false }))
 
 // 后端api路由
 app.use('/user', userRelatedApi); //用户信息 
-app.use('/', messageBoardApi); //留言
+app.use('/', messageBoardApi); //messageBoard留言
 app.use('/treasureBox', favoritesApi); //收藏夹
 app.use('/main', mainContentApi); //主要内容
+app.use('/message', blogMessagesApi); // 博客留言
+
+
 // 错误处理中间件（放在所有路由之后）
 app.use((err, req, res, next) => {
     console.error(err.stack);

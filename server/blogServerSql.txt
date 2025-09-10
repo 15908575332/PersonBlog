@@ -10,29 +10,6 @@ CREATE TABLE users (
   status TINYINT DEFAULT 1 COMMENT '账户状态:0:禁用,1:启用'  
 ) COMMENT='用户信息表';
 
--- 创建留言板数据表 (messageBoard页面用)
-CREATE TABLE messages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT COMMENT '用户ID（可为空，表示用户已删除）', -- 注意去掉NOT NULL
-    message_content TEXT NOT NULL COMMENT '留言内容',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE /*级联删除，user表中用户删除后，message表中id对应的相关数据一起删除*/
-);
-
-
--- 创建回复表
-CREATE TABLE replies (
-  id INT AUTO_INCREMENT PRIMARY KEY COMMENT '回复唯一ID',
-  message_id INT NOT NULL COMMENT '关联留言ID',
-  user_id INT NOT NULL COMMENT '回复用户ID',
-  content TEXT NOT NULL COMMENT '回复内容',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '回复时间',
-  FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  INDEX idx_message_created (message_id, created_at)
-) COMMENT='回复表';
-
-
 --收藏夹
 -- 创建主分类表（存储分类标题）
 CREATE TABLE favorite_categories (
@@ -85,3 +62,5 @@ CREATE TABLE blog_content_main (
   INDEX idx_master_tag (master_tag),
   UNIQUE INDEX uk_biz_id (biz_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='博客详细内容表';
+
+--内容详情留言表

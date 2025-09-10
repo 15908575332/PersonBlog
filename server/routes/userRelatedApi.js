@@ -78,6 +78,7 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
                 sex: user.sex,
                 introduce: user.introduce,
                 registerTime: user.created_at,
+                level: user.vipLevel,
                 iat: Math.floor(Date.now() / 1000), // 签发时间
             }
         });

@@ -57,7 +57,7 @@
                             </li>
                             <li>
                                 <img src="@/assets/icon/recordList/comment.svg" alt="comment">
-                                <span>{{ selectComment.length }}评论 ·</span>
+                                <!-- <span>{{ selectComment.length }}评论 ·</span> -->
                             </li>
                             <li>
                                 <img src="@/assets/icon/recordList/like.svg" alt="like">
@@ -277,23 +277,23 @@
             </div>
             <!-- 留言记录 -->
             <div class="comment__moudle">
-                <div class="sum" v-if="selectComment.length">Comments | {{ selectComment.length }}条留言</div>
-                <ul v-if="selectComment.length">
-                    <li class="comment__item" v-for="(message, index) in paginatedItems" :key="index">
+                <div class="sum">Comments | {{ totals }}条留言</div>
+                <ul v-if="messageList.length > 0">
+                    <li class="comment__item" v-for="(message, index) in messageList" :key="index">
                         <div>
                             <div class="louyt">
                                 <div style="display: flex;">
                                     <div class="profile__picture">
-                                        <img :src="message.profile__picture" alt="avatar">
+                                        <img :src="message.avatarUrl" alt="avatar">
                                     </div>
                                     <div class="time__name">
                                         <div class="nickname">
-                                            <span>{{ message.nickname }}</span>
+                                            <span>{{ message.username }}</span>
                                             <img class="level"
-                                                :src="utils.getAssetsFile('icon/level/' + message.level + '.svg')"
+                                                :src="utils.getAssetsFile('icon/level/lv' + message.vipLevel + '.svg')"
                                                 alt="level">
                                         </div>
-                                        <div class="time">{{ release_time_format(message.timestamp) }}</div>
+                                        <div class="time">{{ release_time_format(message.created_at) }}</div>
                                     </div>
                                 </div>
                                 <div class="reply">
@@ -306,26 +306,26 @@
                             </div>
                         </div>
                         <!-- 回复展示 -->
-                        <div class="reply__container" v-for="(reply, index) in message.replies" :key="reply.replyId">
+                        <div class="reply__container">
                             <div class="louyt">
                                 <div style="display: flex;">
                                     <div class="profile__picture">
-                                        <img :src="reply.profile__picture" alt="avatar">
+                                        <img :src="message.avatarUrl" alt="avatar">
                                     </div>
                                     <div class="time__name">
                                         <div class="nickname">
-                                            <span>{{ reply.nickname }}</span>
+                                            <span>{{ message.user }}</span>
                                             <img class="level"
-                                                :src="utils.getAssetsFile('icon/level/' + reply.level + '.svg')"
+                                                :src="utils.getAssetsFile('icon/level/' + message.vipLevel + '.svg')"
                                                 alt="level">
                                         </div>
-                                        <div class="time">{{ release_time_format(reply.timestamp) }}</div>
+                                        <!-- <div class="time">{{ release_time_format(reply.timestamp) }}</div> -->
                                     </div>
                                 </div>
 
                             </div>
                             <div class="comment__container">
-                                <div class="content"><span>@{{ reply.replyUser }}:</span>{{ reply.replyContent }}</div>
+                                <!-- <div class="content"><span>@{{ reply.replyUser }}:</span>{{ reply.replyContent }}</div> -->
                             </div>
                         </div>
                     </li>
@@ -334,8 +334,8 @@
                     <span>没有更多留言，去留言吧~</span>
                 </div>
                 <!-- 分页 -->
-                <div class="paginate" v-if="totalItems">
-                    <vue-awesome-paginate :total-items="totalItems" v-model="currentPage" :items-per-page="pageSize"
+                <div class="paginate" v-if="totals">
+                    <vue-awesome-paginate :total-items="totals" v-model="currentPage" :items-per-page="pageSize"
                         :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
                         :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
                         <template #prev-button>
@@ -516,89 +516,6 @@ import ModalBox from '@/components/ModalBox/index.vue'
 import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
 
-const selectComment = ref(''); // 留言记录
-const showReplyModal = ref(false); // 控制回复框的显示/隐藏
-const currentReplyId = ref(null); // 当前回复的评论ID
-const replyContent = ref(''); // 回复内容
-// 显示回复框
-const showReply = (commentId) => {
-    currentReplyId.value = commentId;
-    // 获取对应留言的回复
-    showReplyModal.value = true;
-    document.body.classList.add('no-scroll'); // 新增
-}
-
-// 关闭回复框
-const handleReplyClose = () => {
-    showReplyModal.value = false;
-    replyContent.value = '';
-    document.body.classList.remove('no-scroll'); // 新增
-}
-
-// 提交回复
-const submitReply = () => {
-    if (!replyContent.value.trim()) return;
-
-    // 找到回复的留言具体是那一条
-    const targetComment = selectComment.value.find(
-        c => c.commentId === currentReplyId.value
-    );
-    // 生成随机两位数 (00-99)
-    const randomSuffix = Math.floor(Math.random() * 65)
-        .toString()
-        .padStart(2, '0');
-
-    // 调用store的addReply方法
-    recordStore.addReply(currentReplyId.value, {
-        replyId: Date.now(),
-        replyContent: replyContent.value,
-        timestamp: Date.now(),
-        profile__picture: utils.getAssetsFile(
-            `img/profile_picture/100${randomSuffix}.png` // 示例: 10003.png -> 100[03].png
-        ), nickname: '用户昵称',
-        replyUser: targetComment.nickname,
-        level: 'lv1'
-    });
-
-    // 清空并关闭
-    replyContent.value = '';
-    showReplyModal.value = false;
-    document.body.classList.remove('no-scroll'); // 新增
-
-};
-//回复框表情显示/隐藏控制
-const _ModalShow = ref(false);
-//回复框表情显示/隐藏控制方法
-const modalIs_show = () => {
-    _ModalShow.value = !_ModalShow.value;
-}
-
-//回复框表情输入
-const getVue3Emoje = (val) => {
-    // 表情输入
-    replyContent.value += val.i;
-}
-
-// 视频播放
-const videoRef = ref(null);
-const playVideo = () => {
-    const video = videoRef.value;
-    if (video && (video.paused || video.ended)) {
-        video.play();
-    }
-};
-const isPlaying = ref(false);
-const handlePlay = () => {
-    isPlaying.value = true;
-};
-const handlePause = () => {
-    isPlaying.value = false;
-};
-// 控制子组件回复框显示隐藏
-const showModal = ref(false);
-const handClose = () => {
-    showModal.value = false;
-}
 
 /** ------------------------内容处理------------------------ */
 // 接收组件recordRender传递的路由id
@@ -622,26 +539,7 @@ const mainContent = computed(() => {
         return null; // 或 {}、''
     }
 });
-// //段落分割函数（句号/换行）
-// function splitParagraphs(text) {
-//     // 处理空输入
-//     if (typeof text !== 'string' || text.trim() === '') return [];
-//     // 按换行符分割为初步段落
-//     const lines = text.split(/\n+/).map(line => line.trim());
-//     // 过滤空行
-//     const validLines = lines.filter(line => line !== '');
-//     // 按句号分割段落（处理边界情况）
-//     const paragraphs = [];
-//     for (const line of validLines) {
-//         // 按句号分割，但排除缩写词和数字小数点
-//         const parts = line.split(/(?<!\b[A-Za-z]{1,2})\.\s+/);
-//         paragraphs.push(...parts);
-//     }
-//     // 过滤空段落
-//     return paragraphs.filter(p => p !== '');
-// }
-//渲染内容
-const recordDetail = ref('');
+const recordDetail = ref('');//渲染内容
 //格式化发布时间
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
@@ -790,12 +688,114 @@ const onVue3Emoje = (val) => {
 const onChangeText = () => {
     return;
 }
-// // 时间格式化函数
-// const release_time_format = (timestamp) => {
-//     // 将时间戳格式化为可读的日期字符串
-//     const date = new Date(timestamp);
-//     return date.toLocaleString();
-// }
+
+//留言列表相关
+const messageList = ref([]); //留言列表
+const currentPage = ref(1); //当前页
+const totalPages = ref(1); //总页数
+const pageSize = ref(10);
+const totals = ref(0); //总条数
+
+// 获取留言列表
+const getMessageList = async () => {
+    try {
+        const res = await $http.get('/message/getmessageList', {
+            params: {
+                page: currentPage.value,
+                pageSize: pageSize.value,
+                parentId: 0
+            },
+            headers: {
+                'Authorization': `Bearer ${userStore.token}`
+            }
+        });
+        messageList.value = res.data.list;
+        totals.value = res.data.total;
+        totalPages.value = Math.ceil(res.data.total / pageSize.value);
+    } catch (error) {
+        console.error('获取留言列表失败:', error);
+    }
+}
+
+// 显示回复框
+const showReply = (commentId) => {
+    currentReplyId.value = commentId;
+    // 获取对应留言的回复
+    showReplyModal.value = true;
+    document.body.classList.add('no-scroll'); // 新增
+}
+
+// 关闭回复框
+const handleReplyClose = () => {
+    showReplyModal.value = false;
+    replyContent.value = '';
+    document.body.classList.remove('no-scroll'); // 新增
+}
+
+// 提交回复
+const submitReply = () => {
+    if (!replyContent.value.trim()) return;
+
+    // 找到回复的留言具体是那一条
+    const targetComment = selectComment.value.find(
+        c => c.commentId === currentReplyId.value
+    );
+    // 生成随机两位数 (00-99)
+    const randomSuffix = Math.floor(Math.random() * 65)
+        .toString()
+        .padStart(2, '0');
+
+    // 调用store的addReply方法
+    recordStore.addReply(currentReplyId.value, {
+        replyId: Date.now(),
+        replyContent: replyContent.value,
+        timestamp: Date.now(),
+        profile__picture: utils.getAssetsFile(
+            `img/profile_picture/100${randomSuffix}.png` // 示例: 10003.png -> 100[03].png
+        ), nickname: '用户昵称',
+        replyUser: targetComment.nickname,
+        level: 'lv1'
+    });
+
+    // 清空并关闭
+    replyContent.value = '';
+    showReplyModal.value = false;
+    document.body.classList.remove('no-scroll'); // 新增
+
+};
+//回复框表情显示/隐藏控制
+const _ModalShow = ref(false);
+//回复框表情显示/隐藏控制方法
+const modalIs_show = () => {
+    _ModalShow.value = !_ModalShow.value;
+}
+
+//回复框表情输入
+const getVue3Emoje = (val) => {
+    // 表情输入
+    replyContent.value += val.i;
+}
+
+// 视频播放
+const videoRef = ref(null);
+const playVideo = () => {
+    const video = videoRef.value;
+    if (video && (video.paused || video.ended)) {
+        video.play();
+    }
+};
+const isPlaying = ref(false);
+const handlePlay = () => {
+    isPlaying.value = true;
+};
+const handlePause = () => {
+    isPlaying.value = false;
+};
+// 控制子组件回复框显示隐藏
+const showModal = ref(false);
+const handClose = () => {
+    showModal.value = false;
+}
 // (提交按钮)留言动态添加函数
 const isContent = ref(false); //内容是否需要评价才可查看
 const addMessage = (contentId) => {
@@ -824,25 +824,26 @@ const addMessage = (contentId) => {
     }, 1000);
 }
 // 分页
-var currentPage = ref(1) // 当前页码
-var pageSize = ref(10) // 每页显示的项数
-var paginatedItems = ref([]) // 存储分页后的项目列表，实际页面渲染的数据集
-var totalItems = computed(() => { // 总项数（通常你会从服务器获取这个值，但在这里我们直接知道）
-    return selectComment.value.length;
-})
+// var currentPage = ref(1) // 当前页码
+// var pageSize = ref(10) // 每页显示的项数
+// var paginatedItems = ref([]) // 存储分页后的项目列表，实际页面渲染的数据集
+// var totalItems = computed(() => { // 总项数（通常你会从服务器获取这个值，但在这里我们直接知道）
+//     return selectComment.value.length;
+// })
 
-const calculatePaginatedItems = () => { //计算和更新分页后的项目列表 
-    const startIndex = (currentPage.value - 1) * pageSize.value;
-    const endIndex = startIndex + pageSize.value;
-    //提取数组中从startIndex到endIndex（不包括endIndex）的部分，这部分即为当前页的项目列表
-    paginatedItems.value = selectComment.value.slice(startIndex, endIndex);
-}
-const onClickHandler = (page) => {
-    currentPage.value = page;
-    calculatePaginatedItems();
-};
+// const calculatePaginatedItems = () => { //计算和更新分页后的项目列表 
+//     const startIndex = (currentPage.value - 1) * pageSize.value;
+//     const endIndex = startIndex + pageSize.value;
+//     //提取数组中从startIndex到endIndex（不包括endIndex）的部分，这部分即为当前页的项目列表
+//     paginatedItems.value = selectComment.value.slice(startIndex, endIndex);
+// }
+// const onClickHandler = (page) => {
+//     currentPage.value = page;
+//     calculatePaginatedItems();
+// };
 onMounted(async () => {
     updateHeat(paramsId.value);
+    getMessageList();
 })
 </script>
 <style lang="scss">
