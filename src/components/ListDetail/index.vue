@@ -276,10 +276,12 @@
                 </div>
             </div>
             <!-- 留言记录 -->
+
             <div class="comment__moudle">
                 <div class="sum">Comments | {{ totals }}条留言</div>
                 <ul v-if="messageList.length > 0">
-                    <li class="comment__item" v-for="(message, index) in messageList" :key="index">
+                    <li class="comment__item" :class="{ 'reply__item': message.length > 0 }"
+                        v-for="(message, index) in messageList" :key="index">
                         <div>
                             <div class="louyt">
                                 <div style="display: flex;">
@@ -297,7 +299,7 @@
                                     </div>
                                 </div>
                                 <div class="reply">
-                                    <button @click="showReply(message.commentId)">回复</button>
+                                    <button @click="handleReply(message)">回复</button>
                                 </div>
                             </div>
                             <!-- 留言展示 -->
@@ -306,26 +308,27 @@
                             </div>
                         </div>
                         <!-- 回复展示 -->
-                        <div class="reply__container">
+                        <div class="reply__container" v-for="value in message.replies">
                             <div class="louyt">
                                 <div style="display: flex;">
                                     <div class="profile__picture">
-                                        <img :src="message.avatarUrl" alt="avatar">
+                                        <img :src="value.user.avatarUrl" alt="avatar">
                                     </div>
                                     <div class="time__name">
                                         <div class="nickname">
-                                            <span>{{ message.user }}</span>
+                                            <span>{{ value.user.username }}</span>
                                             <img class="level"
-                                                :src="utils.getAssetsFile('icon/level/' + message.vipLevel + '.svg')"
+                                                :src="utils.getAssetsFile('icon/level/lv' + value.user.vipLevel + '.svg')"
                                                 alt="level">
                                         </div>
-                                        <!-- <div class="time">{{ release_time_format(reply.timestamp) }}</div> -->
+                                        <div class="time">{{ release_time_format(message.created_at) }}</div>
                                     </div>
                                 </div>
 
                             </div>
                             <div class="comment__container">
-                                <!-- <div class="content"><span>@{{ reply.replyUser }}:</span>{{ reply.replyContent }}</div> -->
+                                <div class="content"><span>@{{ message.username }}:</span>{{ value.content }}
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -354,7 +357,7 @@
             </div>
         </div>
 
-        <!-- 留言回复回复框 -->
+        <!-- 留言回复框 -->
         <div class="reply-modal" v-if="showReplyModal" @click.self="handleReplyClose" @close="handleReplyClose">
             <div class="modal" data-aos="flip-down">
                 <!-- 输入框 -->
@@ -372,7 +375,7 @@
                     <div @click="modalIs_show" class="emoji__btn">
                         <img src="./img/Rainbow.gif" alt="">
                     </div>
-                    <button class="modalSubmit" @click="submitReply(recordDetail.contentId)">提交
+                    <button class="modalSubmit" @click="handleReplyPost()">提交
                         <div class="star-1">
                             <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
                                 style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
@@ -679,7 +682,6 @@ const _ISshow = ref(false);
 const emojiIs_show = () => {
     _ISshow.value = !_ISshow.value;
 }
-const input__message = ref('');
 const onVue3Emoje = (val) => {
     // 表情输入
     input__message.value += val.i;
@@ -691,6 +693,7 @@ const onChangeText = () => {
 
 //留言列表相关
 const messageList = ref([]); //留言列表
+const replies = ref([]);//回复列表
 const currentPage = ref(1); //当前页
 const totalPages = ref(1); //总页数
 const pageSize = ref(10);
@@ -709,7 +712,9 @@ const getMessageList = async () => {
                 'Authorization': `Bearer ${userStore.token}`
             }
         });
-        messageList.value = res.data.list;
+        // 提取主留言和回复
+        messageList.value = res.data.list.filter(item => !item.parentId);
+        console.log(messageList.value)
         totals.value = res.data.total;
         totalPages.value = Math.ceil(res.data.total / pageSize.value);
     } catch (error) {
@@ -717,6 +722,7 @@ const getMessageList = async () => {
     }
 }
 //发布留言
+const input__message = ref(''); //留言内容
 const addMessage = async () => {
     if (!input__message.value.trim()) return;
 
@@ -736,16 +742,48 @@ const addMessage = async () => {
         input__message.value = '';
 
     } catch (error) {
-        
+
         console.error('发布留言失败:', error);
     }
 }
-// 显示回复框
-const showReply = (commentId) => {
-    currentReplyId.value = commentId;
-    // 获取对应留言的回复
+// 留言回复
+const showReplyModal = ref(false); //回复框状态
+const replyContent = ref(''); //回复内容
+const activeParentId = ref(0); //当前回复留言id
+const replyUserID = ref(0); //被回复用户id
+
+const handleReply = (message) => {
     showReplyModal.value = true;
+    activeParentId.value = message.id;
+    // 回复内容默认 @ 被回复用户
+    replyUserID.value = message.user_id;
+    replyContent.value = `@${message.username}：`;
     document.body.classList.add('no-scroll'); // 新增
+}
+
+// 提交回复
+const handleReplyPost = async () => {
+    if (!replyContent.value.trim()) return;
+    try {
+
+        await $http.post('/message/replies', {
+            content: replyContent.value, //回复内容
+            postId: activeParentId.value,//关联主留言的id值
+        },
+            {
+                headers: {
+                    'Authorization': `Bearer ${userStore.token}`
+                }
+            });
+        message.success('回复成功');
+        getMessageList();
+        replyContent.value = '';
+        activeParentId.value = 0;
+        showReplyModal.value = false;
+        document.body.classList.remove('no-scroll'); // 新增
+    } catch (error) {
+        console.error('回复留言失败:', error);
+    }
 }
 
 // 关闭回复框
@@ -754,38 +792,6 @@ const handleReplyClose = () => {
     replyContent.value = '';
     document.body.classList.remove('no-scroll'); // 新增
 }
-
-// 提交回复
-const submitReply = () => {
-    if (!replyContent.value.trim()) return;
-
-    // 找到回复的留言具体是那一条
-    const targetComment = selectComment.value.find(
-        c => c.commentId === currentReplyId.value
-    );
-    // 生成随机两位数 (00-99)
-    const randomSuffix = Math.floor(Math.random() * 65)
-        .toString()
-        .padStart(2, '0');
-
-    // 调用store的addReply方法
-    recordStore.addReply(currentReplyId.value, {
-        replyId: Date.now(),
-        replyContent: replyContent.value,
-        timestamp: Date.now(),
-        profile__picture: utils.getAssetsFile(
-            `img/profile_picture/100${randomSuffix}.png` // 示例: 10003.png -> 100[03].png
-        ), nickname: '用户昵称',
-        replyUser: targetComment.nickname,
-        level: 'lv1'
-    });
-
-    // 清空并关闭
-    replyContent.value = '';
-    showReplyModal.value = false;
-    document.body.classList.remove('no-scroll'); // 新增
-
-};
 //回复框表情显示/隐藏控制
 const _ModalShow = ref(false);
 //回复框表情显示/隐藏控制方法
@@ -1677,75 +1683,77 @@ onMounted(async () => {
                     }
                 }
 
-                //回复
-                .reply__container {
-                    padding: 0.5rem 0;
-                    padding-left: 1.5rem;
+            }
 
-                    .louyt {
-                        @include flexCenter(row, space-between);
+            //回复
+            .reply__container {
+                padding: 0.5rem 0;
+                padding-left: 1.5rem;
 
-                        .profile__picture {
-                            width: 1.75rem;
-                            height: 1.75rem;
-                            border-radius: 0.25rem;
-                            background-color: pink;
-                            overflow: hidden;
-                        }
+                .louyt {
+                    @include flexCenter(row, space-between);
 
-                        .time__name {
-                            display: flex;
-                            flex-direction: column;
-                            margin: 0 0.5rem;
-                            letter-spacing: 1px;
-                            line-height: 1.2;
-                            font-weight: 700;
-
-                            .nickname {
-                                color: #ff7645;
-                                width: 100%;
-                                @include flexCenter(row, flex-start);
-
-                                span {
-                                    margin-right: 0.5rem;
-
-                                }
-
-                                .level {
-                                    height: 1.2rem;
-                                    width: 1.2rem;
-                                }
-                            }
-
-                            .time {
-                                font-size: 0.75rem;
-                                color: #8d8d8d;
-                            }
-
-                        }
+                    .profile__picture {
+                        width: 1.75rem;
+                        height: 1.75rem;
+                        border-radius: 0.25rem;
+                        background-color: pink;
+                        overflow: hidden;
                     }
 
-                    .comment__container {
-                        padding: 0.8rem;
-                        padding-left: 1.75rem;
+                    .time__name {
+                        display: flex;
+                        flex-direction: column;
+                        margin: 0 0.5rem;
+                        letter-spacing: 1px;
+                        line-height: 1.2;
+                        font-weight: 700;
 
-                        .content {
-                            background-color: #f7f9fe;
-                            padding: 0.7rem;
-                            border-radius: 0.25rem;
-                            letter-spacing: 1px;
-                            line-height: 1.5;
-                            word-break: break-all;
+                        .nickname {
+                            color: #ff7645;
+                            width: 100%;
+                            @include flexCenter(row, flex-start);
 
                             span {
-                                color: #2e82f9;
+                                margin-right: 0.5rem;
+
+                            }
+
+                            .level {
+                                height: 1.2rem;
+                                width: 1.2rem;
                             }
                         }
-                    }
 
+                        .time {
+                            font-size: 0.75rem;
+                            color: #8d8d8d;
+                        }
+
+                    }
+                }
+
+                .comment__container {
+                    padding: 0.8rem;
+                    padding-left: 1.75rem;
+
+                    .content {
+                        background-color: #f7f9fe;
+                        padding: 0.7rem;
+                        border-radius: 0.25rem;
+                        letter-spacing: 1px;
+                        line-height: 1.5;
+                        word-break: break-all;
+
+                        span {
+                            color: #2e82f9;
+                        }
+                    }
                 }
 
             }
+
+
 
             //没有留言
             .noComment {

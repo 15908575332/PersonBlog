@@ -2,44 +2,98 @@ import express from 'express';
 const router = express.Router();
 import sqlQuery from '../db/sqlQuery.js';
 import authenticateToken from '../middleware/authenticateToken.js';
-// 获取留言列表（分页）
+
+
+// 获取留言列表（分页 + 回复内容）
 router.get('/getmessageList', authenticateToken, async (req, res) => {
     try {
-        const { page = 1, pageSize = 10, parentId = 0 } = req.query;
+        const { page = 1, pageSize = 10 } = req.query;
         const offset = (page - 1) * pageSize;
 
-        // 查询当前用户的留言（或所有公开留言，根据业务调整）
-        const result = await sqlQuery(`
-      SELECT m.*, u.avatarUrl, u.username, u.vipLevel 
-      FROM blog_messages m
-      JOIN users u ON m.user_id = u.id
-      WHERE m.parent_id = ? AND m.status = 0
-      ORDER BY m.created_at DESC
-      LIMIT ? OFFSET ?
-    `, [parentId, parseInt(pageSize), parseInt(offset)]);
+        // 查询主留言（保持原有逻辑）
+        const posts = await sqlQuery(`
+            SELECT 
+                p.id AS postId,
+                p.user_id,
+                p.content,
+                p.id,
+                p.created_at,
+                u.avatarUrl,
+                u.username,
+                u.vipLevel,
+                COUNT(r.id) AS reply_count 
+            FROM blog_messages p
+            LEFT JOIN users u ON p.user_id = u.id
+            LEFT JOIN blog_messages_replies r ON p.id = r.parent_reply_id
+            GROUP BY p.id
+            ORDER BY p.created_at DESC
+            LIMIT ? OFFSET ?
+        `, [parseInt(pageSize), parseInt(offset)]);
 
-        // 查询总条数
-        const [countRows] = await sqlQuery(`
-      SELECT COUNT(*) AS total 
-      FROM blog_messages m 
-      WHERE m.parent_id = ? AND m.status = 0
-    `, [parentId]);
-        const formatData = result.map(item => ({
-            ...item,
-            created_at: item.created_at.toLocaleString()
-        }))
+        if (posts.length === 0) {
+            return res.status(404).json({ code: 404, msg: '暂无留言' });
+        }
+
+        // 提取所有主留言ID
+        const postIds = posts.map(post => post.postId);
+
+        // 查询所有回复（新增逻辑）
+        const replies = await sqlQuery(`
+            SELECT 
+                pr.parent_reply_id,
+                pr.user_id,
+                pr.content AS reply_content,
+                u.avatarUrl AS reply_avatar,
+                u.username AS reply_username,
+                u.vipLevel AS reply_vipLevel,
+                pr.created_at AS reply_created_at
+            FROM blog_messages_replies pr
+            LEFT JOIN users u ON pr.user_id = u.id
+            WHERE pr.parent_reply_id IN (?)
+            ORDER BY pr.created_at DESC
+        `, [postIds]);
+
+        // 按parent_reply_id分组回复数据
+        const replyMap = replies.reduce((acc, curr) => {
+            if (!acc[curr.parent_reply_id]) {
+                acc[curr.parent_reply_id] = [];
+            }
+            acc[curr.parent_reply_id].push({
+                id: curr.id,
+                parentId: curr.parent_reply_id,
+                content: curr.reply_content,
+                user: {
+                    id: curr.user_id,
+                    avatarUrl: curr.reply_avatar,
+                    username: curr.reply_username,
+                    vipLevel: curr.reply_vipLevel,
+                },
+                createdAt: curr.reply_created_at.toLocaleString()
+            });
+            return acc;
+        }, {});
+
+        // 关联回复数据到主留言
+        const formattedPosts = posts.map(post => ({
+            ...post,
+            replies: replyMap[post.postId] || [],
+            createdAt: post.created_at.toLocaleString()
+        }));
+
         res.json({
             code: 200,
             data: {
-                list: formatData,
-                total: countRows.total
+                list: formattedPosts,
+                total: posts.length
             }
         });
+
     } catch (err) {
         console.error('获取留言失败:', err);
         res.status(500).json({ code: 500, msg: '服务器错误' });
     }
 });
+
 // 发布留言
 router.post('/postmessage', authenticateToken, async (req, res) => {
     try {
@@ -56,13 +110,11 @@ router.post('/postmessage', authenticateToken, async (req, res) => {
         if (user.length === 0) {
             return res.status(404).json({ code: 404, msg: '用户不存在' });
         }
-
         // 插入留言
         const result = await sqlQuery(`
       INSERT INTO blog_messages (user_id, content, parent_id)
       VALUES (?, ?, ?)
     `, [req.user.id, content.trim(), parseInt(parent_id)]);
-
         res.status(200).json({
             code: 200,
             data: { id: result.insertId }
@@ -73,4 +125,23 @@ router.post('/postmessage', authenticateToken, async (req, res) => {
     }
 });
 
+// 新增回复接口（示例）
+router.post('/replies', authenticateToken, async (req, res) => {
+    try {
+        const { content, postId, parentId } = req.body; // parentId 是回复的目标的ID（可选）
+        // 校验 postId 是否存在
+        const [post] = await sqlQuery('SELECT id FROM blog_messages WHERE id = ?', [postId]);
+        if (!post) return res.status(404).json({ code: 404, msg: '主留言不存在' });
+
+        // 插入回复
+        const result = await sqlQuery(`
+            INSERT INTO blog_messages_replies (parent_reply_id, parent_reply_id, user_id, content)
+            VALUES (?, ?, ?, ?)
+        `, [postId, parentId || null, req.user.id, content.trim()]);
+        res.json({ code: 200, data: { id: result.insertId } });
+    } catch (err) {
+        console.error('创建回复失败:', err);
+        res.status(500).json({ code: 500, msg: '服务器错误' });
+    }
+});
 export default router;
