@@ -716,7 +716,30 @@ const getMessageList = async () => {
         console.error('获取留言列表失败:', error);
     }
 }
+//发布留言
+const addMessage = async () => {
+    if (!input__message.value.trim()) return;
 
+    try {
+        await $http.post('/message/postmessage', {
+            content: input__message.value,
+            parentId: 0
+        },
+            {
+                headers: {
+                    'Authorization': `Bearer ${userStore.token}`
+                }
+            });
+
+        message.success('发布成功');
+        getMessageList();
+        input__message.value = '';
+
+    } catch (error) {
+        
+        console.error('发布留言失败:', error);
+    }
+}
 // 显示回复框
 const showReply = (commentId) => {
     currentReplyId.value = commentId;
@@ -798,31 +821,7 @@ const handClose = () => {
 }
 // (提交按钮)留言动态添加函数
 const isContent = ref(false); //内容是否需要评价才可查看
-const addMessage = (contentId) => {
-    _ISshow.value = false;
-    if (input__message.value.trim() === '') {
-        return;
-    }
 
-    recordStore.updateIsContent(contentId, true);
-    // // 更新isContent为true，展示需要留言才能查看的内容
-    // recordStore.updateIsContent(contentId, !recordStore.dataContent.some(section =>
-    //     section.content.some(item => item.contentId === contentId && item.isContent)
-    // ));
-    // 添加新留言到 messages 数组，并附带当前时间戳
-    setTimeout(() => {
-        selectComment.value.unshift({
-            profile__picture: utils.getAssetsFile('img/infomalEssay/infomalEssayPicture.jpg'),
-            nickname: '昵称来自注册数据表',
-            level: 'lv1',
-            content: input__message.value.toString(),
-            timestamp: Date.now(), // 使用 Date.now() 获取当前时间的时间戳
-        });
-        // 清空输入框
-        input__message.value = '';
-        calculatePaginatedItems();
-    }, 1000);
-}
 // 分页
 // var currentPage = ref(1) // 当前页码
 // var pageSize = ref(10) // 每页显示的项数

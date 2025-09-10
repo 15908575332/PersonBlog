@@ -49,7 +49,7 @@ router.post('/postmessage', authenticateToken, async (req, res) => {
         }
 
         // 校验用户是否存在（冗余校验，外键已约束）
-        const [user] = await pool.execute(
+        const [user] = await sqlQuery(
             'SELECT id FROM users WHERE id = ?',
             [req.user.id]
         );
@@ -58,13 +58,13 @@ router.post('/postmessage', authenticateToken, async (req, res) => {
         }
 
         // 插入留言
-        const [result] = await pool.execute(`
+        const result = await sqlQuery(`
       INSERT INTO blog_messages (user_id, content, parent_id)
       VALUES (?, ?, ?)
     `, [req.user.id, content.trim(), parseInt(parent_id)]);
 
-        res.status(201).json({
-            code: 201,
+        res.status(200).json({
+            code: 200,
             data: { id: result.insertId }
         });
     } catch (err) {
