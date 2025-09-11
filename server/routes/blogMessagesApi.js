@@ -97,7 +97,7 @@ router.get('/getmessageList', authenticateToken, async (req, res) => {
 // 发布留言
 router.post('/postmessage', authenticateToken, async (req, res) => {
     try {
-        const { content, parent_id = 0 } = req.body;
+        const { content } = req.body;
         if (!content || content.trim().length === 0) {
             return res.status(400).json({ code: 400, msg: '留言内容不能为空' });
         }
@@ -112,9 +112,9 @@ router.post('/postmessage', authenticateToken, async (req, res) => {
         }
         // 插入留言
         const result = await sqlQuery(`
-      INSERT INTO blog_messages (user_id, content, parent_id)
-      VALUES (?, ?, ?)
-    `, [req.user.id, content.trim(), parseInt(parent_id)]);
+      INSERT INTO blog_messages (user_id, content)
+      VALUES (?, ?)
+    `, [req.user.id, content.trim()]);
         res.status(200).json({
             code: 200,
             data: { id: result.insertId }
@@ -128,16 +128,19 @@ router.post('/postmessage', authenticateToken, async (req, res) => {
 // 新增回复接口（示例）
 router.post('/replies', authenticateToken, async (req, res) => {
     try {
-        const { content, postId, parentId } = req.body; // parentId 是回复的目标的ID（可选）
+        const { content, userId, currentFatherId } = req.body;
         // 校验 postId 是否存在
-        const [post] = await sqlQuery('SELECT id FROM blog_messages WHERE id = ?', [postId]);
+        const [post] = await sqlQuery('SELECT id FROM blog_messages WHERE id = ?', [currentFatherId]);
         if (!post) return res.status(404).json({ code: 404, msg: '主留言不存在' });
 
+        if (userId === req.user.id) {
+            return res.status(400).json({ code: 400, msg: '不能回复自己' });
+        }
         // 插入回复
         const result = await sqlQuery(`
-            INSERT INTO blog_messages_replies (parent_reply_id, parent_reply_id, user_id, content)
-            VALUES (?, ?, ?, ?)
-        `, [postId, parentId || null, req.user.id, content.trim()]);
+            INSERT INTO blog_messages_replies (user_id, content)
+            VALUES ( ?, ?)
+        `, [req.user.id, content.trim()]);
         res.json({ code: 200, data: { id: result.insertId } });
     } catch (err) {
         console.error('创建回复失败:', err);

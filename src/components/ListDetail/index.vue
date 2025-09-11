@@ -712,9 +712,7 @@ const getMessageList = async () => {
                 'Authorization': `Bearer ${userStore.token}`
             }
         });
-        // 提取主留言和回复
         messageList.value = res.data.list.filter(item => !item.parentId);
-        console.log(messageList.value)
         totals.value = res.data.total;
         totalPages.value = Math.ceil(res.data.total / pageSize.value);
     } catch (error) {
@@ -728,8 +726,7 @@ const addMessage = async () => {
 
     try {
         await $http.post('/message/postmessage', {
-            content: input__message.value,
-            parentId: 0
+            content: input__message.value
         },
             {
                 headers: {
@@ -742,21 +739,19 @@ const addMessage = async () => {
         input__message.value = '';
 
     } catch (error) {
-
         console.error('发布留言失败:', error);
+        message.error(error.response.data.msg)
+
     }
 }
 // 留言回复
 const showReplyModal = ref(false); //回复框状态
 const replyContent = ref(''); //回复内容
 const activeParentId = ref(0); //当前回复留言id
-const replyUserID = ref(0); //被回复用户id
 
 const handleReply = (message) => {
     showReplyModal.value = true;
     activeParentId.value = message.id;
-    // 回复内容默认 @ 被回复用户
-    replyUserID.value = message.user_id;
     replyContent.value = `@${message.username}：`;
     document.body.classList.add('no-scroll'); // 新增
 }
@@ -768,7 +763,8 @@ const handleReplyPost = async () => {
 
         await $http.post('/message/replies', {
             content: replyContent.value, //回复内容
-            postId: activeParentId.value,//关联主留言的id值
+            userId: userStore.user.id,
+            currentFatherId: activeParentId.value
         },
             {
                 headers: {
@@ -783,6 +779,7 @@ const handleReplyPost = async () => {
         document.body.classList.remove('no-scroll'); // 新增
     } catch (error) {
         console.error('回复留言失败:', error);
+        message.warning(error.response.data.msg)
     }
 }
 

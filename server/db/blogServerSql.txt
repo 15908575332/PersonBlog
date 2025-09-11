@@ -68,8 +68,8 @@ CREATE TABLE blog_messages (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     content TEXT,
-    created_at DATETIME,
-    updated_at DATETIME,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 --留言回复
@@ -79,8 +79,8 @@ CREATE TABLE blog_messages_replies (
     parent_reply_id INT, -- 关联父回复（用于多级回复）
     user_id INT,
     content TEXT,
-    created_at DATETIME,
-    updated_at DATETIME,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
     FOREIGN KEY (post_id) REFERENCES blog_messages(id),
     FOREIGN KEY (parent_reply_id) REFERENCES blog_messages_replies(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
