@@ -30,11 +30,10 @@ const authenticateToken = async (req, res, next) => {
 
         // 挂载用户信息（可扩展角色权限）
         req.user = {
-            id: decoded.userId,
+            user_id: decoded.userId,
             userEmail: decoded.userEmail,
             role: decoded.role || 'guest'
         };
-
         next();
     } catch (error) {
         console.error('[JWT验证失败]', error);

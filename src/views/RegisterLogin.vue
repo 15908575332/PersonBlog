@@ -136,6 +136,9 @@ const registerData = ref({
 });
 
 //用户注册
+import { v4 as uuidv4 } from 'uuid';
+//生成uuid
+const userId = `user-${uuidv4()}`;
 async function UserRegister(e) {
     //防止表单默认提交
     e.preventDefault()
@@ -157,14 +160,14 @@ async function UserRegister(e) {
     }
 
     try {
-        const response = await $http.post('/user/register', {
+        await $http.post('/user/register', {
+            userId: userId,
             userName: registerData.value.userName,
             userEmail: registerData.value.userEmail,
             userPassword: registerData.value.userPassword,
             avatarUrl: '/src/assets/img/profile_picture/' + registerData.value.userName + '.png'
         });
-
-        // message.success(response.data.message || '注册成功！正在跳转登录页面...');
+        message.success('注册成功！正在跳转登录页面...');
         setTimeout(() => {
             window.location.href = '/userInfo';
         }, 2000);

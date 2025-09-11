@@ -27,6 +27,7 @@
     "pinia": "^2.2.7",
     "pixi-live2d-display": "^0.4.0",
     "pixi.js": "^6.5.10",
+    "uuid": "^13.0.0",
     "v-preview-image": "^3.1.0",
     "vite-plugin-compression": "^0.5.1",
     "vue": "^3.4.37",

@@ -12,7 +12,7 @@ import sqlQuery from '../db/sqlQuery.js';
 
 // 用户注册接口
 router.post('/register', validateRegister, async (req, res) => {
-    const { userName, userEmail, userPassword, avatarUrl = '' } = req.body;
+    const { userId, userName, userEmail, userPassword, avatarUrl = '' } = req.body;
     try {
         // 检查邮箱是否已注册
         const [existingUser] = await sqlQuery(
@@ -28,8 +28,8 @@ router.post('/register', validateRegister, async (req, res) => {
 
         // 插入新用户
         await sqlQuery(
-            'INSERT INTO users (username, email, password_hash, avatarUrl, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())',
-            [userName, userEmail, hashedPassword, avatarUrl]
+            'INSERT INTO users (user_id, username, email, password_hash, avatarUrl, created_at, updated_at) VALUES (?,?, ?, ?, ?, NOW(), NOW())',
+            [userId, userName, userEmail, hashedPassword, avatarUrl]
         );
 
         res.status(200).json({ message: '注册成功' });
@@ -58,7 +58,7 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
         // 生成Token（固定2小时有效期）
         const token = jwt.sign(
             {
-                userId: user.id,
+                userId: user.user_id,
                 userEmail: user.email,
                 iat: Math.floor(Date.now() / 1000), // 签发时间
                 nbf: Math.floor(Date.now() / 1000)   // 生效时间
@@ -71,7 +71,7 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
         res.status(200).json({
             token,
             user: {
-                id: user.id,
+                userId: user.user_id,
                 username: user.username,
                 email: user.email,
                 avatarUrl: user.avatarUrl,
@@ -100,14 +100,13 @@ router.post('/updateUserInfo', validateUpdateInfo, async (req, res) => {
             clockTolerance: 5 * 60 // 时钟偏差容忍5分钟
         });
         const userId = decoded.userId;
-
         // 检查邮箱是否已被其他用户使用
         if (req.body.email) {
             const [existingEmail] = await sqlQuery(
-                'SELECT id FROM users WHERE email = ? AND id != ?',
+                'SELECT user_id FROM users WHERE email = ? AND user_id != ?',
                 [req.body.email, userId]
             );
-            if (existingEmail.length) {
+            if (existingEmail) {
                 return res.status(409).json({ message: '邮箱已被其他用户使用' });
             }
         }
@@ -121,13 +120,13 @@ router.post('/updateUserInfo', validateUpdateInfo, async (req, res) => {
 
         // 执行更新
         await sqlQuery(
-            'UPDATE users SET ? WHERE id = ?',
+            'UPDATE users SET ? WHERE user_id = ?',
             [updateData, userId]
         );
 
         // 返回更新后的用户信息
         const [updatedUser] = await sqlQuery(
-            'SELECT id, username, email, avatarUrl, sex, introduce FROM users WHERE id = ?',
+            'SELECT user_id, username, email, avatarUrl, sex, introduce FROM users WHERE user_id = ?',
             [userId]
         );
 
