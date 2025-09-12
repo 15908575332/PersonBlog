@@ -40,13 +40,13 @@ CREATE TABLE blog_content_class (
   update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id),
   INDEX idx_create_time (create_time) COMMENT '创建时间索引（用于按时间范围查询）'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='博客内容分类表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客内容分类表';
 --博客内容主体
 CREATE TABLE blog_content_main (
   id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID（自增，全局唯一标识）',
   father_id BIGINT UNSIGNED COMMENT '父内容ID（关联自身表id，NULL表示无父级）', -- 移除 NOT NULL
   biz_id VARCHAR(36) NOT NULL UNIQUE COMMENT '业务自有ID（如UUID，全局唯一）',
-  author_id VARCHAR(50) NOT NULL COMMENT '关联作者ID（最长50字符）',
+  user_id VARCHAR(50) NOT NULL COMMENT '关联作者ID（最长50字符）',
   subtitle VARCHAR(500) NOT NULL COMMENT '内容简概（最长500字符）',
   title VARCHAR(200) NOT NULL COMMENT '文章标题（最长200字符）',
   heat INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '热度（浏览量，无符号防负数）',
@@ -58,11 +58,11 @@ CREATE TABLE blog_content_main (
   -- 外键约束：关联自身表 id，父表删除时子表 father_id 置为 NULL
   FOREIGN KEY (father_id) REFERENCES blog_content_main(id) ON DELETE SET NULL ON UPDATE CASCADE,
   INDEX idx_create_time (create_time),
-  INDEX idx_author_id (author_id),
+  INDEX idx_user_id (user_id),
   INDEX idx_father_id (father_id),
   INDEX idx_master_tag (master_tag),
   UNIQUE INDEX uk_biz_id (biz_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='博客详细内容表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客详细内容表';
 
 --内容详情留言表
 CREATE TABLE blog_messages (

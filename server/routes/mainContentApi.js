@@ -30,15 +30,15 @@ router.get('/getMainContent', async (req, res) => {
     try {
         const result = await sqlQuery(
             `
-    SELECT
-        m.* ,
-        u.username
-    FROM
-        blog_content_main m
-    INNER JOIN users u on u.id = m.author_id
-    INNER JOIN blog_content_class c on c.order_id = m.father_id
-    where c.order_id = '${req.query.id}'
-    ORDER BY m.release_time desc
+        SELECT
+            m.* ,
+            u.username
+        FROM
+            blog_content_main m
+        INNER JOIN users u on u.user_id = m.user_id
+        INNER JOIN blog_content_class c on c.order_id = m.father_id
+        where c.order_id = '${req.query.id}'
+        ORDER BY m.release_time desc
             `
         );
         res.status(200).json({
@@ -49,7 +49,7 @@ router.get('/getMainContent', async (req, res) => {
     } catch (error) {
         console.error('获取主要内容失败:', error);
         res.status(500).json({ message: '服务器内部错误' });
-     }
+    }
 });
 //内容浏览量
 router.post('/updateHeat', async (req, res) => {
