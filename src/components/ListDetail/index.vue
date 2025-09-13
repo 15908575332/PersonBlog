@@ -57,7 +57,7 @@
                             </li>
                             <li>
                                 <img src="@/assets/icon/recordList/comment.svg" alt="comment">
-                                <!-- <span>{{ selectComment.length }}评论 ·</span> -->
+                                <span>{{ totals }}评论 ·</span>
                             </li>
                             <li>
                                 <img src="@/assets/icon/recordList/like.svg" alt="like">
@@ -83,18 +83,29 @@
                 {{ recordDetail.title }}
             </div>
             <!-- 主内容区域 -->
-            <div class="content" v-for="content in articleSections">
-                <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
-                <div class="content_model" v-for="text in splitParagraphs(content.content)">
-                    <div>
-                        {{ text }}
-                        <ul v-if="content.level === 200">
-                            <li>123</li>
-                        </ul>
+            <div class="content" v-if="articleSections.length > 0" v-for="content in articleSections"
+                :key="content.title">
+                <div>
+                    <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
+                    <div class="content_model" v-for="text in splitParagraphs(content.content)">
+                        <div>
+                            {{ text }}
+                            <ul v-if="content.level === 200">
+                                <li>123</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+
             </div>
 
+            <div v-else>
+                <div class="introduce" v-for="pre in graph">
+                    <span>
+                        {{ pre }}
+                    </span>
+                </div>
+            </div>
             <!-- 时间轴 -->
             <!-- <div v-if="recordDetail.timeAxis" class="time__axis">
                 <h1><span>#</span>UL timeline cards</h1>
@@ -171,16 +182,17 @@
             <!-- 提示 -->
             <ul class="abstract">
                 <li>作者：{{ recordDetail.author }}</li>
-                <li>1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(sara@poetize.cn)进行删除处理。</li>
+                <li>1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(sara@blog.cn)进行删除处理。</li>
                 <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
                 <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>
             </ul>
             <!-- 操作按钮 -->
             <div class="feed">
-                <div class="likeBtn" @click="handleLikeClick">
+                <button class="likeBtn" @click="handleLikeClick">
                     <p style="text-wrap: nowrap;">点赞</p>
-                    <div class="heart" :class="{ 'heartAnimation': isLiked }" :rel="isLiked ? 'unlike:' : 'like'"></div>
-                </div>
+                    <div class="heart" :class="{ 'heartAnimation': isLiked }" :rel="isLiked ? 'unlike:' : 'like'">
+                    </div>
+                </button>
                 <div class="shareBtn" @click="shareLike">
                     <p>分享</p>
                     <img src="./icon/share_icon.svg" alt="">
@@ -534,7 +546,6 @@ import ModalBox from '@/components/ModalBox/index.vue'
 import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
 
-
 /** ------------------------内容处理------------------------ */
 // 接收组件recordRender传递的路由id
 import { useRoute } from 'vue-router';
@@ -596,7 +607,7 @@ const getArticleContent = async () => {
 }
 
 import { splitParagraphs } from '@/utils/splitParagraphs'; //引入段落处理函数
-
+const graph = splitParagraphs(recordDetail.value.preface);
 /** ------------------------文章浏览量计数------------------------ */
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
@@ -611,13 +622,29 @@ const updateHeat = async (id) => {
 
 /** ------------------------点赞量计数------------------------ */
 const userStore = useAuthStore(); //当前登录用户信息
-
-const updateLike = (async (id) => {
+//检查当前用户点赞状态
+const checkLikeStatus = async (article_id) => {
     try {
-        const response = await $http.post('/main/updateLike', { id });
+        const response = await $http.get('/main/checkLikeStatus', {
+            params: {
+                user_id: userStore.user.userId,
+                article_id
+            }
+        });
+        console.log(response.hasLiked);
+        isLiked.value = response.hasLiked;
+    } catch (error) {
+        console.error('检查点赞状态失败:', error);
+    }
+}
+const updateLike = (async (article_id) => {
+    try {
+        const response = await $http.post('/main/likeArticle', { user_id: userStore.user.userId, article_id });
         recordDetail.value.like_count = response.likeCount;
+        message.success('点赞成功');
     } catch (error) {
         console.error('更新失败:', error);
+        message.error(error.response.data.message);
     }
 })
 const isLiked = ref(false);
@@ -630,7 +657,6 @@ const handleLikeClick = async () => {
         // 取消点赞
         await updateLike(recordDetail.value.article_id);
     }
-    isLiked.value = !isLiked.value;
 }
 /** ------------------------分享模块------------------------ */
 const showShareModal = ref(false);
@@ -861,9 +887,11 @@ const handClose = () => {
 }
 
 onMounted(async () => {
+    checkLikeStatus(paramsId.value);
     updateHeat(paramsId.value);
     getMessageList();
     getArticleContent();
+
 })
 </script>
 <style lang="scss">
@@ -1274,7 +1302,7 @@ onMounted(async () => {
             background-color: #ecf8ff;
             color: #6b6c6d;
             font-size: 0.9rem;
-            border-left: 3px solid #50bfff;
+            border-left: 3px solid #ff6d6d;
             margin: 1rem 0;
         }
 
@@ -1352,7 +1380,7 @@ onMounted(async () => {
 
         .abstract {
             background-color: #ecf8ff;
-            border-left: 3px solid #50bfff;
+            border-left: 3px solid #ff6d6d;
             padding: 0.5rem;
             line-height: 1.5rem;
             margin-top: 2rem;

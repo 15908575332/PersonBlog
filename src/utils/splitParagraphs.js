@@ -10,11 +10,11 @@ export function splitParagraphs(text) {
     // 过滤空行
     const validLines = lines.filter(line => line !== '');
 
-    // 按句号分割段落（处理边界情况）
+    // 只按中文句号分割段落
     const paragraphs = [];
     for (const line of validLines) {
-        // 按句号分割，但排除缩写词和数字小数点
-        const parts = line.split(/(?<!\b[A-Za-z]{1,2})\.\s+/);
+        // 仅使用中文句号（。）作为分割点
+        const parts = line.split(/。\s*/);
         paragraphs.push(...parts);
     }
 

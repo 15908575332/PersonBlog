@@ -591,6 +591,7 @@ onMounted(() => {
               font-size: 0.8rem;
               font-weight: 700;
               margin: 0.5rem 0;
+
               span {
                 img {
                   width: 0.6rem;

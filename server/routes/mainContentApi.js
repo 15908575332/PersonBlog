@@ -29,8 +29,8 @@ router.get('/getNavData', async (req, res) => {
 //  获取文章基本信息
 router.get('/getArticleInfo', async (req, res) => {
     try {
-        const { id } = req.query;
-        if (!id) {
+        const { article_id } = req.query;
+        if (!article_id) {
             return res.status(400).json({ message: '缺少文章ID参数' });
         }
         // 查询文章基本信息和作者信息
@@ -44,7 +44,7 @@ router.get('/getArticleInfo', async (req, res) => {
             INNER JOIN articles_categories ac ON ac.category_id = articles.category_id
             WHERE articles.category_id = ?
             `,
-            [id]
+            [article_id]
         );
 
         if (result.length === 0) {
@@ -53,11 +53,12 @@ router.get('/getArticleInfo', async (req, res) => {
                 message: '文章不存在'
             });
         }
+
         // 返回文章基本信息
         res.status(200).json({
             code: 200,
             message: '获取文章信息成功',
-            result
+            result,
         });
     } catch (error) {
         console.error('获取文章信息失败:', error);
@@ -126,24 +127,117 @@ router.post('/updateHeat', async (req, res) => {
     }
 })
 
-// 新增点赞接口
-router.post('/updateLike', async (req, res) => {
+// 检查当前用户点赞状态
+router.get('/checkLikeStatus', async (req, res) => {
     try {
-        const { article_id } = req.body;
-        // 使用参数化查询
-        const result = await sqlQuery(
-            `UPDATE articles SET like_count = like_count + 1 WHERE article_id = ?`,
-            [article_id]
-        );
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ code: 404, message: '内容不存在' });
+        const { user_id, article_id } = req.query;
+
+        if (!user_id || !article_id) {
+            return res.status(400).json({
+                code: 400,
+                message: '缺少必要参数'
+            });
         }
-        // 返回更新后的点赞数
-        const [article] = await sqlQuery('SELECT like_count FROM articles WHERE article_id = ?', [article_id]);
-        res.json({ likeCount: article.like_count });
+
+        const result = await sqlQuery(
+            `SELECT 
+                CASE 
+                    WHEN COUNT(*) > 0 THEN true 
+                    ELSE false 
+                END AS has_liked
+             FROM article_likes_count 
+             WHERE user_id = ? AND article_id = ? 
+             AND liked_at > DATE_SUB(NOW(), INTERVAL 1 DAY)`,
+            [user_id, article_id]
+        );
+
+        res.status(200).json({
+            code: 200,
+            hasLiked: result[0].has_liked
+        });
+
     } catch (error) {
-        console.error('点赞失败:', error);
-        res.status(500).json({ message: '服务器内部错误' });
+        console.error('检查点赞状态失败:', error);
+        res.status(500).json({
+            code: 500,
+            message: '服务器内部错误'
+        });
     }
 });
+
+// 点赞接口（防重复）
+router.post('/likeArticle', async (req, res) => {
+    try {
+        const { user_id, article_id } = req.body;
+        // 参数校验
+        if (!user_id || !article_id) {
+            return res.status(400).json({
+                code: 400,
+                message: '缺少必要参数'
+            });
+        }
+
+        // 检查是否在24小时内已经点赞过
+        const existingLike = await sqlQuery(
+            `SELECT * FROM article_likes_count
+             WHERE user_id = ? AND article_id = ? 
+             AND liked_at > DATE_SUB(NOW(), INTERVAL 1 DAY)`,
+            [user_id, article_id]
+        );
+
+        if (existingLike.length > 0) {
+            return res.status(400).json({
+                code: 400,
+                message: '您今天已经点过赞了，请明天再来'
+            });
+        }
+
+        try {
+            // 插入点赞记录（使用ON DUPLICATE KEY UPDATE来更新已存在的记录）
+            await sqlQuery(
+                `INSERT INTO article_likes_count (user_id, article_id) 
+                 VALUES (?, ?)
+                 ON DUPLICATE KEY UPDATE liked_at = NOW()`,
+                [user_id, article_id]
+            );
+
+            // 更新文章点赞数
+            const updateResult = await sqlQuery(
+                `UPDATE articles SET like_count = like_count + 1 
+                 WHERE article_id = ?`,
+                [article_id]
+            );
+
+            if (updateResult.affectedRows === 0) {
+                throw new Error('文章不存在');
+            }
+
+            await sqlQuery('COMMIT');
+
+            // 获取更新后的点赞数
+            const [article] = await sqlQuery(
+                'SELECT like_count FROM articles WHERE article_id = ?',
+                [article_id]
+            );
+
+            res.status(200).json({
+                code: 200,
+                message: '点赞成功',
+                likeCount: article.like_count
+            });
+
+        } catch (error) {
+            await sqlQuery('ROLLBACK');
+            throw error; // 抛出错误，由外层的catch处理
+        }
+
+    } catch (error) {
+        console.error('点赞失败:', error);
+        res.status(500).json({
+            code: 500,
+            message: '服务器内部错误'
+        });
+    }
+});
+
 export default router;

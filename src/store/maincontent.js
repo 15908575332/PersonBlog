@@ -15,7 +15,7 @@ export const useMainStore = defineStore('main', () => {
         try {
             const response = await axios.get('http://localhost:3000/main/getArticleInfo', {
                 params: {
-                    id: id
+                    article_id: id,
                 }
             });
             if (!response.data) throw new Error("无效数据");
