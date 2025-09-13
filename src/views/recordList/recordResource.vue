@@ -19,10 +19,10 @@
     <div class="container-content">
       <!-- 按钮导航 -->
       <div class="button__navigate">
-        <button class="btn-7" v-for="(item, index) in navContent" :key="item.order_id"
-          @click="toggleMoudle(item.order_id, index)" :class="{ btn__active: isActiveBtn == index }"
+        <button class="btn-7" v-for="(item, index) in navContent" :key="item.category_id"
+          @click="toggleMoudle(item.category_id, index)" :class="{ btn__active: isActiveBtn == index }"
           :style="buttonStyles(index)">
-          <span>{{ item.title }}</span>
+          <span>{{ item.nav_btn_title }}</span>
         </button>
       </div>
       <!-- 主模块 -->
@@ -35,9 +35,9 @@
         <!-- 内容 -->
         <div v-for="(module, index) in mainContent" data-aos="fade-up" :key="index" class="module-container">
           <div :class="['module', getLayoutClass(index)]">
-            <a @click="listDetail(module.id)" class="image">
-              <img v-if="!module.main_url" v-lazy="module.backimg_url" alt="Image" />
-              <video v-else :src="module.main_url" controls></video>
+            <a @click="listDetail(module.article_id)" class="image">
+              <img v-if="!module.cover_video_url" v-lazy="module.cover_image_url" alt="Image" />
+              <video v-else :src="module.cover_video_url" controls></video>
             </a>
             <div class="text__content">
               <!-- 发布 -->
@@ -61,7 +61,7 @@
                 </li>
               </ul>
               <div class="article__container">
-                <p v-if="module.content_text">{{ module.content_text }}</p>
+                <p v-if="module.preface">{{ module.preface }}</p>
                 <p v-else>暂无更多内容</p>
               </div>
               <div class="footer__tags">
@@ -108,7 +108,7 @@ const fetchNavData = async () => {
   await mainStore.fetchNavData();
   navContent.value = mainStore.navData;
   if (navContent.value.length > 0) {
-    toggleMoudle(navContent.value[0].order_id);
+    toggleMoudle(navContent.value[0].category_id);
   }
 };
 /** ------------------------内容数据------------------------ */
