@@ -313,13 +313,13 @@
                             <div class="louyt">
                                 <div style="display: flex;">
                                     <div class="profile__picture">
-                                        <img :src="message.avatarUrl" alt="avatar">
+                                        <img :src="message.user.avatarUrl" alt="avatar">
                                     </div>
                                     <div class="time__name">
                                         <div class="nickname">
-                                            <span>{{ message.username }}</span>
+                                            <span>{{ message.user.username }}</span>
                                             <img class="level"
-                                                :src="utils.getAssetsFile('icon/level/lv' + message.vipLevel + '.svg')"
+                                                :src="utils.getAssetsFile('icon/level/lv' + message.user.vipLevel + '.svg')"
                                                 alt="level">
                                         </div>
                                         <div class="time">{{ release_time_format(message.created_at) }}</div>
@@ -631,7 +631,6 @@ const checkLikeStatus = async (article_id) => {
                 article_id
             }
         });
-        console.log(response.hasLiked);
         isLiked.value = response.hasLiked;
     } catch (error) {
         console.error('检查点赞状态失败:', error);
@@ -765,10 +764,11 @@ const totals = ref(0); //总条数
 // 获取留言列表
 const getMessageList = async () => {
     try {
-        const res = await $http.get('/message/getmessageList', {
+        const res = await $http.get('/message/getblogmessageList', {
             params: {
                 page: currentPage.value,
                 pageSize: pageSize.value,
+                article_id: recordDetail.value.article_id,
                 parentId: 0
             },
             headers: {

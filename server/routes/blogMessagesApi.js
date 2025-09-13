@@ -5,86 +5,110 @@ import authenticateToken from '../middleware/authenticateToken.js';
 
 
 // 获取留言列表（分页 + 回复内容）
-router.get('/getmessageList', authenticateToken, async (req, res) => {
+router.get('/getblogmessageList', authenticateToken, async (req, res) => {
     try {
-        const { page = 1, pageSize = 10 } = req.query;
+        const { page = 1, pageSize = 10, article_id } = req.query;
+
+        if (!article_id) {
+            return res.status(400).json({ code: 400, msg: '缺少文章ID参数' });
+        }
+
+        // 计算分页偏移量
         const offset = (page - 1) * pageSize;
 
-        // 查询主留言（保持原有逻辑）
-        const posts = await sqlQuery(`
-            SELECT 
-                p.id AS postId,
-                p.user_id,
-                p.content,
-                p.id,
-                p.created_at,
+        // 优化后的 SQL：仅选择必要字段
+        const postsQuery = `
+            SELECT
+                bm.id AS postId,
+                bm.user_id,
+                bm.article_id,
+                bm.content,
+                DATE_FORMAT(bm.created_at, '%Y-%m-%d %H:%i:%s') AS createdAt,
                 u.avatarUrl,
                 u.username,
-                u.vipLevel,
-                COUNT(r.id) AS reply_count 
-            FROM blog_messages p
-            LEFT JOIN users u ON p.user_id = u.id
-            LEFT JOIN blog_messages_replies r ON p.id = r.parent_reply_id
-            GROUP BY p.id
-            ORDER BY p.created_at DESC
+                u.vipLevel
+            FROM blog_messages bm
+            INNER JOIN articles a ON bm.article_id = a.article_id
+            LEFT JOIN users u ON bm.user_id = u.user_id
+            WHERE bm.article_id = ?
+            ORDER BY bm.created_at DESC
             LIMIT ? OFFSET ?
-        `, [parseInt(pageSize), parseInt(offset)]);
+        `;
+        const posts = await sqlQuery(postsQuery, [article_id, parseInt(pageSize), parseInt(offset)]);
 
         if (posts.length === 0) {
-            return res.status(404).json({ code: 404, msg: '暂无留言' });
+            return res.status(404).json({ code: 404, msg: '该文章暂无留言' });
         }
 
         // 提取所有主留言ID
         const postIds = posts.map(post => post.postId);
 
-        // 查询所有回复（新增逻辑）
+        // 优化回复查询（仅选择必要字段）
         const replies = await sqlQuery(`
-            SELECT 
+            SELECT
                 pr.parent_reply_id,
                 pr.user_id,
-                pr.content AS reply_content,
-                u.avatarUrl AS reply_avatar,
-                u.username AS reply_username,
-                u.vipLevel AS reply_vipLevel,
-                pr.created_at AS reply_created_at
+                pr.content AS replyContent,
+                DATE_FORMAT(pr.created_at, '%Y-%m-%d %H:%i:%s') AS replyCreatedAt,
+                u.avatarUrl AS replyAvatar,
+                u.username AS replyUsername,
+                u.vipLevel AS replyVipLevel
             FROM blog_messages_replies pr
-            LEFT JOIN users u ON pr.user_id = u.id
+            LEFT JOIN users u ON pr.user_id = u.user_id
             WHERE pr.parent_reply_id IN (?)
-            ORDER BY pr.created_at DESC
         `, [postIds]);
 
-        // 按parent_reply_id分组回复数据
-        const replyMap = replies.reduce((acc, curr) => {
-            if (!acc[curr.parent_reply_id]) {
-                acc[curr.parent_reply_id] = [];
+        // 构建回复映射
+        const replyMap = new Map();
+        replies.forEach(reply => {
+            if (!replyMap.has(reply.parent_reply_id)) {
+                replyMap.set(reply.parent_reply_id, []);
             }
-            acc[curr.parent_reply_id].push({
-                id: curr.id,
-                parentId: curr.parent_reply_id,
-                content: curr.reply_content,
+            replyMap.get(reply.parent_reply_id).push({
+                id: reply.id,
+                parentId: reply.parent_reply_id,
+                content: reply.replyContent,
                 user: {
-                    id: curr.user_id,
-                    avatarUrl: curr.reply_avatar,
-                    username: curr.reply_username,
-                    vipLevel: curr.reply_vipLevel,
+                    id: reply.user_id,
+                    avatarUrl: reply.replyAvatar,
+                    username: reply.replyUsername,
+                    vipLevel: reply.replyVipLevel
                 },
-                createdAt: curr.reply_created_at.toLocaleString()
+                createdAt: reply.replyCreatedAt
             });
-            return acc;
-        }, {});
+        });
 
-        // 关联回复数据到主留言
+        // 构建最终响应数据（移除 articleId）
         const formattedPosts = posts.map(post => ({
-            ...post,
-            replies: replyMap[post.postId] || [],
-            createdAt: post.created_at.toLocaleString()
+            id: post.postId,
+            userId: post.user_id,
+            content: post.content,
+            createdAt: post.createdAt,
+            user: {
+                avatarUrl: post.avatarUrl,
+                username: post.username,
+                vipLevel: post.vipLevel
+            },
+            replyCount: post.reply_count,
+            replies: replyMap.get(post.postId) || []
         }));
+
+        // 获取总记录数（仅需计数，无需关联文章）
+        const totalResult = await sqlQuery(
+            'SELECT COUNT(*) AS total FROM blog_messages WHERE article_id = ?',
+            [article_id]
+        );
+        const total = totalResult[0].total;
 
         res.json({
             code: 200,
             data: {
                 list: formattedPosts,
-                total: posts.length
+                pagination: {
+                    total,
+                    page: parseInt(page),
+                    pageSize: parseInt(pageSize)
+                }
             }
         });
 
