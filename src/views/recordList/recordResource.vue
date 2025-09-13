@@ -61,7 +61,7 @@
                 </li>
               </ul>
               <div class="article__container">
-                <p v-if="module.main_text">{{ module.main_text }}</p>
+                <p v-if="module.content_text">{{ module.content_text }}</p>
                 <p v-else>暂无更多内容</p>
               </div>
               <div class="footer__tags">

@@ -13,7 +13,7 @@ export const useMainStore = defineStore('main', () => {
     const fetchMainContent = async (id) => {
         loading.value = true;
         try {
-            const response = await axios.get('http://localhost:3000/main/getMainContent', {
+            const response = await axios.get('http://localhost:3000/main/getArticleInfo', {
                 params: {
                     id: id
                 }
@@ -40,6 +40,6 @@ export const useMainStore = defineStore('main', () => {
             error.value = "数据加载失败";
             navData.value = []; // 确保错误时清空数据
         }
-    }
+    };
     return { fetchNavData, navData, fetchMainContent, contentData, loading, error };
 });

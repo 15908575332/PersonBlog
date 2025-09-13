@@ -1,10 +1,11 @@
-// utils/textUtils.js
 export function splitParagraphs(text) {
-    // 处理空输入
     if (typeof text !== 'string' || text.trim() === '') return [];
 
+    // 合并项目符号行：将 "•\n内容" 合并为 "• 内容"
+    const mergedText = text.replace(/•\s*\n\s*/g, '• ');
+
     // 按换行符分割为初步段落
-    const lines = text.split(/\n+/).map(line => line.trim());
+    const lines = mergedText.split(/\n+/).map(line => line.trim());
 
     // 过滤空行
     const validLines = lines.filter(line => line !== '');

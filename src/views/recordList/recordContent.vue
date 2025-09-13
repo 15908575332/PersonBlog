@@ -26,15 +26,16 @@
       <div class="nav__card">
         <ul>
           <li class="nav__item" v-for="(module, index) in navContent" :key="module.order_id"
-            @click="toggleMoudle(module.order_id, index)" :class="{ nav__itemActive: isActive == module.order_id }">
-            <div class="hoverBanner" :style="{ opacity: isActive == module.order_id ? 1 : 0 }"></div>
+            @click="toggleMoudle(module.category_id, index)"
+            :class="{ nav__itemActive: isActive == module.category_id }">
+            <div class="hoverBanner" :style="{ opacity: isActive == module.category_id ? 1 : 0 }"></div>
             <a href="#">
               <div class="profile__picture">
-                <img :src="module.class_img_url" alt="icon" />
+                <img :src="module.category_img_url" alt="icon" />
               </div>
               <div>
-                <h1>{{ module.title }}</h1>
-                <p>{{ module.subtitle }}</p>
+                <h1>{{ module.nav_btn_title }}</h1>
+                <p>{{ module.nav_btn_subtitle }}</p>
               </div>
             </a>
           </li>
@@ -46,7 +47,7 @@
           <div class="menu">
             <div class="flex__layout" v-if="navContent.length > 0">
               <img src=" @/assets/icon/informalEssay/informalEssayMenu.svg" alt="informalEssayMenu" />
-              <span>{{ navContent[currentIndex || 0].title }}</span>
+              <span>{{ navContent[currentIndex || 0].nav_btn_title }}</span>
             </div>
             <div class="flex__layout">
               <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
@@ -55,12 +56,12 @@
           </div>
           <div class="content_aera">
             <div class="specific__content" v-for="item in paginatedItems" :key="item.id">
-              <a class="image" @click="listDetail(item.id)" data-aos="zoom-in">
-                <img v-lazy="item.backimg_url" @load="onLoad" @error="onError" alt="Image" />
-                <button v-if="item.main_url && playButtonReview" class="play-button"></button>
+              <a class="image" @click="listDetail(item.article_id)" data-aos="zoom-in">
+                <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
                 <div class="item__count">
                   <ul>
-                    <li v-if="item.main_url === 'video'">
+                    <li v-if="item.cover_video_url !== null">
                       <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
                       <span>3</span>
                     </li>
@@ -81,7 +82,10 @@
                 <!-- 发布 -->
                 <h1>{{ item.title }}</h1>
                 <div class="release">
-                  <span>{{ item.username }}-{{ release_time_format(item.release_time) }}</span>
+                  <span>
+                    <img :src="utils.getAssetsFile('icon/recordList/auther.svg')" alt="auther_icon">
+                    {{ item.username }}·{{ release_time_format(item.release_time) }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -116,6 +120,7 @@ import { useRouter } from "vue-router"; //引入路由相关的api
 const route = useRouter(); // 实例化路由
 import { useMainStore } from "@/store/maincontent";
 const mainStore = useMainStore();
+import utils from "@/utils/getAssetsFile";
 import AOS from "aos";
 import {
   onMounted,
@@ -148,7 +153,7 @@ const fetchNavData = async () => {
   await mainStore.fetchNavData();
   navContent.value = mainStore.navData;
   if (navContent.value.length > 0) {
-    toggleMoudle(navContent.value[0].order_id);
+    toggleMoudle(navContent.value[0].category_id);
   }
 }
 /** ------------------------内容数据------------------------ */
@@ -160,7 +165,7 @@ const mainContent = computed(() => {
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
 const release_time_format = ((date) => {
-  return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+  return dayjs(date).format('YYYY-MM-DD');
 })
 
 const isActive = ref(); //当前激活导航
@@ -586,6 +591,12 @@ onMounted(() => {
               font-size: 0.8rem;
               font-weight: 700;
               margin: 0.5rem 0;
+              span {
+                img {
+                  width: 0.6rem;
+                  margin: 0;
+                }
+              }
             }
 
             // 标题
@@ -650,7 +661,7 @@ onMounted(() => {
               @include flexCenter(row, center);
               font-size: 0.7rem;
               font-weight: 700;
-              margin-right: 0.5rem;
+              padding-left: 0.8rem;
 
               img {
                 padding-right: 0.1rem;

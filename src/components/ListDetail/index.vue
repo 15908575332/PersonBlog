@@ -32,13 +32,13 @@
         <!-- 背景设置 -->
         <div class=" background__img">
             <!-- 背景图 -->
-            <div class=" backPhoto" :style="{ backgroundImage: `url(${recordDetail.backimg_url})` }"></div>
+            <div class=" backPhoto" :style="{ backgroundImage: `url(${recordDetail.cover_image_url})` }"></div>
             <!-- 遮罩 -->
             <div class="mask"></div>
             <div class="back__text">
                 <!-- 二级标题 -->
                 <div class="subtitle">
-                    <span> {{ recordDetail.subtitle }}</span>
+                    <span> {{ nav_btn_title }}</span>
                     <div style="display: flex;" class="content">
                         <!-- 作者 -->
                         <div class="auther">
@@ -70,18 +70,33 @@
         </div>
         <!-- 内容主体 -->
         <div class="content__container">
+            <!-- 资源展示 -->
             <div class="image">
-
                 <video v-if="recordDetail.main_url" :src="recordDetail.main_url" controls ref="videoRef"
                     @play="handlePlay" @pause="handlePause"></video>
-                <img v-else :src="recordDetail.backimg_url" alt="backimg">
-                <button v-if="recordDetail.main_url && !isPlaying" class="play-button" @click="playVideo"></button>
+                <img v-else :src="recordDetail.cover_image_url" alt="backimg">
+                <button v-if="recordDetail.cover_video_url && !isPlaying" class="play-button"
+                    @click="playVideo"></button>
             </div>
-            <div class="moudle__tag">
+            <!-- 标签 -->
+            <div class="module__tag">
                 {{ recordDetail.title }}
             </div>
+            <!-- 主内容区域 -->
+            <div class="content" v-for="content in articleSections">
+                <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
+                <div class="content_model" v-for="text in splitParagraphs(content.content)">
+                    <div>
+                        {{ text }}
+                        <ul v-if="content.level === 200">
+                            <li>123</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
             <!-- 时间轴 -->
-            <div v-if="recordDetail.timeAxis" class="time__axis">
+            <!-- <div v-if="recordDetail.timeAxis" class="time__axis">
                 <h1><span>#</span>UL timeline cards</h1>
                 <ul class="ul">
                     <li style="--accent-color:#41516C">
@@ -119,9 +134,9 @@
                         <div class="descr">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odit, non.</div>
                     </li>
                 </ul>
-            </div>
+            </div> -->
             <!-- 源代码展示 -->
-            <div v-if="recordDetail.code" class="code__show">
+            <!-- <div v-if="recordDetail.code" class="code__show">
                 <h1><span>#</span>源码展示说明</h1>
                 <highlightjs language="js" code='
 // 留言区>表情管理
@@ -139,20 +154,20 @@
         const onChangeText = () => {
         return;
         }' />
-            </div>
-            <div class="introduce" v-for="(item, index) in paragraph" :key="index" v-if="!isContent">
+            </div> -->
+            <!-- <div class="introduce" v-for="(item, index) in paragraph" :key="index" v-if="!isContent">
                 <span>
                     {{ item }}
                 </span>
-            </div>
+            </div> -->
             <!-- 评论可见 -->
-            <div class="comment__show" v-else>
+            <!-- <div class="comment__show" v-else>
                 <div class=" text">评论可见</div>
                 <div class="warring">
                     <img src="./icon/warring-icon.svg" alt="warring">
                     <span>此处内容已隐藏</span>
                 </div>
-            </div>
+            </div> -->
             <!-- 提示 -->
             <ul class="abstract">
                 <li>作者：{{ recordDetail.author }}</li>
@@ -277,7 +292,7 @@
             </div>
             <!-- 留言记录 -->
 
-            <div class="comment__moudle">
+            <div class="comment__module">
                 <div class="sum">Comments | {{ totals }}条留言</div>
                 <ul v-if="messageList.length > 0">
                     <li class="comment__item" :class="{ 'reply__item': message.length > 0 }"
@@ -481,7 +496,7 @@
                         </p>
                         <!-- 图片展示 -->
                         <div class="content_img">
-                            <img :src="recordDetail.backimg_url" alt="图片">
+                            <img :src="recordDetail.cover_image_url" alt="图片">
                         </div>
                         <!-- 作者 -->
                         <p class="content_author">
@@ -525,8 +540,9 @@ import 'highlight.js/styles/stackoverflow-light.css'
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const paramsId = computed(() => {
-    return Number(route.params.id); //默认是字符串类型
+    return route.params.id;
 });
+
 const mainContent = computed(() => {
     try {
         const storedValue = localStorage.getItem('mainContent');
@@ -542,6 +558,7 @@ const mainContent = computed(() => {
         return null; // 或 {}、''
     }
 });
+
 const recordDetail = ref('');//渲染内容
 //格式化发布时间
 import dayjs from "dayjs";
@@ -552,7 +569,7 @@ const release_time_format = ((date) => {
 //获取数据
 const getFatherdata = () => {
     if (mainContent.value) {
-        recordDetail.value = mainContent.value.find(obj => obj.id === paramsId.value);
+        recordDetail.value = mainContent.value.find(obj => obj.article_id === paramsId.value);
         return recordDetail.value;
     } else {
         message.error('未找到匹配的对象');
@@ -561,8 +578,24 @@ const getFatherdata = () => {
 getFatherdata();
 
 //段落内容
-import { splitParagraphs } from '@/utils/splitParagraphs';
-const paragraph = splitParagraphs(recordDetail.value.main_text);
+const articleSections = ref([]);
+const getArticleContent = async () => {
+    try {
+        const response = await $http.get('/main/getArticleSections', {
+            params: {
+                id: paramsId.value
+            }
+        });
+        if (!response.sections) throw new Error("无效数据");
+        articleSections.value = response.sections;
+    } catch (error) {
+        console.error("请求错误:", error);
+        error.value = "数据加载失败";
+        articleSections.value = []; // 确保错误时清空数据
+    }
+}
+
+import { splitParagraphs } from '@/utils/splitParagraphs'; //引入段落处理函数
 
 /** ------------------------文章浏览量计数------------------------ */
 const instance = getCurrentInstance();
@@ -592,10 +625,10 @@ const isLiked = ref(false);
 const handleLikeClick = async () => {
     if (isLiked.value) {
         // 点赞
-        await updateLike(recordDetail.value.id);
+        await updateLike(recordDetail.value.article_id);
     } else {
         // 取消点赞
-        await updateLike(recordDetail.value.id);
+        await updateLike(recordDetail.value.article_id);
     }
     isLiked.value = !isLiked.value;
 }
@@ -603,9 +636,13 @@ const handleLikeClick = async () => {
 const showShareModal = ref(false);
 const shareLike = () => {
     showShareModal.value = true;
+    document.body.style.overflow = 'hidden';
 }
 const handleShareClose = () => {
     showShareModal.value = false;
+    if (showShareModal) {
+        document.body.style.overflow = 'auto';
+    }
 }
 const moreShare = () => {
     // 例如，使用浏览器的分享 API
@@ -822,30 +859,11 @@ const showModal = ref(false);
 const handClose = () => {
     showModal.value = false;
 }
-// (提交按钮)留言动态添加函数
-const isContent = ref(false); //内容是否需要评价才可查看
 
-// 分页
-// var currentPage = ref(1) // 当前页码
-// var pageSize = ref(10) // 每页显示的项数
-// var paginatedItems = ref([]) // 存储分页后的项目列表，实际页面渲染的数据集
-// var totalItems = computed(() => { // 总项数（通常你会从服务器获取这个值，但在这里我们直接知道）
-//     return selectComment.value.length;
-// })
-
-// const calculatePaginatedItems = () => { //计算和更新分页后的项目列表 
-//     const startIndex = (currentPage.value - 1) * pageSize.value;
-//     const endIndex = startIndex + pageSize.value;
-//     //提取数组中从startIndex到endIndex（不包括endIndex）的部分，这部分即为当前页的项目列表
-//     paginatedItems.value = selectComment.value.slice(startIndex, endIndex);
-// }
-// const onClickHandler = (page) => {
-//     currentPage.value = page;
-//     calculatePaginatedItems();
-// };
 onMounted(async () => {
     updateHeat(paramsId.value);
     getMessageList();
+    getArticleContent();
 })
 </script>
 <style lang="scss">
@@ -1250,13 +1268,38 @@ onMounted(async () => {
             }
         }
 
-        .moudle__tag {
+        //标签
+        .module__tag {
             padding: 0.5rem;
             background-color: #ecf8ff;
             color: #6b6c6d;
             font-size: 0.9rem;
             border-left: 3px solid #50bfff;
             margin: 1rem 0;
+        }
+
+        //主内容区域
+        .content {
+            padding: 1rem 0;
+
+            //标题
+            .content_title {
+                padding: 0.2rem 0;
+                border-bottom: 1px dashed #ccc;
+                font-size: 1.5rem;
+                font-weight: 600;
+
+                span {
+                    color: #ff6d6d;
+                    padding: 0 0.2rem;
+                }
+            }
+
+            //内容
+            .content_model {
+                padding: 0.7rem 0.5rem;
+                text-indent: 1em; //首行缩进
+            }
         }
 
         .introduce {
@@ -1591,7 +1634,7 @@ onMounted(async () => {
             }
         }
 
-        .comment__moudle {
+        .comment__module {
 
             .sum {
                 color: #696969;

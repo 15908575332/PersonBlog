@@ -11,6 +11,8 @@ CREATE TABLE users (
   status TINYINT DEFAULT 1 COMMENT '账户状态:0:禁用,1:启用'  
 ) COMMENT='用户信息表';
 
+使用show variables where Variable_name like 'collation%';可查看当前数据库编码
+
 --收藏夹
 -- 创建主分类表（存储分类标题）
 CREATE TABLE favorite_categories (
@@ -31,7 +33,7 @@ CREATE TABLE favorite_items (
 );
 
 --博客内容分类表
-CREATE TABLE blog_content_class (
+CREATE TABLE articles_categories (
   id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID（自增）',
   order_id VARCHAR(36) NOT NULL COMMENT '关联查询ID（如UUID，36位）',
   title VARCHAR(50) NOT NULL COMMENT '导航标题（最长50字符）',
@@ -42,7 +44,7 @@ CREATE TABLE blog_content_class (
   INDEX idx_create_time (create_time) COMMENT '创建时间索引（用于按时间范围查询）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客内容分类表';
 --博客内容主体
-CREATE TABLE blog_content_main (
+CREATE TABLE articles (
   id BIGINT UNSIGNED AUTO_INCREMENT COMMENT '主键ID（自增，全局唯一标识）',
   father_id BIGINT UNSIGNED COMMENT '父内容ID（关联自身表id，NULL表示无父级）', -- 移除 NOT NULL
   biz_id VARCHAR(36) NOT NULL UNIQUE COMMENT '业务自有ID（如UUID，全局唯一）',
@@ -56,7 +58,7 @@ CREATE TABLE blog_content_main (
   create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间（自动记录插入时间）',
   PRIMARY KEY (id),
   -- 外键约束：关联自身表 id，父表删除时子表 father_id 置为 NULL
-  FOREIGN KEY (father_id) REFERENCES blog_content_main(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (father_id) REFERENCES articles(id) ON DELETE SET NULL ON UPDATE CASCADE,
   INDEX idx_create_time (create_time),
   INDEX idx_user_id (user_id),
   INDEX idx_father_id (father_id),
