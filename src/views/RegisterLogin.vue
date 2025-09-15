@@ -158,14 +158,15 @@ async function UserRegister(e) {
         alert('两次密码不一致')
         return false
     }
-
     try {
+        const atIndex = str.indexOf('@');
+        profileName === -1 ? str : str.slice(0, atIndex);
         await $http.post('/user/register', {
             userId: userId,
             userName: registerData.value.userName,
             userEmail: registerData.value.userEmail,
             userPassword: registerData.value.userPassword,
-            avatarUrl: '/src/assets/img/profile_picture/' + registerData.value.userName + '.png'
+            avatarUrl: '/src/assets/img/profile_picture/' + registerData.value.userEmail.split('@')[0] + '.png'
         });
         message.success('注册成功！正在跳转登录页面...');
         setTimeout(() => {

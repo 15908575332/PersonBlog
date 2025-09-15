@@ -98,12 +98,12 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
             'SELECT COUNT(*) AS total FROM blog_comments WHERE article_id = ?',
             [article_id]
         );
-        const replyTotalResult = await sqlQuery(
-            'SELECT COUNT(*) AS total FROM blog_comments_replies WHERE parent_reply_id IN (?)',
-            [postIds]
-        );
-        const replyTotal = replyTotalResult[0].total;
-        const total = totalResult[0].total + replyTotal;
+        // const replyTotalResult = await sqlQuery(
+        //     'SELECT COUNT(*) AS total FROM blog_comments_replies WHERE parent_reply_id IN (?)',
+        //     [postIds]
+        // );
+        // const replyTotal = replyTotalResult[0].total;
+        const total = totalResult[0].total;
 
         res.json({
             code: 200,
@@ -161,15 +161,14 @@ router.post('/replies', authenticateToken, async (req, res) => {
         // 校验 postId 是否存在
         const [post] = await sqlQuery('SELECT id FROM blog_comments WHERE id = ?', [currentFatherId]);
         if (!post) return res.status(404).json({ code: 404, msg: '主评论不存在' });
-
-        if (userId === req.user.id) {
+        if (userId === req.user.user_id) {
             return res.status(400).json({ code: 400, msg: '不能回复自己' });
         }
         // 插入回复
         const result = await sqlQuery(`
-            INSERT INTO blog_comments_replies (user_id, content)
-            VALUES ( ?, ?)
-        `, [req.user.id, content.trim()]);
+            INSERT INTO blog_comments_replies (user_id, parent_reply_id, content)
+            VALUES ( ?, ?, ?)
+        `, [req.user.user_id, currentFatherId, content.trim()]);
         res.json({ code: 200, data: { id: result.insertId } });
     } catch (err) {
         console.error('创建回复失败:', err);

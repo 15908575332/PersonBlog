@@ -322,7 +322,7 @@
                                                 :src="utils.getAssetsFile('icon/level/lv' + message.user.vipLevel + '.svg')"
                                                 alt="level">
                                         </div>
-                                        <div class="time">{{ release_time_format(message.created_at) }}</div>
+                                        <div class="time">{{ message.createdAt }}</div>
                                     </div>
                                 </div>
                                 <div class="reply">
@@ -348,7 +348,7 @@
                                                 :src="utils.getAssetsFile('icon/level/lv' + value.user.vipLevel + '.svg')"
                                                 alt="level">
                                         </div>
-                                        <div class="time">{{ release_time_format(message.created_at) }}</div>
+                                        <div class="time">{{ release_time_format(message.createdAt) }}</div>
                                     </div>
                                 </div>
 
@@ -389,7 +389,7 @@
             <div class="modal" data-aos="flip-down">
                 <!-- 输入框 -->
                 <div class="modal__input__aera">
-                    <textarea class="input" name="comment" maxlength="500" placeholder="写下点什么..."
+                    <textarea class="input" name="comment" maxlength="500" :placeholder='replyUser'
                         v-model="replyContent"></textarea>
                     <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
                 </div>
@@ -758,7 +758,7 @@ const onChangeText = () => {
 const messageList = ref([]); //评论列表
 const currentPage = ref(1); //当前页
 const totalPages = ref(1); //总页数
-const pageSize = ref(10);
+const pageSize = ref(5);
 const totals = ref(0); //总条数
 
 // 获取评论列表
@@ -781,6 +781,11 @@ const getMessageList = async () => {
     } catch (error) {
         console.error('获取评论列表失败:', error);
     }
+}
+// 下一页
+const onClickHandler = (page) => {
+    currentPage.value = page;
+    getMessageList();
 }
 //发布评论
 const input__message = ref(''); //评论内容
@@ -810,13 +815,17 @@ const addMessage = async () => {
 }
 // 评论回复
 const showReplyModal = ref(false); //回复框状态
+const replyUser = ref(''); //被回复用户
+const replyUserId = ref(0); //被回复用户id
 const replyContent = ref(''); //回复内容
-const activeParentId = ref(0); //当前回复评论id
+const activeParentId = ref(0); //被回复评论id
 
 const handleReply = (message) => {
     showReplyModal.value = true;
     activeParentId.value = message.id;
-    replyContent.value = `@${message.username}：`;
+    replyUserId.value = message.userId;
+    console.log(message.id);
+    replyUser.value = `@${message.user.username}`;
     document.body.classList.add('no-scroll'); // 新增
 }
 
@@ -826,8 +835,8 @@ const handleReplyPost = async () => {
     try {
 
         await $http.post('/message/replies', {
-            content: replyContent.value, //回复内容
-            userId: userStore.user.id,
+            content: replyContent.value,
+            userId: replyUserId.value,
             currentFatherId: activeParentId.value
         },
             {
