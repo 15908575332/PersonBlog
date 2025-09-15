@@ -72,7 +72,7 @@
                     </li>
                     <!-- 点赞量 -->
                     <li>
-                      <img src="@/assets/icon/recordList/countMessage-icon.svg" alt="message" />
+                      <img src="@/assets/icon/recordList/like.svg" alt="message" />
                       <span>{{ item.like_count }}</span>
                     </li>
                   </ul>
@@ -216,6 +216,7 @@ const onClickHandler = (page) => {
   currentPage.value = page;
   calculatePaginatedItems();
 };
+
 const calculatePaginatedItems = () => {
   //计算和更新分页后的项目列表
   const startIndex = (currentPage.value - 1) * pageSize.value;

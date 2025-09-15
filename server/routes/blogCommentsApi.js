@@ -4,7 +4,7 @@ import sqlQuery from '../db/sqlQuery.js';
 import authenticateToken from '../middleware/authenticateToken.js';
 
 
-// 获取留言列表（分页 + 回复内容）
+// 获取评论列表（分页 + 回复内容）
 router.get('/getblogmessageList', authenticateToken, async (req, res) => {
     try {
         const { page = 1, pageSize = 10, article_id } = req.query;
@@ -27,7 +27,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
                 u.avatarUrl,
                 u.username,
                 u.vipLevel
-            FROM blog_messages bm
+            FROM blog_comments bm
             INNER JOIN articles a ON bm.article_id = a.article_id
             LEFT JOIN users u ON bm.user_id = u.user_id
             WHERE bm.article_id = ?
@@ -37,10 +37,10 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
         const posts = await sqlQuery(postsQuery, [article_id, parseInt(pageSize), parseInt(offset)]);
 
         if (posts.length === 0) {
-            return res.status(404).json({ code: 404, msg: '该文章暂无留言' });
+            return res.status(404).json({ code: 404, msg: '该文章暂无评论' });
         }
 
-        // 提取所有主留言ID
+        // 提取所有主评论ID
         const postIds = posts.map(post => post.postId);
 
         // 优化回复查询（仅选择必要字段）
@@ -53,7 +53,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
                 u.avatarUrl AS replyAvatar,
                 u.username AS replyUsername,
                 u.vipLevel AS replyVipLevel
-            FROM blog_messages_replies pr
+            FROM blog_comments_replies pr
             LEFT JOIN users u ON pr.user_id = u.user_id
             WHERE pr.parent_reply_id IN (?)
         `, [postIds]);
@@ -95,10 +95,15 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
 
         // 获取总记录数（仅需计数，无需关联文章）
         const totalResult = await sqlQuery(
-            'SELECT COUNT(*) AS total FROM blog_messages WHERE article_id = ?',
+            'SELECT COUNT(*) AS total FROM blog_comments WHERE article_id = ?',
             [article_id]
         );
-        const total = totalResult[0].total;
+        const replyTotalResult = await sqlQuery(
+            'SELECT COUNT(*) AS total FROM blog_comments_replies WHERE parent_reply_id IN (?)',
+            [postIds]
+        );
+        const replyTotal = replyTotalResult[0].total;
+        const total = totalResult[0].total + replyTotal;
 
         res.json({
             code: 200,
@@ -113,38 +118,38 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
         });
 
     } catch (err) {
-        console.error('获取留言失败:', err);
+        console.error('获取评论失败:', err);
         res.status(500).json({ code: 500, msg: '服务器错误' });
     }
 });
 
-// 发布留言
+// 发布评论
 router.post('/postmessage', authenticateToken, async (req, res) => {
     try {
-        const { content } = req.body;
+        const { content, article_id } = req.body;
         if (!content || content.trim().length === 0) {
-            return res.status(400).json({ code: 400, msg: '留言内容不能为空' });
+            return res.status(400).json({ code: 400, msg: '评论内容不能为空' });
         }
 
         // 校验用户是否存在（冗余校验，外键已约束）
         const [user] = await sqlQuery(
-            'SELECT id FROM users WHERE id = ?',
-            [req.user.id]
+            'SELECT user_id FROM users WHERE user_id = ?',
+            [req.user.user_id]
         );
-        if (user.length === 0) {
+        if (!user) {
             return res.status(404).json({ code: 404, msg: '用户不存在' });
         }
-        // 插入留言
+        // 插入评论
         const result = await sqlQuery(`
-      INSERT INTO blog_messages (user_id, content)
-      VALUES (?, ?)
-    `, [req.user.id, content.trim()]);
+            INSERT INTO blog_comments (user_id, article_id,content)
+            VALUES (?, ?, ?)
+        `, [req.user.user_id, article_id, content.trim()]);
         res.status(200).json({
             code: 200,
             data: { id: result.insertId }
         });
     } catch (err) {
-        console.error('发布留言失败:', err);
+        console.error('发布评论失败:', err);
         res.status(500).json({ code: 500, msg: '服务器错误' });
     }
 });
@@ -154,15 +159,15 @@ router.post('/replies', authenticateToken, async (req, res) => {
     try {
         const { content, userId, currentFatherId } = req.body;
         // 校验 postId 是否存在
-        const [post] = await sqlQuery('SELECT id FROM blog_messages WHERE id = ?', [currentFatherId]);
-        if (!post) return res.status(404).json({ code: 404, msg: '主留言不存在' });
+        const [post] = await sqlQuery('SELECT id FROM blog_comments WHERE id = ?', [currentFatherId]);
+        if (!post) return res.status(404).json({ code: 404, msg: '主评论不存在' });
 
         if (userId === req.user.id) {
             return res.status(400).json({ code: 400, msg: '不能回复自己' });
         }
         // 插入回复
         const result = await sqlQuery(`
-            INSERT INTO blog_messages_replies (user_id, content)
+            INSERT INTO blog_comments_replies (user_id, content)
             VALUES ( ?, ?)
         `, [req.user.id, content.trim()]);
         res.json({ code: 200, data: { id: result.insertId } });

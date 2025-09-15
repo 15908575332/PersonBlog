@@ -67,7 +67,7 @@ CREATE TABLE articles (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客详细内容表';
 
 --内容详情留言表
-CREATE TABLE blog_messages (
+CREATE TABLE blog_comments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     content TEXT,
@@ -76,7 +76,7 @@ CREATE TABLE blog_messages (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 --留言回复
-CREATE TABLE blog_messages_replies (
+CREATE TABLE blog_comments_replies (
     id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT,         -- 关联回复的主留言（可选，如果允许回复主留言）
     parent_reply_id INT, -- 关联父回复（用于多级回复）
@@ -84,7 +84,7 @@ CREATE TABLE blog_messages_replies (
     content TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
-    FOREIGN KEY (post_id) REFERENCES blog_messages(id),
-    FOREIGN KEY (parent_reply_id) REFERENCES blog_messages_replies(id),
+    FOREIGN KEY (post_id) REFERENCES blog_comments(id),
+    FOREIGN KEY (parent_reply_id) REFERENCES blog_comments_replies(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

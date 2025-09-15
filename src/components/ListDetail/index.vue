@@ -150,7 +150,7 @@
             <!-- <div v-if="recordDetail.code" class="code__show">
                 <h1><span>#</span>源码展示说明</h1>
                 <highlightjs language="js" code='
-// 留言区>表情管理
+// 评论区>表情管理
     import EmojiPicker from " vue3-emoji-picker"; 
     import "vue3-emoji-picker/css" ; const
     _ISshow=ref(false); const emojiIs_show=()=> {
@@ -203,7 +203,7 @@
             <div class="comment">
                 <h1 class="title">
                     <img src="./icon/edit-icon.svg" alt="edit">
-                    <span>留言</span>
+                    <span>评论</span>
                 </h1>
                 <!-- 输入框 -->
                 <div class="comment__input__aera">
@@ -302,10 +302,10 @@
                     </button>
                 </div>
             </div>
-            <!-- 留言记录 -->
+            <!-- 评论记录 -->
 
             <div class="comment__module">
-                <div class="sum">Comments | {{ totals }}条留言</div>
+                <div class="sum">Comments | {{ totals }}条评论</div>
                 <ul v-if="messageList.length > 0">
                     <li class="comment__item" :class="{ 'reply__item': message.length > 0 }"
                         v-for="(message, index) in messageList" :key="index">
@@ -329,7 +329,7 @@
                                     <button @click="handleReply(message)">回复</button>
                                 </div>
                             </div>
-                            <!-- 留言展示 -->
+                            <!-- 评论展示 -->
                             <div class="comment__container">
                                 <div class="content">{{ message.content }}</div>
                             </div>
@@ -354,14 +354,14 @@
 
                             </div>
                             <div class="comment__container">
-                                <div class="content"><span>@{{ message.username }}:</span>{{ value.content }}
+                                <div class="content"><span>@{{ message.user.username }}:</span>{{ value.content }}
                                 </div>
                             </div>
                         </div>
                     </li>
                 </ul>
                 <div class="noComment" v-else>
-                    <span>没有更多留言，去留言吧~</span>
+                    <span>没有更多评论，去评论吧~</span>
                 </div>
                 <!-- 分页 -->
                 <div class="paginate" v-if="totals">
@@ -384,7 +384,7 @@
             </div>
         </div>
 
-        <!-- 留言回复框 -->
+        <!-- 评论回复框 -->
         <div class="reply-modal" v-if="showReplyModal" @click.self="handleReplyClose" @close="handleReplyClose">
             <div class="modal" data-aos="flip-down">
                 <!-- 输入框 -->
@@ -393,7 +393,7 @@
                         v-model="replyContent"></textarea>
                     <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
                 </div>
-                <!--留言提交 -->
+                <!--评论提交 -->
                 <div class="MessageSubmit">
                     <div class="emojipicker" v-show="_ModalShow">
                         <EmojiPicker hide-search hide-group-names :native="true" @select="getVue3Emoje"
@@ -622,6 +622,7 @@ const updateHeat = async (id) => {
 
 /** ------------------------点赞量计数------------------------ */
 const userStore = useAuthStore(); //当前登录用户信息
+const isLiked = ref(null);
 //检查当前用户点赞状态
 const checkLikeStatus = async (article_id) => {
     try {
@@ -639,6 +640,7 @@ const checkLikeStatus = async (article_id) => {
 const updateLike = (async (article_id) => {
     try {
         const response = await $http.post('/main/likeArticle', { user_id: userStore.user.userId, article_id });
+        isLiked.value = !isLiked.value;
         recordDetail.value.like_count = response.likeCount;
         message.success('点赞成功');
     } catch (error) {
@@ -646,7 +648,6 @@ const updateLike = (async (article_id) => {
         message.error(error.response.data.message);
     }
 })
-const isLiked = ref(false);
 // 点赞按钮点击事件
 const handleLikeClick = async () => {
     if (isLiked.value) {
@@ -737,7 +738,7 @@ const downloadImage = (url, filename) => {
     URL.revokeObjectURL(url) // 释放 Blob URL（如果是 Blob 类型需要）
 }
 
-/** ------------------------留言区>表情管理2------------------------ */
+/** ------------------------评论区>表情管理2------------------------ */
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
 const _ISshow = ref(false);
@@ -753,15 +754,14 @@ const onChangeText = () => {
     return;
 }
 
-//留言列表相关
-const messageList = ref([]); //留言列表
-const replies = ref([]);//回复列表
+//评论列表相关
+const messageList = ref([]); //评论列表
 const currentPage = ref(1); //当前页
 const totalPages = ref(1); //总页数
 const pageSize = ref(10);
 const totals = ref(0); //总条数
 
-// 获取留言列表
+// 获取评论列表
 const getMessageList = async () => {
     try {
         const res = await $http.get('/message/getblogmessageList', {
@@ -776,20 +776,21 @@ const getMessageList = async () => {
             }
         });
         messageList.value = res.data.list.filter(item => !item.parentId);
-        totals.value = res.data.total;
-        totalPages.value = Math.ceil(res.data.total / pageSize.value);
+        totals.value = res.data.pagination.total;
+        totalPages.value = Math.ceil(totals.value / pageSize.value);
     } catch (error) {
-        console.error('获取留言列表失败:', error);
+        console.error('获取评论列表失败:', error);
     }
 }
-//发布留言
-const input__message = ref(''); //留言内容
+//发布评论
+const input__message = ref(''); //评论内容
 const addMessage = async () => {
     if (!input__message.value.trim()) return;
 
     try {
         await $http.post('/message/postmessage', {
-            content: input__message.value
+            content: input__message.value,
+            article_id: recordDetail.value.article_id
         },
             {
                 headers: {
@@ -802,15 +803,15 @@ const addMessage = async () => {
         input__message.value = '';
 
     } catch (error) {
-        console.error('发布留言失败:', error);
+        console.error('发布评论失败:', error);
         message.error(error.response.data.msg)
 
     }
 }
-// 留言回复
+// 评论回复
 const showReplyModal = ref(false); //回复框状态
 const replyContent = ref(''); //回复内容
-const activeParentId = ref(0); //当前回复留言id
+const activeParentId = ref(0); //当前回复评论id
 
 const handleReply = (message) => {
     showReplyModal.value = true;
@@ -841,7 +842,7 @@ const handleReplyPost = async () => {
         showReplyModal.value = false;
         document.body.classList.remove('no-scroll'); // 新增
     } catch (error) {
-        console.error('回复留言失败:', error);
+        console.error('回复评论失败:', error);
         message.warning(error.response.data.msg)
     }
 }
@@ -1668,7 +1669,7 @@ onMounted(async () => {
                 color: #696969;
             }
 
-            //留言记录
+            //评论记录
             .comment__item {
                 padding: 0.5rem;
                 border-bottom: 1px solid #ccc;
@@ -1823,7 +1824,7 @@ onMounted(async () => {
 
 
 
-            //没有留言
+            //没有评论
             .noComment {
                 margin: 1rem 0;
                 border-top: dashed 1px #ccc;
@@ -1973,7 +1974,7 @@ onMounted(async () => {
         }
     }
 
-    //留言回复框
+    //评论回复框
     .reply-modal {
         position: fixed;
         top: 0;
