@@ -37,7 +37,7 @@ router.get('/getArticleInfo', async (req, res) => {
         const result = await sqlQuery(
             `
             SELECT 
-                articles.*, 
+                articles.*,
                 users.username
             FROM articles
             INNER JOIN users ON users.user_id = articles.user_id
@@ -53,12 +53,21 @@ router.get('/getArticleInfo', async (req, res) => {
                 message: '文章不存在'
             });
         }
-
+        const tags = await sqlQuery(
+            `
+            SELECT
+                distinct master_tag
+            FROM
+                articles
+            `,
+            [article_id]
+        )
         // 返回文章基本信息
         res.status(200).json({
             code: 200,
             message: '获取文章信息成功',
             result,
+            tags
         });
     } catch (error) {
         console.error('获取文章信息失败:', error);

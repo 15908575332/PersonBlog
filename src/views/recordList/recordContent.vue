@@ -15,8 +15,8 @@
       <div class="search__suggestion">
         <h3>一些有用的建议</h3>
         <div class="suggestion-tags">
-          <span v-for="tag in mainContent" :key="tag" class="suggestion-tag" @click="setTagToInput(tag.sub_tag)">#{{
-            tag.sub_tag
+          <span v-for="tag in tags" :key="tag" class="suggestion-tag" @click="setTagToInput(tag.master_tag)">#{{
+            tag.master_tag
           }}</span>
         </div>
       </div>
@@ -160,7 +160,9 @@ const fetchNavData = async () => {
 const mainContent = computed(() => {
   return mainStore.contentData;
 })
-
+const tags = computed(() => {
+  return mainStore.tags;
+})
 //格式化发布时间
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
@@ -292,7 +294,7 @@ onMounted(() => {
       transform: scale3d(0.9, 0.9, 1) translateX(-60%);
       transition: transform 0.5s;
       transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
-      z-index: 2;
+      // z-index: 2;
 
       input {
         border-radius: 1rem;
@@ -404,6 +406,7 @@ onMounted(() => {
     }
 
     .search__form {
+      z-index: 2;
       transform: translate3d(0, 30vh, 0) translate3d(-50%, -50%, 0) scale3d(1.2, 1.2, 1);
     }
 
@@ -473,6 +476,7 @@ onMounted(() => {
           background-size: 100% 100%;
           opacity: 0;
           transition: all 0.8s;
+
         }
 
         &:hover {
@@ -494,6 +498,7 @@ onMounted(() => {
 
           img {
             width: 100%;
+            height: 100%;
           }
         }
 
