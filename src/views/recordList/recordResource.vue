@@ -144,27 +144,27 @@ const listDetail = (id) => {
 // 背景图源地址、文本存储数组
 const videoUrls = ref([
   {
-    imgSrc: utils.getAssetsFile("img/recordList/resource__back1.jpeg"),
+    imgSrc: utils.getAssetsFile("img/recordList/resource/resource_back1.png"),
     title: "Florence",
     subtitle: "当遇到你时，大脑连上CSGO都会掉帧",
   },
   {
-    imgSrc: utils.getAssetsFile("img/recordList/resource__back2.jpeg"),
+    imgSrc: utils.getAssetsFile("img/recordList/resource/resource_back2.png"),
     title: "英雄联盟",
     subtitle: "有些错无法犯两次，有些事绝对不会无趣",
   },
   {
-    imgSrc: utils.getAssetsFile("img/recordList/resource__back3.jpeg"),
+    imgSrc: utils.getAssetsFile("img/recordList/resource/resource_back3.png"),
     title: "Angel Beats!",
     subtitle: "声起立华乐独奏，曲末音无心结弦。",
   },
   {
-    imgSrc: utils.getAssetsFile("img/recordList/resource__back4.jpeg"),
+    imgSrc: utils.getAssetsFile("img/recordList/resource/resource_back4.png"),
     title: "柴郡猫",
     subtitle: "如果你都不知道自己想去哪里，那去哪里都是一样的。",
   },
   {
-    imgSrc: utils.getAssetsFile("img/recordList/resource__back5.jpeg"),
+    imgSrc: utils.getAssetsFile("img/recordList/resource/resource_back5.png"),
     title: "七律·和郭沫若同志",
     subtitle: "今日欢呼孙大圣，只缘妖雾又重来。",
   },
