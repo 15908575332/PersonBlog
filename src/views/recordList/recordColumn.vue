@@ -6,22 +6,24 @@
         <div class="category__content">
             <!-- carousel -->
             <div class="carousel">
+
                 <div class="specific__content">
                     <carousel-3d :disable3d="true" :width="1200" :height="662" :autoplay="true" :autoplayTimeout="5000"
                         :display="true">
-                        <slide v-for="(item, index) in carousel" :key="index" :index="index">
+                        <slide v-for="(item, index) in spliceData" :key="index" :index="index">
                             <a class="image">
-                                <img :src="item.img" alt="Image" />
+                                <a-badge-ribbon color="#fe3459" text="推荐"></a-badge-ribbon>
+                                <img :src="item.cover_image_url" alt="Image" />
                                 <div class="item__count">
                                     <h1>{{ item.title }}</h1>
                                     <ul>
                                         <li>
                                             <img src="@/assets/icon/recordList/countCat-icon.svg" alt="cat">
-                                            <span>{{ item.cat }}</span>
+                                            <span>{{ item.heat }}</span>
                                         </li>
                                         <li>
-                                            <img src="@/assets/icon/recordList/countMessage-icon.svg" alt="message">
-                                            <span>{{ item.message }}</span>
+                                            <img src="@/assets/icon/recordList/like.svg" alt="message">
+                                            <span>{{ item.like_count }}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -40,16 +42,21 @@
                         <img src="@/assets/icon/recordList/orange-icon.svg" alt="img">
                     </div>
                 </div>
-                <div class="content__container" v-for="module in specialColumn" :key="module.id" data-aos="fade-left">
+                <div class="content__container" v-for="module in specialColumn" :key="module.category_id"
+                    data-aos="fade-left">
                     <div class="content__container__title">
-                        <h1>{{ module.title }}</h1>
+                        <h1>{{ module.nav_btn_title }}</h1>
                     </div>
                     <div class="content__container__list">
-                        <div class="content__items" v-for="(item, index) in module.content" :key="item.contentId">
-                            <img :src="item.tagsImg" alt="图片">
+                        <div class="content__items" v-for="(tag, index) in module.tags" :key="tag.master_tag">
+                            <img :src="utils.getAssetsFile(`img/public/public-${tag.randomNumber}.png`)"
+                                :alt="tag.randomNumber">
+                            {{ tag.randomNumber }}
                             <div class="text">
-                                <h1 class="count" :style="buttonStyles(index)">{{ item.count }}</h1>
-                                <h2 class="intrduce">{{ item.title }}</h2>
+                                <h1 class="count"
+                                    :style="`--btn-color: ${btn_colors[Math.floor(Math.random() * btn_colors.length)]};`">
+                                    {{ tag.tag_count }}</h1>
+                                <h2 class="intrduce">{{ tag.master_tag }}</h2>
                             </div>
                         </div>
                     </div>
@@ -60,45 +67,49 @@
 </template>
 <script setup>
 import Navigation from '@/components/NavigationMenu/index.vue';
-import { ref, onMounted } from 'vue';
+import { getCurrentInstance, ref, onMounted, destroyed } from 'vue';
+const instance = getCurrentInstance();
+const $http = instance.appContext.config.globalProperties.$http;
+import { useMainStore } from '@/store/maincontent';
+const mainStore = useMainStore();
 import utils from "@/utils/getAssetsFile";
-import { useListDetail } from '@/store/listDetailStore';
-import Aos from 'aos';
-const recordStore = useListDetail();
-const specialColumn = recordStore.specialColumn;
-const carousel = ref([
-    {
-        img: utils.getAssetsFile("img/albumCollection/cover-1.jpeg"),
-        title: 'POTTE-最美博客',
-        cat: 31521,
-        message: 47,
-    },
-    {
-        img: utils.getAssetsFile("img/albumCollection/cover-2.jpeg"),
-        title: 'POTTE-最美博客',
-        cat: 31521,
-        message: 47,
-    },
-    {
-        img: utils.getAssetsFile("img/albumCollection/cover-3.jpeg"),
-        title: 'POTTE-最美博客',
-        cat: 31521,
-        message: 47,
-    },
-    {
-        img: utils.getAssetsFile("img/albumCollection/cover-4.jpeg"),
-        title: 'POTTE-最美博客',
-        cat: 31521,
-        message: 47,
-    },
-    {
-        img: utils.getAssetsFile("img/albumCollection/cover-5.jpeg"),
-        title: 'POTTE-最美博客',
-        cat: 31521,
-        message: 47,
-    },
 
-]);
+//标题栏
+const specialColumn = ref([]);
+//轮播数据
+const carousel = ref(JSON.parse(localStorage.getItem('mainContent')) || []);
+const spliceData = carousel.value.splice(0, 8);
+
+// 在getSpecialColumn方法中修改
+const getSpecialColumn = async () => {
+    await mainStore.fetchNavData();
+    const promises = mainStore.navData.map(async (module) => {
+        const response = await $http.get('main/getColumnData', {
+            params: {
+                category_id: module.category_id
+            }
+        });
+
+        // 处理数据时优先使用本地存储的随机数
+        response.columnData.forEach(tag => {
+            const storedNumber = localStorage.getItem(`randomNumber_${tag.master_tag}`);
+            if (storedNumber) {
+                tag.randomNumber = parseInt(storedNumber, 10);
+            } else {
+                // 生成新随机数并保存到本地存储
+                const randomNumber = Math.floor(Math.random() * 50) + 1;
+                tag.randomNumber = randomNumber;
+                localStorage.setItem(`randomNumber_${tag.master_tag}`, randomNumber.toString());
+            }
+        });
+
+        return {
+            ...module,
+            tags: response.columnData
+        };
+    });
+    specialColumn.value = await Promise.all(promises);
+};
 const btn_colors = ref([
     '#CC6666',
     '#CC6633',
@@ -107,13 +118,16 @@ const btn_colors = ref([
     '#ee7752',
     '#6699FF'
 ])
-const buttonStyles = (index) => {
-    return {
-        backgroundColor: btn_colors.value[index % btn_colors.value.length],
-    }
-};
 onMounted(() => {
-
+    getSpecialColumn();
+});
+destroyed(() => {
+    // 组件销毁时清除本地存储中的随机数
+    specialColumn.value.forEach(module => {
+        module.tags.forEach(tag => {
+            localStorage.removeItem(`randomNumber_${tag.master_tag}`);
+        });
+    });
 });
 </script>
 <style scoped lang="scss">
@@ -253,7 +267,7 @@ onMounted(() => {
                     padding: 1rem 0;
 
                     h1 {
-                        font-size: 1.2rem;
+                        font-size: 1rem;
                         font-weight: 700;
                         width: fit-content;
                         position: relative;
@@ -303,6 +317,7 @@ onMounted(() => {
                             position: absolute;
                             top: 50%;
                             left: 50%;
+                            width: 100%;
                             transform: translate(-50%, -50%);
                             z-index: 2;
                             @include flexCenter(column, center);
@@ -310,13 +325,19 @@ onMounted(() => {
 
                             h1 {
                                 padding: 0.2rem 0.8rem;
-                                background-color: red;
+                                background-color: var(--btn-color);
                                 border-radius: 4px;
                             }
 
                             h2 {
                                 font-size: 0.9rem;
                                 font-weight: 700;
+                                width: 100%;
+                                text-align: center;
+                                max-width: 90%;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
                             }
 
                         }

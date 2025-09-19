@@ -9,8 +9,7 @@ export const useMainStore = defineStore('main', () => {
     const tags = ref([]); //标签数据
     const loading = ref(false);
     const error = ref(null);
-
-
+    
     const fetchMainContent = async (id) => {
         loading.value = true;
         try {

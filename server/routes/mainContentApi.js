@@ -249,4 +249,41 @@ router.post('/likeArticle', async (req, res) => {
     }
 });
 
+// 专栏数据处理
+router.get('/getColumnData', async (req, res) => {
+    try {
+        const { category_id } = req.query;
+        if (!category_id) {
+            return res.status(400).json({ message: '缺少专栏ID参数' });
+        }
+        // 查询专栏数据
+        const columnData = await sqlQuery(
+            `
+  SELECT
+  a.master_tag,
+  COUNT(*) AS tag_count
+FROM
+  articles_categories c
+INNER JOIN
+  articles a ON c.category_id = a.category_id
+WHERE
+  c.category_id = ?
+GROUP BY
+  a.master_tag
+ORDER BY
+  tag_count;
+            `,
+            [category_id]
+        );
+
+        res.status(200).json({
+            code: 200,
+            message: '获取专栏数据成功',
+            columnData
+        });
+    } catch (error) {
+        console.error('获取专栏数据失败:', error);
+        res.status(500).json({ message: '服务器内部错误' });
+    }
+});
 export default router;

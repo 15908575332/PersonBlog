@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { jwtDecode } from 'jwt-decode'
 import { message } from 'ant-design-vue'
+import { clearAllLocalStorage } from '@/utils/clearAllLocalStorage';
 export const useAuthStore = defineStore('auth', () => {
     const login = async (credentials) => {
         try {
@@ -42,11 +43,8 @@ export const useAuthStore = defineStore('auth', () => {
         token.value = null
         iat.value = null
 
-        // 清除 localStorage
-        localStorage.removeItem('user')
-        localStorage.removeItem('token')
-        localStorage.removeItem('iat')
-        localStorage.removeItem('hasShownNotification')
+        // 清除本地 localStorage 所有数据
+        clearAllLocalStorage();
 
     }
     //获取token过期时间

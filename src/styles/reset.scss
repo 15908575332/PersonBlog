@@ -28,6 +28,20 @@
         color: #fff;
     }
 }
+#recordColumn {
+    .ant-ribbon-wrapper {
+        .ant-ribbon {
+            padding:0.3rem 1rem;
+            position: absolute;
+            background-color: #ffa500 !important;
+            .ant-ribbon-text {
+                
+                font-size: 20px;
+                font-family: "gtpy";
+            }
+        }
+    }
+}
 // 全局提示组件ant-message样式重写
 .ant-message {
     top: 3rem;
