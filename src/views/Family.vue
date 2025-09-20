@@ -12,12 +12,12 @@
       <div class="profile__picture">
         <ul>
           <li class="item">
-            <img src="@/assets/img/public/avatar01.webp" alt="" />
+            <img src="@/assets/img/profile_picture/10025.png" alt="" />
             <h1>Sara</h1>
           </li>
           <li class="item heart"></li>
           <li class="item">
-            <img src="@/assets/img/public/avatar02.webp" alt="" />
+            <img src="@/assets/img/profile_picture/10024.png" alt="" />
             <h1>Abby</h1>
           </li>
         </ul>
@@ -146,117 +146,121 @@
             </li>
           </ul>
         </div>
-        <!-- 模块一 -->
-        <section class="main" v-if="changeModule === 'module1'">
-          <ul class="lifeCard">
-            <li class="event">
-              <input type="radio" name="tl-group" checked />
-              <label></label>
-              <div class="thumb user-1"><span>19 Nov</span></div>
-              <div class="content-perspective">
-                <div class="content">
-                  <div class="content-inner">
-                    <h3>
-                      <span>I</span>
-                      <span>find</span>
-                      <span>your</span>
-                      <span>lack</span>
-                      <span>of</span>
-                      <span>faith</span>
-                      <span>disturbing</span>
-                    </h3>
-                    <p>
-                      Don't be too proud of this technological terror you've
-                      constructed. The ability tothe presence of my old master.
-                      Escape is not his plan. I must face him.Alone.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </li>
+        <!-- 模块内容 -->
+        <div class="module_content">
 
-            <li class="event">
-              <input type="radio" name="tl-group" />
-              <label></label>
-              <div class="thumb user-2"><span>18 Nov</span></div>
-              <div class="content-perspective">
-                <div class="content">
-                  <div class="content-inner">
-                    <h3>I ain't shooting this thing, I hate guns.</h3>
-                    <p>
-                      Ha, illiandran. And youwill not call me 'you'. You will
-                      never address me as 'you'. You will call me 'your
-                      royalhighness'. I really must go back. I shouldn't have
-                      run away. I realize nowthat love is one lucannot afford.
-                    </p>
+          <!-- 模块一 -->
+          <section class="main" v-if="changeModule === 'module1'">
+            <ul class="lifeCard">
+              <li class="event">
+                <input type="radio" name="tl-group" checked />
+                <label></label>
+                <div class="thumb user-1"><span>19 Nov</span></div>
+                <div class="content-perspective">
+                  <div class="content">
+                    <div class="content-inner">
+                      <h3>
+                        <span>I</span>
+                        <span>find</span>
+                        <span>your</span>
+                        <span>lack</span>
+                        <span>of</span>
+                        <span>faith</span>
+                        <span>disturbing</span>
+                      </h3>
+                      <p>
+                        Don't be too proud of this technological terror you've
+                        constructed. The ability tothe presence of my old master.
+                        Escape is not his plan. I must face him.Alone.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
+              </li>
 
-            <li class="event">
-              <input type="radio" name="tl-group" />
-              <label></label>
-              <div class="thumb user-3"><span>17 Nov</span></div>
-              <div class="content-perspective">
-                <div class="content">
-                  <div class="content-inner">
-                    <h3>My brains are going into my feet!</h3>
-                    <p>We're done with you. Go back to the golf cou</p>
+              <li class="event">
+                <input type="radio" name="tl-group" />
+                <label></label>
+                <div class="thumb user-2"><span>18 Nov</span></div>
+                <div class="content-perspective">
+                  <div class="content">
+                    <div class="content-inner">
+                      <h3>I ain't shooting this thing, I hate guns.</h3>
+                      <p>
+                        Ha, illiandran. And youwill not call me 'you'. You will
+                        never address me as 'you'. You will call me 'your
+                        royalhighness'. I really must go back. I shouldn't have
+                        run away. I realize nowthat love is one lucannot afford.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
+              </li>
 
-            <li class="event">
-              <input type="radio" name="tl-group" />
-              <label></label>
-              <div class="thumb user-4"><span>16 Nov</span></div>
-              <div class="content-perspective">
-                <div class="content">
-                  <div class="content-inner">
-                    <h3>Would you please stop calling me that?</h3>
-                    <p>
-                      You make it so difficult sometimes. You have your moments.
-                      Not many of them Evacuate staff.
-                    </p>
+              <li class="event">
+                <input type="radio" name="tl-group" />
+                <label></label>
+                <div class="thumb user-3"><span>17 Nov</span></div>
+                <div class="content-perspective">
+                  <div class="content">
+                    <div class="content-inner">
+                      <h3>My brains are going into my feet!</h3>
+                      <p>We're done with you. Go back to the golf cou</p>
+                    </div>
                   </div>
                 </div>
+              </li>
+
+              <li class="event">
+                <input type="radio" name="tl-group" />
+                <label></label>
+                <div class="thumb user-4"><span>16 Nov</span></div>
+                <div class="content-perspective">
+                  <div class="content">
+                    <div class="content-inner">
+                      <h3>Would you please stop calling me that?</h3>
+                      <p>
+                        You make it so difficult sometimes. You have your moments.
+                        Not many of them Evacuate staff.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </section>
+          <!-- 模块二 -->
+          <div v-else-if="changeModule === 'module2'">
+            <div class="gallery">
+              <div class="gallery__image">
+                <img src="@/assets/img/albumCollection/travel2.jpg" alt="1" />
               </div>
-            </li>
-          </ul>
-        </section>
-        <!-- 模块二 -->
-        <div v-else-if="changeModule === 'module2'">
-          <div class="gallery">
-            <div class="gallery__image">
-              <img src="@/assets/img/albumCollection/travel2.jpg" alt="1" />
-            </div>
-            <div class="gallery__image">
-              <img src="@/assets/img/albumCollection/travel3.jpg" alt="2" />
-            </div>
-            <div class="gallery__image">
-              <img src="@/assets/img/albumCollection/travel4.jpg" alt="3" />
+              <div class="gallery__image">
+                <img src="@/assets/img/albumCollection/travel4.jpg" alt="2" />
+              </div>
+              <div class="gallery__image">
+                <img src="@/assets/img/albumCollection/travel5.jpg" alt="3" />
+              </div>
             </div>
           </div>
-        </div>
-        <!-- 模块三 -->
-        <div v-else="changeModule === 'module3'">
-          <div class="g-container">
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
-            <div class="g-item" data-aos="fade-up"></div>
+          <!-- 模块三 -->
+          <div v-else="changeModule === 'module3'">
+            <div class="g-container">
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+              <div class="g-item" data-aos="fade-up"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -529,7 +533,6 @@ onUnmounted(() => {
 
     // 内容
     .content__col {
-      //  background: linear-gradient(rgba(244, 0, 0, 0.1) 2%, rgb(255, 255, 255, .8) 0);
       background-size: 100% 40px;
       width: 100%;
       height: 100%;
@@ -651,7 +654,6 @@ onUnmounted(() => {
       .module {
         width: 100%;
         font-family: "gtpy";
-        // padding: rem 0;
 
         ul {
           @include flexCenter(row, space-between);
@@ -669,7 +671,7 @@ onUnmounted(() => {
 
             &:hover {
               cursor: pointer;
-              transform: translateY(-0.5rem);
+              transform: scale(0.9);
             }
 
             .card__left {
@@ -883,404 +885,415 @@ onUnmounted(() => {
         }
       }
 
-      // 模块一
-      .main {
-        width: 100%;
-        max-width: 60vw;
-        margin: 0 auto;
-        padding: 4rem 0;
-        @include flexCenter(column, center);
+      // 模块内容
+      .module_content {
+        background-color: rgb(139, 179, 213, .1);
+        backdrop-filter: blur(0.25rem);
+        width: 100vw;
+        overflow: hidden;
 
-        .lifeCard {
-          position: relative;
-          list-style-type: none;
-          font-family: "Gorditas", Arial, sans-serif;
+        // 模块一
+        .main {
+          width: 100%;
+          max-width: 60vw;
+          margin: 0 auto;
+          padding: 4rem 0;
+          @include flexCenter(column, center);
 
-          &:before {
-            content: "";
-            position: absolute;
-            width: 5px;
-            height: 100%;
-            top: 0;
-            left: 165px;
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJUlEQVQIW2NkQAP/gYARWQwkAOLDBeECjEAAkkEWAKtEFwAJAgAZEBP+oM1IkwAAAABJRU5ErkJggg==);
-          }
-
-          .event {
+          .lifeCard {
             position: relative;
-            margin-bottom: 3rem;
-            padding-right: 40px;
+            list-style-type: none;
+            font-family: "Gorditas", Arial, sans-serif;
 
-            .thumb {
+            &:before {
+              content: "";
               position: absolute;
-              width: 4rem;
-              height: 4rem;
-              box-shadow: 0 0 0 4px rgb(253, 255, 255),
-                0 1px 1px rgba(255, 255, 255, 0.5);
-              background-repeat: no-repeat;
-              border-radius: 50%;
-              transform: scale(0.8) translateX(50px);
-              transition: all 0.6s ease-in-out 0.2s;
-
-              span {
-                color: #ffffff;
-                width: 100%;
-                text-align: center;
-                font-weight: 700;
-                font-size: 15px;
-                text-transform: uppercase;
-                position: absolute;
-                bottom: -30px;
-                transition: all 0.6s ease-in-out 0.2s;
-              }
-
-              &:before {
-                content: "";
-                position: absolute;
-                height: 0.4rem;
-                z-index: -1;
-                background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPElEQVQYV2NkQAP/gYARCNDFUQRgirAphitEl0TngxXisg5ZnBGXIpgbYfIYjkb3BNxGbBLYxIgyEaQRAA8KKAWYsZtjAAAAAElFTkSuQmCC);
-                width: 3rem;
-                top: 2.1rem;
-                left: 4rem;
-              }
+              width: 5px;
+              height: 100%;
+              top: 0;
+              left: 165px;
+              background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJUlEQVQIW2NkQAP/gYARWQwkAOLDBeECjEAAkkEWAKtEFwAJAgAZEBP+oM1IkwAAAABJRU5ErkJggg==);
             }
 
-            .content-perspective {
-              margin-left: 215px;
+            .event {
               position: relative;
-              perspective: 600px;
-              width: 30vw;
+              margin-bottom: 3rem;
+              padding-right: 40px;
 
-              &:before {
-                content: "";
-                width: 37px;
-                left: -37px;
-                top: 45px;
+              .thumb {
                 position: absolute;
-                height: 1px;
-                z-index: -1;
-                background: #fff;
+                width: 4rem;
+                height: 4rem;
+                box-shadow: 0 0 0 4px rgb(253, 255, 255),
+                  0 1px 1px rgba(255, 255, 255, 0.5);
+                background-repeat: no-repeat;
+                border-radius: 50%;
+                transform: scale(0.8) translateX(50px);
+                transition: all 0.6s ease-in-out 0.2s;
+
+                span {
+                  color: #ffffff;
+                  width: 100%;
+                  text-align: center;
+                  font-weight: 700;
+                  font-size: 15px;
+                  text-transform: uppercase;
+                  position: absolute;
+                  bottom: -30px;
+                  transition: all 0.6s ease-in-out 0.2s;
+                }
+
+                &:before {
+                  content: "";
+                  position: absolute;
+                  height: 0.4rem;
+                  z-index: -1;
+                  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPElEQVQYV2NkQAP/gYARCNDFUQRgirAphitEl0TngxXisg5ZnBGXIpgbYfIYjkb3BNxGbBLYxIgyEaQRAA8KKAWYsZtjAAAAAElFTkSuQmCC);
+                  width: 3rem;
+                  top: 2.1rem;
+                  left: 4rem;
+                }
               }
 
-              .content {
-                transform: rotateY(12deg);
-                transform-origin: 0 0;
-                transform-style: preserve-3d;
-                transition: transform 0.8s cubic-bezier(0.59, 1.45, 0.69, 0.98) 0.2s;
+              .content-perspective {
+                margin-left: 215px;
+                position: relative;
+                perspective: 600px;
+                width: 30vw;
 
-                .content-inner {
-                  position: relative;
-                  padding: 20px;
-                  border: none;
-                  border-left: 5px solid #41838e;
-                  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                &:before {
+                  content: "";
+                  width: 37px;
+                  left: -37px;
+                  top: 45px;
+                  position: absolute;
+                  height: 1px;
+                  z-index: -1;
                   background: #fff;
-                  font-family: "lmst";
-                  letter-spacing: 1px;
-                  transition: box-shadow 0.8s linear 0.2s;
+                }
 
-                  &::before {
-                    content: "\25b4";
-                    left: 33px;
-                    top: -32px;
-                  }
+                .content {
+                  transform: rotateY(12deg);
+                  transform-origin: 0 0;
+                  transform-style: preserve-3d;
+                  transition: transform 0.8s cubic-bezier(0.59, 1.45, 0.69, 0.98) 0.2s;
 
-                  h3 {
-                    // font-size: 26px;
-                    padding: 5px 0 5px 0;
-                    color: black;
-                    transition: all 0.6s ease-in-out 0.2s;
-                    overflow: hidden;
+                  .content-inner {
+                    position: relative;
+                    padding: 20px;
+                    border: none;
+                    border-left: 5px solid #41838e;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    background: #fff;
+                    font-family: "lmst";
+                    letter-spacing: 1px;
+                    transition: box-shadow 0.8s linear 0.2s;
 
-                    span {
-                      transition: all 0.6s ease-in-out 0.2s;
-                      padding: 0 0.1rem;
-                      // font-size: ;
+                    &::before {
+                      content: "\25b4";
+                      left: 33px;
+                      top: -32px;
                     }
-                  }
 
-                  p {
-                    font-size: 18px;
-                    max-height: 0px;
-                    overflow: hidden;
-                    color: transparent;
-                    color: rgba(0, 0, 0, 0);
-                    text-align: left;
-                    transition: max-height 0.5s linear, color 0.3s linear;
-                  }
+                    h3 {
+                      // font-size: 26px;
+                      padding: 5px 0 5px 0;
+                      color: black;
+                      transition: all 0.6s ease-in-out 0.2s;
+                      overflow: hidden;
 
-                  &:before {
-                    font-family: "fontawesome-selected";
-                    content: "\25c2";
-                    font-weight: normal;
-                    font-size: 54px;
-                    line-height: 54px;
-                    position: absolute;
-                    width: 30px;
-                    height: 30px;
-                    color: #41838e;
-                    left: -22px;
-                    top: 19px;
-                    z-index: -1;
+                      span {
+                        transition: all 0.6s ease-in-out 0.2s;
+                        padding: 0 0.1rem;
+                        // font-size: ;
+                      }
+                    }
+
+                    p {
+                      font-size: 18px;
+                      max-height: 0px;
+                      overflow: hidden;
+                      color: transparent;
+                      color: rgba(0, 0, 0, 0);
+                      text-align: left;
+                      transition: max-height 0.5s linear, color 0.3s linear;
+                    }
+
+                    &:before {
+                      font-family: "fontawesome-selected";
+                      content: "\25c2";
+                      font-weight: normal;
+                      font-size: 54px;
+                      line-height: 54px;
+                      position: absolute;
+                      width: 30px;
+                      height: 30px;
+                      color: #41838e;
+                      left: -22px;
+                      top: 19px;
+                      z-index: -1;
+                    }
                   }
                 }
               }
             }
           }
-        }
 
-        .user-1 {
-          background-image: url(@/assets/img/profile_picture/10055.png);
-          background-size: 100% 100%;
-        }
-
-        .user-2 {
-          background-image: url(@/assets/img/profile_picture/10056.png);
-          background-size: 100% 100%;
-        }
-
-        .user-3 {
-          background-image: url(@/assets/img/profile_picture/10058.png);
-          background-size: 100% 100%;
-        }
-
-        .user-4 {
-          background-image: url(@/assets/img/profile_picture/10059.png);
-          background-size: 100% 100%;
-        }
-
-        /*透明复选框/无线电破解：将复选框保留在顶部，用不透明0隐藏它*/
-
-        .event label,
-        .event input[type="radio"] {
-          width: 24px;
-          height: 24px;
-          left: 158px;
-          top: 36px;
-          position: absolute;
-          display: block;
-          z-index: 2;
-        }
-
-        .event input[type="radio"] {
-          opacity: 0;
-          z-index: 10;
-          cursor: pointer;
-        }
-
-        .event label:after {
-          font-family: "fontawesome-selected";
-          content: "√";
-          background: #fff;
-          border-radius: 50%;
-          color: #41838e;
-          font-size: 26px;
-          height: 100%;
-          width: 100%;
-          left: -2px;
-          top: -3px;
-          line-height: 24px;
-          position: absolute;
-          text-align: center;
-        }
-
-        /* Checked */
-
-        .event input[type="radio"]:checked+label:after {
-          content: "\2714";
-          color: #f26328;
-          box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8);
-        }
-
-        .event input[type="radio"]:checked~.content-perspective:before {
-          background: #f26328;
-        }
-
-        .event input[type="radio"]:checked~.content-perspective .content-inner h3 {
-          color: #f26328;
-
-          span {
-            font-family: "Cabin Sketch", cursive;
-            // text-transform: uppercase;
-            color: #0535f5;
-
-            &:nth-child(1),
-            &:nth-child(4),
-            &:nth-child(7),
-            &:nth-child(10) {
-              color: #4cd137;
-            }
-
-            &:nth-child(2),
-            &:nth-child(5),
-            &:nth-child(8) {
-              color: #ff0000;
-            }
+          .user-1 {
+            background-image: url(@/assets/img/profile_picture/10055.png);
+            background-size: 100% 100%;
           }
-        }
 
-        .event input[type="radio"]:checked~.content-perspective .content {
-          -webkit-transform: rotateY(-5deg);
-          -moz-transform: rotateY(-5deg);
-          -o-transform: rotateY(-5deg);
-          -ms-transform: rotateY(-5deg);
-          transform: rotateY(-5deg);
-        }
+          .user-2 {
+            background-image: url(@/assets/img/profile_picture/10008.png);
+            background-size: 100% 100%;
+          }
 
-        .event input[type="radio"]:checked~.content-perspective .content-inner {
-          border-color: #f26328;
-          box-shadow: 10px 0px 10px -6px rgba(0, 0, 0, 0.1);
-        }
+          .user-3 {
+            background-image: url(@/assets/img/profile_picture/10009.png);
+            background-size: 100% 100%;
+          }
 
-        .event input[type="radio"]:checked~.content-perspective .content-inner p {
-          max-height: 13rem;
-          /* Add media queries */
-          color: rgba(0, 0, 0, 0.8);
-          -webkit-transition-delay: 0s, 0.6s;
-          -moz-transition-delay: 0s, 0.6s;
-          -o-transition-delay: 0s, 0.6s;
-          -ms-transition-delay: 0s, 0.6s;
-          transition-delay: 0s, 0.6s;
-        }
+          .user-4 {
+            background-image: url(@/assets/img/profile_picture/10010.png);
+            background-size: 100% 100%;
+          }
 
-        .event input[type="radio"]:checked~.content-perspective .content-inner:before {
-          color: #f26328;
-        }
+          /*透明复选框/无线电破解：将复选框保留在顶部，用不透明0隐藏它*/
 
-        .event input[type="radio"]:checked~.thumb {
-          transform: scale(0.9);
-          transform: translateX(10px);
-          box-shadow: 0 0 0 2px rgba(242, 99, 40, 1),
-            0 1px 1px rgba(255, 255, 255, 0.5);
-        }
-
-        .event input[type="radio"]:checked~.thumb span {
-          color: #f26328;
-        }
-
-        .event input[type="radio"]:checked~.thumb:before {
-          background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPUlEQVQYV2NkQAOfUjX+882+wYgujiIAU4RNMVwhuiQ6H6wQl3XI4oy4FMHcCJPHcDS6J2A2EqUQpJhohQBbNyaHFmzEqgAAAABJRU5ErkJggg==);
-        }
-      }
-
-      // 模块二
-      .gallery {
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        margin: 4rem 0;
-
-        .gallery__image {
-          padding: 0.5rem 0.5rem 1.5rem;
-          background: white;
-          position: relative;
-          box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-          transform-origin: center -5rem;
-          z-index: -1;
-
-          &::before {
-            content: "";
-            display: block;
-            height: 10rem;
-            width: 2px;
-            background: saddlebrown;
+          .event label,
+          .event input[type="radio"] {
+            width: 24px;
+            height: 24px;
+            left: 158px;
+            top: 36px;
             position: absolute;
-            bottom: 100%;
-            left: 50%;
+            display: block;
+            z-index: 2;
           }
 
-          &:nth-child(1) {
-            animation: 5s infinite bounce;
-            animation-name: image1;
-            transform: rotate(-10deg);
-
-            img {
-              width: 360px;
-              height: 340;
-            }
+          .event input[type="radio"] {
+            opacity: 0;
+            z-index: 10;
+            cursor: pointer;
           }
 
-          &:nth-child(2) {
-            animation: 4.5s infinite bounce;
-            animation-name: image2;
-            transform: rotate(8deg);
-
-            img {
-              width: 280px;
-              height: 280px;
-            }
-          }
-
-          &:nth-child(3) {
-            animation: 4s infinite bounce;
-            animation-name: image3;
-            transform: rotate(-4deg);
-
-            img {
-              width: 320px;
-              height: 300px;
-            }
-          }
-        }
-
-        @keyframes image1 {
-          50% {
-            transform: rotate(10deg);
-          }
-        }
-
-        @keyframes image2 {
-          50% {
-            transform: rotate(-5deg);
-          }
-        }
-
-        @keyframes image3 {
-          50% {
-            transform: rotate(6deg);
-          }
-        }
-      }
-
-      // 模块三
-      .g-container {
-        $count: 14;
-        // width: 70vw;
-        width: 100%;
-        column-count: 4;
-        column-gap: 0.5vw;
-        padding: 4rem 0;
-
-        @function randomNum($max, $min: 0, $u: 1) {
-          @return ($min + random($max)) * $u;
-        }
-
-        @function randomColor() {
-          @return rgb(randomNum(255), randomNum(255), randomNum(255));
-        }
-
-        .g-item {
-          position: relative;
-          width: 17vw;
-          margin-bottom: 1vw;
-          break-inside: avoid;
-
-          img {
-            width: 100%;
+          .event label:after {
+            font-family: "fontawesome-selected";
+            content: "✔";
+            background: #fff;
+            border-radius: 50%;
+            color: #41838e;
+            font-size: 26px;
             height: 100%;
+            width: 100%;
+            left: -2px;
+            top: -3px;
+            line-height: 24px;
+            position: absolute;
+            text-align: center;
+          }
+
+          /* Checked */
+
+          .event input[type="radio"]:checked+label:after {
+            content: "\2714";
+            color: #f26328;
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8);
+          }
+
+          .event input[type="radio"]:checked~.content-perspective:before {
+            background: #f26328;
+          }
+
+          .event input[type="radio"]:checked~.content-perspective .content-inner h3 {
+            color: #f26328;
+
+            span {
+              font-family: "Cabin Sketch", cursive;
+              // text-transform: uppercase;
+              color: #0535f5;
+
+              &:nth-child(1),
+              &:nth-child(4),
+              &:nth-child(7),
+              &:nth-child(10) {
+                color: #4cd137;
+              }
+
+              &:nth-child(2),
+              &:nth-child(5),
+              &:nth-child(8) {
+                color: #ff0000;
+              }
+            }
+          }
+
+          .event input[type="radio"]:checked~.content-perspective .content {
+            -webkit-transform: rotateY(-5deg);
+            -moz-transform: rotateY(-5deg);
+            -o-transform: rotateY(-5deg);
+            -ms-transform: rotateY(-5deg);
+            transform: rotateY(-5deg);
+          }
+
+          .event input[type="radio"]:checked~.content-perspective .content-inner {
+            border-color: #f26328;
+            box-shadow: 10px 0px 10px -6px rgba(0, 0, 0, 0.1);
+          }
+
+          .event input[type="radio"]:checked~.content-perspective .content-inner p {
+            max-height: 13rem;
+            /* Add media queries */
+            color: rgba(0, 0, 0, 0.8);
+            -webkit-transition-delay: 0s, 0.6s;
+            -moz-transition-delay: 0s, 0.6s;
+            -o-transition-delay: 0s, 0.6s;
+            -ms-transition-delay: 0s, 0.6s;
+            transition-delay: 0s, 0.6s;
+          }
+
+          .event input[type="radio"]:checked~.content-perspective .content-inner:before {
+            color: #f26328;
+          }
+
+          .event input[type="radio"]:checked~.thumb {
+            transform: scale(0.9);
+            transform: translateX(10px);
+            box-shadow: 0 0 0 2px rgba(242, 99, 40, 1),
+              0 1px 1px rgba(255, 255, 255, 0.5);
+          }
+
+          .event input[type="radio"]:checked~.thumb span {
+            color: #f26328;
+          }
+
+          .event input[type="radio"]:checked~.thumb:before {
+            background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPUlEQVQYV2NkQAOfUjX+882+wYgujiIAU4RNMVwhuiQ6H6wQl3XI4oy4FMHcCJPHcDS6J2A2EqUQpJhohQBbNyaHFmzEqgAAAABJRU5ErkJggg==);
           }
         }
 
-        @for $i from 1 through ($count + 1) {
-          .g-item:nth-child(#{$i}) {
-            height: #{randomNum(300, 50)}px;
-            background: randomColor();
+        // 模块二
+        .gallery {
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          margin: 5rem 0;
 
-            &::after {
-              content: "#{$i}";
-              // content: '';
-              color: white;
+          .gallery__image {
+            padding: 0.5rem 0.5rem 1.5rem;
+            background: white;
+            position: relative;
+            // box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+          box-shadow: 3px 3px 6px 0px #ccdbe8 inset, -3px -3px 6px 1px #fff inset;
+            transform-origin: center -5rem;
+            z-index: -1;
+            border-radius: 0.25rem;
+
+            // 竖线
+            &::before {
+              content: "";
+              display: block;
+              height: 10rem;
+              width: 2px;
+              background: saddlebrown;
+              position: absolute;
+              bottom: 100%;
+              left: 50%;
+            }
+
+            &:nth-child(1) {
+              animation: 5s infinite bounce;
+              animation-name: image1;
+              transform: rotate(-10deg);
+
+              img {
+                width: 360px;
+                height: 220px;
+              }
+            }
+
+            &:nth-child(2) {
+              animation: 4.5s infinite bounce;
+              animation-name: image2;
+              transform: rotate(8deg);
+
+              img {
+                // width: 280px;
+                height: 280px;
+              }
+            }
+
+            &:nth-child(3) {
+              animation: 4s infinite bounce;
+              animation-name: image3;
+              transform: rotate(-4deg);
+
+              img {
+                width: 320px;
+                height: 300px;
+              }
+            }
+          }
+
+          @keyframes image1 {
+            50% {
+              transform: rotate(10deg);
+            }
+          }
+
+          @keyframes image2 {
+            50% {
+              transform: rotate(-5deg);
+            }
+          }
+
+          @keyframes image3 {
+            50% {
+              transform: rotate(6deg);
+            }
+          }
+        }
+
+        // 模块三
+        .g-container {
+          $count: 14;
+          margin: 0 auto;
+          width: 70%;
+          column-count: 4;
+          column-gap: 0.5vw;
+          padding: 4rem 0;
+
+          @function randomNum($max, $min: 0, $u: 1) {
+            @return ($min + random($max)) * $u;
+          }
+
+          @function randomColor() {
+            @return rgb(randomNum(255), randomNum(255), randomNum(255));
+          }
+
+          .g-item {
+            position: relative;
+            width: 17vw;
+            margin-bottom: 1vw;
+            break-inside: avoid;
+
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          @for $i from 1 through ($count + 1) {
+            .g-item:nth-child(#{$i}) {
+              height: #{randomNum(300, 50)}px;
+              background: randomColor();
+
+              &::after {
+                content: "#{$i}";
+                // content: '';
+                color: white;
+              }
             }
           }
         }

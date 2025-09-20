@@ -67,7 +67,7 @@
 </template>
 <script setup>
 import Navigation from '@/components/NavigationMenu/index.vue';
-import { getCurrentInstance, ref, onMounted, destroyed } from 'vue';
+import { getCurrentInstance, ref, onMounted } from 'vue';
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
 import { useMainStore } from '@/store/maincontent';
@@ -121,14 +121,7 @@ const btn_colors = ref([
 onMounted(() => {
     getSpecialColumn();
 });
-destroyed(() => {
-    // 组件销毁时清除本地存储中的随机数
-    specialColumn.value.forEach(module => {
-        module.tags.forEach(tag => {
-            localStorage.removeItem(`randomNumber_${tag.master_tag}`);
-        });
-    });
-});
+
 </script>
 <style scoped lang="scss">
 #recordColumn {
