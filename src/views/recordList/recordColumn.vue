@@ -48,7 +48,8 @@
                         <h1>{{ module.nav_btn_title }}</h1>
                     </div>
                     <div class="content__container__list">
-                        <div class="content__items" v-for="(tag, index) in module.tags" :key="tag.master_tag">
+                        <div class="content__items" v-for="(tag, index) in module.tags" :key="tag.master_tag"
+                            @click="gotoClomunDetail(tag.master_tag)">
                             <img :src="utils.getAssetsFile(`img/public/public-${tag.randomNumber}.png`)"
                                 :alt="tag.randomNumber">
                             {{ tag.randomNumber }}
@@ -73,7 +74,8 @@ const $http = instance.appContext.config.globalProperties.$http;
 import { useMainStore } from '@/store/maincontent';
 const mainStore = useMainStore();
 import utils from "@/utils/getAssetsFile";
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 //标题栏
 const specialColumn = ref([]);
 //轮播数据
@@ -118,6 +120,26 @@ const btn_colors = ref([
     '#ee7752',
     '#6699FF'
 ])
+//跳转详情页
+import CryptoJS from 'crypto-js';
+const gotoClomunDetail = (tag) => {
+    router.push({
+        name: 'columnDetail',
+        params: {
+            id: encryptTag(tag) // 传递加密后的ID
+        }
+    });
+}
+
+//AES加密函数
+const encryptTag = (tag) => {
+    // 使用 crypto-js 或其他加密库
+    return CryptoJS.AES.encrypt(
+        tag,
+        import.meta.env.VITE_SECRET_KEY // 使用环境变量中的密钥
+    ).toString();
+}
+
 onMounted(() => {
     getSpecialColumn();
 });

@@ -1,536 +1,473 @@
 <template>
-    <!-- 导航 -->
-    <Navigation></Navigation>
-    <ModalBox :isVisible="showModal" @close="handClose" class="modal__box">
-        <h1>个人博客版权说明</h1>
-        <h2>
-            欢迎访问我的个人博客（以下简称“本博客”），本博客旨在分享个人见解、技术心得、生活感悟等内容，为访客提供一个交流与学习的平台。在享受本博客提供的内容与服务的同时，请您务必遵守以下版权说明：
+    <div>
+        <!-- 导航 -->
+        <Navigation></Navigation>
+        <ModalBox :isVisible="showModal" @close="handClose" class="modal__box">
+            <h1>个人博客版权说明</h1>
+            <h2>
+                欢迎访问我的个人博客（以下简称“本博客”），本博客旨在分享个人见解、技术心得、生活感悟等内容，为访客提供一个交流与学习的平台。在享受本博客提供的内容与服务的同时，请您务必遵守以下版权说明：
 
-        </h2>
-        <p>
-            1、本博客中的所有原创文章、图片、视频、音频及其他形式的作品（以下简称“内容”），其版权均归作者（即本博客管理员）所有。
+            </h2>
+            <p>
+                1、本博客中的所有原创文章、图片、视频、音频及其他形式的作品（以下简称“内容”），其版权均归作者（即本博客管理员）所有。
 
-        </p>
+            </p>
 
-        <p>
-            2、对于非商业用途，且注明作者及来源（即本博客网址）的情况下，允许个人网站、论坛、社交媒体等平台以链接形式分享本博客中的文章。
+            <p>
+                2、对于非商业用途，且注明作者及来源（即本博客网址）的情况下，允许个人网站、论坛、社交媒体等平台以链接形式分享本博客中的文章。
 
-        </p>
-        <p>
-            3、本博客可能包含来自第三方的链接或内容，对于这些第三方内容，本博客不承担任何版权审核责任。访客在访问这些链接或内容时，请自行判断其合法性及版权归属。
+            </p>
+            <p>
+                3、本博客可能包含来自第三方的链接或内容，对于这些第三方内容，本博客不承担任何版权审核责任。访客在访问这些链接或内容时，请自行判断其合法性及版权归属。
 
-        </p>
-        <p>
-            4、本博客的版权说明及访客行为均适用中华人民共和国相关法律法规。
-        </p>
+            </p>
+            <p>
+                4、本博客的版权说明及访客行为均适用中华人民共和国相关法律法规。
+            </p>
 
-        <p>
-            5、作者保留随时修改本版权声明的权利，任何修改将在本页面即时生效，无需另行通知。
-        </p>
-    </ModalBox>
-    <div id="recordDetail">
-        <!-- 背景设置 -->
-        <div class=" background__img">
-            <!-- 背景图 -->
-            <div class=" backPhoto" :style="{ backgroundImage: `url(${recordDetail.cover_image_url})` }"></div>
-            <!-- 遮罩 -->
-            <div class="mask"></div>
-            <div class="back__text">
-                <!-- 二级标题 -->
-                <div class="subtitle">
-                    <span> {{ nav_btn_title }}</span>
-                    <div style="display: flex;" class="content">
-                        <!-- 作者 -->
-                        <div class="auther">
-                            <img src='@/assets/icon/recordList/auther.svg' alt="">
-                            <span class="name">{{ recordDetail.username }} ·</span>
-                        </div>
-                        <!-- 发布 -->
-                        <div class="release">
-                            <img src="@/assets/icon/recordList/release.svg" alt="">
-                            <span>发布于{{ release_time_format(recordDetail.release_time) }} ·</span>
-                        </div>
-                        <ul class="funcition">
-                            <li>
-                                <img src="@/assets/icon/recordList/heat.svg" alt="heat">
-                                <span>{{ recordDetail.heat }}热度 ·</span>
-                            </li>
-                            <li>
-                                <img src="@/assets/icon/recordList/comment.svg" alt="comment">
-                                <span>{{ totals }}评论 ·</span>
-                            </li>
-                            <li>
-                                <img src="@/assets/icon/recordList/like.svg" alt="like">
-                                <span>{{ recordDetail.like_count }}赞</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- 内容主体 -->
-        <div class="content__container">
-            <!-- 资源展示 -->
-            <div class="image">
-                <video v-if="recordDetail.main_url" :src="recordDetail.main_url" controls ref="videoRef"
-                    @play="handlePlay" @pause="handlePause"></video>
-                <img v-else :src="recordDetail.cover_image_url" alt="backimg">
-                <button v-if="recordDetail.cover_video_url && !isPlaying" class="play-button"
-                    @click="playVideo"></button>
-            </div>
-            <!-- 标签 -->
-            <div class="module__tag">
-                {{ recordDetail.title }}
-            </div>
-            <!-- 主内容区域 -->
-            <div class="content" v-if="articleSections.length > 0" v-for="content in articleSections"
-                :key="content.title">
-                <div>
-                    <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
-                    <div class="content_model" v-for="text in splitParagraphs(content.content)">
-                        <div>
-                            {{ text }}
-                            <ul v-if="content.level === 200">
-                                <li>123</li>
+            <p>
+                5、作者保留随时修改本版权声明的权利，任何修改将在本页面即时生效，无需另行通知。
+            </p>
+        </ModalBox>
+        <div id="recordDetail">
+            <!-- 背景设置 -->
+            <div class=" background__img">
+                <!-- 背景图 -->
+                <div class=" backPhoto" :style="{ backgroundImage: `url(${recordDetail.cover_image_url})` }"></div>
+                <!-- 遮罩 -->
+                <div class="mask"></div>
+                <div class="back__text">
+                    <!-- 二级标题 -->
+                    <div class="subtitle">
+                        <span> {{ nav_btn_title }}</span>
+                        <div style="display: flex;" class="content">
+                            <!-- 作者 -->
+                            <div class="auther">
+                                <img src='@/assets/icon/recordList/auther.svg' alt="">
+                                <span class="name">{{ recordDetail.username }} ·</span>
+                            </div>
+                            <!-- 发布 -->
+                            <div class="release">
+                                <img src="@/assets/icon/recordList/release.svg" alt="">
+                                <span>发布于{{ release_time_format(recordDetail.release_time) }} ·</span>
+                            </div>
+                            <ul class="funcition">
+                                <li>
+                                    <img src="@/assets/icon/recordList/heat.svg" alt="heat">
+                                    <span>{{ recordDetail.heat }}热度 ·</span>
+                                </li>
+                                <li>
+                                    <img src="@/assets/icon/recordList/comment.svg" alt="comment">
+                                    <span>{{ totals }}评论 ·</span>
+                                </li>
+                                <li>
+                                    <img src="@/assets/icon/recordList/like.svg" alt="like">
+                                    <span>{{ recordDetail.like_count }}赞</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            <div v-else>
-                <div class="introduce" v-for="pre in graph">
-                    <span>
-                        {{ pre }}
-                    </span>
+            <!-- 内容主体 -->
+            <div class="content__container">
+                <!-- 资源展示 -->
+                <div class="image">
+                    <video v-if="recordDetail.main_url" :src="recordDetail.main_url" controls ref="videoRef"
+                        @play="handlePlay" @pause="handlePause"></video>
+                    <img v-else :src="recordDetail.cover_image_url" alt="backimg">
+                    <button v-if="recordDetail.cover_video_url && !isPlaying" class="play-button"
+                        @click="playVideo"></button>
                 </div>
-            </div>
-            <!-- 时间轴 -->
-            <!-- <div v-if="recordDetail.timeAxis" class="time__axis">
-                <h1><span>#</span>UL timeline cards</h1>
-                <ul class="ul">
-                    <li style="--accent-color:#41516C">
-                        <div class="date">2002</div>
-                        <div class="title">Title 1</div>
-                        <div class="descr">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas itaque hic
-                            quibusdam
-                            fugiat est numquam harum, accusamus suscipit consequatur laboriosam!</div>
-                    </li>
-                    <li style="--accent-color:#FBCA3E">
-                        <div class="date">2007</div>
-                        <div class="title">Title 2</div>
-                        <div class="descr">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quos adipisci nobis
-                            nostrum
-                            vero nihil veniam.</div>
-                    </li>
-                    <li style="--accent-color:#E24A68">
-                        <div class="date">2012</div>
-                        <div class="title">Title 3</div>
-                        <div class="descr">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga minima
-                            consequuntur
-                            soluta placeat iure totam commodi repellendus ea delectus, libero fugit quod reprehenderit,
-                            sequi
-                            quo, et dolorum saepe nulla hic.</div>
-                    </li>
-                    <li style="--accent-color:#1B5F8C">
-                        <div class="date">2017</div>
-                        <div class="title">Title 4</div>
-                        <div class="descr">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit, cumque.
+                <!-- 标签 -->
+                <div class="module__tag">
+                    {{ recordDetail.title }}
+                </div>
+                <!-- 主内容区域 -->
+                <div class="content" v-if="articleSections.length > 0" v-for="content in articleSections"
+                    :key="content.title">
+                    <div>
+                        <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
+                        <div class="content_model" v-for="text in splitParagraphs(content.content)">
+                            <div>
+                                {{ text }}
+                                <ul v-if="content.level === 200">
+                                    <li>123</li>
+                                </ul>
+                            </div>
                         </div>
-                    </li>
-                    <li style="--accent-color:#4CADAD">
-                        <div class="date">2022</div>
-                        <div class="title">Title 5</div>
-                        <div class="descr">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odit, non.</div>
-                    </li>
-                </ul>
-            </div> -->
-            <!-- 源代码展示 -->
-            <!-- <div v-if="recordDetail.code" class="code__show">
-                <h1><span>#</span>源码展示说明</h1>
-                <highlightjs language="js" code='
-// 评论区>表情管理
-    import EmojiPicker from " vue3-emoji-picker"; 
-    import "vue3-emoji-picker/css" ; const
-    _ISshow=ref(false); const emojiIs_show=()=> {
-    _ISshow.value = !_ISshow.value;
-        }
-    const input__message = ref("");
-    const onVue3Emoje = (val) => {
+                    </div>
 
-// 表情输入
-    input__message.value += val.i;
-        }
-        const onChangeText = () => {
-        return;
-        }' />
-            </div> -->
-            <!-- <div class="introduce" v-for="(item, index) in paragraph" :key="index" v-if="!isContent">
-                <span>
-                    {{ item }}
-                </span>
-            </div> -->
-            <!-- 评论可见 -->
-            <!-- <div class="comment__show" v-else>
+                </div>
+
+                <div v-else>
+                    <div class="introduce" v-for="pre in graph">
+                        <span>
+                            {{ pre }}
+                        </span>
+                    </div>
+                </div>
+                <!-- 评论可见 -->
+                <!-- <div class="comment__show" v-else>
                 <div class=" text">评论可见</div>
                 <div class="warring">
                     <img src="./icon/warring-icon.svg" alt="warring">
                     <span>此处内容已隐藏</span>
                 </div>
             </div> -->
-            <!-- 提示 -->
-            <ul class="abstract">
-                <li>作者：{{ recordDetail.author }}</li>
-                <li>1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(sara@blog.cn)进行删除处理。</li>
-                <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
-                <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>
-            </ul>
-            <!-- 操作按钮 -->
-            <div class="feed">
-                <button class="likeBtn" @click="handleLikeClick">
-                    <p style="text-wrap: nowrap;">点赞</p>
-                    <div class="heart" :class="{ 'heartAnimation': isLiked }" :rel="isLiked ? 'unlike:' : 'like'">
-                    </div>
-                </button>
-                <div class="shareBtn" @click="shareLike">
-                    <p>分享</p>
-                    <img src="./icon/share_icon.svg" alt="">
-                </div>
-
-            </div>
-            <!-- 评论区 -->
-            <div class="comment">
-                <h1 class="title">
-                    <img src="./icon/edit-icon.svg" alt="edit">
-                    <span>评论</span>
-                </h1>
-                <!-- 输入框 -->
-                <div class="comment__input__aera">
-                    <textarea class="input" name="comment" maxlength="500" placeholder="写下点什么..."
-                        v-model="input__message"></textarea>
-                    <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
-                </div>
-                <!-- 表情/提交按钮 -->
-                <div class="submit">
-                    <div class="emojipicker" v-show="_ISshow">
-                        <EmojiPicker hide-search hide-group-names :native="true" @select="onVue3Emoje"
-                            @update:text="onChangeText" theme="auto" />
-                    </div>
-                    <div @click="emojiIs_show" class="emoji__btn">
-                        <img src="./img/Rainbow.gif" alt="">
-                    </div>
-                    <button class="reMessage" @click="addMessage(recordDetail.contentId)">提交
-                        <div class="star-1">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-2">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-3">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-4">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-5">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-6">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <!-- 评论记录 -->
-
-            <div class="comment__module">
-                <div class="sum">Comments | {{ totals }}条评论</div>
-                <ul v-if="messageList.length > 0">
-                    <li class="comment__item" :class="{ 'reply__item': message.length > 0 }"
-                        v-for="(message, index) in messageList" :key="index">
-                        <div>
-                            <div class="louyt">
-                                <div style="display: flex;">
-                                    <div class="profile__picture">
-                                        <img :src="message.user.avatarUrl" alt="avatar">
-                                    </div>
-                                    <div class="time__name">
-                                        <div class="nickname">
-                                            <span>{{ message.user.username }}</span>
-                                            <img class="level"
-                                                :src="utils.getAssetsFile('icon/level/lv' + message.user.vipLevel + '.svg')"
-                                                alt="level">
-                                        </div>
-                                        <div class="time">{{ message.createdAt }}</div>
-                                    </div>
-                                </div>
-                                <div class="reply">
-                                    <button @click="handleReply(message)">回复</button>
-                                </div>
-                            </div>
-                            <!-- 评论展示 -->
-                            <div class="comment__container">
-                                <div class="content">{{ message.content }}</div>
-                            </div>
-                        </div>
-                        <!-- 回复展示 -->
-                        <div class="reply__container" v-for="value in message.replies">
-                            <div class="louyt">
-                                <div style="display: flex;">
-                                    <div class="profile__picture">
-                                        <img :src="value.user.avatarUrl" alt="avatar">
-                                    </div>
-                                    <div class="time__name">
-                                        <div class="nickname">
-                                            <span>{{ value.user.username }}</span>
-                                            <img class="level"
-                                                :src="utils.getAssetsFile('icon/level/lv' + value.user.vipLevel + '.svg')"
-                                                alt="level">
-                                        </div>
-                                        <div class="time">{{ release_time_format(message.createdAt) }}</div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="comment__container">
-                                <div class="content"><span>@{{ message.user.username }}:</span>{{ value.content }}
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+                <!-- 提示 -->
+                <ul class="abstract">
+                    <li>作者：{{ recordDetail.author }}</li>
+                    <li>1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(sara@blog.cn)进行删除处理。</li>
+                    <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
+                    <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>
                 </ul>
-                <div class="noComment" v-else>
-                    <span>没有更多评论，去评论吧~</span>
-                </div>
-                <!-- 分页 -->
-                <div class="paginate" v-if="totals">
-                    <vue-awesome-paginate :total-items="totals" v-model="currentPage" :items-per-page="pageSize"
-                        :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
-                        :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
-                        <template #prev-button>
-                            <span>
-                                <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
-                            </span>
-                        </template>
-
-                        <template #next-button>
-                            <span>
-                                <img src="@/assets/icon/recordList/nextPage.svg" height="25" />
-                            </span>
-                        </template>
-                    </vue-awesome-paginate>
-                </div>
-            </div>
-        </div>
-
-        <!-- 评论回复框 -->
-        <div class="reply-modal" v-if="showReplyModal" @click.self="handleReplyClose" @close="handleReplyClose">
-            <div class="modal" data-aos="flip-down">
-                <!-- 输入框 -->
-                <div class="modal__input__aera">
-                    <textarea class="input" name="comment" maxlength="500" :placeholder='replyUser'
-                        v-model="replyContent"></textarea>
-                    <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
-                </div>
-                <!--评论提交 -->
-                <div class="MessageSubmit">
-                    <div class="emojipicker" v-show="_ModalShow">
-                        <EmojiPicker hide-search hide-group-names :native="true" @select="getVue3Emoje"
-                            @update:text="onChangeText" theme="auto" />
-                    </div>
-                    <div @click="modalIs_show" class="emoji__btn">
-                        <img src="./img/Rainbow.gif" alt="">
-                    </div>
-                    <button class="modalSubmit" @click="handleReplyPost()">提交
-                        <div class="star-1">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-2">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-3">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-4">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-5">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="star-6">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-                                <defs></defs>
-                                <g id="Layer_x0020_1">
-                                    <metadata id="CorelCorpID_0Corel-Layer"></metadata>
-                                    <path
-                                        d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
-                                        class="fil0"></path>
-                                </g>
-                            </svg>
+                <!-- 操作按钮 -->
+                <div class="feed">
+                    <button class="likeBtn" @click="handleLikeClick">
+                        <p style="text-wrap: nowrap;">点赞</p>
+                        <div class="heart" :class="{ 'heartAnimation': isLiked }" :rel="isLiked ? 'unlike:' : 'like'">
                         </div>
                     </button>
+                    <div class="shareBtn" @click="shareLike">
+                        <p>分享</p>
+                        <img src="./icon/share_icon.svg" alt="">
+                    </div>
+
+                </div>
+                <!-- 评论区 -->
+                <div class="comment">
+                    <h1 class="title">
+                        <img src="./icon/edit-icon.svg" alt="edit">
+                        <span>评论</span>
+                    </h1>
+                    <!-- 输入框 -->
+                    <div class="comment__input__aera">
+                        <textarea class="input" name="comment" maxlength="500" placeholder="写下点什么..."
+                            v-model="input__message"></textarea>
+                        <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
+                    </div>
+                    <!-- 表情/提交按钮 -->
+                    <div class="submit">
+                        <div class="emojipicker" v-show="_ISshow">
+                            <EmojiPicker hide-search hide-group-names :native="true" @select="onVue3Emoje"
+                                @update:text="onChangeText" theme="auto" />
+                        </div>
+                        <div @click="emojiIs_show" class="emoji__btn">
+                            <img src="./img/Rainbow.gif" alt="">
+                        </div>
+                        <button class="reMessage" @click="addMessage(recordDetail.contentId)">提交
+                            <div class="star-1">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-2">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-3">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-4">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-5">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-6">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <!-- 评论记录 -->
+
+                <div class="comment__module">
+                    <div class="sum">Comments | {{ totals }}条评论</div>
+                    <ul v-if="messageList.length > 0">
+                        <li class="comment__item" :class="{ 'reply__item': message.length > 0 }"
+                            v-for="(message, index) in messageList" :key="index">
+                            <div>
+                                <div class="louyt">
+                                    <div style="display: flex;">
+                                        <div class="profile__picture">
+                                            <img :src="message.user.avatarUrl" alt="avatar">
+                                        </div>
+                                        <div class="time__name">
+                                            <div class="nickname">
+                                                <span>{{ message.user.username }}</span>
+                                                <img class="level"
+                                                    :src="utils.getAssetsFile('icon/level/lv' + message.user.vipLevel + '.svg')"
+                                                    alt="level">
+                                            </div>
+                                            <div class="time">{{ message.createdAt }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="reply">
+                                        <button @click="handleReply(message)">回复</button>
+                                    </div>
+                                </div>
+                                <!-- 评论展示 -->
+                                <div class="comment__container">
+                                    <div class="content">{{ message.content }}</div>
+                                </div>
+                            </div>
+                            <!-- 回复展示 -->
+                            <div class="reply__container" v-for="value in message.replies">
+                                <div class="louyt">
+                                    <div style="display: flex;">
+                                        <div class="profile__picture">
+                                            <img :src="value.user.avatarUrl" alt="avatar">
+                                        </div>
+                                        <div class="time__name">
+                                            <div class="nickname">
+                                                <span>{{ value.user.username }}</span>
+                                                <img class="level"
+                                                    :src="utils.getAssetsFile('icon/level/lv' + value.user.vipLevel + '.svg')"
+                                                    alt="level">
+                                            </div>
+                                            <div class="time">{{ release_time_format(message.createdAt) }}</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="comment__container">
+                                    <div class="content"><span>@{{ message.user.username }}:</span>{{ value.content }}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="noComment" v-else>
+                        <span>没有更多评论，去评论吧~</span>
+                    </div>
+                    <!-- 分页 -->
+                    <div class="paginate" v-if="totals">
+                        <vue-awesome-paginate :total-items="totals" v-model="currentPage" :items-per-page="pageSize"
+                            :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
+                            :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
+                            <template #prev-button>
+                                <span>
+                                    <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
+                                </span>
+                            </template>
+
+                            <template #next-button>
+                                <span>
+                                    <img src="@/assets/icon/recordList/nextPage.svg" height="25" />
+                                </span>
+                            </template>
+                        </vue-awesome-paginate>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 分享卡片 -->
-        <div class="share-modal" v-if="showShareModal" @click.self="handleShareClose" @close="handleShareClose">
-            <div class="modal" data-aos="fade-up" ref="shareCard">
-                <!-- 标题 -->
-                <p class="modal_title">卡片分享</p>
-                <div class="modal__content">
-                    <!-- 头像 -->
-                    <div class="modal__avatar">
-                        <img :src="userStore.user.avatarUrl" alt="头像">
+            <!-- 评论回复框 -->
+            <div class="reply-modal" v-if="showReplyModal" @click.self="handleReplyClose" @close="handleReplyClose">
+                <div class="modal" data-aos="flip-down">
+                    <!-- 输入框 -->
+                    <div class="modal__input__aera">
+                        <textarea class="input" name="comment" maxlength="500" :placeholder='replyUser'
+                            v-model="replyContent"></textarea>
+                        <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
                     </div>
-                    <!-- 分享时间 -->
-                    <p class="dateTime">
-                        {{ dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss') }}
-                    </p>
-                    <!-- 分享内容 -->
-                    <div class="shareContent">
-                        <!-- 内容标题 -->
-                        <p class="content_title">
-                            {{ recordDetail.title }}
-                        </p>
-                        <!-- 图片展示 -->
-                        <div class="content_img">
-                            <img :src="recordDetail.cover_image_url" alt="图片">
+                    <!--评论提交 -->
+                    <div class="MessageSubmit">
+                        <div class="emojipicker" v-show="_ModalShow">
+                            <EmojiPicker hide-search hide-group-names :native="true" @select="getVue3Emoje"
+                                @update:text="onChangeText" theme="auto" />
                         </div>
-                        <!-- 作者 -->
-                        <p class="content_author">
-                            {{ recordDetail.username }}
-                        </p>
-                        <!-- 二维码生成区域 -->
-                        <div class="content_qrcode">
-                            <div class="text">
-                                <p>BLOG</p>
-                            </div>
-                            <div class="code">
-                                <Qrcode :value="currentUrl" width="500" hight="500" margin="0"></Qrcode>
-                            </div>
+                        <div @click="modalIs_show" class="emoji__btn">
+                            <img src="./img/Rainbow.gif" alt="">
                         </div>
+                        <button class="modalSubmit" @click="handleReplyPost()">提交
+                            <div class="star-1">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-2">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-3">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-4">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-5">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-6">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
+                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                    <defs></defs>
+                                    <g id="Layer_x0020_1">
+                                        <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                                        <path
+                                            d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                                            class="fil0"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                        </button>
                     </div>
-
                 </div>
-                <!-- 下载图片按钮 -->
-                <div class="download">
-                    <span class="download-btn" @click="downloadCard">下载卡片</span>
-                    <span class="more" @click="moreShare">更多分享</span>
+            </div>
 
+            <!-- 分享卡片 -->
+            <div class="share-modal" v-if="showShareModal" @click.self="handleShareClose" @close="handleShareClose">
+                <div class="modal" data-aos="fade-up" ref="shareCard">
+                    <!-- 标题 -->
+                    <p class="modal_title">卡片分享</p>
+                    <div class="modal__content">
+                        <!-- 头像 -->
+                        <div class="modal__avatar">
+                            <img :src="userStore.user.avatarUrl" alt="头像">
+                        </div>
+                        <!-- 分享时间 -->
+                        <p class="dateTime">
+                            {{ dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss') }}
+                        </p>
+                        <!-- 分享内容 -->
+                        <div class="shareContent">
+                            <!-- 内容标题 -->
+                            <p class="content_title">
+                                {{ recordDetail.title }}
+                            </p>
+                            <!-- 图片展示 -->
+                            <div class="content_img">
+                                <img :src="recordDetail.cover_image_url" alt="图片">
+                            </div>
+                            <!-- 作者 -->
+                            <p class="content_author">
+                                {{ recordDetail.username }}
+                            </p>
+                            <!-- 二维码生成区域 -->
+                            <div class="content_qrcode">
+                                <div class="text">
+                                    <p>BLOG</p>
+                                </div>
+                                <div class="code">
+                                    <Qrcode :value="currentUrl" width="500" hight="500" margin="0"></Qrcode>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- 下载图片按钮 -->
+                    <div class="download">
+                        <span class="download-btn" @click="downloadCard">下载卡片</span>
+                        <span class="more" @click="moreShare">更多分享</span>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -904,7 +841,7 @@ onMounted(async () => {
 
 })
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 #recordDetail {
     font-family: 'gtpy';
     font-size: 0.75rem;
@@ -1035,276 +972,6 @@ onMounted(async () => {
 
         }
 
-        .time__axis {
-            --color: rgba(30, 30, 30);
-            --bgColor: #ecf8ff;
-            min-height: 100vh;
-            display: grid;
-            align-content: center;
-            gap: 2rem;
-            padding: 2rem 0;
-            font-family: 'gtpy';
-            color: var(--color);
-
-            h1 {
-                padding: 0.2rem 0.5rem;
-                border-bottom: 1px dashed #ccc;
-                font-size: 1.5rem;
-                font-weight: 600;
-
-                span {
-                    color: #ff6d6d;
-                    padding: 0 0.2rem;
-                }
-            }
-
-            .ul {
-                --col-gap: 1rem;
-                --row-gap: 2rem;
-                --line-w: 0.25rem;
-                display: grid;
-                grid-template-columns: var(--line-w) 1fr;
-                grid-auto-columns: max-content;
-                column-gap: var(--col-gap);
-                list-style: none;
-                // width: min(60rem, 90%);
-                margin-inline: auto;
-
-                /* line */
-                &::before {
-                    content: "";
-                    grid-row: 1 / span 10;
-                    background: rgb(225, 225, 225);
-                    border-radius: calc(var(--line-w) / 2);
-                    width: 2px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                /* card */
-                li {
-                    grid-column: 2;
-                    --inlineP: 1.5rem;
-                    margin-inline: var(--inlineP);
-                    grid-row: span 2;
-                    display: grid;
-                    grid-template-rows: min-content min-content min-content;
-
-                    &:not(:last-child) {
-                        margin-bottom: var(--row-gap);
-                    }
-
-                    /* date */
-                    .date {
-                        --dateH: auto;
-                        padding: 0.2rem 0;
-                        height: var(--dateH);
-                        margin-inline: calc(var(--inlineP) * -1);
-                        background-color: var(--accent-color);
-
-                        color: white;
-                        font-size: 1rem;
-                        font-weight: 700;
-
-                        display: grid;
-                        place-content: center;
-                        position: relative;
-
-                        border-radius: calc(var(--dateH) / 2) 0 0 calc(var(--dateH) / 2);
-
-                        /* date flap */
-                        &::before {
-                            content: "";
-                            width: var(--inlineP);
-                            aspect-ratio: 1;
-                            background: var(--accent-color);
-                            background-image: linear-gradient(rgba(0, 0, 0, 0.2) 100%, transparent);
-                            position: absolute;
-                            top: 100%;
-
-                            clip-path: polygon(0 0, 100% 0, 0 100%);
-                            right: 0;
-                        }
-
-                        /* circle */
-                        &::after {
-                            content: "";
-                            position: absolute;
-                            width: 1rem;
-                            aspect-ratio: 1;
-                            background: var(--bgColor);
-                            border: 0.3rem solid var(--accent-color);
-                            border-radius: 50%;
-                            top: 50%;
-
-                            transform: translate(50%, -50%);
-                            right: calc(100% + var(--col-gap) + var(--line-w) / 2);
-
-
-                        }
-                    }
-
-                    &:first-child {
-
-                        /* 初始阴影 */
-                        .date {
-                            &::after {
-                                box-shadow: 0px 0px 15px 5px var(--accent-color);
-                                animation: breathe 2s infinite;
-                            }
-                        }
-                    }
-
-                    @keyframes breathe {
-
-                        0%,
-                        100% {
-                            box-shadow: 0px 0px 5px 5px var(--accent-color);
-                            animation: breathe 2s infinite;
-                        }
-
-                        50% {
-                            box-shadow: 0px 0px 15px 5px var(--accent-color);
-                            animation: breathe 2s infinite;
-                        }
-                    }
-                }
-
-                /* title descr */
-                .title,
-                .descr {
-                    background: var(--bgColor);
-                    position: relative;
-                    padding-inline: 1.5rem;
-                }
-
-                .title {
-                    overflow: hidden;
-                    padding-block-start: 1.5rem;
-                    padding-block-end: 1rem;
-                    font-weight: 500;
-
-                    &::before {
-                        bottom: calc(100% + 0.125rem);
-                    }
-                }
-
-                .descr {
-                    padding-block-end: 1.5rem;
-                    font-weight: 300;
-
-                    &::before {
-                        z-index: -1;
-                        bottom: 0.25rem;
-                    }
-                }
-
-                /* shadows */
-                .title::before,
-                .descr::before {
-                    content: "";
-                    position: absolute;
-                    width: 90%;
-                    height: 0.5rem;
-                    background: rgba(0, 0, 0, 0.5);
-                    left: 50%;
-                    border-radius: 50%;
-                    filter: blur(4px);
-                    transform: translate(-50%, 50%);
-                }
-            }
-
-            @media (min-width: 40rem) {
-                .ul {
-                    grid-template-columns: 1fr var(--line-w) 1fr;
-                }
-
-                .ul::before {
-                    grid-column: 2;
-                }
-
-                .ul li:nth-child(odd) {
-                    grid-column: 1;
-                }
-
-                .ul li:nth-child(even) {
-                    grid-column: 3;
-                }
-
-                /* start second card */
-                .ul li:nth-child(2) {
-                    grid-row: 2/4;
-                }
-
-                .ul li:nth-child(odd) .date::before {
-                    clip-path: polygon(0 0, 100% 0, 100% 100%);
-                    left: 0;
-                }
-
-                .ul li:nth-child(odd) .date::after {
-                    transform: translate(-50%, -50%);
-                    left: calc(100% + var(--col-gap) + var(--line-w) / 2);
-                }
-
-                .ul li:nth-child(odd) .date {
-                    border-radius: 0 calc(var(--dateH) / 2) calc(var(--dateH) / 2) 0;
-                }
-            }
-        }
-
-        .code__show {
-            h1 {
-                padding: 0.2rem 0.5rem;
-                border-bottom: 1px dashed #ccc;
-                font-size: 1.3rem;
-                font-weight: 600;
-
-                span {
-                    color: #ff6d6d;
-                    padding: 0 0.2rem;
-                }
-            }
-
-            .hljs {
-                // background: #120101;
-                // background-color: #343638;
-                overflow-x: auto;
-                position: relative;
-                padding: 3rem 0.5rem 2rem;
-                border-radius: 0.5rem;
-                margin: 1.5rem 0;
-                font-family: 'gtpy';
-                font-size: 20px;
-                // color: #e9f1ea;
-
-
-                &::before {
-                    content: "";
-                    position: absolute;
-                    border-radius: 50%;
-                    background: #fc625d;
-                    width: 12px;
-                    height: 12px;
-                    left: 12px;
-                    top: 30px;
-                    margin-top: -18px;
-                    box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b;
-                    z-index: 99;
-                }
-
-                &::after {
-                    content: "";
-                    position: absolute;
-                    width: 100%;
-                    height: 35px;
-                    background: #21252b;
-                    left: 0;
-                    top: 0;
-                    z-index: 1;
-                }
-            }
-        }
 
         //标签
         .module__tag {

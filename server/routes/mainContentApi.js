@@ -286,4 +286,42 @@ ORDER BY
         res.status(500).json({ message: '服务器内部错误' });
     }
 });
+// 专栏文章详情
+router.get('/getColumnArticles', async (req, res) => {
+    try {
+        const { master_tag } = req.query;
+        if (!master_tag) {
+            return res.status(400).json({ message: '缺少专栏文章标签参数' });
+        }
+        // 查询专栏文章
+        const articles = await sqlQuery(
+            `
+           SELECT
+                a.article_id,
+                a.user_id,
+                a.title,
+                a.preface,
+                a.heat,
+                a.like_count,
+                a.cover_image_url,
+                a.cover_video_url,
+                a.release_time
+            FROM
+                articles a
+            WHERE   
+                a.master_tag = ?
+            ORDER BY a.release_time DESC;   
+            `,
+            [master_tag]
+        );
+        res.status(200).json({
+            code: 200,
+            message: '获取专栏文章成功',
+            articles
+        });
+    } catch (error) {
+        console.error('获取专栏文章失败:', error);
+        res.status(500).json({ message: '服务器内部错误' });
+    }
+});
 export default router;

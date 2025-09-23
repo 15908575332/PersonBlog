@@ -31,11 +31,10 @@
 #recordColumn {
     .ant-ribbon-wrapper {
         .ant-ribbon {
-            padding:0.3rem 1rem;
+            padding: 0.3rem 1rem;
             position: absolute;
             background-color: #ffa500 !important;
             .ant-ribbon-text {
-                
                 font-size: 20px;
                 font-family: "gtpy";
             }
@@ -138,5 +137,15 @@ span.cc-cmd {
     //关闭按钮
     .ant-notification-notice-close {
         top: 0.8rem;
+    }
+}
+
+pre {
+    code {
+        .hljs {
+            span {
+                font-family: "gtpy" !important;
+            }
+        }
     }
 }

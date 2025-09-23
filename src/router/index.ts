@@ -118,6 +118,11 @@ const router = createRouter({
 
         },
         {
+            path: "/columnDetail/:id",
+            name: "columnDetail", component: () => import('@/components/ColumnDetail/index.vue'),
+            props: true
+        },
+        {
             path: "/userInfo", component: UserRegisterLogin,
             meta: {
                 public: true

@@ -30,7 +30,7 @@ import Antd from 'ant-design-vue';
 import VueAwesomePaginate from "vue-awesome-paginate";
 import "vue-awesome-paginate/dist/style.css";
 // 代码高亮
-import 'highlight.js/styles/stackoverflow-light.css'
+import 'highlight.js/styles/paraiso-light.min.css'
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import hljsVuePlugin from "@highlightjs/vue-plugin";
