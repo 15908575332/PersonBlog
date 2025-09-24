@@ -227,10 +227,7 @@ const getScrollMessageData = (async () => {
   }
 });
 
-// 获取store定义的公共数组
-import { useListDetail } from "@/store/listDetailStore";
-const recordStore = useListDetail();
-const dataContent = recordStore.dataContent;
+const dataContent = localStorage.getItem("mainContent");
 const scrollToSection = (sectionId) => {
   const element = document.getElementById(sectionId);
   if (element) {

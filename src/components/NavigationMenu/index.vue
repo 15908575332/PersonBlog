@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%" v-if="userStore">
-    <div class="navigate" :class="{ hoverStyle: isHover }">
+    <div class="navigate" :class="{ hoverStyle: isHover }" :style="colorStyles">
       <div class="logo">
         <img src="/logo.png" alt="logo" />
         <!-- <span>BLOG</span> -->
@@ -148,7 +148,7 @@ import DropdoenMenu from "@/components/DropdownMenu/index.vue";
 import TreeMenu from "@/components/TreeMenu/index.vue";
 import { ref, onMounted, computed } from "vue";
 import utils from "@/utils/getAssetsFile";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 import { useAuthStore } from "@/store/auth";
 const userStore = useAuthStore();
@@ -164,10 +164,32 @@ const quitLogin = () => {
   userStore.logout();
   route.push("/userInfo");
 };
-const { fontColor } = defineProps({
-  fontColor: String,
-});
+// const { fontColor } = defineProps({
+//   fontColor: String,
+// });
 
+// 新增颜色props并设置默认值
+const props = defineProps({
+  bgColor: {
+    type: String,
+    default: 'rgb(25, 29, 15, 0)' // 默认背景色
+  },
+  hoverBgColor: {
+    type: String,
+    default: 'rgb(25, 29, 15, 0.6)' // 默认hover背景色
+  },
+  textColor: {
+    type: String,
+    default: '#fcfcfc' // 默认文字颜色
+  }
+})
+
+// 计算动态样式对象
+const colorStyles = computed(() => ({
+  '--bg-color': props.bgColor,
+  '--hover-bg-color': props.hoverBgColor,
+  '--text-color': props.textColor
+}))
 const isVisible = ref(false);
 const isHover = ref(false);
 const isSidebarVisible = ref();
@@ -287,15 +309,24 @@ onMounted(async () => { });
   width: 100%;
   padding: 0 2rem;
   font-family: "lmst";
-  font-size: 1.2rem;
-  color: #fcfcfc;
+
   z-index: 1;
-  background-color: rgb(25, 29, 15, 0);
+  background-color: var(--bg-color);
   transition: all 0.3s linear;
   @include flexCenter(row, space-between);
 
+  ul>li {
+    a {
+      span {
+        font-size: 1rem;
+        color: var(--text-color);
+      }
+    }
+  }
+
+
   &:hover {
-    background-color: rgb(25, 29, 15, 0.6);
+    background-color: var(--hover-bg-color);
     transition: all 0.3s linear;
   }
 
@@ -305,7 +336,6 @@ onMounted(async () => { });
     align-items: center;
 
     img {
-      // width: 3rem;
       height: 2.5rem;
     }
 
@@ -372,11 +402,9 @@ onMounted(async () => { });
         height: 1.9rem;
         overflow: hidden;
         border-radius: 50%;
-        // background-color: #fff;
         transition: transform 0.2s, box-shadow 0.3s;
 
         &:hover {
-          //transform: scale(1.1);
           box-shadow: 0 0 0 2px #ffa89f;
         }
 

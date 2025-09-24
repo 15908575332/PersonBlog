@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <Navigation />
+    <div id="columnDetail-page">
+        <Navigation bgColor="#f8f7f7" hoverBgColor="#e0e0e0" textColor="#585858" />
         <div id="columnDetail">
             <!-- 左侧目录 -->
             <div class="left-catalogue">
@@ -161,7 +161,7 @@ onMounted(() => {
         left: 0;
         top: 3rem;
         width: 20rem;
-        background-color: #f0efef7b;
+        background-color: #ffffff7b;
         overflow-y: auto;
         height: 100vh;
         padding: 1rem 0;
@@ -169,15 +169,13 @@ onMounted(() => {
 
         //栏目标题
         .column-title {
-            font-size: 1.1rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            text-align: center;
-            margin-bottom: 1rem;
-            @include flexCenter(row, center);
+            padding: 2rem;
 
             img {
-                width: 1.2rem;
-                height: 1rem;
+                width: 1.3rem;
+                height: 1.3rem;
                 margin-right: 0.2rem;
             }
         }
@@ -234,7 +232,7 @@ onMounted(() => {
             }
 
             &:hover {
-                background-color: #fff;
+                background-color: #f8f7f7;
             }
         }
     }
