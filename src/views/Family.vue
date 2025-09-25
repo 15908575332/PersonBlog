@@ -367,7 +367,6 @@ const module_data = [
   },
 ];
 const changeModule = ref("module1");
-console.log(changeModule.value);
 let interval;
 let intervalId;
 onMounted(() => {

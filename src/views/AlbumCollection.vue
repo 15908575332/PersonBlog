@@ -154,7 +154,6 @@ function onCardClick(idx) {
   // 只有最上面那张卡片可点击
   if (idx === cards.value.length - 1) {
     moveCard();
-    console.log("点击了第" + (idx + 1) + "张卡片");
   }
 }
 

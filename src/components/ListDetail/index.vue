@@ -1,7 +1,5 @@
 <template>
     <div>
-        <!-- 导航 -->
-        <Navigation></Navigation>
         <ModalBox :isVisible="showModal" @close="handClose" class="modal__box">
             <h1>个人博客版权说明</h1>
             <h2>
@@ -31,7 +29,7 @@
         </ModalBox>
         <div id="recordDetail">
             <!-- 背景设置 -->
-            <div class=" background__img">
+            <div class=" background__img" :style="backTextStyle">
                 <!-- 背景图 -->
                 <div class=" backPhoto" :style="{ backgroundImage: `url(${recordDetail.cover_image_url})` }"></div>
                 <!-- 遮罩 -->
@@ -73,8 +71,8 @@
             <div class="content__container">
                 <!-- 资源展示 -->
                 <div class="image">
-                    <video v-if="recordDetail.main_url" :src="recordDetail.main_url" controls ref="videoRef"
-                        @play="handlePlay" @pause="handlePause"></video>
+                    <video v-if="recordDetail.cover_video_url" :src="recordDetail.cover_video_url" controls
+                        ref="videoRef" @play="handlePlay" @pause="handlePause"></video>
                     <img v-else :src="recordDetail.cover_image_url" alt="backimg">
                     <button v-if="recordDetail.cover_video_url && !isPlaying" class="play-button"
                         @click="playVideo"></button>
@@ -84,37 +82,38 @@
                     {{ recordDetail.title }}
                 </div>
                 <!-- 主内容区域 -->
-                <div class="content" v-if="articleSections.length > 0" v-for="content in articleSections"
-                    :key="content.title">
-                    <div>
-                        <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
-                        <div class="content_model" v-for="text in splitParagraphs(content.content)">
-                            <div>
-                                {{ text }}
-                                <ul v-if="content.level === 200">
-                                    <li>123</li>
-                                </ul>
+                <div v-if="!recordDetail.has_comment">
+                    <div class="content" v-if="articleSections.length > 0" v-for="content in articleSections"
+                        :key="content.title">
+                        <div>
+                            <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
+                            <div class="content_model" v-for="text in splitParagraphs(content.content)">
+                                <div>
+                                    {{ text }}
+                                    <ul v-if="content.level === 200">
+                                        <li>123</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+
                     </div>
-
-                </div>
-
-                <div v-else>
-                    <div class="introduce" v-for="pre in graph">
-                        <span>
-                            {{ pre }}
-                        </span>
+                    <div v-else>
+                        <div class="introduce" v-for="pre in splitParagraphs(recordDetail.preface)">
+                            <span>
+                                {{ pre }}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <!-- 评论可见 -->
-                <!-- <div class="comment__show" v-else>
-                <div class=" text">评论可见</div>
-                <div class="warring">
-                    <img src="./icon/warring-icon.svg" alt="warring">
-                    <span>此处内容已隐藏</span>
+                <div class="comment__show" v-else>
+                    <div class=" text">评论可见</div>
+                    <div class="warring">
+                        <img src="./icon/warring-icon.svg" alt="warring">
+                        <span>此处内容已隐藏</span>
+                    </div>
                 </div>
-            </div> -->
                 <!-- 提示 -->
                 <ul class="abstract">
                     <li>作者：{{ recordDetail.author }}</li>
@@ -474,22 +473,31 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref, computed, getCurrentInstance } from 'vue';
+import { onMounted, ref, computed, getCurrentInstance, watch } from 'vue';
 import { useAuthStore } from '@/store/auth';
-import Navigation from '@/components/NavigationMenu/index.vue';
 import utils from '@/utils/getAssetsFile';
 import { message } from 'ant-design-vue';
 import ModalBox from '@/components/ModalBox/index.vue'
 import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
-
+import { splitParagraphs } from '@/utils/splitParagraphs'; //引入段落处理函数
 /** ------------------------内容处理------------------------ */
-// 接收组件recordRender传递的路由id
-import { useRoute } from 'vue-router';
-const route = useRoute();
-const paramsId = computed(() => {
-    return route.params.id;
+// 声明 props，接收父组件传递的 id
+const props = defineProps({
+    articleId: {
+        type: [String, Number], // 根据实际情况调整类型
+        required: true         // 如果父组件必须传递此参数
+    },
+    backTextHeight: {
+        type: [Number, String],
+        default: 18
+    }
 });
+const backTextStyle = computed(() => {
+    return { '--back-text-height': `${props.backTextHeight}rem` }
+});
+console.log(backTextStyle.value)
+const paramsId = computed(() => props.articleId);
 
 const mainContent = computed(() => {
     try {
@@ -524,8 +532,9 @@ const getFatherdata = () => {
     }
 }
 getFatherdata();
+// 在组件挂载时和articleId变化时触发
+watch(() => props.articleId, getFatherdata, { immediate: true });
 
-//段落内容
 const articleSections = ref([]);
 const getArticleContent = async () => {
     try {
@@ -543,8 +552,7 @@ const getArticleContent = async () => {
     }
 }
 
-import { splitParagraphs } from '@/utils/splitParagraphs'; //引入段落处理函数
-const graph = splitParagraphs(recordDetail.value.preface);
+
 /** ------------------------文章浏览量计数------------------------ */
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
@@ -716,7 +724,7 @@ const getMessageList = async () => {
         totals.value = res.data.pagination.total;
         totalPages.value = Math.ceil(totals.value / pageSize.value);
     } catch (error) {
-        console.error('获取评论列表失败:', error);
+        console.error('获取评论列表失败:', error.response.data.msg);
     }
 }
 // 下一页
@@ -761,7 +769,6 @@ const handleReply = (message) => {
     showReplyModal.value = true;
     activeParentId.value = message.id;
     replyUserId.value = message.userId;
-    console.log(message.id);
     replyUser.value = `@${message.user.username}`;
     document.body.classList.add('no-scroll'); // 新增
 }
@@ -846,9 +853,10 @@ onMounted(async () => {
     font-family: 'gtpy';
     font-size: 0.75rem;
 
+
     // 背景设置
     .background__img {
-        height: 18rem;
+        height: var(--back-text-height);
 
         // 背景图 
         .backPhoto {
@@ -997,6 +1005,7 @@ onMounted(async () => {
                 span {
                     color: #ff6d6d;
                     padding: 0 0.2rem;
+
                 }
             }
 
@@ -1004,6 +1013,8 @@ onMounted(async () => {
             .content_model {
                 padding: 0.7rem 0.5rem;
                 text-indent: 1em; //首行缩进
+                font-size: 0.9rem;
+                line-height: 1.8rem;
             }
         }
 

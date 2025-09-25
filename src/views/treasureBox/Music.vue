@@ -285,7 +285,6 @@ watch(
         throw new Error("歌词文件加载失败");
       }
       const lrcText = await response.text();
-      // console.log(lrcText)
       currentLyrics.value = parseLRC(lrcText); // 解析歌词
     } catch (error) {
       console.error("歌词加载失败:", error);

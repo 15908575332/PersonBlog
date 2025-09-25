@@ -122,6 +122,9 @@ import { useMainStore } from "@/store/maincontent";
 const mainStore = useMainStore();
 import utils from "@/utils/getAssetsFile";
 import AOS from "aos";
+import { useAuthStore } from '@/store/auth';
+const authStore = useAuthStore();
+
 import {
   onMounted,
   computed,
@@ -174,11 +177,11 @@ const isActive = ref(); //当前激活导航
 const currentId = ref(); //设置当前ID
 const currentIndex = ref(0); // 当前选中的导航索引
 
-const toggleMoudle = async (id = null, index) => {
-  isActive.value = id;
-  currentId.value = id;
+const toggleMoudle = async (category_id = null, index) => {
+  isActive.value = category_id;
+  currentId.value = category_id;
   currentIndex.value = index;
-  await mainStore.fetchMainContent(id);
+  await mainStore.fetchMainContent(category_id, authStore.user.userId);
   onClickHandler(1);
 };
 

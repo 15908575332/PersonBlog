@@ -26,25 +26,32 @@ router.get('/getNavData', async (req, res) => {
     }
 });
 
-//  获取文章基本信息
+//  获取文章基本信息(分类下所有文章)
 router.get('/getArticleInfo', async (req, res) => {
     try {
-        const { article_id } = req.query;
-        if (!article_id) {
-            return res.status(400).json({ message: '缺少文章ID参数' });
+        const { category_id, user_id } = req.query;
+        if (!category_id || !user_id && isNaN(category_id)) {
+            return res.status(400).json({ message: '缺少分类ID或用户ID参数' });
         }
         // 查询文章基本信息和作者信息
         const result = await sqlQuery(
             `
-            SELECT 
-                articles.*,
-                users.username
-            FROM articles
-            INNER JOIN users ON users.user_id = articles.user_id
-            INNER JOIN articles_categories ac ON ac.category_id = articles.category_id
-            WHERE articles.category_id = ?
+                SELECT
+                    a.*,
+                    u.username,
+                    CASE WHEN cv.has_comment = 1 THEN true ELSE false END AS has_comment
+                FROM
+                    articles a
+                INNER JOIN users u
+                    ON u.user_id = a.user_id
+                LEFT JOIN comments_visible cv
+                    ON cv.article_id = a.article_id
+                    AND cv.user_id = ?
+                WHERE
+                    a.category_id = ?
+
             `,
-            [article_id]
+            [user_id, category_id]
         );
 
         if (result.length === 0) {
@@ -59,8 +66,8 @@ router.get('/getArticleInfo', async (req, res) => {
                 distinct master_tag
             FROM
                 articles
-            `,
-            [article_id]
+                `,
+            [category_id]
         )
         // 返回文章基本信息
         res.status(200).json({
@@ -86,16 +93,16 @@ router.get('/getArticleSections', async (req, res) => {
         const sections = await sqlQuery(
             `
            SELECT
-  title,
-  content,
-  level,
-  order_asc
-FROM
-  articles_sections
-WHERE
-  article_id = ?
-ORDER BY
-  order_asc ASC
+                title,
+                content,
+                level,
+                order_asc
+            FROM
+                articles_sections
+            WHERE
+                article_id = ?
+            ORDER BY
+                order_asc ASC
             `,
             [id]
         );
@@ -155,8 +162,8 @@ router.get('/checkLikeStatus', async (req, res) => {
                     ELSE false 
                 END AS has_liked
              FROM article_likes_count 
-             WHERE user_id = ? AND article_id = ? 
-             AND liked_at > DATE_SUB(NOW(), INTERVAL 1 DAY)`,
+             WHERE user_id = ? AND article_id = ?
+            AND liked_at > DATE_SUB(NOW(), INTERVAL 1 DAY)`,
             [user_id, article_id]
         );
 
@@ -189,8 +196,8 @@ router.post('/likeArticle', async (req, res) => {
         // 检查是否在24小时内已经点赞过
         const existingLike = await sqlQuery(
             `SELECT * FROM article_likes_count
-             WHERE user_id = ? AND article_id = ? 
-             AND liked_at > DATE_SUB(NOW(), INTERVAL 1 DAY)`,
+             WHERE user_id = ? AND article_id = ?
+            AND liked_at > DATE_SUB(NOW(), INTERVAL 1 DAY)`,
             [user_id, article_id]
         );
 
@@ -204,8 +211,8 @@ router.post('/likeArticle', async (req, res) => {
         try {
             // 插入点赞记录（使用ON DUPLICATE KEY UPDATE来更新已存在的记录）
             await sqlQuery(
-                `INSERT INTO article_likes_count (user_id, article_id) 
-                 VALUES (?, ?)
+                `INSERT INTO article_likes_count(user_id, article_id) 
+                 VALUES(?, ?)
                  ON DUPLICATE KEY UPDATE liked_at = NOW()`,
                 [user_id, article_id]
             );
@@ -213,7 +220,7 @@ router.post('/likeArticle', async (req, res) => {
             // 更新文章点赞数
             const updateResult = await sqlQuery(
                 `UPDATE articles SET like_count = like_count + 1 
-                 WHERE article_id = ?`,
+                 WHERE article_id = ? `,
                 [article_id]
             );
 
@@ -259,20 +266,20 @@ router.get('/getColumnData', async (req, res) => {
         // 查询专栏数据
         const columnData = await sqlQuery(
             `
-  SELECT
-  a.master_tag,
-  COUNT(*) AS tag_count
-FROM
-  articles_categories c
-INNER JOIN
-  articles a ON c.category_id = a.category_id
-WHERE
-  c.category_id = ?
-GROUP BY
-  a.master_tag
-ORDER BY
-  tag_count;
-            `,
+            SELECT
+                a.master_tag,
+            COUNT(*) AS tag_count
+            FROM
+                articles_categories c
+            INNER JOIN
+                articles a ON c.category_id = a.category_id
+            WHERE
+                c.category_id = ?
+                GROUP BY
+                a.master_tag
+            ORDER BY
+                tag_count;
+        `,
             [category_id]
         );
 
@@ -286,7 +293,8 @@ ORDER BY
         res.status(500).json({ message: '服务器内部错误' });
     }
 });
-// 专栏文章详情
+
+// 专栏文章统计
 router.get('/getColumnArticles', async (req, res) => {
     try {
         const { master_tag } = req.query;
@@ -296,22 +304,22 @@ router.get('/getColumnArticles', async (req, res) => {
         // 查询专栏文章
         const articles = await sqlQuery(
             `
-           SELECT
-                a.article_id,
-                a.user_id,
-                a.title,
-                a.preface,
-                a.heat,
-                a.like_count,
-                a.cover_image_url,
-                a.cover_video_url,
-                a.release_time
-            FROM
+        SELECT
+        a.article_id,
+            a.user_id,
+            a.title,
+            a.preface,
+            a.heat,
+            a.like_count,
+            a.cover_image_url,
+            a.cover_video_url,
+            a.release_time
+        FROM
                 articles a
-            WHERE   
-                a.master_tag = ?
-            ORDER BY a.release_time DESC;   
-            `,
+        WHERE
+        a.master_tag = ?
+            ORDER BY a.release_time DESC;
+        `,
             [master_tag]
         );
         res.status(200).json({
@@ -319,9 +327,54 @@ router.get('/getColumnArticles', async (req, res) => {
             message: '获取专栏文章成功',
             articles
         });
+
     } catch (error) {
         console.error('获取专栏文章失败:', error);
         res.status(500).json({ message: '服务器内部错误' });
+
     }
 });
+
+//专栏获取文章详情(每次查询)
+// router.get('/getColumnDetail', async (req, res) => {
+//     try {
+//         const { article_id } = req.query;
+//         if (!article_id) {
+//             return res.status(400).json({ message: '缺少文章ID参数' });
+//         }
+//         // 查询文章详情
+//         const articleDetail = await sqlQuery(
+//             `
+//             SELECT
+//                 a.category_id,
+//                 a.article_id,
+//                 a.user_id,
+//                 a.title,
+//                 a.preface,
+//                 a.heat,
+//                 a.like_count,
+//                 a.cover_image_url,
+//                 a.cover_video_url,
+//                 a.release_time,
+//                 c.has_comment
+//             FROM
+//                 articles a
+//             INNER JOIN
+//                 comments_visible c ON a.article_id = c.article_id
+//             WHERE
+//                 a.article_id = ?;
+//             `,
+//             [article_id]
+//         );
+//         res.status(200).json({
+//             code: 200,
+//             message: '获取文章详情成功',
+//             articleDetail
+//         });
+//         console.log('articleDetail', articleDetail);
+//     } catch (error) {
+//         console.error('获取文章详情失败:', error);
+//         res.status(500).json({ message: '服务器内部错误' });
+//     }
+// });
 export default router;

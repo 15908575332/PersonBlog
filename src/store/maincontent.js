@@ -10,12 +10,13 @@ export const useMainStore = defineStore('main', () => {
     const loading = ref(false);
     const error = ref(null);
     
-    const fetchMainContent = async (id) => {
+    const fetchMainContent = async (category_id, user_id) => {
         loading.value = true;
         try {
             const response = await axios.get('http://localhost:3000/main/getArticleInfo', {
                 params: {
-                    article_id: id,
+                    category_id: category_id,
+                    user_id: user_id,
                 }
             });
             if (!response.data) throw new Error("无效数据");

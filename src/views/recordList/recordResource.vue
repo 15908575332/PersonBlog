@@ -93,6 +93,8 @@ import Navigation from "@/components/NavigationMenu/index.vue"; //引入导航�
 import utils from "@/utils/getAssetsFile"; //引入获取静态资源的方法
 import { useRouter } from "vue-router"; //引入路由相关的api
 import { useMainStore } from "@/store/maincontent"; // 引入store
+import { useAuthStore } from '@/store/auth';
+const authStore = useAuthStore();
 
 const mainStore = useMainStore(); // 实例化store
 const route = useRouter(); // 实例化路由
@@ -117,10 +119,10 @@ const mainContent = computed(() => {
 });
 
 /** ------------------------导航栏按钮切换模块------------------------ */
-const toggleMoudle = async (id = null, index = 0) => {
-  currentId.value = id;
+const toggleMoudle = async (category_id = null, index = 0) => {
+  currentId.value = category_id;
   isActiveBtn.value = index;
-  await mainStore.fetchMainContent(id);
+  await mainStore.fetchMainContent(category_id, authStore.user.userId);
 };
 
 //格式化发布时间

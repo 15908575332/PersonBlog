@@ -18,7 +18,6 @@ const emit = defineEmits(['close']);
 
 const closeModal = () => {
     emit('close');
-    console.log(11)
 };
 watch(() => props.isVisible, (newValue) => {
     if (newValue) {

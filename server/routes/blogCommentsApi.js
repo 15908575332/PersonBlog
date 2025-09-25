@@ -37,7 +37,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
         const posts = await sqlQuery(postsQuery, [article_id, parseInt(pageSize), parseInt(offset)]);
 
         if (posts.length === 0) {
-            return res.status(404).json({ code: 404, msg: '该文章暂无评论' });
+            return res.status(401).json({ code: 401, msg: '该文章暂无评论' });
         }
 
         // 提取所有主评论ID
@@ -118,7 +118,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
         });
 
     } catch (err) {
-        console.error('获取评论失败:', err);
+        console.error('获取评论失败:', err.msg);
         res.status(500).json({ code: 500, msg: '服务器错误' });
     }
 });

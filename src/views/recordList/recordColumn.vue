@@ -47,7 +47,7 @@
                     </div>
                     <div class="content__container__list">
                         <div class="content__items" v-for="(tag, index) in module.tags" :key="tag.master_tag"
-                            @click="gotoClomunDetail(tag.master_tag)">
+                            @click="gotoClomunDetail(tag.master_tag, module.category_id)">
                             <img :src="utils.getAssetsFile(`img/public/public-${tag.randomNumber}.png`)"
                                 :alt="tag.randomNumber">
                             {{ tag.randomNumber }}
@@ -74,6 +74,9 @@ const mainStore = useMainStore();
 import utils from "@/utils/getAssetsFile";
 import { useRouter } from 'vue-router';
 const router = useRouter();
+import { useAuthStore } from '@/store/auth';
+const authStore = useAuthStore();
+
 //标题栏
 const specialColumn = ref([]);
 //轮播数据
@@ -120,7 +123,8 @@ const btn_colors = ref([
 ])
 //跳转详情页
 import CryptoJS from 'crypto-js';
-const gotoClomunDetail = (tag) => {
+const gotoClomunDetail = (tag, category_id) => {
+    getCategoryArticles(category_id); // 获取分类下的所有文章
     router.push({
         name: 'columnDetail',
         params: {
@@ -128,7 +132,9 @@ const gotoClomunDetail = (tag) => {
         }
     });
 }
-
+const getCategoryArticles = async (category_id) => {
+    await mainStore.fetchMainContent(category_id, authStore.user.userId);
+}
 //AES加密函数
 const encryptTag = (tag) => {
     // 使用 crypto-js 或其他加密库

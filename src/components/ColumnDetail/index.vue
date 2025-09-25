@@ -1,6 +1,8 @@
 <template>
-    <div id="columnDetail-page">
-        <Navigation bgColor="#f8f7f7" hoverBgColor="#e0e0e0" textColor="#585858" />
+    <div>
+        <div style="position: relative;top: 0; z-index: 1; width: 100%;">
+            <Navigation hoverBgColor="#ecf8ff" textColor="#585858" style="z-index: 1;" />
+        </div>
         <div id="columnDetail">
             <!-- 左侧目录 -->
             <div class="left-catalogue">
@@ -8,7 +10,8 @@
                     <img src="./icon/deploy.svg" alt="">
                     {{ decryptedId }}
                 </div>
-                <div class="catalogue-item" v-for="article in columnDetail" :key="article.article_id">
+                <div class="catalogue-item" v-for="article in columnDetail" :key="article.article_id"
+                    @click="getCurrentArticleDetail(article.article_id)">
                     <div class="img_title">
                         <div class="catalogue-cover">
                             <img :src="article.cover_image_url" alt="img">
@@ -21,10 +24,11 @@
                     </div>
                 </div>
             </div>
+
             <!-- 右侧内容区域 -->
             <div class="right-rapper">
                 <div class="right-content">
-                    <div class="default" v-if="1">
+                    <div class="default" v-if="isShowDefault">
                         <!-- 时间轴 -->
                         <div class="time__axis">
                             <h1><span>#</span>UL 时间表卡片</h1>
@@ -95,7 +99,7 @@
 
                     </div>
                     <div class="content" v-else>
-                        这里展示点击目录后的文章内容
+                        <ListDetail :articleId="currentArticleId" :key="currentArticleId" :backTextHeight=20 />
                     </div>
                 </div>
             </div>
@@ -110,6 +114,8 @@ import CryptoJS from 'crypto-js';
 const route = useRoute()
 import dayjs from "dayjs";
 import Navigation from '@/components/NavigationMenu/index.vue'
+import ListDetail from '@/components/ListDetail/index.vue'
+
 // 解密函数
 const decryptTag = (encryptedTag) => {
     try {
@@ -127,41 +133,46 @@ const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
 const columnDetail = ref({});
 
-const getColumnDetail = async (master_tag) => {
+const getColumnDataCount = async (master_tag) => {
     try {
         const response = await $http.get('main/getColumnArticles', {
             params: {
                 master_tag
             }
         });
-        console.log('获取到的专栏详情:', response);
-        columnDetail.value = response.articles || [];
+        columnDetail.value = response.articles || {};
     } catch (error) {
         console.error('获取专栏详情失败:', error);
     }
+};
+//获取当前点击文章详情
+const isShowDefault = ref(true);
+const currentArticleId = ref(null);
+const getCurrentArticleDetail = (article_id) => {
+    currentArticleId.value = article_id; // 直接赋值即可
+    isShowDefault.value = !currentArticleId.value;
 };
 onMounted(() => {
     // 直接从路由参数获取并解密
     const encryptedId = route.params.id;
     decryptedId.value = decryptTag(encryptedId);
-    getColumnDetail(decryptedId.value);
+    getColumnDataCount(decryptedId.value);
 });
 
 </script>
 
 <style scoped lang="scss">
 #columnDetail {
-    // @include flexCenter(row, space-between);
-    display: flex;
     font-family: 'gtpy';
+    display: flex;
 
     // 左侧目录
     .left-catalogue {
-        position: fixed;
+        position: absolute;
         left: 0;
-        top: 3rem;
-        width: 20rem;
-        background-color: #ffffff7b;
+        top: 0rem;
+        width: 16rem;
+        background-color: #ecf8ff;
         overflow-y: auto;
         height: 100vh;
         padding: 1rem 0;
@@ -171,7 +182,7 @@ onMounted(() => {
         .column-title {
             font-size: 1.4rem;
             font-weight: bold;
-            padding: 2rem;
+            padding: 4rem 0 1rem 2rem;
 
             img {
                 width: 1.3rem;
@@ -232,11 +243,12 @@ onMounted(() => {
             }
 
             &:hover {
-                background-color: #f8f7f7;
+                background-color: #ffffff;
             }
         }
     }
 
+    // 右侧区域
     .right-rapper {
         flex: 1;
         overflow: hidden;
@@ -245,9 +257,10 @@ onMounted(() => {
         .right-content {
             position: fixed;
             right: 0;
-            width: calc(100% - 20rem);
+            width: calc(100% - 16rem);
             height: 100%;
             overflow-y: auto;
+            z-index: 0;
 
             // 默认内容
             .default {
@@ -493,6 +506,5 @@ onMounted(() => {
             }
         }
     }
-
 }
 </style>

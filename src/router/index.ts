@@ -113,7 +113,7 @@ const router = createRouter({
         },
         {
             path: "/listDetail/:id",
-            name: "listDetail", component: () => import('@/Components/ListDetail/index.vue'),
+            name: "listDetail", component: () => import('@/views/recordList/recordContentRender.vue'),
             props: true
 
         },
