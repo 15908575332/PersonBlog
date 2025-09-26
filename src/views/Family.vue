@@ -13,7 +13,7 @@
         <ul>
           <li class="item">
             <img src="@/assets/img/profile_picture/10025.png" alt="" />
-            <h1>Sara</h1>
+            <h1>Auther</h1>
           </li>
           <li class="item heart"></li>
           <li class="item">
