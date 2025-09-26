@@ -92,11 +92,12 @@
 import utils from '@/utils/getAssetsFile';
 import Navigation from '../components/NavigationMenu/index.vue';
 import { ref, computed, onMounted, reactive, watchEffect } from 'vue';
-const maxlength = ref(110);
 import dayjs from 'dayjs';
 import { useAuthStore } from "@/store/auth";
 import { message } from 'ant-design-vue';
 const userStore = useAuthStore();
+const maxlength = ref(110);
+
 message.config({
     duration: 3,
 })

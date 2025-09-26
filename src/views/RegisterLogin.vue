@@ -1,7 +1,7 @@
 <template>
     <div id="userLogin">
         <!-- 背景图 -->
-        <div class="backPhoto" :style=videoSrc></div>
+        <div class="backPhoto" :style=currentPageBackground></div>
         <!-- 遮罩 -->
         <div class="mask"></div>
         <div class="main">
@@ -82,23 +82,27 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, getCurrentInstance } from 'vue';
-const $http = getCurrentInstance().appContext.config.globalProperties.$http;
-import { useRouter } from 'vue-router';
-const route = useRouter();
-const timer = ref();
-const randomIndex = ref();
-
 import { message } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
+import { v4 as uuidv4 } from 'uuid';
+import { useAuthStore } from '@/store/auth';
+const $http = getCurrentInstance().appContext.config.globalProperties.$http;
+const route = useRouter();
+
+/** ------------------------ 全局消息提示配置 ------------------------ */
 message.config({
     duration: 3,
     maxCount: 1,
 });
-const videoSrc = computed(() => {
+
+/** ------------------------ 背景图切换 ------------------------ */
+const randomIndex = ref();
+const currentPageBackground = computed(() => {
     return {
-        backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`
+        backgroundImage: `url('${backImages.value[randomIndex.value]}')`
     }
 });
-const videoUrls = ref([
+const backImages = ref([
     'src/assets/img/homePage/back1.webp',
     'src/assets/img/homePage/back2.webp',
     'src/assets/img/homePage/back3.webp',
@@ -106,42 +110,20 @@ const videoUrls = ref([
     'src/assets/img/homePage/back5.webp',
     'src/assets/img/homePage/back6.webp'
 ]);
-
-
-const defaultLoginInfo = ref({
-    loginEmail: 'test@163.com',
-    loginPassword: '123456',
-})
-//清空邮箱
-const clearFields = (prop) => {
-    switch (prop) {
-        case 'userEmail':
-            registerData.value.userEmail = '';
-            break;
-        case 'userName':
-            registerData.value.userName = '';
-            break;
-        case 'loginEmail':
-            defaultLoginInfo.value.loginEmail = '';
-            break;
-    }
+if (backImages.value.length > 0) {
+    randomIndex.value = Math.floor(Math.random() * backImages.value.length);
 };
 
-//注册
+/** ------------------------ 注册 ------------------------ */
 const registerData = ref({
     userName: '',
     userEmail: '',
     userPassword: '',
     rePassword: '' //二次密码
 });
-
-//用户注册
-import { v4 as uuidv4 } from 'uuid';
-//生成uuid
 const userId = `user-${uuidv4()}`;
 async function UserRegister(e) {
-    //防止表单默认提交
-    e.preventDefault()
+    e.preventDefault()  //防止表单默认提交
     if (!registerData.value.userName) {
         alert('用户名不能为空')
         return false
@@ -176,8 +158,12 @@ async function UserRegister(e) {
         message.error(error.response.data.message);
     }
 }
-//用户登录
-import { useAuthStore } from '@/store/auth';
+
+/** ------------------------ 登录 ------------------------ */
+const defaultLoginInfo = ref({
+    loginEmail: 'test@163.com',
+    loginPassword: '123456',
+})
 const login = async (e) => {
     e.preventDefault();
     if (!defaultLoginInfo.value.loginEmail) {
@@ -215,11 +201,22 @@ const login = async (e) => {
     }
 }
 
+/** ------------------------ 输入框一键清空 ------------------------ */
+const clearFields = (prop) => {
+    switch (prop) {
+        case 'userEmail':
+            registerData.value.userEmail = '';
+            break;
+        case 'userName':
+            registerData.value.userName = '';
+            break;
+        case 'loginEmail':
+            defaultLoginInfo.value.loginEmail = '';
+            break;
+    }
+};
+
 onMounted(() => {
-    //背景图索引值
-    if (videoUrls.value.length > 0) {
-        randomIndex.value = Math.floor(Math.random() * videoUrls.value.length);
-    };
     let switchCtn = document.querySelector("#switch-cnt");
     let switchC1 = document.querySelector("#switch-c1");
     let switchC2 = document.querySelector("#switch-c2");
@@ -228,7 +225,6 @@ onMounted(() => {
     let aContainer = document.querySelector("#a-container");
     let bContainer = document.querySelector("#b-container");
     let allButtons = document.querySelectorAll(".submit");
-
     let getButtons = e => e.preventDefault();
     let changeForm = e => {
         switchCtn.classList.toggle("is-txr");
@@ -254,7 +250,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-    clearInterval(timer.value);
+    // clearInterval(timer.value);
 })
 </script>
 

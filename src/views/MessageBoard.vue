@@ -2,7 +2,7 @@
     <div id="messageBoard">
         <div class="blog-container">
             <!-- 背景图 -->
-            <div class="backPhoto" :style=videoSrc></div>
+            <div class="backPhoto" :style=currentPageBackground></div>
             <!-- 遮罩 -->
             <div class="mask"></div>
             <!-- 内容 -->
@@ -41,9 +41,9 @@ const inputValue = ref();
 import { useAuthStore } from "@/store/auth";
 const authStore = useAuthStore();
 
-const videoSrc = computed(() => {
+const currentPageBackground = computed(() => {
     return {
-        backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`
+        backgroundImage: `url('${backImgaes.value[randomIndex.value]}')`
     }
 });
 function getRandomColor() {
@@ -51,13 +51,17 @@ function getRandomColor() {
 }
 
 const danmus = ref([])
-const videoUrls = ref([
+const backImgaes = ref([
     utils.getAssetsFile('img/homePage/back1.webp'),
     utils.getAssetsFile('img/homePage/back2.webp'),
     utils.getAssetsFile('img/homePage/back3.webp'),
     utils.getAssetsFile('img/homePage/back4.webp'),
     utils.getAssetsFile('img/homePage/back5.webp'),
 ]);
+if (backImgaes.value.length > 0) {
+    randomIndex.value = Math.floor(Math.random() * backImgaes.value.length); //背景图索引值
+};
+
 // 在Vue组件中调用
 const fetchMessages = async () => {
     try {
@@ -100,9 +104,6 @@ const insertMessage = async () => {
 }
 import { message } from 'ant-design-vue';
 onMounted(() => {
-    if (videoUrls.value.length > 0) {
-        randomIndex.value = Math.floor(Math.random() * videoUrls.value.length); //背景图索引值
-    };
     // 顶部全局提示
     message.config({
         duration: 2,

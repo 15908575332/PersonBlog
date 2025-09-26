@@ -284,7 +284,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                                }}</div>
+                                            }}</div>
                                         </div>
                                     </div>
 
@@ -595,7 +595,8 @@ const handleLikeClick = async () => { // 点赞/取消点赞函数
         // await updateLike(recordDetail.value.article_id); // 取消点赞（增加相应方法）
     }
 }
-/** ------------------------分享模块------------------------ */
+
+/** ------------------------ 分享模块 ------------------------ */
 const showShareModal = ref(false);
 const shareLike = () => {
     showShareModal.value = true;

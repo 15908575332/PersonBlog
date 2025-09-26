@@ -105,7 +105,6 @@
         </section>
       </form>
       <div v-if="message" :class="{ error: isError, success: !isError }" class="msg">
-        <!-- {{ codeSent }} -->
       </div>
     </div>
     <template v-else>
@@ -140,9 +139,7 @@ const confirmPassword = ref("");
 const isError = ref(false);
 const captcha = ref("");
 const captchaInput = ref("");
-
-//密码修改状态
-const isSuccess = ref(false);
+const isSuccess = ref(false); // 重置密码状态
 
 message.config({
   duration: 3,
@@ -153,7 +150,6 @@ function validateAccount(val) {
     /^(1[3-9]\d{9})$/.test(val) || /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(val)
   );
 }
-
 function onAccountAndCodeSubmit() {
   isError.value = false;
   if (!account.value) {
@@ -187,18 +183,14 @@ function onAccountAndCodeSubmit() {
   if (captchaInput.value.toUpperCase() !== captcha.value) {
     message.error("图形验证码错误");
     isError.value = true;
-    // generateCaptcha();
     return;
   }
-
   step.value = 2;
 }
 
 function sendCode(type) {
   if (countdown.value > 0) return;
-  // 生成6位验证码
-  codeSent.value = String(Math.floor(100000 + Math.random() * 900000));
-  // message.success(`验证码已发送: ${codeSent.value}`);
+  codeSent.value = String(Math.floor(100000 + Math.random() * 900000)); // 生成6位验证码
   notification[type]({
     message: "验证码已发送",
     description: codeSent.value,
