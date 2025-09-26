@@ -30,6 +30,10 @@
 import ClickRipple from "./components/ClickRipple/ClickRipple.vue";
 import { rippleStore } from "@/store/isEnabledRipple";
 import utils from "@/utils/getAssetsFile";
+import { onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useMainStore } from '@/store/maincontent'
+
 // 示例化参数，避免未定义变量报错
 const t = 'LOG';
 const n = 'App启动';
@@ -50,6 +54,23 @@ console.log(
   `border:1px solid ${vn.typeColor(e)};padding: 1px; border-radius: 0 4px 4px 0; color: ${vn.typeColor(e)};`,
   "background:transparent"
 );
+
+// 页面加载时获取数据
+onMounted(() => {
+  fetchData()
+})
+const mainStore = useMainStore()
+const route = useRoute()
+
+// 路由变化时重新获取数据
+watch(() => route.path, () => {
+  fetchData()
+})
+
+async function fetchData() {
+  await mainStore.fetchNavData()
+  await mainStore.fetchMainContent() // 如果需要按分类加载，需传参
+}
 </script>
 
 <style scoped lang="scss">
