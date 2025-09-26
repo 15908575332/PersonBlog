@@ -134,11 +134,11 @@
             </div>
             <div class="content__container">
               <!-- 生活倒影 -->
-              <section v-for="module in dataContent" :id="module.id" :key="module.id">
+              <section v-for="module in navData" :key="module.category_id">
                 <div class="menu">
                   <div class="flex__layout">
                     <img src=" @/assets/icon/informalEssay/informalEssayMenu.svg" alt="" />
-                    <span>{{ module.navBtntitle }}</span>
+                    <span>{{ module.nav_btn_title }}</span>
                   </div>
                   <div class="flex__layout">
                     <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="" />
@@ -146,17 +146,17 @@
                   </div>
                 </div>
                 <div class="right__content_aera">
-                  <div class="specific__content box__shadow" v-for="(item, index) in module.content" :key="index">
-                    <figure class="image c4-izmir c4-image-pan-down" @click="listDetail(item.contentId, module.id)">
-                      <img v-lazy="item.backImage" alt="Image" />
-                      <!-- <video v-else :src="item.mainUrl"></video> -->
-                      <button v-if="item.mediaType === 'video'" class="play-button"></button>
+                  <div class="specific__content box__shadow" v-for="(item, index) in dataContent[module.category_id]"
+                    :key="index">
+                    <figure class="image c4-izmir c4-image-pan-down" @click="listDetail(item.article_id)">
+                      <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                      <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
                     </figure>
                     <div class="text__content">
                       <!-- 发布 -->
                       <div class="release">
                         <img src="@/assets/icon/recordList/release.svg" alt="" />
-                        <span>发布于{{ item.release__time }}</span>
+                        <span>发布于{{ dayjs(item.release_time).format('YYYY-MM-DD HH:mm:ss') }}</span>
                       </div>
                       <h1>{{ item.title }}</h1>
                       <ul class="funcition">
@@ -165,22 +165,22 @@
                           <span>{{ item.heat }}热度</span>
                         </li>
                         <li>
-                          <img src="@/assets/icon/recordList/comment.svg" alt="comment" />
-                          <span>{{ item.comment.length }}评论</span>
+                          <!-- <img src="@/assets/icon/recordList/comment.svg" alt="comment" /> -->
+                          <!-- <span>{{ item.comment.length }}评论</span> -->
                         </li>
                         <li>
                           <img src="@/assets/icon/recordList/like.svg" alt="like" />
-                          <span>{{ item.like }}赞</span>
+                          <span>{{ item.like_count }}赞</span>
                         </li>
                       </ul>
                       <div class="footer__tags">
                         <p>
                           <img src="@/assets/icon/recordList/blog.svg" alt="blog" />
-                          <span>{{ item.tag1 }}</span>
+                          <span>{{ item.master_tag }}</span>
                         </p>
                         <p>
                           <img src="@/assets/icon/recordList/arrange.svg" alt="arrange" />
-                          <span>{{ item.tag2 }}</span>
+                          <span>{{ item.sub_tag }}</span>
                         </p>
                       </div>
                     </div>
@@ -210,7 +210,9 @@ import Navigation from "@/components/NavigationMenu/index.vue";
 import scrollMessage from "@/components/scrollMessage/index.vue";
 import { useAuthStore } from "@/store/auth";
 const authStore = useAuthStore();
-const $http = getCurrentInstance().appContext.config.globalProperties.$http;
+import { useMainStore } from "@/store/maincontent";
+const mainStore = useMainStore();
+import dayjs from "dayjs";
 import axios from "axios";
 const messageList = ref([]);
 const getScrollMessageData = (async () => {
@@ -227,7 +229,7 @@ const getScrollMessageData = (async () => {
   }
 });
 
-const dataContent = localStorage.getItem("mainContent");
+
 const scrollToSection = (sectionId) => {
   const element = document.getElementById(sectionId);
   if (element) {
@@ -237,12 +239,9 @@ const scrollToSection = (sectionId) => {
 // 传入id值到详情页ListDetail
 import { useRouter } from "vue-router";
 const route = useRouter();
-const listDetail = (id, currentId) => {
+const listDetail = (id) => {
   route.push({
-    name: "listDetail",
-    query: {
-      fatherId: currentId,
-    },
+    name: 'listDetail',
     params: {
       id: id,
     },
@@ -270,10 +269,34 @@ const handleScroll = () => {
 // 使用防抖包装滚动事件处理函数
 const debouncedHandleScroll = debounce(handleScroll, 100); // 300ms 防抖延迟
 
+const navData = ref([]);
+const getNavData = () => {
+  mainStore.fetchNavData();
+  navData.value = mainStore.navData;
+}
+const dataContent = ref([]);
+const getContentData = async () => {
+  // 获取分类数据后
+  await Promise.all(navData.value.map(async (category) => {
+    const categoryId = category.category_id;
+    await mainStore.fetchMainContent(categoryId, authStore.user.userId);
+    dataContent.value[categoryId] = mainStore.contentData; // 按分类ID存储数据
+  }));
+
+}
+const
+  playButtonReview = ref(false), // 用于控制图片加载状态
+  onLoad = () => {
+    if (!mainStore.loading) {
+      // 图片加载完成后执行的逻辑
+      playButtonReview.value = true;
+    }
+  };
 onMounted(() => {
   window.addEventListener("scroll", debouncedHandleScroll);
   getScrollMessageData(); //滚动消息
-  getMainContent(); //获取主要内容模块
+  getNavData(); //获取分类
+  getContentData(); //获取主要内容模块
 });
 
 onBeforeUnmount(() => {

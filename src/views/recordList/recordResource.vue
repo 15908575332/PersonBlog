@@ -135,9 +135,6 @@ const release_time_format = (date) => {
 const listDetail = (id) => {
   route.push({
     name: "listDetail",
-    // query: {
-    //   fatherId: currentId.value,
-    // },
     params: {
       id: id,
     },

@@ -47,7 +47,7 @@
                             <!-- 发布 -->
                             <div class="release">
                                 <img src="@/assets/icon/recordList/release.svg" alt="">
-                                <span>发布于{{ release_time_format(recordDetail.release_time) }} ·</span>
+                                <span>发布于{{ dayjs(recordDetail.release_time).format('YYYY-MM-DD HH:mm:ss') }} ·</span>
                             </div>
                             <ul class="funcition">
                                 <li>
@@ -283,7 +283,8 @@
                                                     :src="utils.getAssetsFile('icon/level/lv' + value.user.vipLevel + '.svg')"
                                                     alt="level">
                                             </div>
-                                            <div class="time">{{ release_time_format(message.createdAt) }}</div>
+                                            <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                                            }}</div>
                                         </div>
                                     </div>
 
@@ -481,14 +482,23 @@ import ModalBox from '@/components/ModalBox/index.vue'
 import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
 import { splitParagraphs } from '@/utils/splitParagraphs'; //引入段落处理函数
-/** ------------------------内容处理------------------------ */
-// 声明 props，接收父组件传递的 id
+import { useRoute } from 'vue-router';
+import EmojiPicker from "vue3-emoji-picker";
+import "vue3-emoji-picker/css";
+import Qrcode from 'vue-qrcode';
+import html2canvas from 'html2canvas';
+import dayjs from "dayjs";
+const route = useRoute();
+const instance = getCurrentInstance();
+const $http = instance.appContext.config.globalProperties.$http;
+
+/** ------------------------外部参数处理------------------------ */
 const props = defineProps({
-    articleId: {
-        type: [String, Number], // 根据实际情况调整类型
-        required: true         // 如果父组件必须传递此参数
+    articleId: { // 文章article_id，由父组件传入
+        type: [String, Number],
+        required: true
     },
-    backTextHeight: {
+    backTextHeight: { // 顶部标题高度
         type: [Number, String],
         default: 18
     }
@@ -496,47 +506,35 @@ const props = defineProps({
 const backTextStyle = computed(() => {
     return { '--back-text-height': `${props.backTextHeight}rem` }
 });
-console.log(backTextStyle.value)
-const paramsId = computed(() => props.articleId);
-
-const mainContent = computed(() => {
-    try {
-        const storedValue = localStorage.getItem('mainContent');
-        // 情况1：无存储值，返回默认值（根据业务需求调整）
-        if (storedValue === null) {
-            return null; // 或返回 {}、'' 等默认值
-        }
-        // 情况2：尝试解析JSON（捕获可能的解析错误）
-        return JSON.parse(storedValue);
-    } catch (error) {
-        console.error('解析localStorage中的mainContent失败:', error);
-        // 返回安全值（如空对象、空字符串，或根据业务逻辑处理）
-        return null; // 或 {}、''
+const paramsId = computed(() => { //本文实际使用唯一参数值
+    if (props.articleId != null) {
+        return props.articleId;
     }
+    if (route.params.id != null) {
+        return route.params.id; //文章article_id，由路由参数传入
+    }
+    return null;
 });
 
-const recordDetail = ref('');//渲染内容
-//格式化发布时间
-import dayjs from "dayjs";
-import 'dayjs/locale/zh-cn';
-const release_time_format = ((date) => {
-    return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
-})
-//获取数据
-const getFatherdata = () => {
-    if (mainContent.value) {
-        recordDetail.value = mainContent.value.find(obj => obj.article_id === paramsId.value);
-        return recordDetail.value;
-    } else {
-        message.error('未找到匹配的对象');
+/** ------------------------获取数据------------------------ */
+const articleSections = ref([]); //文章段落内容
+const recordDetail = ref(''); //文章详情（基本信息）
+const getColumnDetailData = async () => { // 获取文章详情（基本信息）
+    try {
+        const response = await $http.get('/main/getColumnDetail', {
+            params: {
+                article_id: paramsId.value
+            }
+        });
+        if (!response.articleDetail) throw new Error("无效数据");
+        recordDetail.value = response.articleDetail[0] || {};
+    } catch (error) {
+        console.error("请求错误:", error);
+        error.value = "数据加载失败";
+        recordDetail.value = {}; // 确保错误时清空数据
     }
 }
-getFatherdata();
-// 在组件挂载时和articleId变化时触发
-watch(() => props.articleId, getFatherdata, { immediate: true });
-
-const articleSections = ref([]);
-const getArticleContent = async () => {
+const getArticleContent = async () => { // 获取文章内容段落
     try {
         const response = await $http.get('/main/getArticleSections', {
             params: {
@@ -551,11 +549,9 @@ const getArticleContent = async () => {
         articleSections.value = []; // 确保错误时清空数据
     }
 }
-
+watch(() => props.articleId, getColumnDetailData, { immediate: true }); // 在组件挂载时和articleId变化时触发
 
 /** ------------------------文章浏览量计数------------------------ */
-const instance = getCurrentInstance();
-const $http = instance.appContext.config.globalProperties.$http;
 const updateHeat = async (id) => {
     try {
         const response = await $http.post('/main/updateHeat', { id });
@@ -567,9 +563,8 @@ const updateHeat = async (id) => {
 
 /** ------------------------点赞量计数------------------------ */
 const userStore = useAuthStore(); //当前登录用户信息
-const isLiked = ref(null);
-//检查当前用户点赞状态
-const checkLikeStatus = async (article_id) => {
+const isLiked = ref(null); // 当前用户是否点赞了该文章
+const checkLikeStatus = async (article_id) => { //检查当前用户点赞状态
     try {
         const response = await $http.get('/main/checkLikeStatus', {
             params: {
@@ -593,14 +588,11 @@ const updateLike = (async (article_id) => {
         message.error(error.response.data.message);
     }
 })
-// 点赞按钮点击事件
-const handleLikeClick = async () => {
+const handleLikeClick = async () => { // 点赞/取消点赞函数
     if (isLiked.value) {
-        // 点赞
         await updateLike(recordDetail.value.article_id);
     } else {
-        // 取消点赞
-        await updateLike(recordDetail.value.article_id);
+        // await updateLike(recordDetail.value.article_id); // 取消点赞（增加相应方法）
     }
 }
 /** ------------------------分享模块------------------------ */
@@ -616,35 +608,30 @@ const handleShareClose = () => {
     }
 }
 const moreShare = () => {
-    // 例如，使用浏览器的分享 API
+    // 使用浏览器的分享 API
     if (navigator.share) {
         navigator.share({
             title: '分享标题',
             text: '分享内容',
             url: window.location.href
         }).then(() => {
-            console.log('分享成功');
+            message.success('分享成功');
         }).catch((error) => {
-            console.log('分享失败:', error);
+            message.error('分享失败:', error);
         });
     } else {
-        // 不支持分享 API 的浏览器
-        // 可以使用其他分享方式，例如复制链接
+        // 不支持分享 API 的浏览器可以使用其他分享方式，例如复制链接
         copyToClipboard(window.location.href);
         message.success('链接已复制到剪贴板');
     }
 }
 
 /** ------------------------二维码生成/下载按钮------------------------ */
-// 获取当前url
-const currentUrl = window.location.href;
-import Qrcode from 'vue-qrcode';
-import html2canvas from 'html2canvas';//dom转化为图片
+const currentUrl = window.location.href;// 获取当前url
 const shareCard = ref(null); //获取元素
 const downloadCard = async () => {
     if (!shareCard.value) return;
     try {
-        // 使用 html2canvas 截图（带配置项）
         const canvas = await html2canvas(shareCard.value, {
             scale: 2, // 关键：提高分辨率（默认 1，值越大越清晰）
             useCORS: true, // 允许跨域图片
@@ -658,62 +645,47 @@ const downloadCard = async () => {
             // windowWidth: shareCard.value.offsetWidth, // 窗口宽度（避免响应式布局错乱）
             // windowHeight: shareCard.value.offsetHeight, // 窗口高度
         });
-        // 生成图片 Data URL（PNG 格式）
-        const imgUrl = canvas.toDataURL('image/png');
-        // 调用下载方法
-        downloadImage(imgUrl, '分享卡片.png');
+        const imgUrl = canvas.toDataURL('image/png'); // 生成图片 Data URL（PNG 格式）
+        downloadImage(imgUrl, '分享卡片.png'); // 调用下载方法
     } catch (error) {
-        console.error('生成分享卡片失败:', error);
+        message.error('生成分享卡片失败:', error);
     }
 };
-// 通用下载方法
-const downloadImage = (url, filename) => {
-    // 创建临时 a 标签
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename // 下载文件名
-    a.style.display = 'none'
-
-    // 模拟点击下载
-    document.body.appendChild(a)
-    a.click()
-
-    // 清理资源
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url) // 释放 Blob URL（如果是 Blob 类型需要）
+const downloadImage = (url, filename) => { // 下载方法
+    const a = document.createElement('a'); // 创建临时 a 标签
+    a.href = url;
+    a.download = filename; // 下载文件名
+    a.style.display = 'none';
+    document.body.appendChild(a); // 模拟点击下载
+    a.click();
+    document.body.removeChild(a); // 清理资源
+    URL.revokeObjectURL(url); // 释放 Blob URL（如果是 Blob 类型需要）
 }
 
-/** ------------------------评论区>表情管理2------------------------ */
-import EmojiPicker from "vue3-emoji-picker";
-import "vue3-emoji-picker/css";
-const _ISshow = ref(false);
+/** ------------------------评论区------------------------ */
+const _ISshow = ref(false); // 表情选择器状态
 const emojiIs_show = () => {
     _ISshow.value = !_ISshow.value;
 }
 const onVue3Emoje = (val) => {
-    // 表情输入
-    input__message.value += val.i;
+    input__message.value += val.i; // 表情输入
 }
-
 const onChangeText = () => {
     return;
 }
-
-//评论列表相关
 const messageList = ref([]); //评论列表
 const currentPage = ref(1); //当前页
 const totalPages = ref(1); //总页数
 const pageSize = ref(5);
 const totals = ref(0); //总条数
-
-// 获取评论列表
-const getMessageList = async () => {
+const input__message = ref(''); //评论内容
+const getMessageList = async () => { // 获取评论列表
     try {
         const res = await $http.get('/message/getblogmessageList', {
             params: {
                 page: currentPage.value,
                 pageSize: pageSize.value,
-                article_id: recordDetail.value.article_id,
+                article_id: paramsId.value,
                 parentId: 0
             },
             headers: {
@@ -724,23 +696,16 @@ const getMessageList = async () => {
         totals.value = res.data.pagination.total;
         totalPages.value = Math.ceil(totals.value / pageSize.value);
     } catch (error) {
-        console.error('获取评论列表失败:', error.response.data.msg);
+        // console.error('获取评论列表失败:', error.response.data.msg);
     }
 }
-// 下一页
-const onClickHandler = (page) => {
-    currentPage.value = page;
-    getMessageList();
-}
-//发布评论
-const input__message = ref(''); //评论内容
-const addMessage = async () => {
+const addMessage = async () => { // 发布评论
     if (!input__message.value.trim()) return;
 
     try {
         await $http.post('/message/postmessage', {
             content: input__message.value,
-            article_id: recordDetail.value.article_id
+            article_id: paramsId.value
         },
             {
                 headers: {
@@ -753,18 +718,25 @@ const addMessage = async () => {
         input__message.value = '';
 
     } catch (error) {
-        console.error('发布评论失败:', error);
         message.error(error.response.data.msg)
 
     }
 }
-// 评论回复
-const showReplyModal = ref(false); //回复框状态
-const replyUser = ref(''); //被回复用户
-const replyUserId = ref(0); //被回复用户id
-const replyContent = ref(''); //回复内容
-const activeParentId = ref(0); //被回复评论id
-
+/** ------------------------回复功能------------------------ */
+/**
+ * @param {Boolean} showReplyModal 回复框状态
+ * @param {String} replyUser 被回复用户
+ * @param {Number} replyUserId 被回复用户id
+ * @param {String} replyContent 回复内容
+ * @param {Number} activeParentId 被回复评论id
+ * @param {Function} handleReply 回复的函数，参数message为每一篇article
+ * @param {Function} handleReplyPost 提交回复函数
+ */
+const showReplyModal = ref(false);
+const replyUser = ref('');
+const replyUserId = ref(0);
+const replyContent = ref('');
+const activeParentId = ref(0);
 const handleReply = (message) => {
     showReplyModal.value = true;
     activeParentId.value = message.id;
@@ -772,12 +744,9 @@ const handleReply = (message) => {
     replyUser.value = `@${message.user.username}`;
     document.body.classList.add('no-scroll'); // 新增
 }
-
-// 提交回复
-const handleReplyPost = async () => {
+const handleReplyPost = async () => { // 提交回复
     if (!replyContent.value.trim()) return;
     try {
-
         await $http.post('/message/replies', {
             content: replyContent.value,
             userId: replyUserId.value,
@@ -795,31 +764,33 @@ const handleReplyPost = async () => {
         showReplyModal.value = false;
         document.body.classList.remove('no-scroll'); // 新增
     } catch (error) {
-        console.error('回复评论失败:', error);
         message.warning(error.response.data.msg)
     }
 }
-
-// 关闭回复框
-const handleReplyClose = () => {
+const handleReplyClose = () => { // 关闭回复框
     showReplyModal.value = false;
     replyContent.value = '';
     document.body.classList.remove('no-scroll'); // 新增
 }
-//回复框表情显示/隐藏控制
-const _ModalShow = ref(false);
-//回复框表情显示/隐藏控制方法
-const modalIs_show = () => {
+const _ModalShow = ref(false);//回复框表情显示/隐藏控制
+const modalIs_show = () => { //回复框表情显示/隐藏控制方法
     _ModalShow.value = !_ModalShow.value;
 }
-
-//回复框表情输入
-const getVue3Emoje = (val) => {
-    // 表情输入
-    replyContent.value += val.i;
+const getVue3Emoje = (val) => { //回复框表情输入
+    replyContent.value += val.i; // 表情输入
+}
+const showModal = ref(false); // 控制子组件回复框显示隐藏
+const handClose = () => {
+    showModal.value = false;
 }
 
-// 视频播放
+/** ------------------------视频播放------------------------ */
+/**
+ * @param {HtmlElement} videoRef 视频节点
+ * @param {Boolean} isPlaying 视频播放状态
+ * @param {Function} handlePlay 播放视频
+ * @param {Function} handlePause 暂停视频
+ */
 const videoRef = ref(null);
 const playVideo = () => {
     const video = videoRef.value;
@@ -834,10 +805,11 @@ const handlePlay = () => {
 const handlePause = () => {
     isPlaying.value = false;
 };
-// 控制子组件回复框显示隐藏
-const showModal = ref(false);
-const handClose = () => {
-    showModal.value = false;
+
+/** ------------------------分页→下一页------------------------ */
+const onClickHandler = (page) => {
+    currentPage.value = page;
+    getMessageList();
 }
 
 onMounted(async () => {

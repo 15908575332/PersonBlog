@@ -336,45 +336,32 @@ router.get('/getColumnArticles', async (req, res) => {
 });
 
 //专栏获取文章详情(每次查询)
-// router.get('/getColumnDetail', async (req, res) => {
-//     try {
-//         const { article_id } = req.query;
-//         if (!article_id) {
-//             return res.status(400).json({ message: '缺少文章ID参数' });
-//         }
-//         // 查询文章详情
-//         const articleDetail = await sqlQuery(
-//             `
-//             SELECT
-//                 a.category_id,
-//                 a.article_id,
-//                 a.user_id,
-//                 a.title,
-//                 a.preface,
-//                 a.heat,
-//                 a.like_count,
-//                 a.cover_image_url,
-//                 a.cover_video_url,
-//                 a.release_time,
-//                 c.has_comment
-//             FROM
-//                 articles a
-//             INNER JOIN
-//                 comments_visible c ON a.article_id = c.article_id
-//             WHERE
-//                 a.article_id = ?;
-//             `,
-//             [article_id]
-//         );
-//         res.status(200).json({
-//             code: 200,
-//             message: '获取文章详情成功',
-//             articleDetail
-//         });
-//         console.log('articleDetail', articleDetail);
-//     } catch (error) {
-//         console.error('获取文章详情失败:', error);
-//         res.status(500).json({ message: '服务器内部错误' });
-//     }
-// });
+router.get('/getColumnDetail', async (req, res) => {
+    try {
+        const { article_id } = req.query;
+        if (!article_id) {
+            return res.status(400).json({ message: '缺少文章ID参数' });
+        }
+        // 查询文章详情
+        const articleDetail = await sqlQuery(
+            `
+          SELECT
+            *
+            FROM
+                articles
+            WHERE
+                article_id = ?;
+            `,
+            [article_id]
+        );
+        res.status(200).json({
+            code: 200,
+            message: '获取文章详情成功',
+            articleDetail
+        });
+    } catch (error) {
+        console.error('获取文章详情失败:', error);
+        res.status(500).json({ message: '服务器内部错误' });
+    }
+});
 export default router;
