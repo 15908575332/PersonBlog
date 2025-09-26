@@ -69,22 +69,6 @@ const router = createRouter({
                     meta: {
                         dataKey: "resource"
                     }
-                },
-                {
-                    path: "learning",
-                    name: "recordLearning",
-                    component: () => recordListDetail,
-                    meta: {
-                        dataKey: "learning"
-                    }
-                },
-                {
-                    path: "country",
-                    name: "recordCountry",
-                    component: () => recordListDetail,
-                    meta: {
-                        dataKey: "country"
-                    }
                 }
             ]
         },

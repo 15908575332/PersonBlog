@@ -164,9 +164,7 @@ const quitLogin = () => {
   userStore.logout();
   route.push("/userInfo");
 };
-// const { fontColor } = defineProps({
-//   fontColor: String,
-// });
+
 
 // 新增颜色props并设置默认值
 const props = defineProps({
@@ -211,19 +209,7 @@ const record_options = ref([
     text: "资源合集",
     router: "recordList/resource",
     engTitle: "resource",
-  },
-  {
-    value: "option2",
-    text: "学习人生",
-    router: "recordList/learning",
-    engTitle: "learning",
-  },
-  {
-    value: "option3",
-    text: "寻国记",
-    router: "recordList/country",
-    engTitle: "country",
-  },
+  }
 ]);
 //百宝箱二级目录
 const treasureBox_options = ref([

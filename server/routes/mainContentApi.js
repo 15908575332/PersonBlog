@@ -49,7 +49,6 @@ router.get('/getArticleInfo', async (req, res) => {
                     AND cv.user_id = ?
                 WHERE
                     a.category_id = ?
-
             `,
             [user_id, category_id]
         );
