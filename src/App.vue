@@ -33,7 +33,8 @@ import utils from "@/utils/getAssetsFile";
 import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/store/maincontent'
-
+import { useAuthStore } from '@/store/auth'
+const authStore = useAuthStore()
 // 示例化参数，避免未定义变量报错
 const t = 'LOG';
 const n = 'App启动';
@@ -69,7 +70,7 @@ watch(() => route.path, () => {
 
 async function fetchData() {
   await mainStore.fetchNavData()
-  await mainStore.fetchMainContent() // 如果需要按分类加载，需传参
+  // await mainStore.fetchMainContent(route.query.category_id, authStore.user.userId) // 如果需要按分类加载，需传参
 }
 </script>
 

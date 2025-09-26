@@ -4,7 +4,7 @@
       <Navigation></Navigation>
     </div>
     <!-- 背景图 -->
-    <div class="backPhoto" :style="videoSrc"></div>
+    <div class="backPhoto"></div>
     <!-- 遮罩 -->
     <div class="mask"></div>
     <div class="text">
@@ -94,32 +94,11 @@
             <!-- 锚点导航 -->
             <div class="anchorPointNav">
               <ul class="anchorPointList">
-                <li>
-                  <a href="#" @click.prevent="scrollToSection('lifeReflection')">
+                <li v-for="module in navData" :key="module.category_id">
+                  <a href="#" @click.prevent="scrollToSection(module.category_id)">
                     <p>速览</p>
-                    <p>生活倒影</p>
-                    <p>记录美好生活</p>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" @click.prevent="scrollToSection('audiovisualFeast')">
-                    <p>速览</p>
-                    <p>视听盛宴</p>
-                    <p>听音乐、看书、看电影</p>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" @click.prevent="scrollToSection('blog')">
-                    <p>速览</p>
-                    <p>Blog</p>
-                    <p>blog</p>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" @click.prevent="scrollToSection('resources')">
-                    <p>速览</p>
-                    <p>资源</p>
-                    <p>寻找有趣的资源</p>
+                    <p>{{ module.nav_btn_title }}</p>
+                    <p>{{ module.nav_btn_subtitle }}</p>
                   </a>
                 </li>
               </ul>
@@ -134,7 +113,7 @@
             </div>
             <div class="content__container">
               <!-- 生活倒影 -->
-              <section v-for="module in navData" :key="module.category_id">
+              <section v-for="module in navData" :key="module.category_id" :id="module.category_id">
                 <div class="menu">
                   <div class="flex__layout">
                     <img src=" @/assets/icon/informalEssay/informalEssayMenu.svg" alt="" />
@@ -204,16 +183,36 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance } from "vue";
-import utils from "@/utils/getAssetsFile";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import Navigation from "@/components/NavigationMenu/index.vue";
 import scrollMessage from "@/components/scrollMessage/index.vue";
 import { useAuthStore } from "@/store/auth";
-const authStore = useAuthStore();
 import { useMainStore } from "@/store/maincontent";
-const mainStore = useMainStore();
 import dayjs from "dayjs";
 import axios from "axios";
+import { debounce } from "@/utils/debounce"; // 导入防抖函数
+const mainStore = useMainStore();
+const authStore = useAuthStore();
+
+
+/** ------------------------ 获取分类 ------------------------ */
+const navData = ref([]);
+const getNavData = () => {
+  mainStore.fetchNavData();
+  navData.value = mainStore.navData;
+}
+
+/** ------------------------ 获取所有内容，根据分类id分别存储 ------------------------ */
+const dataContent = ref([]);
+const getContentData = async () => {
+  await Promise.all(navData.value.map(async (category) => {
+    const categoryId = category.category_id;
+    await mainStore.fetchMainContent(categoryId, authStore.user.userId);
+    dataContent.value[categoryId] = mainStore.contentData; // 按分类ID存储数据
+  }));
+}
+
+/** ------------------------ 获取留言（左侧滚动留言） ------------------------ */
 const messageList = ref([]);
 const getScrollMessageData = (async () => {
   try {
@@ -229,14 +228,16 @@ const getScrollMessageData = (async () => {
   }
 });
 
-
+/** ------------------------ 锚点导航------------------------ */
 const scrollToSection = (sectionId) => {
+  console.log(sectionId);
   const element = document.getElementById(sectionId);
   if (element) {
     element.scrollIntoView({ behavior: "smooth" });
   }
 };
-// 传入id值到详情页ListDetail
+
+/** ------------------------ 传入文章id值详情页ListDetail ------------------------ */
 import { useRouter } from "vue-router";
 const route = useRouter();
 const listDetail = (id) => {
@@ -247,51 +248,25 @@ const listDetail = (id) => {
     },
   });
 };
-const imgUrls = ref([
-  {
-    imgSrc: utils.getAssetsFile("img/infomalEssay/infomalEssay.png"),
-  },
-]);
-const videoSrc = computed(() => {
-  return {
-    backgroundImage: `url('${imgUrls.value[0].imgSrc}')`,
-  };
-});
-import { debounce } from "@/utils/debounce"; // 导入防抖函数
-const isNavHidden = ref(false);
+
+/** ------------------------ 滚动隐藏导航栏 ------------------------ */
+const isNavHidden = ref(false); //状态
 const scrollThreshold = 200; // 滚动阈值
-// 处理滚动事件的函数
 const handleScroll = () => {
   const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
   isNavHidden.value = scrollY > scrollThreshold;
 };
-
-// 使用防抖包装滚动事件处理函数
 const debouncedHandleScroll = debounce(handleScroll, 100); // 300ms 防抖延迟
 
-const navData = ref([]);
-const getNavData = () => {
-  mainStore.fetchNavData();
-  navData.value = mainStore.navData;
-}
-const dataContent = ref([]);
-const getContentData = async () => {
-  // 获取分类数据后
-  await Promise.all(navData.value.map(async (category) => {
-    const categoryId = category.category_id;
-    await mainStore.fetchMainContent(categoryId, authStore.user.userId);
-    dataContent.value[categoryId] = mainStore.contentData; // 按分类ID存储数据
-  }));
-
-}
+/** ------------------------ 图片加载完成后显示播放按钮 ------------------------ */
 const
   playButtonReview = ref(false), // 用于控制图片加载状态
   onLoad = () => {
-    if (!mainStore.loading) {
-      // 图片加载完成后执行的逻辑
+    if (!mainStore.loading) { // 图片加载完成后再显示播放按钮
       playButtonReview.value = true;
     }
   };
+
 onMounted(() => {
   window.addEventListener("scroll", debouncedHandleScroll);
   getScrollMessageData(); //滚动消息
@@ -341,6 +316,7 @@ $contentWidth: 65rem; // 内容宽度
     background-position: center;
     position: fixed;
     animation: zoomInDown 0.6s ease-out forwards;
+    background-image: url("../../assets/img/infomalEssay/infomalEssay.png");
   }
 
   // 遮罩

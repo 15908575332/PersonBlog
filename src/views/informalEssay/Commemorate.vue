@@ -80,9 +80,6 @@ import Navigation from "@/components/NavigationMenu/index.vue";
 import FireWorks from "@/components/FireWorks/index.vue";
 </script>
 <style lang="scss" scoped>
-#commemorate {
-
-}
 .wedding_animation {
   @include flexCenter(column, center);
   overflow: hidden;
@@ -125,8 +122,6 @@ import FireWorks from "@/components/FireWorks/index.vue";
   .deng-box2,
   .deng-box3,
   .deng-box4 {
-    // position: fixed;
-    // z-index: 0;
     position: absolute;
     top: 30px;
     pointer-events: none;

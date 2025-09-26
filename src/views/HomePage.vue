@@ -2,7 +2,8 @@
   <div id="homePage">
     <div class="blog-container">
       <!-- 背景图 -->
-      <div class="backPhoto" :style="videoSrc" :class="[isFocus ? 'img-background-scale' : 'img-background-reduction']">
+      <div class="backPhoto" :style="currentPageBackgrounds"
+        :class="[isFocus ? 'img-background-scale' : 'img-background-reduction']">
       </div>
       <!-- 遮罩 -->
       <div class="mask" :class="{ 'blur-groud': isFocus }"></div>
@@ -12,7 +13,7 @@
         <Navigation></Navigation>
         <!-- 时钟/搜索 -->
         <transition name="fade">
-          <div v-if="!isOpen" class="clock-search" :style="{ transform: isFocus ? 'translateY(-80%)' : '' }">
+          <div v-if="!isOpenFavorite" class="clock-search" :style="{ transform: isFocus ? 'translateY(-80%)' : '' }">
             <div class="h-minute">
               <div class="hour">
                 {{ hourString }}
@@ -47,7 +48,7 @@
         </transition>
         <div class="footer-box">
           <!-- 友情链接 -->
-          <div class="help-link" :class="{ opacity0: isOpen | isFocus }">
+          <div class="help-link" :class="{ opacity0: isOpenFavorite | isFocus }">
             <a href="https://gitee.com/T-mysrc/personal-blog" class="item">
               <img src="@/assets/icon/homePage/gitee-icon.png" alt="blog" />
               <p>Gitee</p>
@@ -79,8 +80,8 @@
       </div>
       <!-- 收藏夹 -->
       <transition name="fade">
-        <div @click="isOutInside" class="favorites" v-show="isOpen">
-          <div class="front-end" ref="favorites">
+        <div @click="isOutInside" class="favorites" v-show="isOpenFavorite">
+          <div class="front-end" ref="favoriteElement">
             <h3 style="
                 text-align: center;
                 margin-bottom: 1rem;
@@ -128,20 +129,21 @@ import {
 import WeatherCard from "../components/WeatherCard/index.vue";
 import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
-// 通知
-import { notification, Button } from "ant-design-vue";
-//通知图标
+import { notification } from "ant-design-vue";
 import { SmileOutlined } from '@ant-design/icons-vue';
-const randomIndex = ref();
+import { useAuthStore } from "@/store/auth";
+import { Solar } from "lunar-javascript";
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
-import { useAuthStore } from "@/store/auth";
-const videoSrc = computed(() => {
+
+/** ------------------------ 页面背景图 ------------------------ */
+const randomIndex = ref(0); // 随机数索引
+const currentPageBackgrounds = computed(() => {
   return {
-    backgroundImage: `url('${videoUrls.value[randomIndex.value]}')`,
+    backgroundImage: `url('${onOtherImgs.value[randomIndex.value]}')`,
   };
 });
-const videoUrls = ref([
+const onOtherImgs = ref([
   utils.getAssetsFile("img/homePage/back1.webp"),
   utils.getAssetsFile("img/homePage/back2.webp"),
   utils.getAssetsFile("img/homePage/back3.webp"),
@@ -150,92 +152,57 @@ const videoUrls = ref([
   utils.getAssetsFile("img/homePage/back6.webp"),
 ]);
 
-const hourString = computed(() => {
-  //时
+/** ------------------------ 时间/日期（农历年月日） ------------------------ */
+const hourString = computed(() => { //时
   return currentTime.value.getHours().toString().padStart(2, "0");
 });
-const minuteString = computed(() => {
-  //分
+const minuteString = computed(() => { //分
   return currentTime.value.getMinutes().toString().padStart(2, "0");
 });
-
-// 农历年月日
-import { Solar, Lunar, HolidayUtil } from "lunar-javascript";
 const currentTime = ref(new Date());
 var solar = Solar.fromDate(new Date());
 var lunar = solar.getLunar();
 const lunarYearMonth = lunar.toFullString().substring(5, 16);
-// 星期
-function getCurrentWeekday() {
-  var date = new Date(); // 获取当前日期和时间
+
+function getCurrentWeekday() { // 星期
+  var date = new Date();
   var day = date.getDay(); // 获取当前是周几的数字表示
-  var weeks = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"]; // 定义星期数组
-  const weekday = weeks[day]; // 根据数字获取对应的周几中文表示
+  var weeks = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+  const weekday = weeks[day];
   return weekday;
 }
 const dateSring = computed(() => {
-  // let year = currentTime.getFullYear();
   let now = new Date();
   let month = now.getMonth() + 1; // 月份是从0开始的
   let day = now.getDate();
   return `${month}月${day}日${getCurrentWeekday()}`;
 });
-// const updatTime = () => {
-//   currentTime.value = new Date();
-// };
-// 输入框失去焦点
+
+/** ------------------------ 搜索框 ------------------------ */
 const isFocus = ref(false);
 const focusInput = () => {
   isFocus.value = true;
 };
-// 输入框获得焦点
 const focusBlur = () => {
   isFocus.value = false;
   searchQuery.value = null;
 };
-// 搜索引擎
 const inputAutoFocus = ref("");
-// 切换搜索引擎
-const ChangeSearchLink = () => { };
+const ChangeSearchLink = () => { };  // 切换搜索引擎（未实现）
 const searchQuery = ref();
 function searchEngine() {
-  // 其中，wd是查询参数，表示搜索的关键词
   const baseUrl = "https://www.baidu.com/s?";
   const queryParams = new URLSearchParams({ wd: searchQuery.value }).toString();
   const searchUrl = `${baseUrl}${queryParams}`;
-  // 跳转到百度搜索结果页面
   window.open(searchUrl, "_blank");
 }
-// 打开收藏夹
-const isOpen = ref(false);
-const favorites = ref(true);
-//是否显示全部内容
-const isShowAll = computed(() => {
-  return favorites.value.length <= 10;
-})
-// 计算属性控制显示数据
-const displayedData = computed(() => {
-  if (isShowAll.value) {
-    return favoriteData.value
-  } else {
-    return favoriteData.value.slice(0, 10)
-  }
-})
-const openMore = () => {
-  isOpen.value = isFocus.value = !isOpen.value;
-};
-// 点击是否收藏夹本身
-const isOutInside = (event) => {
-  if (!favorites.value.contains(event.target)) {
-    isOpen.value = isFocus.value = false;
-  }
-};
-// 收藏夹数据源
-const favoriteData = ref([]);
 
+/** ------------------------ 收藏夹 ------------------------ */
+const isOpenFavorite = ref(false); //收藏夹状态
+const favoriteElement = ref(true); //收藏夹Element
+const favoriteData = ref([]); //数据源
 const getFavorites = (async () => {
   const authStore = useAuthStore();
-  // 调用后端接口获取数据
   try {
     const response = await $http.get('/treasureBox/favorite-data', {
 
@@ -254,8 +221,27 @@ const getFavorites = (async () => {
     console.error('请求失败:', error);
   }
 });
+const isShowAll = computed(() => {
+  return favoriteElement.value.length <= 10;
+})
+const displayedData = computed(() => {
+  if (isShowAll.value) {
+    return favoriteData.value
+  } else {
+    return favoriteData.value.slice(0, 10)
+  }
+})
+const openMore = () => { //更多
+  isOpenFavorite.value = isFocus.value = !isOpenFavorite.value;
+};
+const isOutInside = (event) => {
+  if (!favoriteElement.value.contains(event.target)) { // 判断点击是否收藏夹本身
+    isOpenFavorite.value = isFocus.value = false;
+  }
+};
 
-//通知卡片
+
+/** ------------------------ 全局通知卡片 ------------------------ */
 const hasShownNotification = ref(localStorage.getItem('hasShownNotification'));
 const notificationFun = (() => {
   if (!hasShownNotification.value) {
@@ -273,10 +259,11 @@ const notificationFun = (() => {
     localStorage.setItem('hasShownNotification', 'true');
   }
 })
+
 onMounted(() => {
   notificationFun();
-  if (videoUrls.value.length > 0) {
-    randomIndex.value = Math.floor(Math.random() * videoUrls.value.length); //背景图索引值
+  if (onOtherImgs.value.length > 0) {
+    randomIndex.value = Math.floor(Math.random() * onOtherImgs.value.length); //背景图索引值
   }
   getFavorites();
 });

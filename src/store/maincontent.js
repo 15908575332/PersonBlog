@@ -23,7 +23,7 @@ export const useMainStore = defineStore('main', () => {
             contentData.value = response.data.result;
             mainContent.value = response.data.result;
             tags.value = response.data.tags;
-            // localStorage.setItem('mainContent', JSON.stringify(mainContent.value));
+            localStorage.setItem('mainContent', JSON.stringify(mainContent.value));
         } catch (err) {
             console.error("请求错误:", err);
             error.value = "数据加载失败";

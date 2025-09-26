@@ -284,7 +284,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                            }}</div>
+                                                }}</div>
                                         </div>
                                     </div>
 
