@@ -157,7 +157,7 @@ router.get('/checkLikeStatus', async (req, res) => {
         const result = await sqlQuery(
             `SELECT 
                 CASE 
-                    WHEN COUNT(*) > 0 THEN true 
+                    WHEN COUNT(*) > 0 THEN true
                     ELSE false 
                 END AS has_liked
              FROM article_likes_count 

@@ -121,11 +121,12 @@
                     <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
                     <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>
                 </ul>
+
                 <!-- 操作按钮 -->
                 <div class="feed">
-                    <button class="likeBtn" @click="handleLikeClick">
+                    <button class="likeBtn" @click="handleLikeClick(recordDetail.article_id)">
                         <p style="text-wrap: nowrap;">点赞</p>
-                        <div class="heart" :class="{ 'heartAnimation': isLiked }" :rel="isLiked ? 'unlike:' : 'like'">
+                        <div class="heart" :class="{ 'heartAnimation': Boolean(isLiked) }">
                         </div>
                     </button>
                     <div class="shareBtn" @click="shareLike">
@@ -284,7 +285,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                            }}</div>
+                                                }}</div>
                                         </div>
                                     </div>
 
@@ -563,7 +564,7 @@ const updateHeat = async (id) => {
 
 /** ------------------------点赞量计数------------------------ */
 const userStore = useAuthStore(); //当前登录用户信息
-const isLiked = ref(null); // 当前用户是否点赞了该文章
+const isLiked = ref(false); // 当前用户是否点赞了该文章
 const checkLikeStatus = async (article_id) => { //检查当前用户点赞状态
     try {
         const response = await $http.get('/main/checkLikeStatus', {
@@ -573,27 +574,25 @@ const checkLikeStatus = async (article_id) => { //检查当前用户点赞状态
             }
         });
         isLiked.value = response.hasLiked;
+        console.log('checkLikeStatus', isLiked.value);
     } catch (error) {
         console.error('检查点赞状态失败:', error);
     }
 }
+
 const updateLike = (async (article_id) => {
     try {
         const response = await $http.post('/main/likeArticle', { user_id: userStore.user.userId, article_id });
-        isLiked.value = !isLiked.value;
         recordDetail.value.like_count = response.likeCount;
         message.success('点赞成功');
+        isLiked.value = true;
     } catch (error) {
         console.error('更新失败:', error);
         message.error(error.response.data.message);
     }
 })
-const handleLikeClick = async () => { // 点赞/取消点赞函数
-    if (isLiked.value) {
-        await updateLike(recordDetail.value.article_id);
-    } else {
-        // await updateLike(recordDetail.value.article_id); // 取消点赞（增加相应方法）
-    }
+const handleLikeClick = async (article_id) => { // 点赞/取消点赞函数
+    await updateLike(article_id);
 }
 
 /** ------------------------ 分享模块 ------------------------ */
@@ -814,10 +813,10 @@ const onClickHandler = (page) => {
 }
 
 onMounted(async () => {
-    checkLikeStatus(paramsId.value);
-    updateHeat(paramsId.value);
-    getMessageList();
-    getArticleContent();
+    await checkLikeStatus(paramsId.value);
+    await updateHeat(paramsId.value);
+    await getMessageList();
+    await getArticleContent();
 
 })
 </script>
@@ -1619,6 +1618,10 @@ onMounted(async () => {
                 -webkit-animation-timing-function: steps(28);
                 animation-timing-function: steps(28);
                 background-position: right;
+            }
+
+            .noHeart {
+                background-position: 0;
             }
         }
 
