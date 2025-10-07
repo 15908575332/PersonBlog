@@ -1,10 +1,7 @@
 <template>
   <div class="active-page1" id="AlbumCollection" ref="AlbumCollection">
     <!-- 导航栏 -->
-    <div class="navigation">
-      <Navigation></Navigation>
-    </div>
-
+    <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
     <!-- 堆叠切换 -->
     <div class="stacking_switch page page1">
       <div class="content">
@@ -133,7 +130,6 @@ import CarouselImage from "@/components/CarouselImage/index.vue";
 import ThumbnailCarousel from "@/components/ThumbnailCarousel/index.vue";
 import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
-
 const cardImages = Array.from({ length: 7 }, (_, i) =>
   utils.getAssetsFile(`img/albumCollection/nns${i + 1}.jpg`)
 );

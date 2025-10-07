@@ -1,7 +1,6 @@
 <template>
   <div class="container" id="life-card">
-    <!--导航栏 -->
-    <Navigation />
+    <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
     <!-- 内容 -->
     <div id="sb-container" ref="sbContainer" class="sb-container">
       <div v-for="(item, idx) in sbItems" :key="idx">

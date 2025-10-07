@@ -4,98 +4,47 @@
         <div class="backPhoto"></div>
         <!-- 遮罩 -->
         <div class="mask"></div>
-
         <!-- 导航 -->
         <Navigation></Navigation>
-
         <div class="pricing-cards">
-            <!-- 卡片1 -->
-            <div class="pricing-card">
-                <a-badge-ribbon color="#fe3459" text="❦ 常规"></a-badge-ribbon>
+            <!-- 卡片 -->
+            <div class="pricing-card" v-for="(card, index) in cards" :key="index">
+                <a-badge-ribbon v-if="card.isRecommended" :color="card.ribbonColor"
+                    :text="card.ribbonText"></a-badge-ribbon>
                 <div class="content">
                     <div class="card-header">
                         <div class="level">
-                            <img :src="utils.getAssetsFile('icon/level/lv3.svg')" alt="member">
+                            <img :src="utils.getAssetsFile(`icon/level/lv${card.level}.svg`)" alt="member">
 
                         </div>
-                        <h3>POETIZE - 最美博客授权</h3>
+                        <h3>{{ card.title }}</h3>
                     </div>
-
                     <div class="price-section">
-                        <div class="current-price">￥{{ displayedPrice1 }}</div>
-                        <div class="original-price">￥299</div>
-                    </div>
-
-                    <div class="benefits">
-                        此处可以写HTML，自定义会员权益
-                    </div>
-
-                    <button class="buy-button" @click="isPayment">立即购买</button>
-                </div>
-            </div>
-            <!-- 卡片2 -->
-            <div class="pricing-card">
-                <div class="content">
-                    <div class="card-header">
-                        <div class="level">
-                            <img :src="utils.getAssetsFile('icon/level/lv4.svg')" alt="member">
-
+                        <div class="current-price" :data-end="card.price">
+                            ￥ {{ formattedPrice(card.price) }}
                         </div>
-                        <h3>POETIZE - 商品订单支付授权</h3>
+                        <div class="original-price">￥{{ formattedPrice(card.originalPrice) }}</div>
                     </div>
-
-                    <div class="price-section">
-                        <div class="current-price">￥{{ displayedPrice2 }}</div>
-                        <div class="original-price">￥999</div>
-                    </div>
-
-                    <div class="benefits">
-                        此处可以写HTML，自定义会员权益
-                    </div>
-
-                    <button class="buy-button" @click="isPayment">立即购买</button>
-                </div>
-            </div>
-            <!-- 卡片3 -->
-            <div class="pricing-card">
-                <a-badge-ribbon color="#d81e06" text="❧ 推荐"></a-badge-ribbon>
-
-                <div class="content">
-                    <div class="card-header">
-                        <div class="level">
-                            <img :src="utils.getAssetsFile('icon/level/lv6.svg')" alt="member">
-                        </div>
-                        <h3>POETIZE站长专享</h3>
-                    </div>
-
-                    <div class="price-section">
-                        <div class="current-price">￥{{ displayedPrice3 }}</div>
-                        <div class="original-price">暂无</div>
-                    </div>
-
-                    <div class="benefits">
-                        此处可以写HTML，自定义会员权益
-                    </div>
-
-                    <button class="buy-button" @click="isPayment">立即购买</button>
+                    <div class="benefits" v-html="card.benefits"></div>
+                    <button class="buy-button" @click="handlePurchase(card)">立即购买</button>
                 </div>
             </div>
         </div>
         <!-- 购买界面 -->
-        <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
+        <div v-if="isVisible" :ref="selectedCard" class="modal-overlay" @click.self="closeModal">
             <div class="modal-content" @click.stop>
                 <button @click="closeModal"><img :src="utils.getAssetsFile('icon/memberCenter/close.svg')"
                         alt="close"></button>
                 <div class="content">
                     <div class="card-header">
                         <div class="level">
-                            <img :src="utils.getAssetsFile('icon/level/lv4.svg')" alt="member">
+                            <img :src="utils.getAssetsFile(`icon/level/lv${selectedCard.level}.svg`)" alt="member">
                         </div>
-                        <h3>POETIZE - 商品订单支付授权</h3>
+                        <h3>{{ selectedCard.title }}</h3>
                     </div>
                     <div class="price-section">
-                        <div class="current-price">￥{{ displayedPrice2 }}</div>
-                        <div class="original-price">￥999</div>
+                        <div class="current-price">￥ {{ formattedPrice(selectedCard.price) }}</div>
+                        <div class="original-price">￥ {{ formattedPrice(selectedCard.originalPrice) }}</div>
                     </div>
                     <!-- 付款方式 -->
                     <div class="pay-title">
@@ -123,64 +72,56 @@
             </div>
         </div>
     </div>
-    <!-- <a-space direction="vertical" style="width: 50%"> -->
-    <!-- <a-card title="Pushes open the window" size="small">and raises the spyglass.</a-card> -->
-    <!-- </a-space> -->
 </template>
 <script setup>
 import utils from '@/utils/getAssetsFile';
 import Navigation from '../components/NavigationMenu/index.vue';
-import { onMounted, ref, watch } from 'vue';
+import { ref, reactive } from 'vue';
 
-// 价格常量
-const PRICES = {
-    card1: 199,
-    card2: 99,
-    card3: 9999
-}
-
-// 响应式显示值
-const displayedPrice1 = ref(0)
-const displayedPrice2 = ref(0)
-const displayedPrice3 = ref(0)
-
-onMounted(() => {
-    animateValue(0, PRICES.card1, 2000, val => displayedPrice1.value = val)
-    animateValue(0, PRICES.card2, 2000, val => displayedPrice2.value = val)
-    animateValue(0, PRICES.card3, 2500, val => displayedPrice3.value = val) // 较大数值适当延长动画时间
-})
-
-/**
- * 带缓动函数的数值递增动画
- * @param {number} start - 起始值
- * @param {number} end - 结束值
- * @param {number} duration - 动画时长(ms)
- * @param {function} callback - 更新回调
- */
-function animateValue(start, end, duration, callback) {
-    const startTime = Date.now()
-    const easing = t => t * (2 - t) // 缓出函数
-
-    const animate = () => {
-        const elapsed = Date.now() - startTime
-        const progress = Math.min(elapsed / duration, 1)
-
-        callback(
-            start + Math.round((end - start) * easing(progress))
-        )
-
-        if (progress < 1) requestAnimationFrame(animate)
+// 卡片数据集合
+const cards = reactive([
+    {
+        title: '个人博客源码授权',
+        level: 3,
+        ribbonColor: '#fe3459',
+        ribbonText: '常规',
+        price: 99,
+        originalPrice: 199,
+        benefits: '基础博客授权功能<br>支持单篇文章付费阅读',
+        isRecommended: true //角标
+    },
+    {
+        title: '其它订单商品支付 - blog',
+        level: 4,
+        ribbonColor: '#ff9900',
+        ribbonText: '进阶',
+        price: 198,
+        originalPrice: 299,
+        benefits: '高级商品订单系统<br>支持虚拟商品/实物商品支付',
+        isRecommended: true
+    },
+    {
+        title: '高级定制',
+        level: 6,
+        ribbonColor: '#d81e06',
+        ribbonText: '❀推荐',
+        price: 999,
+        originalPrice: '暂无',
+        benefits: '专属定制服务<br>API接口开放<br>优先技术支持',
+        isRecommended: true
     }
+]);
 
-    requestAnimationFrame(animate)
-}
-
-// 购买界面
-const isVisible = ref(false);
-const isPayment = () => {
-    isVisible.value = !isVisible.value;
-}
-const closeModal = () => {
+const selectedCard = ref(null); // 选中的卡片
+const formattedPrice = (price) => { // 格式化价格
+    return price.toLocaleString('en-US', { minimumFractionDigits: 0 });
+};
+const isVisible = ref(false); // 购买界面是否可见
+const handlePurchase = (card) => { // 处理购买
+    selectedCard.value = card;
+    isVisible.value = true;
+};
+const closeModal = () => { // 关闭购买界面
     isVisible.value = false;
 };
 
@@ -190,7 +131,6 @@ const closeModal = () => {
     .backPhoto {
         width: 100vw;
         height: 100vh;
-        // background-size: cover;
         background-position: center;
         position: absolute;
         left: 0;
@@ -224,12 +164,12 @@ const closeModal = () => {
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
+            height: auto;
 
             .content {
                 padding: 1rem;
 
                 .card-header {
-
                     .level {
                         display: flex;
                         align-items: center;
@@ -271,10 +211,12 @@ const closeModal = () => {
 
             .benefits {
                 text-align: center;
-                height: 40px;
+                height: 4rem;
+                overflow: hidden;
                 color: #666;
                 font-size: 0.95em;
                 line-height: 1.5;
+                margin: 0.5rem 0;
             }
 
             .buy-button {
@@ -311,6 +253,7 @@ const closeModal = () => {
         cursor: pointer;
         width: 100%;
         height: 100%;
+        font-family: 'gtpy';
 
         .modal-content {
             background-color: white;

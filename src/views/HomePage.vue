@@ -329,6 +329,7 @@ onUnmounted(() => {
           padding-bottom: 1rem;
           text-align: center;
           @include flexCenter(row, center);
+          letter-spacing: 0.5rem;
 
           .blinking-colon {
             padding: 0 0.4rem;
@@ -341,7 +342,7 @@ onUnmounted(() => {
         // 农历
         .lunarday-year {
           color: #b5c3d1;
-          font-size: 0.9rem;
+          font-size: 1rem;
           font-weight: 700;
         }
 
@@ -350,7 +351,7 @@ onUnmounted(() => {
           font-weight: 700;
           color: #dce4ed;
           padding: 0.5rem;
-          font-size: 1.3rem;
+          font-size: 1.4rem;
         }
 
         //搜索框
@@ -581,6 +582,7 @@ onUnmounted(() => {
       .minute,
       .blinking-colon {
         font-size: 3.5rem;
+        
       }
     }
   }

@@ -662,9 +662,9 @@ $contentWidth: 65rem; // 内容宽度
                   left: -2rem;
                   width: calc(100% + $count * 2rem);
                   height: calc(100% + $count * 2rem);
-                  border-radius: $count * $contentWidth / $contentWidth * 10px;
+                  border-radius: calc($count * $contentWidth / $contentWidth * 10px);
                   animation-name: move_wave;
-                  animation-duration: $count * $contentWidth / $contentWidth * 20s;
+                  animation-duration: calc($count * $contentWidth / $contentWidth * 20s);
                   animation-timing-function: linear;
                   animation-iteration-count: infinite;
                 }

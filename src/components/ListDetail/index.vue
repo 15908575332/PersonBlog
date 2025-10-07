@@ -285,7 +285,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                                }}</div>
+                                            }}</div>
                                         </div>
                                     </div>
 
@@ -574,7 +574,6 @@ const checkLikeStatus = async (article_id) => { //检查当前用户点赞状态
             }
         });
         isLiked.value = response.hasLiked;
-        console.log('checkLikeStatus', isLiked.value);
     } catch (error) {
         console.error('检查点赞状态失败:', error);
     }
@@ -615,7 +614,7 @@ const moreShare = () => {
             text: '分享内容',
             url: window.location.href
         }).then(() => {
-            message.success('分享成功');
+            // message.success('分享成功');
         }).catch((error) => {
             message.error('分享失败:', error);
         });
@@ -635,15 +634,6 @@ const downloadCard = async () => {
         const canvas = await html2canvas(shareCard.value, {
             scale: 2, // 关键：提高分辨率（默认 1，值越大越清晰）
             useCORS: true, // 允许跨域图片
-            // // backgroundColor: '#ffffff', // 设置背景色（如果原元素背景透明）
-            // logging: false, // 关闭日志输出（生产环境建议关闭）
-            // logging: false, // 调试时可设为 true 查看详细日志
-            // useCORS: true, // 强制跨域图片使用 CORS 加载
-            // allowTaint: false, // 禁止污染画布（跨域图片必须设为 false）
-            // width: 1008, // 显式指定宽度（避免缩放失真）
-            // height: 1336, // 显式指定高度
-            // windowWidth: shareCard.value.offsetWidth, // 窗口宽度（避免响应式布局错乱）
-            // windowHeight: shareCard.value.offsetHeight, // 窗口高度
         });
         const imgUrl = canvas.toDataURL('image/png'); // 生成图片 Data URL（PNG 格式）
         downloadImage(imgUrl, '分享卡片.png'); // 调用下载方法

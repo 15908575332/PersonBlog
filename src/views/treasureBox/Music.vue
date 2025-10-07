@@ -49,39 +49,20 @@
               </div>
               <!-- 随机/循环 -->
               <div class="order-change" @click="togglePlayMode">
-                <img
-                  :src="playMode === 'order' ? cycleImg : randomImg"
-                  alt="playMode"
-                />
+                <img :src="playMode === 'order' ? cycleImg : randomImg" alt="playMode" />
                 <!-- <img src="@/assets/icon/treasureBox/random_default.svg" alt="random"> -->
               </div>
               <!-- 音量控制 -->
               <div class="volume-control">
-                <img
-                  :src="!muted && Math.round(volume) > 0 ? volumeImg : mutedImg"
-                  alt="ismute"
-                  @click="toggleMute"
-                />
-                <div
-                  class="custom-volume"
-                  ref="volumeContainer"
-                  @click="setVolume"
-                >
+                <img :src="!muted && Math.round(volume) > 0 ? volumeImg : mutedImg" alt="ismute" @click="toggleMute" />
+                <div class="custom-volume" ref="volumeContainer" @click="setVolume">
                   <div class="volume-bar">
-                    <div
-                      class="current-volume"
-                      :style="{ width: muted ? '0%' : volume + '%' }"
-                    ></div>
-                    <div
-                      class="volume-handle"
-                      :style="{ left: muted ? '0%' : volume + '%' }"
-                      @mousedown="startDrag"
-                    ></div>
+                    <div class="current-volume" :style="{ width: muted ? '0%' : volume + '%' }"></div>
+                    <div class="volume-handle" :style="{ left: muted ? '0%' : volume + '%' }" @mousedown="startDrag">
+                    </div>
                   </div>
                 </div>
-                <span class="volume-number"
-                  >{{ muted ? 0 : Math.round(volume) }}%</span
-                >
+                <span class="volume-number">{{ muted ? 0 : Math.round(volume) }}%</span>
               </div>
             </div>
           </div>
@@ -89,22 +70,12 @@
 
         <!-- 播放列表 -->
         <div class="playlist">
-          <div
-            v-for="(song, index) in playlist"
-            :key="index"
-            class="playlist-item"
-            :class="{ active: currentSongIndex === index }"
-            @click="playSong(index)"
-          >
+          <div v-for="(song, index) in playlist" :key="index" class="playlist-item"
+            :class="{ active: currentSongIndex === index }" @click="playSong(index)">
             <div class="music-introduce">
               <span>
-                <img
-                  v-if="currentSongIndex === index"
-                  :class="{ 'play-active': isPlaying }"
-                  src="@/assets/icon/treasureBox/music-play.png"
-                  class="icon-playing"
-                  alt="播放按钮"
-                />
+                <img v-if="currentSongIndex === index" :class="{ 'play-active': isPlaying }"
+                  src="@/assets/icon/treasureBox/music-play.png" class="icon-playing" alt="播放按钮" />
                 {{ song.title }} - {{ song.artist }}
               </span>
               <span> {{ formatTime(song.duration) }}</span>
@@ -112,21 +83,13 @@
           </div>
         </div>
         <!-- 频谱组件 -->
-        <Spectrum
-          :audio-element="audioElement"
-          :is-playing="isPlaying"
-        ></Spectrum>
+        <Spectrum :audio-element="audioElement" :is-playing="isPlaying"></Spectrum>
       </div>
       <!-- 歌词 -->
       <div class="lyrics-container">
         <div class="lyrics-wrapper" ref="lyricsWrapper">
-          <div
-            v-for="(line, index) in currentLyrics"
-            :key="index"
-            ref="lyricLine"
-            class="lyric-line"
-            :class="{ active: currentLyricIndex === index }"
-          >
+          <div v-for="(line, index) in currentLyrics" :key="index" ref="lyricLine" class="lyric-line"
+            :class="{ active: currentLyricIndex === index }">
             {{ line.text }}
           </div>
           <div v-if="!currentLyrics.length" class="no-lyrics">暂无歌词</div>
@@ -296,36 +259,50 @@ watch(
     immediate: true,
   }
 );
-// 歌词同步逻辑
-watch(currentTime, (time) => {
-  if (!currentLyrics.value.length) return;
 
-  // 精确查找当前时间对应的歌词行
-  let index = -1;
+// 1. 歌词滚动核心逻辑
+const scrollToLyric = (index) => {
+  nextTick(() => {
+    if (!lyricsWrapper.value || !currentLyrics.value.length) return
+
+    const targetLine = lyricLine.value[index]
+    if (!targetLine) return
+
+    const container = lyricsWrapper.value
+    const lineTop = targetLine.offsetTop
+    const containerHeight = container.clientHeight
+    const scrollTop = lineTop - containerHeight / 2 + targetLine.clientHeight / 2
+
+    container.scrollTo({
+      top: scrollTop,
+      behavior: 'smooth'
+    })
+  })
+}
+
+// 2. 优化歌词索引监听
+watch(currentLyricIndex, (newIndex) => {
+  if (newIndex === -1) return
+  scrollToLyric(newIndex)
+})
+
+// 3. 修复歌词同步检测
+watch(currentTime, (newTime) => {
+  if (!currentLyrics.value.length) return
+
+  let newIndex = -1
   for (let i = 0; i < currentLyrics.value.length; i++) {
-    if (currentLyrics.value[i].time <= time) {
-      index = i;
+    if (newTime >= currentLyrics.value[i].time) {
+      newIndex = i
     } else {
-      break;
+      break
     }
   }
 
-  if (index !== currentLyricIndex.value) {
-    currentLyricIndex.value = index;
-    // scrollToLyric(index);
+  if (newIndex !== currentLyricIndex.value) {
+    currentLyricIndex.value = newIndex
   }
-  // scrollToLyric();
-});
-// 滚动逻辑
-// const scrollToLyric = (index) => {
-//     nextTick(() => {
-//         if (lyricsWrapper.value) {
-//             const lineHeight = 24; // 假设每行歌词的高度为24px
-//             const targetTop = index * lineHeight;
-//             lyricLine.value.scrollTop = targetTop;
-//         }
-//     });
-// };
+})
 
 const setVolume = (e) => {
   if (!volumeContainer.value) return;
@@ -468,6 +445,7 @@ onMounted(async () => {
   @include flexCenter(column, center);
   overflow: hidden;
   position: relative;
+
   //导航
   .navigate {
     position: fixed;
@@ -493,18 +471,20 @@ onMounted(async () => {
     z-index: 2;
 
     .song-info {
-      @include flexCenter(row, space-between);
+      @include flexCenter(row, flex-end);
 
       // 专辑图片
       .album-pic {
-        width: 6.5rem;
-        height: 6.5rem;
+        width: 8rem;
+        height: 9.5rem;
         border-radius: 0.5rem;
         overflow: hidden;
         border: 1px solid #333;
         box-shadow: 0 2px 10px black;
         @include flexCenter(center, center);
-        position: relative;
+        position: absolute;
+        top: -1rem;
+        left: -1rem;
         transition: transform 0.3s ease;
 
         &:hover {
@@ -519,7 +499,7 @@ onMounted(async () => {
       //信息和控制按钮
       .text-info-change {
         color: white;
-        width: 65%;
+        width: 75%;
 
         // 歌名、作者
         .title-auther {
@@ -527,7 +507,6 @@ onMounted(async () => {
 
           h2 {
             font-size: 0.9rem;
-            // margin-bottom: 0.5rem;
           }
 
           p {
@@ -596,10 +575,12 @@ onMounted(async () => {
             gap: 0.4rem;
             min-width: 167px;
             overflow: hidden;
+
             // background-color: rebeccapurple;
             span {
               font-size: 16px;
             }
+
             .custom-volume {
               position: relative;
               width: 5rem;
@@ -744,9 +725,11 @@ onMounted(async () => {
     overflow-y: auto;
 
     .lyrics-wrapper {
-      scroll-behavior: smooth;
       height: 20.5rem;
       text-align: center;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+
 
       /* IE 10+ */
       &::-webkit-scrollbar {
