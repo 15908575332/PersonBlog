@@ -116,7 +116,7 @@
                 </div>
                 <!-- 提示 -->
                 <ul class="abstract">
-                    <li>作者：{{ recordDetail.author }}</li>
+                    <li>作者：{{ recordDetail.username }}</li>
                     <li>1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(Blog@blog.cn)进行删除处理。</li>
                     <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
                     <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>

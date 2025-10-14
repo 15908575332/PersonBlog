@@ -16,7 +16,8 @@
             <div class="levelsbox">
                 <img class="level" :src="utils.getAssetsFile('icon/level/member.svg')" alt="icon">
                 <h2>会员等级：</h2>
-                <img class="level" :src="utils.getAssetsFile('icon/level/lv5.svg')" alt="level">
+                <img class="level" :src="utils.getAssetsFile('icon/level/lv' + userStore.user.vipLevel + '.svg')"
+                    alt="level">
             </div>
 
 
@@ -178,16 +179,16 @@ onMounted(() => { });
         width: 100vw;
         height: 100vh;
         background-size: cover;
-        background-position: center;
+        // background-position: center;
         position: absolute;
         left: 0;
         top: 0;
         z-index: -1;
-        background-image: url('@/assets/img/personCenter/personCenterBg.jpeg');
+        background-image: url('@/assets/img/personCenter/personCenterBg.jpg');
     }
 
     .mask {
-        background-color: rgba(50, 50, 50, 0.2);
+        background-color: rgba(50, 50, 50, 0.1);
         z-index: inherit;
         width: 100%;
         height: 100%;

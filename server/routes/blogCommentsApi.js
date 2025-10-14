@@ -24,7 +24,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
                 bm.article_id,
                 bm.content,
                 DATE_FORMAT(bm.created_at, '%Y-%m-%d %H:%i:%s') AS createdAt,
-                u.avatarUrl,
+                u.avatar_url,
                 u.username,
                 u.vipLevel
             FROM blog_comments bm
@@ -50,7 +50,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
                 pr.user_id,
                 pr.content AS replyContent,
                 DATE_FORMAT(pr.created_at, '%Y-%m-%d %H:%i:%s') AS replyCreatedAt,
-                u.avatarUrl AS replyAvatar,
+                u.avatar_url AS replyAvatar,
                 u.username AS replyUsername,
                 u.vipLevel AS replyVipLevel
             FROM blog_comments_replies pr
@@ -85,7 +85,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
             content: post.content,
             createdAt: post.createdAt,
             user: {
-                avatarUrl: post.avatarUrl,
+                avatarUrl: post.avatar_url,
                 username: post.username,
                 vipLevel: post.vipLevel
             },

@@ -74,11 +74,11 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
                 userId: user.user_id,
                 username: user.username,
                 email: user.email,
-                avatarUrl: user.avatarUrl,
+                avatarUrl: user.avatar_url,
                 sex: user.sex,
                 introduce: user.introduce,
                 registerTime: user.created_at,
-                level: user.vipLevel,
+                vipLevel: user.vip_level,
                 iat: Math.floor(Date.now() / 1000), // 签发时间
             }
         });

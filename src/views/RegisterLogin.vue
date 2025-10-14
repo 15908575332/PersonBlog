@@ -161,7 +161,7 @@ async function UserRegister(e) {
 
 /** ------------------------ 登录 ------------------------ */
 const defaultLoginInfo = ref({
-    loginEmail: 'test@163.com',
+    loginEmail: 'henry@163.com',
     loginPassword: '123456',
 })
 const login = async (e) => {

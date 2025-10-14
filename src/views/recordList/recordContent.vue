@@ -6,22 +6,100 @@
     <div class="backVideo">
       <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video>
     </div>
+    <!-- 搜索栏 -->
     <div class="search" :class="{ search__open: isInputOpen }">
       <span class="closeInput" @click="inputBlur">×</span>
-      <form class="search__form">
+      <form class="search__form" @submit.prevent="handleSearch">
         <input type="text" ref="inputSearch" v-model="searchQuery" placeholder="请输入搜索内容" @focus="inputFocus" />
-        <img src=" @/assets/icon/informalEssay/informalEssaySearch.svg" alt="" />
+        <img src=" @/assets/icon/informalEssay/informalEssaySearch.svg" @click="handleSearch" />
       </form>
       <div class="search__suggestion">
         <h3>一些有用的建议</h3>
         <div class="suggestion-tags">
           <span v-for="tag in tags" :key="tag" class="suggestion-tag" @click="setTagToInput(tag.master_tag)">#{{
-            tag.master_tag
-          }}</span>
+            tag.master_tag }}</span>
         </div>
       </div>
     </div>
-    <div class="main__content">
+    <!-- 搜索结果 -->
+    <div v-if="isSearching" class="search__result">
+      <div class="menu" style="border-color: #8fcfc4;">
+        <div class="flex__layout">
+          <img src=" @/assets/icon/recordList/search_result.svg" alt="advocate" style="width: 1.5rem;" />
+          <span style="color: #a39b9c;">“{{ searchTitle }}”</span>
+        </div>
+        <div class="flex__layout">
+          <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
+          <span>MORE</span>
+        </div>
+      </div>
+      <!-- 搜索结果为空 -->
+      <div v-if="!searchResult.length > 0" class="noSearchResult">
+        <div class="noSearchResult__img">
+          <img src=" @/assets/img/recordList/content/noSearchResults.png" alt="noSearchResult" />
+          <p>暂无搜索结果</p>
+        </div>
+      </div>
+      <!-- 搜索结果渲染-->
+      <div v-else>
+        <div class="search_content_aera">
+          <div class="specific__content" v-for="item in searchResult" :key="item.id">
+            <a class="image" @click="listDetail(item.article_id)" data-aos="zoom-in">
+              <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+              <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
+              <div class="item__count">
+                <ul>
+                  <li v-if="item.cover_video_url !== null">
+                    <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
+                    <span>3</span>
+                  </li>
+                  <!-- 预览量 -->
+                  <li>
+                    <img src="@/assets/icon/recordList/countCat-icon.svg" alt="cat" />
+                    <span>{{ item.heat }}</span>
+                  </li>
+                  <!-- 点赞量 -->
+                  <li>
+                    <img src="@/assets/icon/recordList/like.svg" alt="message" />
+                    <span>{{ item.like_count }}</span>
+                  </li>
+                </ul>
+              </div>
+            </a>
+            <div class="text__content">
+              <!-- 发布 -->
+              <h1>{{ item.title }}</h1>
+              <div class="release">
+                <span>
+                  <img :src="utils.getAssetsFile('icon/recordList/auther.svg')" alt="auther_icon">
+                  {{ item.username }}·{{ release_time_format(item.release_time) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 分页 -->
+        <div class="paginate">
+          <vue-awesome-paginate v-if="totalItems > 0" :total-items="totalItems" v-model="currentPage"
+            :items-per-page="pageSize" :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
+            :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
+            <template #prev-button>
+              <span>
+                <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
+              </span>
+            </template>
+
+            <template #next-button>
+              <span>
+                <img src="@/assets/icon/recordList/nextPage.svg" height="25" />
+              </span>
+            </template>
+          </vue-awesome-paginate>
+        </div>
+      </div>
+    </div>
+    <!-- 内容区域 -->
+    <div v-else class="main__content">
       <!-- 导航栏 -->
       <div class="nav__card">
         <ul>
@@ -41,8 +119,60 @@
           </li>
         </ul>
       </div>
-      <!-- 内容区域 -->
+      <!-- content -->
       <div class="content__container">
+        <!-- 推荐位 -->
+        <section v-if="advocateItems">
+          <div class="menu" style="border-color: #ff623e;">
+            <div class="flex__layout">
+              <img src=" @/assets/icon/recordList/advocate.svg" alt="advocate" style="width: 2.9rem;" />
+              <!-- <span style="color: #ff623e;">推荐位</span> -->
+            </div>
+            <div class="flex__layout">
+              <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
+              <span>MORE</span>
+            </div>
+          </div>
+          <div class="content_aera advocate">
+            <div class="specific__content" v-for="item in advocateItems" :key="item.id">
+              <div v-if="item.has_advocate">
+                <a class="image" @click="listDetail(item.article_id)" data-aos="zoom-in">
+                  <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                  <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
+                  <div class="item__count">
+                    <ul>
+                      <li v-if="item.cover_video_url !== null">
+                        <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
+                        <span>3</span>
+                      </li>
+                      <!-- 预览量 -->
+                      <li>
+                        <img src="@/assets/icon/recordList/countCat-icon.svg" alt="cat" />
+                        <span>{{ item.heat }}</span>
+                      </li>
+                      <!-- 点赞量 -->
+                      <li>
+                        <img src="@/assets/icon/recordList/like.svg" alt="message" />
+                        <span>{{ item.like_count }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </a>
+                <div class="text__content">
+                  <!-- 发布 -->
+                  <h1>{{ item.title }}</h1>
+                  <div class="release">
+                    <span>
+                      <img :src="utils.getAssetsFile('icon/recordList/auther.svg')" alt="auther_icon">
+                      {{ item.username }}·{{ release_time_format(item.release_time) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- 常规内容 -->
         <section>
           <div class="menu">
             <div class="flex__layout" v-if="navContent.length > 0">
@@ -123,18 +253,22 @@ const mainStore = useMainStore();
 import utils from "@/utils/getAssetsFile";
 import AOS from "aos";
 import { useAuthStore } from '@/store/auth';
-const authStore = useAuthStore();
-
 import {
   onMounted,
   computed,
   ref,
-  nextTick
+  nextTick,
+  getCurrentInstance
 } from "vue";
-//搜素框
-const isInputOpen = ref(false); // 控制搜索框的打开状态
-const searchQuery = ref("");
+const authStore = useAuthStore();
+const $http = getCurrentInstance().appContext.config.globalProperties.$http;
 
+/** ------------------------ 搜索结果处理 ------------------------ */
+const isInputOpen = ref(false); // 控制搜索框的打开状态
+const isSearching = ref(false); // 控制搜索结果的显示状态
+const searchQuery = ref(""); // 搜索关键词
+const searchResult = ref([]); // 搜索结果
+const searchTitle = ref('');
 const inputBlur = () => {
   isInputOpen.value = false;
 };
@@ -148,9 +282,34 @@ function setTagToInput(tag) {
   nextTick(() => {
     inputSearch.value && inputSearch.value.focus(); // 确保input元素存在后再聚焦
   })
+  handleSearch();
 }
+const handleSearch = async () => {
+  isSearching.value = true; // 开始搜索，显示搜索结果区域
+  if (searchQuery.value.trim() === "") {
+    return; // 避免空搜索
+  }
+  try {
+    const res = await $http.get('/main/searchTags', {
+      params: {
+        keyword: searchQuery.value,
+        pageNum: currentPage.value,
+        pageSize: pageSize.value
+      }
+    });
+    searchResult.value = res.data?.results || [];
+    searchTitle.value = res.data?.searchKey || '搜索结果';
+    searchQuery.value = '';
+    inputBlur();
+    // 输入框失去焦点
+    inputSearch.value.blur();
 
-/** ------------------------导航数据------------------------ */
+  } catch (error) {
+    console.error('搜索失败:', error);
+    isSearching.value = false; // 搜索失败，隐藏搜索结果区域
+  }
+}
+/** ------------------------ 导航数据 ------------------------ */
 const navContent = ref([]);
 const fetchNavData = async () => {
   await mainStore.fetchNavData();
@@ -159,20 +318,24 @@ const fetchNavData = async () => {
     toggleMoudle(navContent.value[0].category_id);
   }
 }
-/** ------------------------内容数据------------------------ */
-const mainContent = computed(() => {
-  return mainStore.contentData;
-})
-const tags = computed(() => {
-  return mainStore.tags;
-})
-//格式化发布时间
+
+/** ------------------------格式化时间------------------------ */
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
 const release_time_format = ((date) => {
   return dayjs(date).format('YYYY-MM-DD');
 })
 
+/** ------------------------内容数据------------------------ */
+const mainContent = computed(() => {
+  return mainStore.contentData || [];
+})
+const advocateItems = computed(() =>
+  mainContent.value.filter(item => item.has_advocate === 1)
+)
+const tags = computed(() => {
+  return mainStore.tags;
+})
 const isActive = ref(); //当前激活导航
 const currentId = ref(); //设置当前ID
 const currentIndex = ref(0); // 当前选中的导航索引
@@ -184,7 +347,6 @@ const toggleMoudle = async (category_id = null, index) => {
   await mainStore.fetchMainContent(category_id, authStore.user.userId);
   onClickHandler(1);
 };
-
 const
   playButtonReview = ref(false), // 用于控制图片加载状态
   onLoad = () => {
@@ -197,9 +359,6 @@ const
     // 图片加载失败后执行的逻辑
     console.error("图片加载失败");
   };
-
-
-
 //传入需要渲染的id，与查询参数fatherId，跳转到listDetail页面
 const listDetail = (id) => {
   route.push({
@@ -221,7 +380,6 @@ const onClickHandler = (page) => {
   currentPage.value = page;
   calculatePaginatedItems();
 };
-
 const calculatePaginatedItems = () => {
   //计算和更新分页后的项目列表
   const startIndex = (currentPage.value - 1) * pageSize.value;
@@ -437,7 +595,242 @@ onMounted(() => {
     }
   }
 
-  //内容
+  // 搜索结果区域
+  .search__result {
+    width: $main_content_width;
+    margin: 0 auto;
+
+    .menu {
+      @include flexCenter(row, space-between);
+      border-bottom: 1px dashed #ccc;
+      padding: 0.2rem;
+      padding-top: 2rem;
+
+      .flex__layout {
+        @include flexCenter(row, center);
+        justify-content: flex-start;
+
+        img {
+          width: 1.2rem;
+          margin-right: 0.5rem;
+        }
+
+        span {
+          font-size: 1rem;
+          color: #999;
+        }
+      }
+    }
+
+    .noSearchResult {
+      padding: 2rem 0;
+
+      .noSearchResult__img {
+        @include flexCenter(column, center);
+
+        img {
+          width: 20rem;
+        }
+
+        p {
+          font-size: 1rem;
+          color: #999;
+        }
+      }
+    }
+
+    // 搜索结果内容区域
+    .search_content_aera {
+      @include flexCenter(row, flex-start);
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.5rem 0.5rem;
+
+
+      .specific__content {
+        width: 11rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        transition: all 0.3s;
+
+        .image {
+          width: 100%;
+          height: 8rem;
+          display: inline-block;
+          border-radius: 0.5rem;
+          overflow: hidden;
+          background-color: black;
+          position: relative;
+
+          &:hover {
+            cursor: pointer;
+
+            img {
+              transform: scale(1.1);
+            }
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            transition: all 0.3s;
+          }
+        }
+
+        .text__content {
+          padding: 0.5rem;
+          color: #a2a2a2;
+
+          img {
+            margin-right: 0.25rem;
+          }
+
+          // 发布
+          .release {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+
+            span {
+              img {
+                width: 0.6rem;
+                margin: 0;
+              }
+            }
+          }
+
+          // 标题
+          h1 {
+            padding: 0rem 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: black;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+
+      // 视频播放按钮
+      .play-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 3rem;
+        /* 按钮的宽度 */
+        height: 2rem;
+        /* 按钮的高度 */
+        background: rgba(0, 0, 0, 0.6);
+        /* 半透明背景 */
+        border: none;
+        border-radius: 10px;
+        /* 圆形按钮 */
+        cursor: pointer;
+        /* 鼠标悬停时显示为可点击 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease;
+
+        /* 背景过渡效果 */
+        &::before {
+          content: "";
+          width: 0;
+          height: 0;
+          border-left: 20px solid white;
+          /* 三角形左边的颜色和宽度 */
+          border-top: 10px solid transparent;
+          /* 三角形顶部的透明度和宽度 */
+          border-bottom: 10px solid transparent;
+          /* 三角形底部的透明度和宽度 */
+        }
+      }
+
+      // 计数
+      .item__count {
+        position: absolute;
+        bottom: 0.3rem;
+        // left: 0.5rem;
+
+        ul {
+          @include flexCenter(row, flex-start);
+
+          li {
+            @include flexCenter(row, center);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding-left: 0.5rem;
+
+            img {
+              padding-right: 0.1rem;
+              height: 0.9rem !important;
+              transform: scale(1) !important;
+            }
+          }
+        }
+      }
+    }
+
+    // 分页
+    .paginate {
+      @include flexCenter(row, center);
+      padding-bottom: 1rem;
+
+      .pagination-container {
+        display: flex;
+        column-gap: 10px;
+      }
+
+      .paginate-buttons {
+        height: 25px;
+        width: 35px;
+        font-size: 0.9rem;
+        font-family: "gtpy";
+        font-weight: 700;
+        margin: 0 0.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: rgb(242, 242, 242);
+        color: black;
+      }
+
+      .paginate-buttons:hover {
+        background-color: #ff8345;
+      }
+
+      .active-page {
+        background-color: #ff8345;
+        border: 1px solid #ff8345;
+        color: white;
+      }
+
+      .back-btn,
+      .next-btn {
+        background-color: transparent;
+
+        &:hover {
+          cursor: pointer;
+          background-color: transparent;
+          animation: scale-animation 1.5s infinite linear;
+        }
+      }
+
+      .active-page:hover {
+        background-color: #ff8345;
+      }
+
+      .first-page-button,
+      .last-page-button {
+        width: 50px;
+      }
+    }
+  }
+
+  // 内容区域
   .main__content {
     width: $main_content_width;
     margin: 0 auto;
@@ -550,19 +943,19 @@ onMounted(() => {
 
       .content_aera {
         @include flexCenter(row, flex-start);
-        column-gap: 2rem;
+        gap: 1rem;
         flex-wrap: wrap;
-        row-gap: 1.2rem;
         padding: 1.5rem 0.5rem;
 
+
         .specific__content {
-          width: 10rem;
+          width: 11rem;
           border-radius: 0.5rem;
           overflow: hidden;
           transition: all 0.3s;
 
           .image {
-            width: 10rem;
+            width: 100%;
             height: 8rem;
             display: inline-block;
             border-radius: 0.5rem;
@@ -662,7 +1055,7 @@ onMounted(() => {
         .item__count {
           position: absolute;
           bottom: 0.3rem;
-          left: 0.5rem;
+          // left: 0.5rem;
 
           ul {
             @include flexCenter(row, flex-start);
@@ -671,7 +1064,7 @@ onMounted(() => {
               @include flexCenter(row, center);
               font-size: 0.7rem;
               font-weight: 700;
-              padding-left: 0.8rem;
+              padding-left: 0.5rem;
 
               img {
                 padding-right: 0.1rem;
@@ -683,6 +1076,20 @@ onMounted(() => {
         }
       }
 
+      // 推荐位
+      .advocate {
+        align-items: flex-start;
+
+        .specific__content:first-child {
+          width: 23rem;
+
+          .image {
+            height: 16rem;
+          }
+        }
+      }
+
+      // 分页
       .paginate {
         @include flexCenter(row, center);
         padding-bottom: 1rem;
@@ -742,7 +1149,6 @@ onMounted(() => {
 .recordContent.overflow-hidden {
   overflow: hidden;
   height: 100vh;
-  // background-color: red;
 }
 
 @keyframes flipInX {

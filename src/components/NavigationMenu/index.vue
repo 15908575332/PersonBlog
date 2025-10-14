@@ -90,7 +90,8 @@
                   </button>
                   <div class="info">
                     <span>{{ userStore.user.username }}</span>
-                    <img :src="utils.getAssetsFile('icon/level/lv5.svg')" alt="level" />
+                    <img class="level" :src="utils.getAssetsFile('icon/level/lv' + userStore.user.vipLevel + '.svg')"
+                      alt="level">
                   </div>
                   <ul>
                     <li class="item" @click="changeRouter('/personalCenter')">

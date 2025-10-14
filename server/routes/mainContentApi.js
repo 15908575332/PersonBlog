@@ -345,11 +345,13 @@ router.get('/getColumnDetail', async (req, res) => {
         const articleDetail = await sqlQuery(
             `
           SELECT
-            *
-            FROM
-                articles
-            WHERE
-                article_id = ?;
+            a.*,
+            u.username
+          FROM
+            articles a
+          INNER JOIN users u on a.user_id = u.user_id
+          WHERE
+            article_id = ?;
             `,
             [article_id]
         );
@@ -361,6 +363,79 @@ router.get('/getColumnDetail', async (req, res) => {
     } catch (error) {
         console.error('获取文章详情失败:', error);
         res.status(500).json({ message: '服务器内部错误' });
+    }
+});
+
+// 文章搜索接口（模糊查询master_tag）带分页
+router.get('/searchTags', async (req, res) => {
+    try {
+        const { keyword, pageNum = 1, pageSize = 10 } = req.query;
+        // 参数校验
+        if (!keyword) {
+            return res.status(400).json({
+                code: 400,
+                message: '缺少关键字参数'
+            });
+        }
+
+        // 参数类型转换与校验
+        const parsedPageNum = parseInt(pageNum, 10);
+        const parsedPageSize = parseInt(pageSize, 10);
+
+        if (isNaN(parsedPageNum) || parsedPageNum < 1) {
+            return res.status(400).json({
+                code: 400,
+                message: 'pageNum必须为大于0的整数'
+            });
+        }
+
+        if (isNaN(parsedPageSize) || parsedPageSize < 1 || parsedPageSize > 100) {
+            return res.status(400).json({
+                code: 400,
+                message: 'pageSize必须为1-100的整数'
+            });
+        }
+
+        // 构建模糊查询条件
+        const likePattern = `%${keyword}%`;
+
+        // 获取总记录数（用于计算总页数）
+        const totalResult = await sqlQuery(
+            `SELECT COUNT(*) AS total FROM articles WHERE master_tag LIKE ?`,
+            [likePattern]
+        );
+
+        const total = totalResult[0].total;
+        const totalPages = Math.ceil(total / parsedPageSize);
+
+        // 执行分页查询
+        const offset = (parsedPageNum - 1) * parsedPageSize;
+        const results = await sqlQuery(
+            `SELECT * FROM articles WHERE master_tag LIKE ? LIMIT ?, ?`,
+            [likePattern, offset, parsedPageSize]
+        );
+
+        res.status(200).json({
+            code: 200,
+            message: '搜索成功',
+            pagination: {
+                total,
+                pageNum: parsedPageNum,
+                pageSize: parsedPageSize,
+                totalPages
+            },
+            data: {
+                searchKey: keyword,
+                results
+            }
+        });
+
+    } catch (error) {
+        console.error('搜索标签失败:', error);
+        res.status(500).json({
+            code: 500,
+            message: '服务器内部错误'
+        });
     }
 });
 export default router;
