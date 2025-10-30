@@ -1,4 +1,5 @@
 <template>
+    <!-- 详情页（入口） -->
     <div>
         <Navigation></Navigation>
         <ListDetail :articleId="routerId" :key="routerId"></ListDetail>

@@ -69,6 +69,11 @@ const router = createRouter({
                     meta: {
                         dataKey: "resource"
                     }
+                },
+                {
+                    path: "other",
+                    name: "recordOther",
+                    component: () => import('@/views/recordList/recordOther.vue')
                 }
             ]
         },

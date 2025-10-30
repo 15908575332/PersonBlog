@@ -472,7 +472,7 @@ onMounted(() => {
                 //     -0.03em -0.03em #0005;
                 cursor: pointer;
                 transition: 0.1s ease;
-                padding-top: 0.2em;
+                padding: 0.2em 0.2em 0 0;
 
 
                 &:after {

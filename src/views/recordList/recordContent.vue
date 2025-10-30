@@ -16,8 +16,9 @@
       <div class="search__suggestion">
         <h3>一些有用的建议</h3>
         <div class="suggestion-tags">
-          <span v-for="tag in tags" :key="tag" class="suggestion-tag" @click="setTagToInput(tag.master_tag)">#{{
-            tag.master_tag }}</span>
+          <span v-for="tag in tags.slice(0, 15)" :key="tag" class="suggestion-tag"
+            @click="setTagToInput(tag.master_tag)">#{{
+              tag.master_tag }}</span>
         </div>
       </div>
     </div>
@@ -43,8 +44,9 @@
       <!-- 搜索结果渲染-->
       <div v-else>
         <div class="search_content_aera">
-          <div class="specific__content" v-for="item in searchResult" :key="item.id">
-            <a class="image" @click="listDetail(item.article_id)" data-aos="zoom-in">
+          <div class="search_item" v-for="item in searchResult" :key="item.article_id"
+            @click="listDetail(item.article_id)">
+            <a class="image" data-aos="zoom-in">
               <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
               <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
               <div class="item__count">
@@ -80,9 +82,10 @@
         </div>
         <!-- 分页 -->
         <div class="paginate">
-          <vue-awesome-paginate v-if="totalItems > 0" :total-items="totalItems" v-model="currentPage"
-            :items-per-page="pageSize" :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
-            :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
+          <vue-awesome-paginate v-if="searchPagination.total > 0" :total-items="searchPagination.total"
+            v-model="searchPagination.pageNum" :items-per-page="searchPagination.pageSize" :max-pages-shown="5"
+            back-button-class="back-btn" next-button-class="next-btn" :show-ending-buttons="true"
+            :show-breakpoint-buttons="true" @click="onClickHandler">
             <template #prev-button>
               <span>
                 <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
@@ -268,6 +271,12 @@ const isInputOpen = ref(false); // 控制搜索框的打开状态
 const isSearching = ref(false); // 控制搜索结果的显示状态
 const searchQuery = ref(""); // 搜索关键词
 const searchResult = ref([]); // 搜索结果
+const searchPagination = ref({ // 搜索结果分页信息
+  total: 0,
+  pageNum: 1,
+  pageSize: 10,
+  totalPages: 0
+});
 const searchTitle = ref('');
 const inputBlur = () => {
   isInputOpen.value = false;
@@ -293,12 +302,13 @@ const handleSearch = async () => {
     const res = await $http.get('/main/searchTags', {
       params: {
         keyword: searchQuery.value,
-        pageNum: currentPage.value,
-        pageSize: pageSize.value
+        pageNum: searchPagination.value.pageNum,
+        pageSize: searchPagination.value.pageSize
       }
     });
     searchResult.value = res.data?.results || [];
     searchTitle.value = res.data?.searchKey || '搜索结果';
+    searchPagination.value = res?.pagination || {};
     searchQuery.value = '';
     inputBlur();
     // 输入框失去焦点
@@ -430,8 +440,6 @@ onMounted(() => {
       background-color: #4dd5cc;
       display: block;
     }
-
-
   }
 
   .search {
@@ -494,7 +502,7 @@ onMounted(() => {
       width: 40vw;
       position: absolute;
       top: 50%;
-      z-index: 0;
+      z-index: -1;
 
       .suggestion-tags {
         display: flex;
@@ -512,10 +520,8 @@ onMounted(() => {
         padding: 0.2rem 0.8rem;
         font-size: 0.95rem;
         cursor: pointer;
-        transition: background 0.2s, color 0.2s;
         opacity: 0;
         transform: translate3d(0, 100px, 0);
-        transition: opacity 0.2s, transform 0.5s;
         transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
         pointer-events: none;
       }
@@ -523,6 +529,7 @@ onMounted(() => {
       .suggestion-tag:hover {
         background: #e85454;
         color: #fff;
+        transition: background 0.2s;
       }
 
 
@@ -550,7 +557,7 @@ onMounted(() => {
       width: 100%;
       height: 100%;
       pointer-events: none; // 默认不拦截点击
-      background: rgba(1, 1, 1, 0.9);
+      background: rgba(1, 1, 1, 0.7);
       opacity: 0;
       transition: opacity 0.5s;
       transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
@@ -641,34 +648,27 @@ onMounted(() => {
 
     // 搜索结果内容区域
     .search_content_aera {
-      @include flexCenter(row, flex-start);
+      @include flexCenter(column, flex-start);
       gap: 1rem;
       flex-wrap: wrap;
       padding: 1.5rem 0.5rem;
 
-
-      .specific__content {
-        width: 11rem;
-        border-radius: 0.5rem;
+      .search_item {
+        width: 100%;
+        border-radius: 0.3rem;
         overflow: hidden;
-        transition: all 0.3s;
+        padding: 0.5rem;
+        background-color: rgb(255, 255, 255, .7);
+        @include flexCenter(row, flex-start);
+        transition: all ease-in-out 0.3s;
 
         .image {
-          width: 100%;
+          width: 20%;
           height: 8rem;
           display: inline-block;
-          border-radius: 0.5rem;
           overflow: hidden;
           background-color: black;
           position: relative;
-
-          &:hover {
-            cursor: pointer;
-
-            img {
-              transform: scale(1.1);
-            }
-          }
 
           img {
             width: 100%;
@@ -711,6 +711,12 @@ onMounted(() => {
             text-overflow: ellipsis;
             white-space: nowrap;
           }
+        }
+
+        &:hover {
+          cursor: pointer;
+          transform: translateY(0.2rem);
+          background-color: #4dd5cc80;
         }
       }
 

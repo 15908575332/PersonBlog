@@ -206,10 +206,16 @@ const record_options = ref([
     engTitle: "column",
   },
   {
-    value: "option1",
+    value: "option3",
     text: "资源合集",
     router: "recordList/resource",
     engTitle: "resource",
+  },
+  {
+    value: "option4",
+    text: "其它",
+    router: "recordList/other",
+    engTitle: "other",
   }
 ]);
 //百宝箱二级目录
@@ -449,6 +455,7 @@ onMounted(async () => { });
               font-size: 1rem;
               font-weight: 700;
               padding-right: 0.5rem;
+              font-family: inherit;
             }
 
             img {

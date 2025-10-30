@@ -411,7 +411,15 @@ router.get('/searchTags', async (req, res) => {
         // 执行分页查询
         const offset = (parsedPageNum - 1) * parsedPageSize;
         const results = await sqlQuery(
-            `SELECT * FROM articles WHERE master_tag LIKE ? LIMIT ?, ?`,
+            `
+            SELECT
+                a.*,
+                u.username
+            FROM
+                articles a
+            INNER JOIN users u on a.user_id = u.user_id
+            WHERE
+                master_tag LIKE ? LIMIT ?, ?`,
             [likePattern, offset, parsedPageSize]
         );
 
