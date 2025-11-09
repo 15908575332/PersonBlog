@@ -74,7 +74,9 @@
 
           <!-- 底部 -->
           <div class="footer-intrduce">
-            <h5>本站源码存于gitee(vue3版本)，仅UI参考POETIZE-最美博客</h5>
+            <h5>本站源码存于gitee(vue3版本)，部分UI参照<a href="https://poetize.cn/" target="_blank"
+                rel="noopener noreferrer">POETIZE-最美博客</a>
+            </h5>
           </div>
         </div>
       </div>
@@ -428,6 +430,11 @@ onUnmounted(() => {
             // max-width: 80%;
             text-align: center;
 
+            a {
+              color: #6388f9;
+              text-decoration: underline;
+            }
+
             @include media-to("phone") {
               font-size: 0.8rem;
             }
@@ -582,7 +589,7 @@ onUnmounted(() => {
       .minute,
       .blinking-colon {
         font-size: 3.5rem;
-        
+
       }
     }
   }

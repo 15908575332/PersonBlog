@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Navigation textColor="#f46c56" hoverBgColor="#ffa54b10" />
+        <Navigation textColor="#2c3e50" hoverBgColor="#ffa54b10" />
         <div class="container">
             <div class="header">
                 <h1>花卉知识卡片</h1>
@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import utils from '@/utils/getAssetsFile';
 import Navigation from '@/components/NavigationMenu/index.vue';
 const flowers = ref([
@@ -176,8 +176,9 @@ const toggleZoom = (index) => {
 onMounted(() => {
     // 从本地存储获取上次悬停的卡片索引
     const storedIndex = localStorage.getItem('lastHoveredCardIndex')
-    if (storedIndex !== null) {
-        lastHoveredCardIndex.value = parseInt(storedIndex)
+    if (storedIndex == null) {
+        // lastHoveredCardIndex.value = parseInt(storedIndex)
+        return false;
     }
 
     // 设置初始背景位置（从左上角展开）
@@ -210,6 +211,11 @@ onMounted(() => {
             }
         }
     }, 100)
+})
+
+onUnmounted(() => {
+    // 清除本地存储中的索引，页面卸载时
+    localStorage.removeItem('lastHoveredCardIndex')
 })
 </script>
 
@@ -411,7 +417,7 @@ p {
 .header h1 {
     font-size: 42px;
     font-weight: 700;
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    background: linear-gradient(135deg, #2c3e50 0%, #2575fc 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 15px;

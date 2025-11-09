@@ -878,6 +878,7 @@ $contentWidth: 65rem; // 内容宽度
       overflow: hidden;
       font-size: 0.8rem;
       z-index: 1;
+      font-family: 'gtpy';
 
       &::before {
         content: "";

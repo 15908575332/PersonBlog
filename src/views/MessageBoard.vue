@@ -23,14 +23,14 @@
             </vue-danmaku>
             <form class="message-input" @submit.prevent="insertMessage">
                 <input type="text" maxlength="40" placeholder="说点什么吧~" v-model="inputValue">
-                <button type="button" @click="insertMessage">发送</button>
+                <button class="send-btn" type="button" @click="insertMessage">发送</button>
             </form>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, onUpdated, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import Navigation from '../components/NavigationMenu/index.vue';
 import vueDanmaku from 'vue3-danmaku';
 import utils from '@/utils/getAssetsFile';
@@ -187,6 +187,7 @@ onUnmounted(() => {
 
         // 输入框
         .message-input {
+            font-family: 'gtpy';
             display: flex;
             justify-content: center;
             align-items: center;
@@ -201,27 +202,29 @@ onUnmounted(() => {
             input {
                 border-radius: 50px;
                 padding: 0 15px;
-                font-size: 14px;
+                font-size: 0.9rem;
                 min-height: 36px;
                 min-width: 300px;
                 background: none;
                 border: 1px solid white;
                 color: white;
+                font-family: inherit;
 
                 &::placeholder {
                     color: #ffffff;
-                    font-size: 14px;
+                    font-size: 0.9rem;
                 }
             }
 
-            button {
+            .send-btn {
                 border-radius: 50px;
                 padding: 0 15px;
-                font-size: 14px;
+                font-size: 0.9rem;
                 min-height: 36px;
                 background: none;
                 border: 1px solid white;
                 color: white;
+                font-family: inherit;
             }
         }
     }

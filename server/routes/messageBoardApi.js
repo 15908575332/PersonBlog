@@ -38,10 +38,11 @@ router.get('/getMessageList', async (req, res) => {
                 m.message_content,
                 m.created_at,
                 u.username,
-                u.avatar_url,
+                u.avatar_url
             FROM message_board m
             INNER JOIN users u ON m.user_id = u.id
-            ORDER BY m.created_at DESC`
+            ORDER BY m.created_at DESC
+            `
         )
         res.status(200).json({
             code: 0,
