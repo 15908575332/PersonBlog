@@ -251,11 +251,12 @@
                                         <div class="profile__picture">
                                             <img :src="message.user.avatarUrl" alt="avatar">
                                         </div>
+                                        {{ message }}
                                         <div class="time__name">
                                             <div class="nickname">
                                                 <span>{{ message.user.username }}</span>
                                                 <img class="level"
-                                                    :src="utils.getAssetsFile('icon/level/lv' + message.user.vipLevel + '.svg')"
+                                                    :src="utils.getAssetsFile('icon/level/lv' + message.user.vip_level + '.svg')"
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ message.createdAt }}</div>
@@ -272,6 +273,7 @@
                             </div>
                             <!-- 回复展示 -->
                             <div class="reply__container" v-for="value in message.replies">
+
                                 <div class="louyt">
                                     <div style="display: flex;">
                                         <div class="profile__picture">
@@ -281,7 +283,7 @@
                                             <div class="nickname">
                                                 <span>{{ value.user.username }}</span>
                                                 <img class="level"
-                                                    :src="utils.getAssetsFile('icon/level/lv' + value.user.vipLevel + '.svg')"
+                                                    :src="utils.getAssetsFile('icon/level/lv' + value.user.vip_level + '.svg')"
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')

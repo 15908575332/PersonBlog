@@ -116,6 +116,7 @@
         <WeatherCard></WeatherCard>
       </div>
     </div>
+    <live2dModel></live2dModel>
   </div>
 </template>
 
@@ -132,6 +133,7 @@ import WeatherCard from "../components/WeatherCard/index.vue";
 import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
 import { notification } from "ant-design-vue";
+import live2dModel from "@/components/live2dModel/index.vue"; //引入live2d组件
 import { SmileOutlined } from '@ant-design/icons-vue';
 import { useAuthStore } from "@/store/auth";
 import { Solar } from "lunar-javascript";

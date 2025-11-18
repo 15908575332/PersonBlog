@@ -82,13 +82,11 @@
       <div style="margin: 2rem 0; font-size: 1rem; font-weight: 700">
         <span>~到底了~</span>
       </div>
-      <Live2d></Live2d>
     </div>
   </div>
 </template>
 <script setup>
 import { onMounted, ref, computed } from "vue"; //引入vue相关的api
-import Live2d from "@/components/Live2d/index.vue"; //引入live2d组件
 import Navigation from "@/components/NavigationMenu/index.vue"; //引入导航组件
 import utils from "@/utils/getAssetsFile"; //引入获取静态资源的方法
 import { useRouter } from "vue-router"; //引入路由相关的api
@@ -553,7 +551,6 @@ onMounted(() => {
         }
       }
     }
-
     // 手机样式
     @include media-to("phone") {
       padding: 0.7rem;

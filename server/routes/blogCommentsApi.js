@@ -26,7 +26,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
                 DATE_FORMAT(bm.created_at, '%Y-%m-%d %H:%i:%s') AS createdAt,
                 u.avatar_url,
                 u.username,
-                u.vipLevel
+                u.vip_level
             FROM blog_comments bm
             INNER JOIN articles a ON bm.article_id = a.article_id
             LEFT JOIN users u ON bm.user_id = u.user_id
@@ -52,7 +52,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
                 DATE_FORMAT(pr.created_at, '%Y-%m-%d %H:%i:%s') AS replyCreatedAt,
                 u.avatar_url AS replyAvatar,
                 u.username AS replyUsername,
-                u.vipLevel AS replyVipLevel
+                u.vip_level AS replyVipLevel
             FROM blog_comments_replies pr
             LEFT JOIN users u ON pr.user_id = u.user_id
             WHERE pr.parent_reply_id IN (?)
