@@ -1,10 +1,9 @@
 <template>
     <div id="recordColumn">
-        <Navigation hoverBgColor="#fff" textColor="#585858" />
+        <Navigation />
         <div class="category__content">
             <!-- carousel -->
             <div class="carousel">
-
                 <div class="specific__content">
                     <carousel-3d :disable3d="true" :width="1200" :height="662" :autoplay="true" :autoplayTimeout="5000"
                         :display="true">
@@ -156,6 +155,7 @@ onMounted(() => {
     height: 100%;
     //内容盒子宽度
     $category_content_width: 60rem;
+    background: $pages-background-color;
     @include flexCenter(column, center);
 
     &::after {
@@ -220,6 +220,9 @@ onMounted(() => {
                     }
                 }
 
+                &:hover {
+                    cursor: grab;
+                }
             }
 
             // 计数

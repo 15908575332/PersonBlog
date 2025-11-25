@@ -17,8 +17,7 @@
         <h3>一些有用的建议</h3>
         <div class="suggestion-tags">
           <span v-for="tag in tags.slice(0, 15)" :key="tag" class="suggestion-tag"
-            @click="setTagToInput(tag.master_tag)">#{{
-              tag.master_tag }}</span>
+            @click="setTagToInput(tag.master_tag)">#{{ tag.master_tag }}</span>
         </div>
       </div>
     </div>
@@ -45,38 +44,35 @@
       <div v-else>
         <div class="search_content_aera">
           <div class="search_item" v-for="item in searchResult" :key="item.article_id"
-            @click="listDetail(item.article_id)">
-            <a class="image" data-aos="zoom-in">
+            @click="listDetail(item.article_id)" data-aos="zoom-in">
+            <!-- 图片和一些数据 -->
+            <div class="search_result_image">
               <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
-              <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
-              <div class="item__count">
-                <ul>
-                  <li v-if="item.cover_video_url !== null">
-                    <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
-                    <span>3</span>
-                  </li>
-                  <!-- 预览量 -->
-                  <li>
-                    <img src="@/assets/icon/recordList/countCat-icon.svg" alt="cat" />
-                    <span>{{ item.heat }}</span>
-                  </li>
-                  <!-- 点赞量 -->
-                  <li>
-                    <img src="@/assets/icon/recordList/like.svg" alt="message" />
-                    <span>{{ item.like_count }}</span>
-                  </li>
-                </ul>
-              </div>
-            </a>
-            <div class="text__content">
-              <!-- 发布 -->
-              <h1>{{ item.title }}</h1>
-              <div class="release">
-                <span>
-                  <img :src="utils.getAssetsFile('icon/recordList/auther.svg')" alt="auther_icon">
-                  {{ item.username }}·{{ release_time_format(item.release_time) }}
-                </span>
-              </div>
+              <ul class="item_count">
+                <li v-if="item.cover_video_url !== null">
+                  <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
+                  <span>3</span>
+                </li>
+                <!-- 预览量 -->
+                <li>
+                  <img src="@/assets/icon/recordList/countCat-icon.svg" alt="cat" />
+                  <span>{{ item.heat }}</span>
+                </li>
+                <!-- 点赞量 -->
+                <li>
+                  <img src="@/assets/icon/recordList/like.svg" alt="message" />
+                  <span>{{ item.like_count }}</span>
+                </li>
+              </ul>
+            </div>
+            <h1>{{ item.title }}</h1>
+            <div class="box-content">
+              <h3 class="title">{{ item.sub_tag }}</h3>
+              <span class="post">Web designer</span>
+              <ul class="icon">
+                <li><a href="#"><i class="fa fa-search"></i></a></li>
+                <li><a href="#"><i class="fa fa-link"></i></a></li>
+              </ul>
             </div>
           </div>
         </div>
@@ -408,9 +404,7 @@ onMounted(() => {
 <style lang="scss">
 .recordContent {
   font-family: "gtpy";
-  background: linear-gradient(to right,
-      rgba(221, 222, 233, 0.77) 0%,
-      rgba(181, 255, 252, 0.56) 100%);
+  background: $pages-background-color;
   user-select: none;
   min-height: 100vh;
   //内容盒子宽度
@@ -654,70 +648,168 @@ onMounted(() => {
       padding: 1.5rem 0.5rem;
 
       .search_item {
-        width: 100%;
-        border-radius: 0.3rem;
         overflow: hidden;
-        padding: 0.5rem;
-        background-color: rgb(255, 255, 255, .7);
+        position: relative;
         @include flexCenter(row, flex-start);
-        transition: all ease-in-out 0.3s;
+        width: 100%;
+        height: 8rem;
+        padding: 0.2rem;
+        border-radius: 0.2rem;
+        z-index: 1;
+        transition: all 0.5s;
+        background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
 
-        .image {
+        &:hover {
+          box-shadow: 3px 3px 5px #999;
+
+          &::before {
+            opacity: 1;
+            right: -6%;
+          }
+
+          &::after {
+            opacity: 1;
+            top: -113%;
+          }
+
+          .box-content {
+            right: 5%;
+          }
+        }
+
+        &::before,
+        &::after {
+          content: "";
+          background: radial-gradient(circle at 23% 70%, rgba(255, 255, 255, 0.8), #ffffff 30%);
           width: 20%;
-          height: 8rem;
-          display: inline-block;
-          overflow: hidden;
-          background-color: black;
+          height: 150%;
+          opacity: 0;
+          transform: rotate(40deg);
+          position: absolute;
+          top: -20%;
+          right: -25%;
+          z-index: 1;
+          transition: all 0.5s ease;
+        }
+
+        &::after {
+          background: rgba(255, 255, 255, 0.5);
+          right: auto;
+          right: 9%;
+          top: -131%;
+        }
+
+        .search_result_image {
+          width: 20%;
+          height: 100%;
           position: relative;
+          border-radius: 0.2rem;
+          overflow: hidden;
 
           img {
             width: 100%;
             height: 100%;
-            transition: all 0.3s;
-          }
-        }
-
-        .text__content {
-          padding: 0.5rem;
-          color: #a2a2a2;
-
-          img {
-            margin-right: 0.25rem;
           }
 
-          // 发布
-          .release {
+          .item_count {
+            position: absolute;
+            bottom: 0.2rem;
+            left: 0.2rem;
             display: flex;
-            align-items: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin: 0.5rem 0;
 
-            span {
+            li {
+              @include flexCenter(row, center);
+              margin-right: 0.2rem;
+
               img {
-                width: 0.6rem;
-                margin: 0;
+                width: 0.9rem;
+                margin-right: 0.2rem;
+              }
+
+              span {
+                font-size: 0.8rem;
+                color: white;
+                font-weight: 700;
               }
             }
           }
+        }
 
-          // 标题
-          h1 {
-            padding: 0rem 0;
-            font-size: 1rem;
+        h1 {
+          font-weight: 700;
+          font-size: 1rem;
+          margin-left: 1rem;
+        }
+
+        .box-content {
+          text-align: right;
+          transform: translateY(-50%);
+          position: absolute;
+          top: 50%;
+          right: -100%;
+          z-index: 2;
+          transition: all .5s;
+
+
+          .title {
+            color: #1e272e;
+            font-size: 23px;
             font-weight: 700;
-            color: black;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            text-transform: uppercase;
+            margin: 0 0 3px 0;
+          }
+
+          .post {
+            font-size: 16px;
+            text-transform: capitalize;
+            margin: 0 0 10px;
+            display: block;
+          }
+
+          .icon {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+
+            li {
+              display: inline-block;
+              margin: 0 4px;
+
+              a {
+                color: #fff;
+                background-color: #1e272e;
+                font-size: 18px;
+                text-align: center;
+                line-height: 35px;
+                height: 35px;
+                width: 35px;
+                border-radius: 50%;
+                display: block;
+                transition: all 0.3s;
+
+                &:hover {
+                  color: #1e272e;
+                  background-color: #fff;
+                  border-radius: 10%;
+                  box-shadow: 0 0 5px #1e272e inset;
+                }
+              }
+            }
           }
         }
 
-        &:hover {
-          cursor: pointer;
-          transform: translateY(0.2rem);
-          background-color: #4dd5cc80;
+        @media only screen and (max-width:990px) {
+          .box {
+            margin: 0 0 30px;
+          }
         }
+
+        @media only screen and (max-width:479px) {
+          .box .title {
+            font-size: 20px;
+          }
+        }
+
       }
 
       // 视频播放按钮

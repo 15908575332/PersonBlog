@@ -116,7 +116,7 @@
         <WeatherCard></WeatherCard>
       </div>
     </div>
-    <live2dModel></live2dModel>
+    <live2dModel v-if="showRippleToggle"></live2dModel>
   </div>
 </template>
 
@@ -129,6 +129,7 @@ import {
   getCurrentInstance,
   h
 } from "vue";
+import { useRoute } from "vue-router";
 import WeatherCard from "../components/WeatherCard/index.vue";
 import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
@@ -139,6 +140,12 @@ import { useAuthStore } from "@/store/auth";
 import { Solar } from "lunar-javascript";
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
+const route = useRoute();
+
+const showRippleToggle = computed(() => {
+  const hiddenRoutes = ['/home'] // 根据你的实际路由配置调整
+  return hiddenRoutes.includes(route.path)
+})
 
 /** ------------------------ 页面背景图 ------------------------ */
 const randomIndex = ref(0); // 随机数索引

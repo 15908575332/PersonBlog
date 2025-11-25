@@ -1184,7 +1184,7 @@ onUnmounted(() => {
             background: white;
             position: relative;
             // box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-          box-shadow: 3px 3px 6px 0px #ccdbe8 inset, -3px -3px 6px 1px #fff inset;
+            box-shadow: 3px 3px 6px 0px #ccdbe8 inset, -3px -3px 6px 1px #fff inset;
             transform-origin: center -5rem;
             z-index: -1;
             border-radius: 0.25rem;

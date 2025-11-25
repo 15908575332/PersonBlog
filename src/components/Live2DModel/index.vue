@@ -12,8 +12,6 @@ onMounted(async () => {
     ResourcesPath: '/live2d/Angel/tianshi.model3.json',
     // 画布大小
     CanvasSize: { height: 400, width: 200 },
-    // live2d 的位置 ('left' | 'right')
-    CanvasPosition: 'right',
     // 背景透明度 [R, G, B, A]
     BackgroundRGBA: [0, 0, 0, 0],
     // 是否显示工具箱（可用于切换表情等）

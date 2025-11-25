@@ -2,17 +2,25 @@
   <div>
     <div class="pagesOption">
       <ClickRipple></ClickRipple>
+      <flowerAnimate :is-animating="isAnimating" :sakura-count="sakuraCount" :speed="speed" />
       <router-view></router-view>
     </div>
     <div class="floot_right" v-if="showRippleToggle">
+      <!-- 花瓣动画设置 -->
+      <div class="ripple__toggle flowerBtn" @click="toggleControlPanel">
+        {{ showControlPanel ? "🌸" : "💮" }}
+      </div>
+
       <!-- 鼠标左键特效切换 -->
       <div class="ripple__toggle" @click="rippleStore.toggle">
         {{ rippleStore.enabled ? "🍃" : "🍂" }}
       </div>
+
       <!-- 占位gif -->
       <div class="ripple__toggle secBtn">
-        <img :src="utils.getAssetsFile('icon/1479.gif')" alt="" />
+        <img :src="utils.getAssetsFile('icon/1479.gif')" alt="占位符" />
       </div>
+
       <!-- 返回顶部 -->
       <a-back-top shape="">
         <template #icon>
@@ -25,17 +33,81 @@
         </template>
       </a-back-top>
     </div>
+    <!-- 花瓣动画控制面板 -->
+    <div class="flowersControl" :class="{ 'showFlowersControl': showControlPanel }">
+      <div class="button-group">
+        <button @click="toggleAnimation" class="control-btn">
+          <img :src="isAnimating ? pauseIcon : playIcon" alt="controlBtn">
+        </button>
+        <button @click="resetAnimation" class="control-btn">
+          <img src="@/assets/icon/public/icons8-reset-100.png" alt="reset">
+        </button>
+      </div>
+      <div class="slider-flex">
+        <div class="slider-group">
+          <label>数量 </label>
+          <input type="range" min="10" max="200" v-model.number="sakuraCount" @change="changeSakuraCount"
+            class="slider">
+          <label for="">{{ sakuraCount }}</label>
+        </div>
+        <div class="slider-group">
+          <label>速度 </label>
+          <input type="range" min="1" max="10" v-model.number="speed" class="slider" @change="changeSpeed">
+          <label for="">{{ speed }}</label>
+
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import ClickRipple from "./components/ClickRipple/ClickRipple.vue";
 import { rippleStore } from "@/store/isEnabledRipple";
+import flowerAnimate from "./components/FlowerAnimate/index.vue"
 import utils from "@/utils/getAssetsFile";
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, watch, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/store/maincontent'
+import pauseIcon from '@/assets/icon/public/icons8-pause-100.png'
+import playIcon from '@/assets/icon/public/icons8-play-100.png'
+/** ------------------------ 全局花瓣飘落动画 ------------------------ */
+const showControlPanel = ref(false)
+const toggleControlPanel = () => {
+  showControlPanel.value = !showControlPanel.value
+}
+const isAnimating = ref(true);
+const sakuraCount = ref(50);
+const speed = ref(5);
 
+const toggleAnimation = () => { // 花瓣动画暂停/播放
+  isAnimating.value = !isAnimating.value;
+};
+const resetAnimation = () => { //重置属性
+  isAnimating.value = true;
+  sakuraCount.value = 50;
+  speed.value = 5;
+}
+const changeSakuraCount = () => { //修改花瓣数量
+  sakuraCount.value = sakuraCount.value;
+};
+const changeSpeed = () => {
+  speed.value = speed.value;
+}
+/** ------------------------ 数据获取 ------------------------ */
+const mainStore = useMainStore()
+const route = useRoute()
+watch(() => route.path, () => {
+  fetchData()
+})
+async function fetchData() {
+  await mainStore.fetchNavData()
+}
+onMounted(() => {
+  fetchData() // 页面加载时获取数据
+})
+
+/** ------------------------ 启动console自动输出 ------------------------ */
 // 示例化参数，避免未定义变量报错
 const t = 'Blog';
 const n = 'App启动';
@@ -57,24 +129,9 @@ console.log(
   "background:transparent"
 );
 const showRippleToggle = computed(() => {
-  const hiddenRoutes = ['/', '/home', '/index'] // 根据你的实际路由配置调整
+  const hiddenRoutes = ['/', '/home', '/index', '/userInfo'] // 根据你的实际路由配置调整
   return !hiddenRoutes.includes(route.path)
 })
-// 页面加载时获取数据
-onMounted(() => {
-  fetchData()
-})
-const mainStore = useMainStore()
-const route = useRoute()
-
-// 路由变化时重新获取数据
-watch(() => route.path, () => {
-  fetchData()
-})
-
-async function fetchData() {
-  await mainStore.fetchNavData()
-}
 </script>
 
 <style scoped lang="scss">
@@ -89,8 +146,16 @@ async function fetchData() {
   box-shadow: 0px 0px 0.75rem 0px rgba(113, 113, 113, 0.2);
   @include flexCenter(column, space-around);
   background-color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
 }
 
+// 鼠标点击动画
 .ripple__toggle {
   width: 2rem;
   height: 2.5rem;
@@ -112,5 +177,96 @@ async function fetchData() {
     width: 1.5rem;
     height: 1.5rem;
   }
+}
+
+//控制面板调出按钮
+.flowerBtn {}
+
+//花瓣动画控制面板
+.flowersControl {
+  position: fixed;
+  right: 5vw;
+  bottom: 0;
+  transform: translateY(100%); // 隐藏时向下移动自身高度
+  opacity: 0; // 隐藏时透明
+  border-radius: 8px;
+  padding: 0 1rem;
+  box-shadow:
+    0px 4px 20px rgba(113, 113, 113, 0.25),
+    0px 0px 0px 1px rgba(113, 113, 113, 0.1);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  min-width: 220px;
+  min-height: 150px;
+  @include flexCenter(row, center);
+  gap: 1rem;
+  // background-image: url('@/assets/img/public/bg-set3-B44-On70.jpg');
+  background-size: cover;
+  background-position: center;
+  font-size: 0.8rem;
+  background-color: #fff;
+  font-family: 'gtpy';
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; // 修改过渡属性
+  z-index: 998;
+
+  .button-group,
+  .slider-group {
+    height: 100%;
+    text-align: center;
+    padding: 0 0.4rem;
+  }
+
+  .button-group {
+    @include flexCenter(column, space-between);
+    padding: 0;
+    gap: 0.8rem;
+
+    //暂停、开始、重置
+    .control-btn {
+      display: block;
+      width: 50px;
+      height: 50px;
+      border: 1px solid #63cdeb;
+      border-radius: 0.4rem;
+      background-position: center;
+      overflow: hidden;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background-color: #cbeee8;
+      }
+
+      img {
+        width: 100%;
+        transition: all 0.5 ease;
+      }
+    }
+  }
+
+  .slider-flex {
+    @include flexCenter(column, flex-start);
+    gap: 0.8rem;
+
+    //数量、速度调节
+    .slider-group {
+      @include flexCenter(row, flex-start);
+      border: 1px solid #63cdeb;
+      border-radius: 0.4rem;
+      gap: 0.2rem;
+      background-image: url('@/assets/img/public/bg-set3-B44-On71.jpg');
+      background-position: center;
+      background-size: cover;
+      width: 220px;
+      height: 50px;
+
+      .slider {}
+    }
+  }
+
+}
+
+//显示控制面板
+.showFlowersControl {
+  transform: translateY(-2vw); // 显示时不再移动
+  opacity: 1;
 }
 </style>

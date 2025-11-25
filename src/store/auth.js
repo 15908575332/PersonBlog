@@ -126,27 +126,34 @@ export const useAuthStore = defineStore('auth', () => {
             });
 
             // 检查响应是否有效
-            if (!response.data || !response.data.accessToken) {
+            if (!response.data || !response.data.token) {
                 throw new Error("Invalid refresh token response");
             }
 
             // 更新 store 状态
-            token.value = response.data.accessToken;
-            iat.value = response.data.iat || new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(); // 默认2小时
+            token.value = response.data.token;
+            const decoded = jwtDecode(token.value);
+            iat.value = decoded.iat;//使用后端传递的新token中的签发时间
 
 
             // 更新本地存储
             localStorage.setItem('token', token.value);
             localStorage.setItem('iat', iat.value);
 
+            console.log('token刷新成功')
             return true; // 表示刷新成功
 
         } catch (error) {
             console.error("Token refresh failed:", error);
+            // 特殊处理400状态码（无需刷新令牌）
+            if (axios.isAxiosError(error) && error.response?.status === 400) {
+                console.warn("Token refresh not needed:", error.response.data.message);
+                // 返回特定标识，表示令牌仍然有效，无需刷新
+                return 'NOT_NEEDED';
+            }
 
             // 刷新失败时清除用户状态
             logout();
-
             // 处理不同的错误情况
             let errorMsg = 'Token refresh failed';
 

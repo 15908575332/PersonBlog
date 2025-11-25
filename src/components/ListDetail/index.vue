@@ -251,7 +251,6 @@
                                         <div class="profile__picture">
                                             <img :src="message.user.avatarUrl" alt="avatar">
                                         </div>
-                                        {{ message }}
                                         <div class="time__name">
                                             <div class="nickname">
                                                 <span>{{ message.user.username }}</span>

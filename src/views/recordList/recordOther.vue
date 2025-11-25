@@ -1,9 +1,8 @@
 <template>
-    <div>
+    <div class="otherPage">
         <Navigation textColor="#2c3e50" hoverBgColor="#ffa54b10" />
         <div class="container">
             <div class="header">
-                <h1>花卉知识卡片</h1>
                 <p>悬停查看效果，点击卡片放大查看详细信息</p>
             </div>
             <div class="card-wrapper" ref="cardWrapper">
@@ -167,9 +166,9 @@ const toggleZoom = (index) => {
     } else {
         // 放大卡片
         zoomedIndex.value = index;
-        document.body.classList.add("overflow");
+        // document.body.classList.add("overflow");
         //禁止底部滚动
-        document.body.style.overflow = 'hidden'
+        // document.body.style.overflow = 'hidden'
     }
 }
 
@@ -220,238 +219,235 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    font-family: 'lmst';
-}
+.otherPage {
+    background: $pages-background-color;
+    $currentPageLinear: linear-gradient(135deg, #f0c4e4 40%, #eb6ec8 100%);
 
-.card-wrapper {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 25px;
-    position: relative;
-    padding: 20px;
-}
-
-.background {
-    background: linear-gradient(135deg, #fc3953 0%, #ffa54b 100%);
-    border-radius: 20px;
-    position: absolute;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    opacity: 0;
-    z-index: 1;
-    pointer-events: none;
-    box-shadow: 0 10px 30px rgba(233, 123, 49, 0.3);
-    left: 0;
-    top: 0;
-    /* 添加transform-origin确保从左上角展开 */
-    transform-origin: top left;
-}
-
-.card {
-    text-decoration: none;
-    display: block;
-    position: relative;
-    padding: 10px;
-    z-index: 2;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-}
-
-.card:hover {
-    transform: scale(1.01);
-}
-
-.card-main {
-    border: 1px solid #e0e6ed;
-    padding: 30px;
-    border-radius: 20px;
-    overflow: hidden;
-    background-color: #fff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    height: 100%;
-    transition: all 0.3s ease;
-}
-
-.card:hover .card-main {
-    border-color: #fa6952;
-    box-shadow: 0 8px 25px rgba(106, 17, 203, 0.15);
-}
-
-.card-inner {
-    position: relative;
-    z-index: 50;
-    height: 100%;
-
-    div {
-        height: auto;
-        min-height: 100%;
-
-        .flower-img {
-            width: 100%;
-            height: auto;
-            margin: 15px 0;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-
-        }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        font-family: 'lmst';
     }
-}
 
-
-h3 {
-    font-size: 26px;
-    margin-bottom: 15px;
-    font-weight: 700;
-    color: #2c3e50;
-    position: relative;
-    display: inline-block;
-}
-
-h3:after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 50px;
-    height: 3px;
-    background: linear-gradient(to right, #fc3953, #ffa54b);
-    border-radius: 2px;
-}
-
-p {
-    font-size: 16px;
-    font-weight: 400;
-    color: #555;
-    line-height: 1.7;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    // 限制显示行数
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
-
-.zoomed {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 90vw !important;
-    height: 90vh !important;
-    z-index: 1000 !important;
-    padding: 20px !important;
-    max-width: 900px;
-}
-
-.zoomed .card-main {
-    height: auto;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 40px;
-
-    img {
-        max-height: 50vh;
-    }
-}
-
-.zoomed p {
-    -webkit-line-clamp: unset !important;
-    overflow-y: auto;
-}
-
-.overflow {
-    overflow: hidden;
-}
-
-.opacity-0 {
-    opacity: 0.3;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.flower-info {
-    padding-top: 15px;
-    border-top: 1px solid #e0e6ed;
-    font-size: 14px;
-    color: #7e8c9a;
-    display: flex;
-    justify-content: space-between;
-}
-
-.flower-info strong {
-    color: #f46c56;
-}
-
-.close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: #f0f2f5;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 20px;
-    color: #7e8c9a;
-    transition: all 0.3s ease;
-    z-index: 1001;
-}
-
-.close-btn:hover {
-    background: #e4e7ec;
-    color: #6a11cb;
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.header h1 {
-    font-size: 42px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #2c3e50 0%, #2575fc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 15px;
-}
-
-.header p {
-    font-size: 18px;
-    color: #7e8c9a;
-    max-width: 600px;
-    margin: 0 auto;
-    -webkit-line-clamp: unset;
-}
-
-@media (max-width: 768px) {
     .card-wrapper {
-        grid-template-columns: 1fr;
-    }
-
-    .card-main {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+        position: relative;
         padding: 20px;
     }
 
-    .header h1 {
-        font-size: 32px;
+    .background {
+        background: $currentPageLinear;
+        border-radius: 20px;
+        position: absolute;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        opacity: 0;
+        z-index: 1;
+        pointer-events: none;
+        box-shadow: 0 10px 30px rgb(225, 248, 244, .5);
+        left: 0;
+        top: 0;
+        /* 添加transform-origin确保从左上角展开 */
+        transform-origin: top left;
+    }
+
+    .card {
+        text-decoration: none;
+        display: block;
+        position: relative;
+        padding: 10px;
+        z-index: 2;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    .card:hover {
+        // transform: scale(1.01);
+    }
+
+    .card-main {
+        border: 1px solid #e0e6ed;
+        padding: 30px;
+        border-radius: 20px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-main {
+        border-color: #fa6952;
+        box-shadow: 0 8px 25px rgba(106, 17, 203, 0.15);
+    }
+
+    .card-inner {
+        position: relative;
+        z-index: 50;
+        height: 100%;
+
+        div {
+            height: auto;
+            min-height: 100%;
+
+            .flower-img {
+                width: 100%;
+                height: auto;
+                margin: 15px 0;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+            }
+        }
+    }
+
+
+    h3 {
+        font-size: 26px;
+        margin-bottom: 15px;
+        font-weight: 700;
+        color: #2c3e50;
+        position: relative;
+        display: inline-block;
+    }
+
+    h3:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: $currentPageLinear;
+        border-radius: 2px;
+    }
+
+    p {
+        font-size: 16px;
+        font-weight: 400;
+        color: #555;
+        line-height: 1.7;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        // 限制显示行数
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
     }
 
     .zoomed {
-        width: 95vw !important;
-        height: 95vh !important;
-        padding: 10px !important;
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 90vw !important;
+        height: 90vh !important;
+        z-index: 1000 !important;
+        padding: 20px !important;
+        max-width: 900px;
     }
 
     .zoomed .card-main {
-        padding: 25px;
+        height: auto;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 40px;
+
+        img {
+            max-height: 50vh;
+        }
+    }
+
+    .zoomed p {
+        -webkit-line-clamp: unset !important;
+        overflow-y: auto;
+    }
+
+    .overflow {
+        overflow: hidden;
+    }
+
+    .opacity-0 {
+        opacity: 0.3;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .flower-info {
+        padding-top: 15px;
+        border-top: 1px solid #e0e6ed;
+        font-size: 14px;
+        color: #7e8c9a;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .flower-info strong {
+        color: #e46dc9;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #f0f2f5;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 20px;
+        color: #7e8c9a;
+        transition: all 0.3s ease;
+        z-index: 1001;
+    }
+
+    .close-btn:hover {
+        background: #e4e7ec;
+        color: #6a11cb;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 50px;
+
+        p {
+            font-size: 18px;
+            color: #7e8c9a;
+            max-width: 600px;
+            margin: 0 auto;
+            -webkit-line-clamp: unset;
+        }
+    }
+
+
+    @media (max-width: 768px) {
+        .card-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .card-main {
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+        }
+
+        .zoomed {
+            width: 95vw !important;
+            height: 95vh !important;
+            padding: 10px !important;
+        }
+
+        .zoomed .card-main {
+            padding: 25px;
+        }
     }
 }
 </style>

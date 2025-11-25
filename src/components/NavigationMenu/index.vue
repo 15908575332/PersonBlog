@@ -302,9 +302,9 @@ onMounted(async () => { });
   width: 100%;
   padding: 0 2rem;
   font-family: "lmst";
-
   z-index: 1;
   background-color: var(--bg-color);
+  // text-shadow: 1px 1px 2px #0b0201;
   transition: all 0.3s linear;
   @include flexCenter(row, space-between);
 

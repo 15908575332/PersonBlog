@@ -256,7 +256,7 @@ const handleScroll = () => {
   const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
   isNavHidden.value = scrollY > scrollThreshold;
 };
-const debouncedHandleScroll = debounce(handleScroll, 100); // 300ms 防抖延迟
+const debouncedHandleScroll = debounce(handleScroll, 100); // 100ms 防抖延迟
 
 /** ------------------------ 图片加载完成后显示播放按钮 ------------------------ */
 const
