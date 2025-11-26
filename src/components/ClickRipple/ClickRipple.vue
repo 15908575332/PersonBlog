@@ -86,13 +86,13 @@ const getEnoughBall = (num, mouseX, mouseY) => {
     // 计算球的最终 x 坐标
     ball.dx =
       (((x < 0 ? 1 : -1) * moreOutterRadius) / Math.sqrt(scale * scale + 1)) *
-        Math.random() *
-        scale +
+      Math.random() *
+      scale +
       mouseX;
     // 计算球的最终 y 坐标
     ball.dy =
       (((y < 0 ? 1 : -1) * moreOutterRadius) / Math.sqrt(scale * scale + 1)) *
-        Math.random() +
+      Math.random() +
       mouseY;
 
     // 将生成的球对象添加到数组中

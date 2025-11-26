@@ -34,7 +34,7 @@
       </a-back-top>
     </div>
     <!-- 花瓣动画控制面板 -->
-    <div class="flowersControl" :class="{ 'showFlowersControl': showControlPanel }">
+    <div class="flowersControl" :class="{ 'showFlowersControl': showControlPanel }" ref="flowersControl">
       <div class="button-group">
         <button @click="toggleAnimation" class="control-btn">
           <img :src="isAnimating ? pauseIcon : playIcon" alt="controlBtn">
@@ -79,6 +79,8 @@ const toggleControlPanel = () => {
 const isAnimating = ref(true);
 const sakuraCount = ref(50);
 const speed = ref(5);
+const flowersControl = ref();
+
 
 const toggleAnimation = () => { // 花瓣动画暂停/播放
   isAnimating.value = !isAnimating.value;
@@ -178,9 +180,6 @@ const showRippleToggle = computed(() => {
     height: 1.5rem;
   }
 }
-
-//控制面板调出按钮
-.flowerBtn {}
 
 //花瓣动画控制面板
 .flowersControl {

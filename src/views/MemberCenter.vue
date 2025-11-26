@@ -104,7 +104,7 @@ const cards = reactive([
         title: '高级定制',
         level: 6,
         ribbonColor: '#d81e06',
-        ribbonText: '❀推荐',
+        ribbonText: '🔥推荐',
         price: 999,
         originalPrice: '暂无',
         benefits: '专属定制服务<br>API接口开放<br>优先技术支持',
