@@ -2,7 +2,7 @@
   <div>
     <div class="pagesOption">
       <ClickRipple></ClickRipple>
-      <flowerAnimate :is-animating="isAnimating" :sakura-count="sakuraCount" :speed="speed" />
+      <!-- <flowerAnimate :is-animating="isAnimating" :sakura-count="sakuraCount" :speed="speed" /> -->
       <router-view></router-view>
     </div>
     <div class="floot_right" v-if="showRippleToggle">
@@ -190,9 +190,7 @@ const showRippleToggle = computed(() => {
   opacity: 0; // 隐藏时透明
   border-radius: 8px;
   padding: 0 1rem;
-  box-shadow:
-    0px 4px 20px rgba(113, 113, 113, 0.25),
-    0px 0px 0px 1px rgba(113, 113, 113, 0.1);
+  box-shadow: $shadow-card;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   min-width: 220px;
   min-height: 150px;

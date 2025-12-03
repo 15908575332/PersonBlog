@@ -1,0 +1,41 @@
+// 背景色
+$pages-background-color: linear-gradient(
+    80deg,
+    rgb(206, 242, 250) 0%,
+    8.44482%,
+    rgb(209, 240, 236) 16.8896%,
+    38.8796%,
+    rgb(250, 239, 243) 60.8696%,
+    80.4348%,
+    rgb(251, 243, 239) 100%
+);
+
+/* 主色调 */
+$primary-color: #4dd5cc; // 主蓝色
+$primary-hover: #82dbf4; // 主色悬停状态
+$primary-sub: #f24257; //次主色
+// 辅色
+$assistance-1: #bf7d52;
+$assistance-2: #ff7f2e;
+$assistance-3: #806757;
+$assistance-4: #891c60;
+$assistance-5: #7a60f4;
+$assistance-6: #d9bb2f;
+$assistance-7: #3470fc;
+$assistance-8: #cd457c;
+$assistance-9: #e46dc9;
+
+//中性色用于文字、背景、边框等
+$color-1: #808080;
+$color-2: #d3d3d3;
+$color-3: #a9a9a9;
+$color-4: #fbf3ef;
+$color-5: #ffa500;
+// 通用卡片阴影
+$shadow-card:
+    0px 4px 20px rgba(113, 113, 113, 0.25),
+    0px 0px 0px 1px rgba(113, 113, 113, 0.1);
+
+// 通用颜色
+$general-black: #111;
+$general-white: #fff;

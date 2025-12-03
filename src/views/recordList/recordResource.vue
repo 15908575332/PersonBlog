@@ -248,10 +248,11 @@ onMounted(() => {
   .background__img {
     height: 18rem;
 
+
     // 背景图
     .backPhoto {
       width: 100vw;
-      height: 19rem;
+      height: 21rem;
       background-size: cover;
       z-index: -2;
       background-position: center;
@@ -267,7 +268,7 @@ onMounted(() => {
     // 遮罩
     .mask {
       width: 100%;
-      height: 19rem;
+      height: 21rem;
       position: absolute;
       background-color: #00000040;
       top: 0;
@@ -320,6 +321,8 @@ onMounted(() => {
   .container-content {
     @include flexCenter(column, center);
     animation: zoomInUp 0.6s ease-out;
+    background: $pages-background-color;
+    padding-top: 1rem;
 
     // 选择按钮
     .button__navigate {
@@ -330,7 +333,8 @@ onMounted(() => {
       @include flexCenter(row, space-around);
       flex-wrap: wrap;
       transition: all 0.2s linear;
-      box-shadow: 0 0 15px 6px #e5e5e5;
+      box-shadow: $shadow-card;
+      background-color: #fff;
       font-size: 0.9rem;
 
       /* 7 */
@@ -453,6 +457,8 @@ onMounted(() => {
       .module {
         display: flex;
         align-items: center;
+        box-shadow: $shadow-card;
+        background-color: #fff;
 
         .image {
           max-width: 50%;
@@ -551,6 +557,7 @@ onMounted(() => {
         }
       }
     }
+
     // 手机样式
     @include media-to("phone") {
       padding: 0.7rem;

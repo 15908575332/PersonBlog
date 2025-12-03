@@ -2,7 +2,7 @@
     <div id="helpLink">
         <!-- 导航栏 -->
         <div class="navigation">
-            <Navigation></Navigation>
+            <Navigation hoverBgColor="#ecf8ff" textColor="#585858"></Navigation>
         </div>
 
         <div class="trends_nav">
@@ -267,6 +267,7 @@ const click_env = () => {
     font-family: 'gtpy';
     @include flexCenter(column, center);
     $allContentWidth: 60vw;
+    // background: $pages-background-color;
 
     .trends_nav {
         width: $allContentWidth;

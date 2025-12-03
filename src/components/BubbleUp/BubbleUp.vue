@@ -34,7 +34,7 @@ const colorPairs = [
 const balloons = Array.from({ length: balloonCount }, (_, i) => {
   const [c1, c2] = colorPairs[random(0, colorPairs.length - 1)];
   return {
-    width: random(40, 90) + "px", // 随机生成气球宽度，30~80px
+    width: random(30, 80) + "px", // 随机生成气球宽度，30~80px
     delay: random(0, 2) + "s", // 让动画延迟为0~2秒，气球首次进入页面就能陆续出现
     left: random(1, 99) + "%",
     duration: random(8, 10) + "s", // 新增动画时长，8~10秒

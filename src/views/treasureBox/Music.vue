@@ -96,7 +96,7 @@
         </div>
       </div>
     </div>
-    <!-- 气泡 -->
+    <!-- 气球 -->
     <BubbleUp></BubbleUp>
   </div>
 </template>

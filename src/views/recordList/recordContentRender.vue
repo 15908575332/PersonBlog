@@ -1,7 +1,9 @@
 <template>
     <!-- 详情页（入口） -->
     <div>
-        <Navigation></Navigation>
+        <div class="navigate">
+            <Navigation></Navigation>
+        </div>
         <ListDetail :articleId="routerId" :key="routerId"></ListDetail>
     </div>
 </template>
@@ -13,3 +15,9 @@ const route = useRoute();
 const routerId = computed(() => route.params.id);
 import Navigation from "@/components/NavigationMenu/index.vue";
 </script>
+<style>
+.navigate {
+    position: relative;
+    z-index: 2;
+}
+</style>

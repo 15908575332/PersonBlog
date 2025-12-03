@@ -78,7 +78,10 @@ export default defineConfig({
     devSourcemap: false, // 开发环境下是否开启css sourcemap，默认false
     preprocessorOptions: {
       scss: {
-        additionalData: ['@import "@/styles/global.scss";'], // 配置全局公共样式，可多个
+        additionalData: `
+          @import "@/styles/global.scss";
+          @import "@/styles/color.scss";
+        `,
         api: 'modern-compiler', // or 'modern'
         charset: false
       }

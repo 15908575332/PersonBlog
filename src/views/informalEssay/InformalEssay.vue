@@ -8,7 +8,7 @@
     <!-- 遮罩 -->
     <div class="mask"></div>
     <div class="text">
-      <div class="text-effect">
+      <!-- <div class="text-effect">
         <span>直</span>
         <span>挂</span>
         <span>云</span>
@@ -16,7 +16,8 @@
         <span>济</span>
         <span>沧</span>
         <span>海</span>
-      </div>
+      </div> -->
+      <h1 class="text-effect">直挂云帆济沧海</h1>
     </div>
     <div class="container">
       <!-- 波浪动画 -->
@@ -329,7 +330,7 @@ $contentWidth: 65rem; // 内容宽度
     z-index: -1;
   }
 
-  //
+  //  文字动画
   .text {
     height: 19rem;
     position: relative;
@@ -347,72 +348,24 @@ $contentWidth: 65rem; // 内容宽度
       text-transform: uppercase;
       text-align: center;
       transform: translate(-50%, -100%);
+      border-right: 0.1em solid;
+      width: 16rem;
+      margin: 2em 1em;
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 3s steps(20, end),
+        cursor-blink 0.3s step-end infinite alternate;
     }
 
-    .text-effect span {
-      animation: animate linear 4000ms infinite;
-    }
-
-    .text-effect span:nth-child(1n) {
-      animation-delay: 100ms;
-    }
-
-    .text-effect span:nth-child(2n) {
-      animation-delay: 300ms;
-    }
-
-    .text-effect span:nth-child(3n) {
-      animation-delay: 500ms;
-    }
-
-    .text-effect span:nth-child(4n) {
-      animation-delay: 700ms;
-    }
-
-    .text-effect span:nth-child(5n) {
-      animation-delay: 900ms;
-    }
-
-    .text-effect span:nth-child(6n) {
-      animation-delay: 1100ms;
-    }
-
-    .text-effect span:nth-child(7n) {
-      animation-delay: 1300ms;
-    }
-
-    @keyframes animate {
-      0% {
-        opacity: 0.3;
-      }
-
-      100% {
-        opacity: 1;
-        text-shadow: 0 0 80px Red, 0 0 30px orange, 0 0 6px DarkRed;
+    @keyframes typing {
+      from {
+        width: 0;
       }
     }
 
-    @media only screen and (max-width: 990px) {
-      .text-effect {
-        font-size: 65px;
-      }
-    }
-
-    @media only screen and (max-width: 767px) {
-      .text-effect {
-        font-size: 50px;
-      }
-    }
-
-    @media only screen and (max-width: 479px) {
-      .text-effect {
-        font-size: 36px;
-      }
-    }
-
-    @media only screen and (max-width: 359px) {
-      .text-effect {
-        font-size: 27px;
+    @keyframes cursor-blink {
+      50% {
+        border-color: transparent;
       }
     }
   }

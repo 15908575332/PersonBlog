@@ -56,9 +56,10 @@ onMounted(() => {
 
 <style scoped lang="scss">
 #life-card {
-  // background: url("./img/egg_shell.png") repeat center;
   height: 100vh;
+  background: $pages-background-color;
 }
+
 @font-face {
   font-family: "icons";
   src: url("./fonts/icons.ttf") format("truetype");
@@ -105,36 +106,30 @@ onMounted(() => {
 // 简化彩色卡片样式，使用循环生成不同颜色和阴影
 @for $i from 1 through 11 {
   .sb-container div:nth-child(#{$i}) {
-    background-color: nth(
-      (
-        #ea2a29,
-        #f16729,
-        #f89322,
-        #ffcf14,
-        #ffea0d,
-        #87b11d,
-        #008253,
-        #3277b5,
-        #4c549f,
-        #764394,
-        #ca0d86
-      ),
-      $i
-    );
+    background-color: nth((#ea2a29,
+          #f16729,
+          #f89322,
+          #ffcf14,
+          #ffea0d,
+          #87b11d,
+          #008253,
+          #3277b5,
+          #4c549f,
+          #764394,
+          #ca0d86),
+        $i );
     box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.1),
-      #{$i}px
-        #{$i}px
-        #{($i * 2 - 1)}px
-        rgba(0, 0, 0, if($i < 4, 0.1 + $i * 0.05, 0.1 + $i * 0.1)),
-      inset 0 3px 0 rgba(255, 255, 255, 0.2);
+    #{$i}px #{$i}px #{($i * 2 - 1)}px rgba(0, 0, 0, if($i < 4, 0.1 + $i * 0.05, 0.1 + $i * 0.1)),
+    inset 0 3px 0 rgba(255, 255, 255, 0.2);
+
     &:hover {
       translate: 0 -1rem;
     }
   }
 }
+
 .sb-container div:last-child {
-  background: #111 url("/src/assets/img/infomalEssay/dark_leather.jpg") repeat
-    center center;
+  background: #111 url("/src/assets/img/infomalEssay/dark_leather.jpg") repeat center center;
   box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.2),
     12px 12px 20px rgba(0, 0, 0, 0.6), inset 2px 2px 0 rgba(255, 255, 255, 0.1);
 }
@@ -148,33 +143,25 @@ onMounted(() => {
   height: 20px;
   border-radius: 50%;
   background: #dddddd;
-  background: -moz-linear-gradient(
-    -45deg,
-    #dddddd 0%,
-    #58535e 48%,
-    #889396 100%
-  );
-  background: -webkit-gradient(
-    linear,
-    left top,
-    right bottom,
-    color-stop(0%, #dddddd),
-    color-stop(48%, #58535e),
-    color-stop(100%, #889396)
-  );
-  background: -webkit-linear-gradient(
-    -45deg,
-    #dddddd 0%,
-    #58535e 48%,
-    #889396 100%
-  );
+  background: -moz-linear-gradient(-45deg,
+      #dddddd 0%,
+      #58535e 48%,
+      #889396 100%);
+  background: -webkit-gradient(linear,
+      left top,
+      right bottom,
+      color-stop(0%, #dddddd),
+      color-stop(48%, #58535e),
+      color-stop(100%, #889396));
+  background: -webkit-linear-gradient(-45deg,
+      #dddddd 0%,
+      #58535e 48%,
+      #889396 100%);
   background: -o-linear-gradient(-45deg, #dddddd 0%, #58535e 48%, #889396 100%);
-  background: -ms-linear-gradient(
-    -45deg,
-    #dddddd 0%,
-    #58535e 48%,
-    #889396 100%
-  );
+  background: -ms-linear-gradient(-45deg,
+      #dddddd 0%,
+      #58535e 48%,
+      #889396 100%);
   background: linear-gradient(135deg, #dddddd 0%, #58535e 48%, #889396 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#889396', GradientType=1);
   box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.7),
@@ -203,10 +190,12 @@ onMounted(() => {
   background: rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 1px rgba(255, 255, 255, 0.1);
 }
+
 span {
   color: white;
   font-family: "gtpy";
 }
+
 .sb-container div:last-child h5 {
   font-size: 50px;
   white-space: nowrap;
@@ -334,10 +323,12 @@ span.sb-icon:before {
   @include flexCenter(row, center);
   margin: 1rem;
   background-image: url("/src/assets/img/infomalEssay/smoke.png");
+
   .closeBtn {
     position: absolute;
     right: 0.4rem;
     top: 0.2rem;
+
     &:hover {
       cursor: pointer;
     }

@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, defineProps } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { debounce } from "@/utils/debounce.ts"; // 导入防抖函数
 // 响应式数据
 const canvasWidth = ref(window.innerWidth)

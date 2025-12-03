@@ -1,6 +1,6 @@
 <template>
     <div id="recordColumn">
-        <Navigation />
+        <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
         <div class="category__content">
             <!-- carousel -->
             <div class="carousel">

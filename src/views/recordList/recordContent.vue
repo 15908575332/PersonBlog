@@ -1,8 +1,8 @@
 <template>
   <div class="recordContent" :class="{ 'overflow-hidden': isInputOpen }">
-    <div class="navigate">
-      <Navigation></Navigation>
-    </div>
+
+    <Navigation />
+
     <div class="backVideo">
       <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video>
     </div>
@@ -26,7 +26,7 @@
       <div class="menu" style="border-color: #8fcfc4;">
         <div class="flex__layout">
           <img src=" @/assets/icon/recordList/search_result.svg" alt="advocate" style="width: 1.5rem;" />
-          <span style="color: #a39b9c;">“{{ searchTitle }}”</span>
+          <span>“{{ searchTitle }}”</span>
         </div>
         <div class="flex__layout">
           <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
@@ -44,7 +44,8 @@
       <div v-else>
         <div class="search_content_aera">
           <div class="search_item" v-for="item in searchResult" :key="item.article_id"
-            @click="listDetail(item.article_id)" data-aos="zoom-in">
+            :style="{ background: generateRandomGradient(item.article_id) }" @click="listDetail(item.article_id)"
+            data-aos="zoom-in">
             <!-- 图片和一些数据 -->
             <div class="search_result_image">
               <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
@@ -70,8 +71,8 @@
               <h3 class="title">{{ item.sub_tag }}</h3>
               <span class="post">Web designer</span>
               <ul class="icon">
-                <li><a href="#"><i class="fa fa-search"></i></a></li>
-                <li><a href="#"><i class="fa fa-link"></i></a></li>
+                <li><a href="#">♥</a></li>
+                <li><a href="#">1</a></li>
               </ul>
             </div>
           </div>
@@ -118,18 +119,17 @@
           </li>
         </ul>
       </div>
-      <!-- content -->
+
       <div class="content__container">
         <!-- 推荐位 -->
-        <section v-if="advocateItems">
+        <section v-if="advocateItems && advocateItems.length > 0">
           <div class="menu" style="border-color: #ff623e;">
             <div class="flex__layout">
               <img src=" @/assets/icon/recordList/advocate.svg" alt="advocate" style="width: 2.9rem;" />
-              <!-- <span style="color: #ff623e;">推荐位</span> -->
             </div>
             <div class="flex__layout">
               <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
-              <span>MORE</span>
+              <span style="color: #d81e06;">MORE</span>
             </div>
           </div>
           <div class="content_aera advocate">
@@ -315,6 +315,32 @@ const handleSearch = async () => {
     isSearching.value = false; // 搜索失败，隐藏搜索结果区域
   }
 }
+//搜索结果随机背景色
+const gradientColors = [
+  ['#ff9a9e', '#fecfef'],
+  ['#a1c4fd', '#c2e9fb'],
+  ['#d4fc79', '#96e6a1'],
+  ['#84fab0', '#8fd3f4'],
+  ['#a6c0fe', '#f68084'],
+  ['#fccb90', '#d57eeb'],
+  ['#e0c3fc', '#8ec5fc'],
+  ['#fad0c4', '#ffd1ff'],
+  ['#cd9cf2', '#f6f3ff'],
+  ['#92fe9d', '#00c9ff'],
+  ['#ffecd2', '#fcb69f'],
+  ['#fdbb2d', '#22c1c3'],
+  ['#00BFFF', '#00FA9A'],
+  ['faeff3', 'd1f0ec']
+];
+
+const generateRandomGradient = (seed) => {
+  // 使用文章ID作为种子，确保同一文章每次显示相同的渐变
+  const seedNum = seed ? String(seed).split('').reduce((a, b) => a + b.charCodeAt(0), 0) : Math.random();
+  const colorIndex = Math.floor(seedNum % gradientColors.length);
+  const colors = gradientColors[colorIndex];
+  const angle = Math.floor(seedNum % 360);
+  return `linear-gradient(${angle}deg, ${colors[0]} 0%, ${colors[1]} 100%)`;
+};
 /** ------------------------ 导航数据 ------------------------ */
 const navContent = ref([]);
 const fetchNavData = async () => {
@@ -411,7 +437,7 @@ onMounted(() => {
   $main_content_width: 60rem;
 
   .navigate {
-    position: fixed;
+    position: absolute;
     top: 0;
     z-index: 2;
   }
@@ -419,7 +445,7 @@ onMounted(() => {
   // 背景视频
   .backVideo {
     width: 100%;
-    height: 18rem;
+    height: 25rem;
     overflow: hidden;
     background-color: #4dd5cc;
     animation: zoomInDown 0.6s ease-out;
@@ -452,12 +478,11 @@ onMounted(() => {
 
     .search__form {
       position: absolute;
-      top: 15%;
+      top: 20%;
       left: 50%;
       transform: scale3d(0.9, 0.9, 1) translateX(-60%);
       transition: transform 0.5s;
       transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
-      // z-index: 2;
 
       input {
         border-radius: 1rem;
@@ -501,14 +526,14 @@ onMounted(() => {
       .suggestion-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 0.8rem;
         margin-top: 0.5rem;
       }
 
       .suggestion-tag {
         display: inline-block;
         background: rgba(255, 255, 255, 0.15);
-        border: 1px solid #4dd5cc;
+        border: 1px solid $primary-color;
         color: #fff;
         border-radius: 1rem;
         padding: 0.2rem 0.8rem;
@@ -521,11 +546,10 @@ onMounted(() => {
       }
 
       .suggestion-tag:hover {
-        background: #e85454;
-        color: #fff;
-        transition: background 0.2s;
+        background: $primary-sub;
+        color: $general-white;
+        transition: all ease 0.4s;
       }
-
 
       h3,
       .suggestion-tag {
@@ -537,7 +561,7 @@ onMounted(() => {
       }
 
       h3 {
-        color: #4dd5cc;
+        color: $primary-color;
         padding: 1rem 0;
         font-size: 1.2rem;
       }
@@ -551,7 +575,7 @@ onMounted(() => {
       width: 100%;
       height: 100%;
       pointer-events: none; // 默认不拦截点击
-      background: rgba(1, 1, 1, 0.7);
+      background: rgba(0, 0, 0, 0.8);
       opacity: 0;
       transition: opacity 0.5s;
       transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
@@ -569,7 +593,7 @@ onMounted(() => {
 
     .search__form {
       z-index: 2;
-      transform: translate3d(0, 30vh, 0) translate3d(-50%, -50%, 0) scale3d(1.2, 1.2, 1);
+      transform: translate3d(0, 20vh, 0) translate3d(-50%, -50%, 0) scale3d(1.2, 1.2, 1);
     }
 
     .search__suggestion {
@@ -600,6 +624,8 @@ onMounted(() => {
   .search__result {
     width: $main_content_width;
     margin: 0 auto;
+    position: relative;
+    z-index: 0;
 
     .menu {
       @include flexCenter(row, space-between);
@@ -618,7 +644,7 @@ onMounted(() => {
 
         span {
           font-size: 1rem;
-          color: #999;
+          color: $primary-sub;
         }
       }
     }
@@ -657,7 +683,7 @@ onMounted(() => {
         border-radius: 0.2rem;
         z-index: 1;
         transition: all 0.5s;
-        background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+        background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
 
         &:hover {
           box-shadow: 3px 3px 5px #999;
@@ -1034,7 +1060,7 @@ onMounted(() => {
 
           span {
             font-size: 1rem;
-            color: #999;
+            color: $primary-sub;
           }
         }
       }

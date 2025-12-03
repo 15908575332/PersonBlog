@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="body">
         <ModalBox :isVisible="showModal" @close="handClose" class="modal__box">
             <h1>个人博客版权说明</h1>
             <h2>
@@ -124,28 +124,35 @@
 
                 <!-- 操作按钮 -->
                 <div class="feed">
-                    <button class="likeBtn" @click="handleLikeClick(recordDetail.article_id)">
-                        <p style="text-wrap: nowrap;">点赞</p>
-                        <div class="heart" :class="{ 'heartAnimation': Boolean(isLiked) }">
+                    <div class="card">
+                        <div class="collectBtn btn" @click="shareLike">
+                            <p>收藏</p>
+                            <img src="./icon/icons8-favorite-48.png" alt="favorite">
                         </div>
-                    </button>
-                    <div class="shareBtn" @click="shareLike">
-                        <p>分享</p>
-                        <img src="./icon/share_icon.svg" alt="">
+                        <button class="likeBtn btn" @click="handleLikeClick(recordDetail.article_id)">
+                            <p style="text-wrap: nowrap;">点赞</p>
+                            <div class="heart" :class="{ 'heartAnimation': Boolean(isLiked) }">
+                            </div>
+                        </button>
+                        <div class="shareBtn btn" @click="shareLike">
+                            <p>分享</p>
+                            <img src="./icon/icons8-share-48.png" alt="share">
+                        </div>
                     </div>
-
                 </div>
                 <!-- 评论区 -->
                 <div class="comment">
                     <h1 class="title">
-                        <img src="./icon/edit-icon.svg" alt="edit">
+                        <img src="./icon/icons8-write-64.png" alt="edit">
                         <span>评论</span>
                     </h1>
                     <!-- 输入框 -->
                     <div class="comment__input__aera">
-                        <textarea class="input" name="comment" maxlength="500" placeholder="写下点什么..."
-                            v-model="input__message"></textarea>
-                        <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
+                        <div class="box-inner">
+                            <textarea class="input" name="comment" maxlength="500" placeholder="写下点什么..."
+                                v-model="input__message"></textarea>
+                            <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
+                        </div>
                     </div>
                     <!-- 表情/提交按钮 -->
                     <div class="submit">
@@ -812,10 +819,23 @@ onMounted(async () => {
 })
 </script>
 <style lang="scss" scoped>
+@property --rotate {
+    syntax: "<angle>";
+    initial-value: 30deg;
+    inherits: false;
+}
+
+
+
 #recordDetail {
     font-family: 'gtpy';
     font-size: 0.75rem;
-
+    // background: $pages-background-color;
+    min-height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(90deg, rgba(147, 157, 163, 0.1) 1px, #fff 0),
+        linear-gradient(180deg, rgba(37, 82, 110, 0.1) 1px, #fff 0);
+    background-size: 2rem 2rem;
 
     // 背景设置
     .background__img {
@@ -826,7 +846,7 @@ onMounted(async () => {
             width: 100vw;
             height: 19rem;
             background-size: cover;
-            z-index: -2;
+            z-index: 0;
             background-position: center;
             position: absolute;
             top: 0;
@@ -926,7 +946,6 @@ onMounted(async () => {
         margin-left: auto;
         margin-right: auto;
         font-size: 0.9rem;
-        max-height: 38rem;
         animation: zoomInUp 0.6s ease-out forwards;
 
         .image {
@@ -1047,7 +1066,7 @@ onMounted(async () => {
             .title {
                 font-size: 1.2rem;
                 font-weight: 700;
-                color: #ffa500;
+                color: $primary-sub;
                 display: flex;
                 align-items: center;
                 padding: 1rem 0;
@@ -1059,27 +1078,74 @@ onMounted(async () => {
             }
 
             .comment__input__aera {
+                $layoutPosition: 4px;
                 position: relative;
-                // z-index: -1;
+                padding: $layoutPosition;
+                border: 1px solid $color-3;
+
+                &::after,
+                &::before {
+                    content: "•";
+                    position: absolute;
+                    width: 14px;
+                    height: 14px;
+                    font-size: 14px;
+                    color: $primary-sub;
+                    border: 1px solid $primary-sub;
+                    line-height: 12px;
+                    top: $layoutPosition;
+                    text-align: center;
+                }
+
+                &::before {
+                    left: $layoutPosition;
+                }
+
+                &::after {
+                    right: $layoutPosition;
+                }
+
+                .box-inner {
+                    position: relative;
+                    border: 1px dashed $primary-sub;
+
+
+                    &::after,
+                    &::before {
+                        content: "•";
+                        position: absolute;
+                        width: 14px;
+                        height: 14px;
+                        font-size: 14px;
+                        color: $primary-sub;
+                        border: 1px solid $primary-sub;
+                        line-height: 12px;
+                        bottom: -2px;
+                        text-align: center;
+                    }
+
+                    &::before {
+                        left: -1px;
+                        bottom: -1px;
+                    }
+
+                    &::after {
+                        right: -1px;
+                        bottom: -1px;
+                    }
+                }
 
                 .input {
                     height: 12rem;
                     width: 100%;
                     resize: none;
-                    font-size: 0.8rem;
+                    font-size: 1rem;
                     padding: 1rem;
                     border-radius: 0.25rem;
                     transition: all 0.1s linear;
                     background-color: transparent;
-                    border-color: #3f3d56;
-
-                    &::placeholder {
-                        font-size: 0.7rem;
-                    }
-
-                    &:focus {
-                        border-color: #ffa500;
-                    }
+                    border: none;
+                    font-family: 'lmst';
                 }
 
                 .input__illustration {
@@ -1095,7 +1161,7 @@ onMounted(async () => {
 
             .submit {
                 text-align: right;
-                padding: 1rem;
+                padding: 3rem 1rem;
                 position: relative;
                 @include flexCenter(row, space-between);
 
@@ -1121,7 +1187,7 @@ onMounted(async () => {
                     width: 100%;
                     position: absolute;
                     left: 0;
-                    top: 2.8rem;
+                    top: 4.8rem;
                     @include flexCenter(row, center);
 
                     //表情模块
@@ -1143,7 +1209,7 @@ onMounted(async () => {
                                     padding: 0.4rem 0.6rem;
 
                                     &:hover {
-                                        background-color: #ff8345;
+                                        background-color: $primary-sub;
                                     }
 
                                     .v3-icon {
@@ -1159,15 +1225,14 @@ onMounted(async () => {
 
                 //提交按钮
                 .reMessage {
-                    $color: #ff8345;
                     font-family: 'gtpy';
                     position: relative;
                     padding: 0.2rem 0.8rem;
-                    background: $color;
+                    background: $primary-sub;
                     font-size: 0.9rem;
                     font-weight: 500;
                     color: rgb(255, 255, 255);
-                    border: 1.5px solid $color;
+                    border: 1.5px solid $primary-sub;
                     border-radius: 8px;
                     // box-shadow: 0 0 0 rgba(255, 138, 159, 0.55);
                     transition: all .3s ease-in-out;
@@ -1368,9 +1433,9 @@ onMounted(async () => {
 
                     //回复
                     .reply {
-                        border: 1px solid #ff8345;
+                        border: 1px solid $color-3;
                         font-size: 0.7rem;
-                        color: #ff8345;
+                        color: $primary-sub;
                         border-radius: 0.2rem;
                         padding: 0.1rem 0.2rem;
                         transition: all 0.3s ease;
@@ -1381,7 +1446,7 @@ onMounted(async () => {
 
                         &:hover {
                             cursor: pointer;
-                            background-color: #ff8345;
+                            background-color: $primary-sub;
                             color: white;
                         }
                     }
@@ -1505,12 +1570,12 @@ onMounted(async () => {
                 }
 
                 .paginate-buttons:hover {
-                    background-color: #ff8345;
+                    background-color: $primary-sub;
                 }
 
                 .active-page {
-                    background-color: #ff8345;
-                    border: 1px solid #ff8345;
+                    background-color: $primary-sub;
+                    border: 1px solid $color-3;
                     color: white;
                 }
 
@@ -1526,7 +1591,7 @@ onMounted(async () => {
                 }
 
                 .active-page:hover {
-                    background-color: #ff8345;
+                    background-color: $primary-sub;
                 }
 
                 .first-page-button,
@@ -1545,87 +1610,148 @@ onMounted(async () => {
     //操作按钮
     .feed {
         width: 100%;
-        height: 5rem;
-        @include flexCenter(row, center);
-        gap: 1rem;
+        height: 10rem;
+        margin: 1rem auto;
+        @include flexCenter(column, center);
 
-        //点赞按钮
-        .likeBtn,
-        .shareBtn {
-            padding: 0 1rem;
-            @include flexCenter(row, space-around);
-            background-color: #773098;
-            width: 5rem;
-            height: 1.8rem;
-            border-radius: 0.3rem;
-            color: white;
-            position: relative;
-
-            &:hover {
-                cursor: pointer;
-            }
-
-            .heart {
-                background: url(./img/web_heart_animation.png);
-                background-position: 0;
-                background-repeat: no-repeat;
-                background-size: cover;
-                height: 1rem;
-                width: 1rem;
-                transform: scale(2.5);
-                cursor: pointer;
-                background-size: 2900%;
-                transition: transform 0.3s ease;
-            }
-
-            @-webkit-keyframes heartBlast {
-                0% {
-                    background-position: left;
-                }
-
-                100% {
-                    background-position: right;
-                }
-            }
-
-            @keyframes heartBlast {
-                0% {
-                    background-position: left;
-                }
-
-                100% {
-                    background-position: right;
-                }
-            }
-
-            .heartAnimation {
-                display: inline-block;
-                -webkit-animation-name: heartBlast;
-                animation-name: heartBlast;
-                -webkit-animation-duration: .8s;
-                animation-duration: .8s;
-                -webkit-animation-iteration-count: 1;
-                animation-iteration-count: 1;
-                -webkit-animation-timing-function: steps(28);
-                animation-timing-function: steps(28);
-                background-position: right;
-            }
-
-            .noHeart {
-                background-position: 0;
-            }
+        .btn,
+        .btn:before {
+            transition: all 0.35s;
+            transition-timing-function: cubic-bezier(0.31, -0.105, 0.43, 1.59);
+            font-family: 'gtpy';
         }
 
-        //分享按钮
-        .shareBtn {
-            background-color: #ff416c;
+        .btn {
+            display: inline-block;
+            background-color: #fff;
+            width: 90px;
+            height: 40px;
+            line-height: 40px;
+            margin: 0 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1);
+            opacity: 0.99;
+            @include flexCenter(row, center);
+
+            &::before {
+                content: "";
+                width: 150%;
+                height: 150%;
+                position: absolute;
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+                top: 90%;
+                left: -110%;
+                background-color: $primary-sub;
+                z-index: -1;
+            }
+
+            &:focus,
+            &:hover {
+                &::before {
+                    top: 0%;
+                    left: -12%;
+                }
+
+            }
 
             img {
-                width: 0.9rem;
-                // position: absolute;
-                // right: 1rem;
+                height: 1.2rem;
+                width: 1.1rem;
             }
         }
+
+        .heart {
+            background: url(./img/web_heart_animation.png);
+            background-position: 0;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 1rem;
+            width: 1rem;
+            transform: scale(2.5);
+            cursor: pointer;
+            background-size: 2900%;
+            transition: transform 0.3s ease;
+        }
+
+        @-webkit-keyframes heartBlast {
+            0% {
+                background-position: left;
+            }
+
+            100% {
+                background-position: right;
+            }
+        }
+
+        @keyframes heartBlast {
+            0% {
+                background-position: left;
+            }
+
+            100% {
+                background-position: right;
+            }
+        }
+
+        .heartAnimation {
+            display: inline-block;
+            -webkit-animation-name: heartBlast;
+            animation-name: heartBlast;
+            -webkit-animation-duration: .8s;
+            animation-duration: .8s;
+            -webkit-animation-iteration-count: 1;
+            animation-iteration-count: 1;
+            -webkit-animation-timing-function: steps(28);
+            animation-timing-function: steps(28);
+            background-position: right;
+        }
+
+        .card {
+            @include flexCenter(row, center);
+            $borderWidthSum: 0.4rem;
+            width: 100%;
+            height: 60%;
+            padding: 3px;
+            position: relative;
+            border-radius: 2px;
+            background-color: #ecf8ff;
+
+            &::before {
+                content: "";
+                width: calc(100% + $borderWidthSum);
+                height: calc(100% + $borderWidthSum);
+                border-radius: $borderWidthSum / 4;
+                background-image: linear-gradient(var(--rotate),
+                        $assistance-7,
+                        $assistance-8 43%,
+                        $assistance-9,
+                    );
+                position: absolute;
+                z-index: -1;
+                top: -calc($borderWidthSum / 2);
+                left: -calc($borderWidthSum / 2);
+                animation: spin 5s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    --rotate: 0deg;
+                }
+
+                50% {
+                    --rotate: 180deg;
+                }
+
+                100% {
+                    --rotate: 360deg;
+                }
+            }
+        }
+
     }
 
     //评论回复框
@@ -1769,7 +1895,7 @@ onMounted(async () => {
 
                 //提交按钮
                 .modalSubmit {
-                    $color: #ff8345;
+                    $color: $primary-sub;
                     font-family: 'gtpy';
                     position: relative;
                     padding: 0.2rem 0.6rem;

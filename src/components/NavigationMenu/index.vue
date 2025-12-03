@@ -302,7 +302,7 @@ onMounted(async () => { });
   width: 100%;
   padding: 0 2rem;
   font-family: "lmst";
-  z-index: 1;
+  z-index: 2 !important;
   background-color: var(--bg-color);
   // text-shadow: 1px 1px 2px #0b0201;
   transition: all 0.3s linear;
@@ -349,10 +349,6 @@ onMounted(async () => { });
       font-size: 1rem;
       font-weight: 700;
       position: relative;
-
-      &:hover a {
-        color: #ffa500;
-      }
 
       &:hover .br {
         animation: grow 0.5s forwards;

@@ -1,7 +1,7 @@
 <template>
   <div class="active-page1" id="AlbumCollection" ref="AlbumCollection">
-    <!-- 导航栏 -->
-    <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
+      <!-- 导航栏 -->
+      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
     <!-- 堆叠切换 -->
     <div class="stacking_switch page page1">
       <div class="content">
@@ -796,11 +796,6 @@ onBeforeUnmount(() => {
     -webkit-transition: -webkit-transform 1s ease-in-out;
     transition: transform 1s ease-in-out;
     will-change: transform;
-    background-image: linear-gradient(90deg, rgba(37, 82, 110, 0.1) 1px, #fff 0),
-      linear-gradient(180deg, rgba(37, 82, 110, 0.1) 1px, #fff 0);
-    background-size: 3rem 3rem;
-    // font-family: "gtpy";
-    // background-color: rebeccapurple;
   }
 
   //每一个Page的配置
