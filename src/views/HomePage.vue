@@ -439,7 +439,7 @@ onUnmounted(() => {
             text-align: center;
 
             a {
-              color: #6388f9;
+              color: $primary-hover;
               text-decoration: underline;
             }
 

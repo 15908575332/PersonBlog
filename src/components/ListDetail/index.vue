@@ -37,7 +37,7 @@
                 <div class="back__text">
                     <!-- 二级标题 -->
                     <div class="subtitle">
-                        <span> {{ nav_btn_title }}</span>
+                        <span> {{ recordDetail.sub_tag }}</span>
                         <div style="display: flex;" class="content">
                             <!-- 作者 -->
                             <div class="auther">
@@ -246,7 +246,6 @@
                     </div>
                 </div>
                 <!-- 评论记录 -->
-
                 <div class="comment__module">
                     <div class="sum">Comments | {{ totals }}条评论</div>
                     <ul v-if="messageList.length > 0">
@@ -261,9 +260,8 @@
                                         <div class="time__name">
                                             <div class="nickname">
                                                 <span>{{ message.user.username }}</span>
-                                                <img class="level"
-                                                    :src="utils.getAssetsFile('icon/level/lv' + message.user.vip_level + '.svg')"
-                                                    alt="level">
+                                                <img class="level" :src="utils.getAssetsFile('icon/level/lv' + message.user.vip_level
+                                                    + '.svg')" alt="level">
                                             </div>
                                             <div class="time">{{ message.createdAt }}</div>
                                         </div>
@@ -279,7 +277,6 @@
                             </div>
                             <!-- 回复展示 -->
                             <div class="reply__container" v-for="value in message.replies">
-
                                 <div class="louyt">
                                     <div style="display: flex;">
                                         <div class="profile__picture">
@@ -686,15 +683,12 @@ const getMessageList = async () => { // 获取评论列表
                 article_id: paramsId.value,
                 parentId: 0
             },
-            headers: {
-                'Authorization': `Bearer ${userStore.token}`
-            }
         });
         messageList.value = res.data.list.filter(item => !item.parentId);
         totals.value = res.data.pagination.total;
         totalPages.value = Math.ceil(totals.value / pageSize.value);
     } catch (error) {
-        // console.error('获取评论列表失败:', error.response.data.msg);
+        console.error( error.response.data.msg);
     }
 }
 const addMessage = async () => { // 发布评论
@@ -877,7 +871,7 @@ onMounted(async () => {
             height: 85%;
             color: white;
             font-family: 'gtpy';
-            z-index: 2;
+            z-index: 1;
             position: relative;
             animation: zoomInDown 0.6s ease-out forwards;
             padding: 0 1rem;

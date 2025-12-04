@@ -2,7 +2,7 @@
   <div class="player-container">
     <!-- 导航 -->
     <div class="navigate">
-      <Navigation></Navigation>
+      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
     </div>
     <!-- 播放器 -->
     <div class="player-controls">
@@ -526,7 +526,7 @@ onMounted(async () => {
 
           .progress {
             height: 100%;
-            background: #64f2e4;
+            background: $primary-sub;
             transition: width 0.1s linear;
           }
         }
@@ -599,7 +599,7 @@ onMounted(async () => {
 
                 .current-volume {
                   height: 100%;
-                  background: #64f2e4;
+                  background: $primary-sub;
                   transition: width 0.1s ease;
                 }
 
@@ -663,14 +663,14 @@ onMounted(async () => {
 
       /* 滚动条滑块 */
       &::-webkit-scrollbar-thumb {
-        background: #64f2e4; // 使用与进度条相同的颜色
+        background: $primary-sub; // 使用与进度条相同的颜色
         border-radius: 3px; // 圆角匹配
         transition: background 0.3s; // 悬停动画
       }
 
       /* Firefox兼容样式 */
       scrollbar-width: thin; // auto | thin | none
-      scrollbar-color: #64f2e4 rgba(255, 255, 255, 0.1); // 滑块颜色 轨道颜色
+      scrollbar-color: $primary-sub rgba(255, 255, 255, 0.1); // 滑块颜色 轨道颜色
 
       span {
         @include flexCenter(row, center);
@@ -686,7 +686,7 @@ onMounted(async () => {
       // 播放时执行动画
       .play-active {
         animation: rotate 4s linear infinite;
-        filter: drop-shadow(0 0 2px #64f2e4);
+        filter: drop-shadow(0 0 2px $primary-sub);
       }
 
       .playlist-item {
@@ -710,7 +710,7 @@ onMounted(async () => {
       }
 
       .playlist-item.active {
-        color: #00ffe5;
+        color: $primary-hover;
         font-weight: bold;
         background-color: #2a436f90;
         animation: pulse 0.6s ease;
@@ -745,7 +745,7 @@ onMounted(async () => {
         line-height: 24px;
 
         &.active {
-          color: #64f2e4;
+          color: $primary-sub;
           font-size: 0.9rem;
           font-weight: bold;
           transform: scale(1.05);

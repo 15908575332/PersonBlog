@@ -13,7 +13,7 @@
 
 <script setup>
 // 随机生成气球参数，减少代码量
-const balloonCount = 5;
+const balloonCount = 2;
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const randomFloat = (min, max, fixed = 0) =>
   (Math.random() * (max - min) + min).toFixed(fixed);

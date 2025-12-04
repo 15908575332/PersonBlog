@@ -1,20 +1,8 @@
 <template>
   <div class="dropdown">
-    <div
-      class="dropdown-content"
-      @click.self="closeDropdownIfNeeded"
-      @click="selectOption($event, option)"
-    >
-      <div
-        class="dropdown-item"
-        v-for="option in options"
-        :key="option.value"
-        data-value="option.value"
-      >
-        <button
-          @click="RouterJump('/' + option.router)"
-          :class="[option.engTitle ? 'btn-12' : 'btn1']"
-        >
+    <div class="dropdown-content" @click.self="closeDropdownIfNeeded" @click="selectOption($event, option)">
+      <div class="dropdown-item" v-for="option in options" :key="option.value" data-value="option.value">
+        <button @click="RouterJump('/' + option.router)" :class="[option.engTitle ? 'btn-12' : 'btn1']">
           <!-- button icon -->
           <img v-if="option.iconUrl" :src="option.iconUrl" alt="btn_icon" />
           <span v-if="option.engTitle">{{ option.engTitle }}</span>
@@ -40,7 +28,7 @@ export default {
   setup(props) {
     const route = useRouter();
     const selectedOption = ref(null);
-    const closeDropdownIfNeeded = () => {};
+    const closeDropdownIfNeeded = () => { };
 
     const selectOption = (event, option) => {
       event.stopPropagation();
@@ -101,6 +89,7 @@ export default {
         color: rgb(0, 0, 0);
         border-radius: 5px;
         gap: 0.5rem;
+
         // padding-left: 0.5rem;
         img {
           width: 1rem;

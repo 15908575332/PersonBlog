@@ -72,7 +72,7 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
                     id: reply.user_id,
                     avatarUrl: reply.replyAvatar,
                     username: reply.replyUsername,
-                    vipLevel: reply.replyVipLevel
+                    vip_level: reply.replyVipLevel
                 },
                 createdAt: reply.replyCreatedAt
             });
@@ -87,12 +87,11 @@ router.get('/getblogmessageList', authenticateToken, async (req, res) => {
             user: {
                 avatarUrl: post.avatar_url,
                 username: post.username,
-                vipLevel: post.vipLevel
+                vip_level: post.vip_level
             },
-            replyCount: post.reply_count,
+            // replyCount: post.reply_count,
             replies: replyMap.get(post.postId) || []
         }));
-
         // 获取总记录数（仅需计数，无需关联文章）
         const totalResult = await sqlQuery(
             'SELECT COUNT(*) AS total FROM blog_comments WHERE article_id = ?',

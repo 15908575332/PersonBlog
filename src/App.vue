@@ -45,16 +45,15 @@
       </div>
       <div class="slider-flex">
         <div class="slider-group">
-          <label>数量 </label>
-          <input type="range" min="10" max="200" v-model.number="sakuraCount" @change="changeSakuraCount"
-            class="slider">
-          <label for="">{{ sakuraCount }}</label>
+          <label for="sakuraCount">数量 </label>
+          <input type="range" id="sakuraCount" min="10" max="200" v-model.number="sakuraCount"
+            @change="changeSakuraCount" class="slider">
+          <label for="sakuraCount">{{ sakuraCount }}</label>
         </div>
         <div class="slider-group">
-          <label>速度 </label>
-          <input type="range" min="1" max="10" v-model.number="speed" class="slider" @change="changeSpeed">
-          <label for="">{{ speed }}</label>
-
+          <label for="speed">速度 </label>
+          <input type="range" id="speed" min="1" max="10" v-model.number="speed" class="slider" @change="changeSpeed">
+          <label for="speed">{{ speed }}</label>
         </div>
       </div>
     </div>
@@ -196,9 +195,6 @@ const showRippleToggle = computed(() => {
   min-height: 150px;
   @include flexCenter(row, center);
   gap: 1rem;
-  // background-image: url('@/assets/img/public/bg-set3-B44-On70.jpg');
-  background-size: cover;
-  background-position: center;
   font-size: 0.8rem;
   background-color: #fff;
   font-family: 'gtpy';

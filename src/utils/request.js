@@ -20,24 +20,46 @@ const getTokenExpiration = (token) => {
 service.interceptors.request.use(
     async (config) => {
         const useStore = useAuthStore();
-        const token = localStorage.getItem('token'); // 从本地存储获取 token
+        let token = localStorage.getItem('token');
 
         if (token) {
             const expiration = getTokenExpiration(token);
             const remainingTime = expiration - Math.floor(Date.now() / 1000);
+
+            // 如果token即将过期，刷新token
             if (remainingTime < 300) {
-                return useStore.refreshToken().then(() => config);
+                try {
+                    const refreshResult = await useStore.refreshToken();
+
+                    // 处理refreshToken的不同返回结果
+                    if (refreshResult === true) {
+                        // 刷新成功，获取新token
+                        token = localStorage.getItem('token');
+                        console.log('Token刷新成功，使用新token');
+                    } else if (refreshResult === 'NOT_NEEDED') {
+                        // 无需刷新，使用原token
+                        console.log('Token无需刷新');
+                    }
+                } catch (error) {
+                    console.error('Token刷新失败:', error);
+                    // 刷新失败时清除token
+                    localStorage.removeItem('token');
+                    window.location.href = '/userInfo';
+                    return Promise.reject(error);
+                }
             }
+
+            // 设置Authorization头（使用最新的token）
+            config.headers.Authorization = `Bearer ${token}`;
         }
+
         return config;
     },
     (error) => {
-        // 处理请求错误（如网络问题）
         console.error('请求拦截器错误:', error);
         return Promise.reject(error);
     }
 );
-
 // --------------------------
 // 响应拦截器（接收响应后处理）
 // --------------------------
@@ -59,7 +81,7 @@ service.interceptors.response.use(
         // 成功时返回业务数据
         return response.data;
     },
-    (error) => {
+    async (error) => {
         // 处理 HTTP 状态码错误（如 404、500）
         const status = error.response?.status;
         const message = error.response?.data?.message || '网络异常，请稍后重试';

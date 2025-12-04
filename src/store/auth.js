@@ -113,53 +113,48 @@ export const useAuthStore = defineStore('auth', () => {
     // 刷新token
     const refreshToken = async () => {
         try {
-            // 检查当前是否有可用的 token
             if (!token.value) {
                 throw new Error("No token available for refresh");
             }
 
-            // 发送刷新 token 的请求
             const response = await axios.post('http://localhost:3000/user/refresh', {}, {
                 headers: {
                     'Authorization': `Bearer ${token.value}`
                 }
             });
 
-            // 检查响应是否有效
+            // 检查响应数据
             if (!response.data || !response.data.token) {
                 throw new Error("Invalid refresh token response");
             }
 
-            // 更新 store 状态
+            // 更新store状态
             token.value = response.data.token;
             const decoded = jwtDecode(token.value);
-            iat.value = decoded.iat;//使用后端传递的新token中的签发时间
-
+            iat.value = decoded.iat;
 
             // 更新本地存储
             localStorage.setItem('token', token.value);
             localStorage.setItem('iat', iat.value);
 
-            console.log('token刷新成功')
-            return true; // 表示刷新成功
+            console.log('Token刷新成功');
+            return { success: true, reason: 'REFRESHED' }; // 统一返回对象
 
         } catch (error) {
             console.error("Token refresh failed:", error);
-            // 特殊处理400状态码（无需刷新令牌）
+
+            // 处理400状态码（无需刷新）
             if (axios.isAxiosError(error) && error.response?.status === 400) {
-                console.warn("Token refresh not needed:", error.response.data.message);
-                // 返回特定标识，表示令牌仍然有效，无需刷新
-                return 'NOT_NEEDED';
+                console.warn("Token refresh not needed");
+                return { success: true, reason: 'NOT_NEEDED' }; // 统一返回对象
             }
 
-            // 刷新失败时清除用户状态
+            // 其他错误情况
             logout();
-            // 处理不同的错误情况
-            let errorMsg = 'Token refresh failed';
 
+            let errorMsg = 'Token refresh failed';
             if (axios.isAxiosError(error)) {
                 if (error.response) {
-                    // 根据 HTTP 状态码细化错误消息
                     switch (error.response.status) {
                         case 401:
                             errorMsg = 'Session expired, please login again';
@@ -173,11 +168,9 @@ export const useAuthStore = defineStore('auth', () => {
                 } else if (error.request) {
                     errorMsg = 'No response from server';
                 }
-            } else if (error instanceof Error) {
-                errorMsg = error.message;
             }
 
-            throw new Error(errorMsg); // 抛出错误以便调用者处理
+            throw new Error(errorMsg);
         }
     };
     return {
