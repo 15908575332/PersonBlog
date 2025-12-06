@@ -15,7 +15,7 @@
         </div>
         <div class="nav">
             <h1>收藏夹</h1>
-            <video src="@/assets/videos/favorite_nav_bg.mp4" autoplay loop></video>
+            <video src="@/assets/videos/video-back10.mp4" autoplay loop></video>
         </div>
         <div class="front-end" v-for="item in favoriteData">
             <h3>{{ item.title }}</h3>
@@ -404,7 +404,7 @@ onMounted(() => {
         ul {
             @include flexCenter(row, flex-start);
             flex-wrap: wrap;
-            gap: 2rem;
+            gap: 1.2rem;
             font-weight: 700;
 
             a {

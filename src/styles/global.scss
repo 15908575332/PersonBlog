@@ -1,3 +1,6 @@
+@use "sass:meta";
+@use "sass:list";
+@use "sass:map";
 @mixin flexCenter($direction, $layout) {
     display: flex;
     flex-wrap: nowrap;
@@ -27,11 +30,11 @@ $breakpointers: (
     "tv": 1201px
 );
 @mixin media-to($breakname) {
-    $bp: map-get($breakpointers, $breakname);
+    $bp: map.get($breakpointers, $breakname);
 
-    @if type-of($bp) == "list" {
-        $min: nth($bp, 1);
-        $max: nth($bp, 2);
+    @if meta.type-of($bp) == "list" {
+        $min: list.nth($bp, 1);
+        $max: list.nth($bp, 2);
 
         @media (min-width: $min) and (max-width: $max) {
             @content; //类似于slot

@@ -3,52 +3,65 @@
     <div class="blog-container">
       <!-- 背景图 -->
       <div class="backPhoto" :style="currentPageBackgrounds"
-        :class="[isFocus ? 'img-background-scale' : 'img-background-reduction']">
+        :class="[searchInputFocus ? 'img-background-scale' : 'img-background-reduction']">
       </div>
       <!-- 遮罩 -->
-      <div class="mask" :class="{ 'blur-groud': isFocus }"></div>
+      <div class="mask" :class="{ 'blur-groud': searchInputFocus }"></div>
       <!-- 内容 -->
       <div class="content-t">
         <!-- 导航 -->
         <Navigation></Navigation>
         <!-- 时钟/搜索 -->
         <transition name="fade">
-          <div v-if="!isOpenFavorite" class="clock-search" :style="{ transform: isFocus ? 'translateY(-80%)' : '' }">
-            <div class="h-minute">
-              <div class="hour">
-                {{ hourString }}
+          <div v-if="!isOpenFavorite" class="clock-search"
+            :style="{ transform: searchInputFocus ? 'translateY(-25%)' : '' }">
+            <!-- 时间 -->
+            <div class="timeShow">
+              <div class="h-minute">
+                <div class="hour">
+                  {{ hourString }}
+                </div>
+                <span class="blinking-colon">:</span>
+                <div class="minute">
+                  {{ minuteString }}
+                </div>
               </div>
-              <span class="blinking-colon">:</span>
-              <div class="minute">
-                {{ minuteString }}
+              <!-- 农历年月日 -->
+              <div class="lunarday-year">
+                <span>{{ lunarYearMonth }}</span>
+              </div>
+              <!-- 公历年月日 -->
+              <div class="day-date">
+                {{ dateSring }}
               </div>
             </div>
-            <!-- 农历年月日 -->
-            <div class="lunarday-year">
-              <span>{{ lunarYearMonth }}</span>
-            </div>
-            <!-- 公历年月日 -->
-            <div class="day-date">
-              {{ dateSring }}
-            </div>
-            <div class="search-container" :style="{ transform: isFocus ? 'translateY(4rem)' : '' }">
-              <form @submit.prevent="searchEngine">
-                <input type="text" @focus="focusInput" @blur="focusBlur" ref="inputAutoFocus" v-model="searchQuery"
-                  placeholder="搜索" />
+            <!-- 搜索栏 -->
+            <div class="search-container" @click="handlePageClick">
+              <!-- 按钮组 -->
+              <div class="searchIconChoose">
+                <button class="webicon" v-for="item in searchEngines" :key="item.id"
+                  :class="[item.id, { 'active': currentEngine === item.id }]" :title="item.name"
+                  @click.stop="changeEngine(item.id)">
+                  <img :src='item.icon' :alt="item.name" />
+                </button>
+              </div>
+
+              <!--输入框 -->
+              <form class="formInput" @submit.prevent="searchEngine">
+                <input type="text" @focus="focusInput" @blur="handleBlur" ref="inputAutoFocus" v-model="searchQuery"
+                  :placeholder="currentEnginePlaceholder" />
               </form>
 
-              <button class="webicon" title="百度图标" @click.stop="ChangeSearchLink">
-                <img src="@/assets/icon/homePage/baidu-icon.svg" alt="" />
-              </button>
-              <button class="seaicon" title="搜索" @click="searchEngine">
-                <img src=" @/assets/icon/homePage/search-icon.svg" alt="" />
+              <!-- 搜索按钮 -->
+              <button class="searchBtn" title="search" @click.stop="searchEngine">
+                <img src=" @/assets/icon/homePage/search-icon.svg" alt="search" />
               </button>
             </div>
           </div>
         </transition>
         <div class="footer-box">
           <!-- 友情链接 -->
-          <div class="help-link" :class="{ opacity0: isOpenFavorite | isFocus }">
+          <div class="help-link" :class="{ opacity0: isOpenFavorite }">
             <a href="https://gitee.com/T-mysrc/personal-blog" class="item">
               <img src="@/assets/icon/homePage/gitee-icon.png" alt="blog" />
               <p>Gitee</p>
@@ -127,16 +140,16 @@ import {
   onMounted,
   onUnmounted,
   getCurrentInstance,
-  h
+  h,
+  nextTick
 } from "vue";
 import { useRoute } from "vue-router";
 import WeatherCard from "../components/WeatherCard/index.vue";
 import Navigation from "../components/NavigationMenu/index.vue";
 import utils from "@/utils/getAssetsFile";
-import { notification } from "ant-design-vue";
+import { message, notification } from "ant-design-vue";
 import live2dModel from "@/components/live2dModel/index.vue"; //引入live2d组件
 import { SmileOutlined } from '@ant-design/icons-vue';
-import { useAuthStore } from "@/store/auth";
 import { Solar } from "lunar-javascript";
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
@@ -190,36 +203,102 @@ const dateSring = computed(() => {
 });
 
 /** ------------------------ 搜索框 ------------------------ */
-const isFocus = ref(false);
-const focusInput = () => {
-  isFocus.value = true;
-};
-const focusBlur = () => {
-  isFocus.value = false;
-  searchQuery.value = null;
-};
 const inputAutoFocus = ref("");
-const ChangeSearchLink = () => { };  // 切换搜索引擎（未实现）
-const searchQuery = ref();
-function searchEngine() {
-  const baseUrl = "https://www.baidu.com/s?";
-  const queryParams = new URLSearchParams({ wd: searchQuery.value }).toString();
-  const searchUrl = `${baseUrl}${queryParams}`;
+const searchQuery = ref(); //输入内容
+const searchInputFocus = ref(false);
+const searchContainerRef = ref(null); // 新增：搜索框容器的ref
+const ignoreNextBlur = ref(false);
+const currentEngine = ref('baidu'); // 当前选中的搜索引擎
+const currentEngineIndex = ref(0); // 当前引擎索引（0:baidu, 1:bing, 2:google）
+const searchEngines = {
+  baidu: {
+    id: 'baidu',
+    name: '百度',
+    url: 'https://www.baidu.com/s?wd=',
+    placeholder: '百度',
+    icon: 'src/assets/icon/homePage/baidu-icon.svg'
+  },
+  bing: {
+    id: 'bing',
+    name: '必应',
+    url: 'https://www.bing.com/search?q=',
+    placeholder: '必应',
+    icon: 'src/assets/icon/homePage/bing-icon.svg'
+  },
+  google: {
+    id: 'google',
+    name: '谷歌',
+    url: 'https://www.google.com/search?q=',
+    placeholder: '谷歌',
+    icon: 'src/assets/icon/homePage/google-icon.svg'
+  }
+};
+const currentEnginePlaceholder = computed(() => {
+  return searchEngines[currentEngine.value]?.placeholder || '搜索';
+});
+
+const focusInput = () => {
+  searchInputFocus.value = true;
+  ignoreNextBlur.value = false;
+};
+
+const handleBlur = () => {
+  if (!ignoreNextBlur.value) {
+    searchInputFocus.value = false;
+    // searchQuery.value = "";
+  }
+};
+// 处理页面点击事件
+const handlePageClick = (event) => {
+  if (!searchInputFocus.value) return;
+
+  if (searchContainerRef.value && !searchContainerRef.value.contains(event.target)) {
+    // 点击了搜索框外部
+    searchInputFocus.value = false;
+    searchQuery.value = "";
+
+    // 如果输入框有焦点，强制失去焦点
+    if (inputAutoFocus.value && document.activeElement === inputAutoFocus.value) {
+      inputAutoFocus.value.blur();
+    }
+  }
+};
+
+// 切换搜索引擎
+const changeEngine = (engine) => {
+  currentEngine.value = engine;
+
+  currentEngine.value = engine;
+  const engineIndexMap = { baidu: 0, bing: 1, google: 2 };
+  currentEngineIndex.value = engineIndexMap[engine];
+
+  const buttons = document.querySelectorAll('.webicon');
+  buttons.forEach((btn, index) => {
+    // 计算每个按钮的top值，激活按钮为0，其他依次向上排列
+    btn.style.transform = `translateY(${-(index - currentEngineIndex.value) * 100}%)`;
+  });
+};
+
+// 搜索函数
+const searchEngine = (() => {
+  console.log(searchQuery.value)
+  if (!searchQuery.value || searchQuery.value.trim() === '') {
+    message.warning('请输入搜索内容');
+    return
+  }
+  const engineConfig = searchEngines[currentEngine.value];
+  const searchUrl = `${engineConfig.url}${encodeURIComponent(searchQuery.value.trim())}`;
   window.open(searchUrl, "_blank");
-}
+})
 
 /** ------------------------ 收藏夹 ------------------------ */
 const isOpenFavorite = ref(false); //收藏夹状态
 const favoriteElement = ref(true); //收藏夹Element
 const favoriteData = ref([]); //数据源
 const getFavorites = (async () => {
-  const authStore = useAuthStore();
   try {
     const response = await $http.get('/treasureBox/favorite-data', {
 
-      headers: {
-        'Authorization': `Bearer ${authStore.token}`
-      }
     });
     //一步完成映射+展平
     favoriteData.value = response.data.flatMap(item =>
@@ -243,11 +322,12 @@ const displayedData = computed(() => {
   }
 })
 const openMore = () => { //更多
-  isOpenFavorite.value = isFocus.value = !isOpenFavorite.value;
+  isOpenFavorite.value = !isOpenFavorite.value;
 };
+
 const isOutInside = (event) => {
   if (!favoriteElement.value.contains(event.target)) { // 判断点击是否收藏夹本身
-    isOpenFavorite.value = isFocus.value = false;
+    isOpenFavorite.value = false;
   }
 };
 
@@ -278,7 +358,7 @@ onMounted(() => {
   getFavorites();
 });
 onUnmounted(() => {
-  // clearTimeout(timer.value);
+
 });
 </script>
 
@@ -330,94 +410,139 @@ onUnmounted(() => {
       //时钟/搜索
       .clock-search {
         @include flexCenter(column, center);
-        transform: translateY(-70%);
+        gap: 2rem;
         transition: all 0.2s linear;
+        transform: translateY(-4rem);
 
-        .h-minute {
-          font-size: 5rem;
-          font-weight: 700;
-          padding-bottom: 1rem;
-          text-align: center;
-          @include flexCenter(row, center);
-          letter-spacing: 0.5rem;
+        //时间
+        .timeShow {
+          @include flexCenter(column, center);
 
-          .blinking-colon {
-            padding: 0 0.4rem;
-            animation: blink 1s step-start infinite;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 3rem;
-          }
-        }
+          .h-minute {
+            font-size: 5rem;
+            font-weight: 700;
+            padding-bottom: 1rem;
+            text-align: center;
+            @include flexCenter(row, center);
+            letter-spacing: 0.5rem;
 
-        // 农历
-        .lunarday-year {
-          color: #b5c3d1;
-          font-size: 1rem;
-          font-weight: 700;
-        }
-
-        // 公历
-        .day-date {
-          font-weight: 700;
-          color: #dce4ed;
-          padding: 0.5rem;
-          font-size: 1.4rem;
-        }
-
-        //搜索框
-        .search-container {
-          font-size: 0.8rem;
-          width: 50vw;
-          position: relative;
-          transform: translateY(5rem);
-          transition: all 0.2s linear;
-          max-width: 33rem;
-          min-width: 10rem;
-
-          @include media-to("phone") {
-            width: 20rem;
-          }
-
-          input {
-            background-color: rgba(21, 21, 22, 0.3);
-            backdrop-filter: blur(0.4rem);
-            border-radius: 1rem;
-            padding: 0.5rem 3rem;
-            width: 100%;
-
-            &::placeholder {
-              color: white;
-              text-align: center;
-              font-size: 0.9rem;
-              font-family: "gtpy";
+            .blinking-colon {
+              padding: 0 0.4rem;
+              animation: blink 1s step-start infinite;
+              font-family: "Courier New", Courier, monospace;
+              font-size: 3rem;
             }
           }
 
-          button {
-            border-radius: 1rem;
-            padding: 0.5rem 1rem;
+          // 农历
+          .lunarday-year {
+            color: #b5c3d1;
+            font-size: 1rem;
+            font-weight: 700;
           }
 
-          button:hover {
-            background: rgba(21, 21, 22, 0.7);
-            transition: all 0.5s;
+          // 公历
+          .day-date {
+            font-weight: 700;
+            color: #dce4ed;
+            padding: 0.5rem;
+            font-size: 1.4rem;
           }
+        }
 
-          img {
+        //搜索
+        .search-container {
+          @include flexCenter(row, space-between);
+          text-align: center;
+          width: 35vw;
+          min-width: 10rem;
+          font-size: 0.8rem;
+          background-color: rgba(0, 0, 0, 0.3);
+          border-radius: 0.2rem;
+
+          //按钮组
+          .searchIconChoose {
+            @include flexCenter(column, flex-start);
+            width: 2rem;
+            height: 2rem;
+
             position: relative;
-            top: 0.1rem;
+            transition: all 1s ease;
+
+            .webicon {
+              display: inline-block;
+              transition: all 0.3s ease;
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              opacity: 0;
+
+              img {
+                width: 1rem;
+              }
+
+              &:hover {
+                background-color: rgb(0, 0, 0, .6);
+              }
+            }
+            .baidu {
+              transform: translateY(0);
+            }
+            .bing {
+              transform: translateY(100%);
+            }
+            .google {
+              transform: translateY(200%);
+            }
+            &:hover {
+              .webicon {
+                opacity: 1 !important;
+              }
+            }
+
           }
 
-          .webicon {
-            position: absolute;
-            top: 0;
-            left: 0;
+          .searchIconChoose .webicon.active {
+            opacity: 1 !important;
           }
 
-          .seaicon {
-            position: absolute;
-            top: 0;
-            right: 0;
+          //输入框
+          .formInput {
+            flex: 1;
+            min-width: 0;
+
+            input {
+              height: 2rem;
+              width: 100%;
+              font-family: 'gtpy';
+              color: $general-black;
+              font-size: 0.9rem;
+              padding: 0 0.5rem;
+              color: $general-white;
+              background-color: transparent;
+              border: none;
+              outline: none;
+
+              &::placeholder {
+                text-align: center;
+                color: $color-4;
+              }
+            }
+          }
+
+          //搜索按钮
+          .searchBtn {
+            min-width: 3rem;
+            height: 100%;
+            transition: all 0.2s ease;
+
+            img {
+              width: 1rem;
+            }
+
+            &:hover {
+              background-color: rgb(0, 0, 0, .6);
+            }
           }
         }
       }
@@ -435,7 +560,6 @@ onUnmounted(() => {
             padding: 1rem 0;
             font-weight: 700;
             font-size: 0.9rem;
-            // max-width: 80%;
             text-align: center;
 
             a {

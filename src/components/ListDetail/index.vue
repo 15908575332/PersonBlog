@@ -290,7 +290,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                            }}</div>
+                                                }}</div>
                                         </div>
                                     </div>
 
@@ -688,7 +688,7 @@ const getMessageList = async () => { // 获取评论列表
         totals.value = res.data.pagination.total;
         totalPages.value = Math.ceil(totals.value / pageSize.value);
     } catch (error) {
-        console.error( error.response.data.msg);
+        console.error(error.response.data.msg);
     }
 }
 const addMessage = async () => { // 发布评论
@@ -818,8 +818,6 @@ onMounted(async () => {
     initial-value: 30deg;
     inherits: false;
 }
-
-
 
 #recordDetail {
     font-family: 'gtpy';
@@ -1720,14 +1718,14 @@ onMounted(async () => {
                 height: calc(100% + $borderWidthSum);
                 border-radius: $borderWidthSum / 4;
                 background-image: linear-gradient(var(--rotate),
-                        $assistance-7,
-                        $assistance-8 43%,
-                        $assistance-9,
+                        $primary-color,
+                        $primary-hover 43%,
+                        $primary-sub,
                     );
                 position: absolute;
                 z-index: -1;
-                top: -calc($borderWidthSum / 2);
-                left: -calc($borderWidthSum / 2);
+                top: -($borderWidthSum / 2);
+                left: -($borderWidthSum / 2);
                 animation: spin 5s linear infinite;
             }
 
