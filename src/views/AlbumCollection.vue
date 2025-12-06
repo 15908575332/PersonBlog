@@ -1,126 +1,127 @@
 <template>
-  <div class="active-page1" id="AlbumCollection" ref="AlbumCollection">
-      <!-- 导航栏 -->
-      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
-    <!-- 堆叠切换 -->
-    <div class="stacking_switch page page1">
-      <div class="content">
-        <h1>人生就像一场旅行，不在于目的地，而在于沿途的风景</h1>
-        <p>
-          青春的我们，站在时代充满诱惑的阳光地带高喊我心飞翔；青春的我们，站在历史回眸的特定角落审视无限江山；青春的我们，站在大浪淘沙的长江口岸展露风流人生。于是，美丽的梦带走美丽的忧伤，留下美丽的向往。心在远方，梦也在远方。
-        </p>
-        <button class="btn">查看更多</button>
-      </div>
-      <div class="stack" ref="stackRef">
-        <div v-for="(img, idx) in cards" :key="img" class="card"
-          :class="{ swap: idx === cards.length - 1 && !isFirstRun }" @click="onCardClick(idx)"
-          :style="{ zIndex: idx + 1 }">
-          <img :src="img" alt="" />
-        </div>
-      </div>
+  <div>
+    <!-- 导航栏 -->
+    <div class="navigate">
+      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" bgColor="#f0f4f5" />
     </div>
 
-    <!-- 连续+缩略 -->
-    <div class="second_carousel page page2">
-      <!-- 无限滚动 -->
-      <div class="carousel">
-        <div class="carousel__left">
-          <CarouselImage :images="imageList_left" scrollDirection="left"></CarouselImage>
+    <div class="active-page1" id="AlbumCollection" ref="AlbumCollection">
+      <!-- 堆叠切换 -->
+      <div class="stacking_switch page page1">
+        <div class="content">
+          <h1>人生就像一场旅行，不在于目的地，而在于沿途的风景</h1>
+          <p>
+            青春的我们，站在时代充满诱惑的阳光地带高喊我心飞翔；青春的我们，站在历史回眸的特定角落审视无限江山；青春的我们，站在大浪淘沙的长江口岸展露风流人生。于是，美丽的梦带走美丽的忧伤，留下美丽的向往。心在远方，梦也在远方。
+          </p>
+          <button class="btn">查看更多</button>
         </div>
-        <div class="carousel__right">
-          <CarouselImage :images="imageList_right" scrollDirection="right"></CarouselImage>
-        </div>
-      </div>
-      <!-- <div class="carouselBg"></div> -->
-      <!-- 缩略轮播 -->
-      <div class="thumbnail__carousel">
-        <ThumbnailCarousel></ThumbnailCarousel>
-      </div>
-    </div>
-
-    <!-- 常见布局 -->
-    <div class="flex_layout page page3">
-      <div class="nav">
-        <ul>
-          <li v-for="(item, index) in navs" :key="item.id">
-            <button href="#" class="btn-7" :style="buttonStyles(index)">
-              <span>
-                {{ item.name }}
-                {{ item.count }}
-              </span>
-            </button>
-          </li>
-        </ul>
-        <h1>四姑娘山</h1>
-      </div>
-      <div class="flex_body">
-        <div class="box" v-for="item in travels" :key="item.id">
-          <div class="img__box">
-            <img v-lazy="item.src" alt="tests" />
-          </div>
-          <div class="text__box">
-            <h1>风住尘香花已尽，日晚倦梳头风住尘香花已尽，日晚倦梳头。</h1>
-            <h2>Date:2024-12-19</h2>
+        <div class="stack" ref="stackRef">
+          <div v-for="(img, idx) in cards" :key="img" class="card"
+            :class="{ swap: idx === cards.length - 1 && !isFirstRun }" @click="onCardClick(idx)"
+            :style="{ zIndex: idx + 1 }">
+            <img :src="img" alt="" />
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- vue3-carousel-3d -->
-    <div class="vue3-carousel-3d page page4">
-      <div class="carousel_title">
-        <h1>vue-carousel-3d | 基于vue.js的漂亮3D轮播图组件</h1>
-        <div class="thisLogo">
-          <img src="/public/vite.svg" alt="" />
-          <span>Personal blog</span>
+      <!-- 连续+缩略 -->
+      <div class="second_carousel page page2">
+        <!-- 无限滚动 -->
+        <div class="carousel">
+          <div class="carousel__left">
+            <CarouselImage :images="imageList_left" scrollDirection="left"></CarouselImage>
+          </div>
+          <div class="carousel__right">
+            <CarouselImage :images="imageList_right" scrollDirection="right"></CarouselImage>
+          </div>
+        </div>
+        <!-- 缩略轮播 -->
+        <div class="thumbnail__carousel">
+          <ThumbnailCarousel></ThumbnailCarousel>
         </div>
       </div>
 
-      <div class="carousel_body">
-        <carousel-3d :controlsVisible="true" :height="280" :width="450" :autoplay="isPageVisible"
-          :autoplayTimeout="4000" :autoplayHoverPause="true">
-          <slide v-for="(slide, i) in carousel_images" :index="i" :key="i">
-            <img :src="slide" alt="carouselImg" style="height: 100%" />
-          </slide>
-        </carousel-3d>
-      </div>
-    </div>
-
-    <!-- 图片倒影 -->
-    <div class="inverted page page5">
-      <div class="inverted_title">
-        <h1>通过CSS3的transform和box-reflect属性实现图片的倒影效果</h1>
-        <div class="thisLogo">
-          <img src="/public/vite.svg" alt="" />
-          <span>Personal blog</span>
+      <!-- 常见布局 -->
+      <div class="flex_layout page page3">
+        <div class="nav">
+          <ul>
+            <li v-for="(item, index) in navs" :key="item.id">
+              <button href="#" class="btn-7" :style="buttonStyles(index)">
+                <span>
+                  {{ item.name }}
+                  {{ item.count }}
+                </span>
+              </button>
+            </li>
+          </ul>
+          <h1>登山</h1>
+        </div>
+        <div class="flex_body">
+          <div class="box" v-for="item in travels" :key="item.id">
+            <div class="img__box">
+              <img v-lazy="item.src" alt="tests" />
+            </div>
+            <div class="text__box">
+              <h1>风住尘香花已尽，日晚倦梳头风住尘香花已尽，日晚倦梳头。</h1>
+              <h2>Date:2024-12-19</h2>
+            </div>
+          </div>
         </div>
       </div>
-      <!-- 舞台层 -->
-      <div class="stage">
-        <!-- 控制层 -->
-        <div class="control">
-          <!-- 图片层 -->
-          <div class="imgWrap">
-            <div v-for="i in 8" :key="i" :class="`img img${i}`">
-              <img :src="utils.getAssetsFile(`img/albumCollection/inverted${i}.png`)" />
+
+      <!-- vue3-carousel-3d -->
+      <div class="vue3-carousel-3d page page4">
+        <div class="carousel_title">
+          <h1>vue-carousel-3d | 基于vue.js的漂亮3D轮播图组件</h1>
+          <div class="thisLogo">
+            <span>Personal blog</span>
+          </div>
+        </div>
+
+        <div class="carousel_body">
+          <carousel-3d :controlsVisible="true" :height="280" :width="450" :autoplay="isPageVisible"
+            :autoplayTimeout="4000" :autoplayHoverPause="true">
+            <slide v-for="(slide, i) in carousel_images" :index="i" :key="i">
+              <img :src="slide" alt="carouselImg" style="height: 100%" />
+            </slide>
+          </carousel-3d>
+        </div>
+      </div>
+
+      <!-- 图片倒影 -->
+      <div class="inverted page page5">
+        <div class="inverted_title">
+          <h1>通过CSS3的transform和box-reflect属性实现图片的倒影效果</h1>
+          <div class="thisLogo">
+            <span>Personal blog</span>
+          </div>
+        </div>
+        <!-- 舞台层 -->
+        <div class="stage">
+          <!-- 控制层 -->
+          <div class="control">
+            <!-- 图片层 -->
+            <div class="imgWrap">
+              <div v-for="i in 8" :key="i" :class="`img img${i}`">
+                <img :src="utils.getAssetsFile(`img/public/public-${i}.png`)" />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- 右侧导航栏 -->
+    <div class="nav-panel">
+      <div class="up">
+        <img :src="utils.getAssetsFile('icon/albumCollection/upArrow.svg')" alt="upArrow">
+      </div>
+      <div class="middle">
+        <img :src="utils.getAssetsFile('icon/albumCollection/snail.svg')" alt="snail">
 
-  </div>
-  <!-- 右侧导航栏 -->
-  <div class="nav-panel">
-    <div class="up">
-      <img :src="utils.getAssetsFile('icon/albumCollection/upArrow.svg')" alt="upArrow">
-    </div>
-    <div class="middle">
-      <img :src="utils.getAssetsFile('icon/albumCollection/snail.svg')" alt="snail">
-
-    </div>
-    <div class="down">
-      <img :src="utils.getAssetsFile('icon/albumCollection/downArrow.svg')" alt="downArrow">
+      </div>
+      <div class="down">
+        <img :src="utils.getAssetsFile('icon/albumCollection/downArrow.svg')" alt="downArrow">
+      </div>
     </div>
   </div>
 </template>
@@ -181,7 +182,7 @@ const buttonStyles = (index) => {
 const navs = ref([
   {
     id: "a01",
-    name: "四姑娘山",
+    name: "登山",
     count: 112,
   },
   {
@@ -223,7 +224,8 @@ const travels = ref([
   },
 ]);
 
-//vue3-carousel-3d data
+
+/** ------------------------ vue3-carousel-3d ------------------------ */
 const isPageVisible = ref(true);
 const handleVisibilityChange = () => {
   if (document.hidden) {
@@ -234,10 +236,11 @@ const handleVisibilityChange = () => {
     // 例如，重新启动一个计时器或触发轮播的继续播放
   }
 };
-
+//图片地址
 const carousel_images = Array.from({ length: 5 }, (_, i) =>
-  utils.getAssetsFile(`img/albumCollection/cover${i + 1}.jpg`)
+  utils.getAssetsFile(`img/public/public-${i + 45}.png`)
 );
+
 onMounted(() => {
   // 只设置定时器，不主动执行 moveCard，且首次定时器触发时跳过
   isFirstRun = true;
@@ -299,6 +302,12 @@ onBeforeUnmount(() => {
     url("@/assets/fonts/Ho2Xld8UbQyBA8XLxF1_NYbN6UDyHWBl620a-IRfuBk.woff") format("woff");
 }
 
+.navigate {
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+}
+
 #AlbumCollection {
   $pagesCount: 10; // 页面数量
   position: absolute;
@@ -351,7 +360,6 @@ onBeforeUnmount(() => {
       }
 
       .btn {
-        background-color: #f76591;
         background-image: linear-gradient(-180deg, #ffc16f, #f76591);
         font-size: clamp(0.8rem, 8vw, 0.9rem);
         font-weight: 600;
@@ -586,6 +594,7 @@ onBeforeUnmount(() => {
         text-align: center;
         font-size: 36px;
         font-weight: 700;
+        font-family: 'gtpy'
       }
     }
 
@@ -646,11 +655,10 @@ onBeforeUnmount(() => {
 
   //vue3-carousel-3d
   .vue3-carousel-3d {
-    @include flexCenter(column, center);
+    @include flexCenter(column, space-around);
     margin: 0;
 
     .carousel_title {
-      transform: translateY(-15vh);
 
       h1 {
         font-size: 38px;
@@ -665,9 +673,11 @@ onBeforeUnmount(() => {
         span {
           font-family: "Vampiro One";
           font-size: 1.6rem;
-          background: -webkit-linear-gradient(0deg, #b341fe, #5ab1ff);
+          background: -webkit-linear-gradient(0deg, $primary-color, $primary-hover);
           background-clip: text;
           -webkit-text-fill-color: transparent;
+          height: 2.6rem;
+          line-height: 2.6rem;
         }
       }
     }
@@ -707,9 +717,11 @@ onBeforeUnmount(() => {
         span {
           font-family: "Vampiro One";
           font-size: 1.6rem;
-          background: -webkit-linear-gradient(0deg, #b341fe, #5ab1ff);
+          background: -webkit-linear-gradient(0deg, $primary-color, $primary-hover);
           background-clip: text;
           -webkit-text-fill-color: transparent;
+          height: 2.6rem;
+          line-height: 2.6rem;
         }
       }
     }
@@ -728,8 +740,8 @@ onBeforeUnmount(() => {
         width: 100%;
         height: 100%;
         transform-style: preserve-3d;
-        transform: translateZ(-2000px) rotateY(50deg) rotateZ(0deg);
-        animation: rotate 30s linear infinite;
+        transform: translateZ(-2000px) rotateY(30deg) rotateZ(0deg);
+        animation: rotate 80s linear infinite;
 
         .imgWrap {
           position: absolute;
@@ -750,7 +762,7 @@ onBeforeUnmount(() => {
             top: 0;
             left: 0;
             transform-style: preserve-3d;
-            transform-origin: 50% 50% 0px;
+            transform-origin: 50% 50% 100px;
           }
 
           img {
@@ -763,7 +775,7 @@ onBeforeUnmount(() => {
           @for $i from 1 through $imgCount {
             .img#{$i} {
               // transform: rotateY(35 + ($i * 45deg)) translateZ(482.84px);
-              transform: rotateY(35 + ($i * 45deg)) translateZ(650px);
+              transform: rotateY(25 + ($i * 45deg)) translateZ(750px);
             }
           }
         }

@@ -155,7 +155,7 @@
               <li class="event">
                 <input type="radio" name="tl-group" checked />
                 <label></label>
-                <div class="thumb user-1"><span>19 Nov</span></div>
+                <div class="thumb user-1"><span>19 岁</span></div>
                 <div class="content-perspective">
                   <div class="content">
                     <div class="content-inner">
@@ -169,9 +169,7 @@
                         <span>disturbing</span>
                       </h3>
                       <p>
-                        Don't be too proud of this technological terror you've
-                        constructed. The ability tothe presence of my old master.
-                        Escape is not his plan. I must face him.Alone.
+                        别为你制造的这场科技恐怖感到骄傲。能让我老师傅的存在感。逃跑不是他的计划。我必须面对他独自
                       </p>
                     </div>
                   </div>
@@ -181,16 +179,13 @@
               <li class="event">
                 <input type="radio" name="tl-group" />
                 <label></label>
-                <div class="thumb user-2"><span>18 Nov</span></div>
+                <div class="thumb user-2"><span>18 岁</span></div>
                 <div class="content-perspective">
                   <div class="content">
                     <div class="content-inner">
                       <h3>I ain't shooting this thing, I hate guns.</h3>
                       <p>
-                        Ha, illiandran. And youwill not call me 'you'. You will
-                        never address me as 'you'. You will call me 'your
-                        royalhighness'. I really must go back. I shouldn't have
-                        run away. I realize nowthat love is one lucannot afford.
+                        哈，伊利安德兰。你也不能叫我'你'。你永远不会称呼我为'你'。你要叫我'殿下'。我真的得回去了。我不该逃跑。我现在明白了，爱是我负担不起的。
                       </p>
                     </div>
                   </div>
@@ -200,7 +195,7 @@
               <li class="event">
                 <input type="radio" name="tl-group" />
                 <label></label>
-                <div class="thumb user-3"><span>17 Nov</span></div>
+                <div class="thumb user-3"><span>17 岁</span></div>
                 <div class="content-perspective">
                   <div class="content">
                     <div class="content-inner">
@@ -214,14 +209,13 @@
               <li class="event">
                 <input type="radio" name="tl-group" />
                 <label></label>
-                <div class="thumb user-4"><span>16 Nov</span></div>
+                <div class="thumb user-4"><span>16 岁</span></div>
                 <div class="content-perspective">
                   <div class="content">
                     <div class="content-inner">
                       <h3>Would you please stop calling me that?</h3>
                       <p>
-                        You make it so difficult sometimes. You have your moments.
-                        Not many of them Evacuate staff.
+                        有时候你真让我难受。你也有你的时刻。撤离员工的人并不多。
                       </p>
                     </div>
                   </div>
@@ -661,16 +655,16 @@ onUnmounted(() => {
             @include flexCenter(row, center);
             position: relative;
             border-radius: 0.6rem;
-            background-color: #fff;
             padding: 1rem;
             min-width: 18vw;
             box-shadow: 1px 1px 3px rgb(0, 0, 0, 0.5);
             transition: all 0.3s ease-in-out;
             cursor: pointer;
+            background: linear-gradient(50deg, #d0e0f7 10%, #eef5f9 100%);
 
             &:hover {
               cursor: pointer;
-              transform: scale(0.9);
+              transform: scale(0.95);
             }
 
             .card__left {
@@ -890,14 +884,14 @@ onUnmounted(() => {
         backdrop-filter: blur(0.25rem);
         width: 100vw;
         overflow: hidden;
+        background: $pages-background-color;
 
         // 模块一
         .main {
           width: 100%;
-          max-width: 60vw;
           margin: 0 auto;
-          padding: 4rem 0;
           @include flexCenter(column, center);
+          padding: 4rem 0;
 
           .lifeCard {
             position: relative;
