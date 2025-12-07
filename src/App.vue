@@ -76,25 +76,33 @@ const toggleControlPanel = () => {
   showControlPanel.value = !showControlPanel.value
 }
 const isAnimating = ref(true);
-const sakuraCount = ref(50);
-const speed = ref(5);
-const flowersControl = ref();
-
+const sakuraCount = ref(localStorage.getItem('flowerAnimateSakuraCount') || 50);
+const speed = ref(localStorage.getItem('flowerAnimateSpeed') || 5);
 
 const toggleAnimation = () => { // 花瓣动画暂停/播放
   isAnimating.value = !isAnimating.value;
 };
 const resetAnimation = () => { //重置属性
+  localStorage.removeItem('flowerAnimateSakuraCount', 'flowerAnimateSpeed');
   isAnimating.value = true;
   sakuraCount.value = 50;
   speed.value = 5;
 }
 const changeSakuraCount = () => { //修改花瓣数量
-  sakuraCount.value = sakuraCount.value;
+  localStorage.setItem('flowerAnimateSakuraCount', sakuraCount.value);
 };
 const changeSpeed = () => {
-  speed.value = speed.value;
+  localStorage.setItem('flowerAnimateSpeed', speed.value);
+
 }
+watch(() => sakuraCount.value, (newVal) => {
+  localStorage.setItem('flowerAnimateSakuraCount', newVal);
+});
+
+watch(() => speed.value, (newVal) => {
+  localStorage.setItem('flowerAnimateSpeed', newVal);
+});
+
 /** ------------------------ 数据获取 ------------------------ */
 const mainStore = useMainStore()
 const route = useRoute()

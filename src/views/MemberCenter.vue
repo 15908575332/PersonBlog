@@ -11,6 +11,7 @@
             <div class="pricing-card" v-for="(card, index) in cards" :key="index">
                 <a-badge-ribbon v-if="card.isRecommended" :color="card.ribbonColor"
                     :text="card.ribbonText"></a-badge-ribbon>
+                <h1 :class="card.h1">{{ card.h1 }}</h1>
                 <div class="content">
                     <div class="card-header">
                         <div class="level">
@@ -82,6 +83,7 @@ import { ref, reactive } from 'vue';
 const cards = reactive([
     {
         title: '个人博客源码授权',
+        h1: 'routine',
         level: 3,
         ribbonColor: '#fe3459',
         ribbonText: '常规',
@@ -92,6 +94,7 @@ const cards = reactive([
     },
     {
         title: '其它订单商品支付 - blog',
+        h1: 'advanced',
         level: 4,
         ribbonColor: '#ff9900',
         ribbonText: '进阶',
@@ -102,6 +105,7 @@ const cards = reactive([
     },
     {
         title: '高级定制',
+        h1: 'recommend',
         level: 6,
         ribbonColor: '#d81e06',
         ribbonText: '🔥推荐',
@@ -155,16 +159,33 @@ const closeModal = () => { // 关闭购买界面
         justify-content: center;
         gap: 1.5rem;
         padding: 1rem;
-        margin-top: 5rem;
+        margin: 5rem auto;
         font-family: 'gtpy';
+        position: relative;
+        z-index: 1;
 
         .pricing-card {
-            width: 24rem;
+            width: 18rem;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 0.6rem;
+            box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
             height: auto;
+            overflow: hidden;
+
+            h1 {
+                height: 2rem;
+                text-align: center;
+                line-height: 2rem;
+                font-size: 0.9rem;
+                width: 100%;
+            }
+
+            .routine,
+            .advanced,
+            .recommend {
+                background-color: $primary-hover;
+            }
 
             .content {
                 padding: 1rem;

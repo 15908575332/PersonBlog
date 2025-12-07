@@ -97,8 +97,8 @@
       </div>
     </div>
     <!-- 气球 -->
-    <BubbleUp></BubbleUp>
   </div>
+  <BubbleUp></BubbleUp>
 </template>
 
 <script setup>
@@ -440,11 +440,10 @@ onMounted(async () => {
 .player-container {
   font-family: "gtpy";
   height: 100vh;
-  background-image: url("@/assets/img/treasureBox/banner.jpg");
+  background-image: url("@/assets/img/treasureBox/banner.png");
   background-size: cover;
   @include flexCenter(column, center);
   overflow: hidden;
-  position: relative;
 
   //导航
   .navigate {
@@ -452,6 +451,7 @@ onMounted(async () => {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 99;
   }
 
   //播放器
@@ -460,12 +460,12 @@ onMounted(async () => {
     min-width: 45rem;
     padding: 1rem;
     background-size: cover;
-    background-color: #8faaca50;
+    background-color: #8faaca90;
     backdrop-filter: blur(0.1rem);
     padding-bottom: 0;
     border-radius: 1rem;
     box-shadow: 0 0 20px rgba(23, 24, 44, 0.72);
-    @include flexCenter(row, flex-start); //歌曲信息和控制按钮
+    @include flexCenter(row, flex-start);
     gap: 1rem;
     position: relative;
     z-index: 2;
@@ -526,7 +526,7 @@ onMounted(async () => {
 
           .progress {
             height: 100%;
-            background: $primary-sub;
+            background: $primary-color;
             transition: width 0.1s linear;
           }
         }
@@ -599,7 +599,7 @@ onMounted(async () => {
 
                 .current-volume {
                   height: 100%;
-                  background: $primary-sub;
+                  background: $primary-color;
                   transition: width 0.1s ease;
                 }
 
@@ -626,7 +626,6 @@ onMounted(async () => {
           .order-change {
             display: flex;
 
-            // background-color: #090909;
             img {
               width: 18px;
             }
@@ -663,14 +662,14 @@ onMounted(async () => {
 
       /* 滚动条滑块 */
       &::-webkit-scrollbar-thumb {
-        background: $primary-sub; // 使用与进度条相同的颜色
+        background: $primary-color; // 使用与进度条相同的颜色
         border-radius: 3px; // 圆角匹配
         transition: background 0.3s; // 悬停动画
       }
 
       /* Firefox兼容样式 */
       scrollbar-width: thin; // auto | thin | none
-      scrollbar-color: $primary-sub rgba(255, 255, 255, 0.1); // 滑块颜色 轨道颜色
+      scrollbar-color: $primary-color rgba(255, 255, 255, 0.1); // 滑块颜色 轨道颜色
 
       span {
         @include flexCenter(row, center);
@@ -686,7 +685,7 @@ onMounted(async () => {
       // 播放时执行动画
       .play-active {
         animation: rotate 4s linear infinite;
-        filter: drop-shadow(0 0 2px $primary-sub);
+        filter: drop-shadow(0 0 2px $primary-color);
       }
 
       .playlist-item {
@@ -745,7 +744,7 @@ onMounted(async () => {
         line-height: 24px;
 
         &.active {
-          color: $primary-sub;
+          color: $primary-color;
           font-size: 0.9rem;
           font-weight: bold;
           transform: scale(1.05);

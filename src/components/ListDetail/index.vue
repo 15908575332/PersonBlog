@@ -121,7 +121,6 @@
                     <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
                     <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>
                 </ul>
-
                 <!-- 操作按钮 -->
                 <div class="feed">
                     <div class="card">
@@ -961,7 +960,7 @@ onMounted(async () => {
             background-color: #ecf8ff;
             color: #6b6c6d;
             font-size: 0.9rem;
-            border-left: 3px solid #ff6d6d;
+            border-left: 2px solid #ff6d6d;
             margin: 1rem 0;
         }
 
@@ -1042,7 +1041,7 @@ onMounted(async () => {
 
         .abstract {
             background-color: #ecf8ff;
-            border-left: 3px solid #ff6d6d;
+            border-left: 2px solid #ff6d6d;
             padding: 0.5rem;
             line-height: 1.5rem;
             margin-top: 2rem;
@@ -1070,10 +1069,14 @@ onMounted(async () => {
             }
 
             .comment__input__aera {
-                $layoutPosition: 4px;
+                $layoutPosition: 0.2rem;
+                $outLineWidth: 0.1rem; //外圈线宽
+                $innerLineWidth: 0.05rem; //内圈线宽
+                $outLineColor: $primary-sub; //外圈颜色
+                $innerLineColor: $assistance-8; //内圈颜色
                 position: relative;
                 padding: $layoutPosition;
-                border: 1px solid $color-3;
+                border: $outLineWidth solid $outLineColor;
 
                 &::after,
                 &::before {
@@ -1082,8 +1085,8 @@ onMounted(async () => {
                     width: 14px;
                     height: 14px;
                     font-size: 14px;
-                    color: $primary-sub;
-                    border: 1px solid $primary-sub;
+                    color: $innerLineColor;
+                    border: $innerLineWidth solid $innerLineColor;
                     line-height: 12px;
                     top: $layoutPosition;
                     text-align: center;
@@ -1099,7 +1102,7 @@ onMounted(async () => {
 
                 .box-inner {
                     position: relative;
-                    border: 1px dashed $primary-sub;
+                    border: $innerLineWidth dotted $innerLineColor;
 
 
                     &::after,
@@ -1109,21 +1112,21 @@ onMounted(async () => {
                         width: 14px;
                         height: 14px;
                         font-size: 14px;
-                        color: $primary-sub;
-                        border: 1px solid $primary-sub;
+                        color: $innerLineColor;
+                        border: $innerLineWidth solid $innerLineColor;
                         line-height: 12px;
                         bottom: -2px;
                         text-align: center;
                     }
 
                     &::before {
-                        left: -1px;
-                        bottom: -1px;
+                        left: -$innerLineWidth;
+                        bottom: -$innerLineWidth;
                     }
 
                     &::after {
-                        right: -1px;
-                        bottom: -1px;
+                        right: -$innerLineWidth;
+                        bottom: -$innerLineWidth;
                     }
                 }
 
@@ -1154,6 +1157,7 @@ onMounted(async () => {
             .submit {
                 text-align: right;
                 padding: 3rem 1rem;
+                padding-top: 1.5rem;
                 position: relative;
                 @include flexCenter(row, space-between);
 
@@ -1704,7 +1708,7 @@ onMounted(async () => {
 
         .card {
             @include flexCenter(row, center);
-            $borderWidthSum: 0.4rem;
+            $borderWidthSum: 0.2rem;
             width: 100%;
             height: 60%;
             padding: 3px;

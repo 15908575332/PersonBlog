@@ -67,6 +67,7 @@
           </div>
         </section>
         <div class="btn-row">
+          <button @click="gologin" class="button05">去登录</button>
           <button type="submit" class="button05">下一步</button>
         </div>
       </form>
@@ -99,8 +100,8 @@
 
           <!-- 按钮 -->
           <div class="btn-row">
-            <button @click="step = 1" class="button05">上一步 ►</button>
-            <button class="button05" type="submit">确认修改 ♥</button>
+            <button @click="step = 1" class="button05">上一步</button>
+            <button class="button05" type="submit">确认修改</button>
           </div>
         </section>
       </form>
@@ -126,6 +127,8 @@ import { message, notification } from "ant-design-vue";
 import utils from "@/utils/getAssetsFile";
 import Navigation from "@/components/NavigationMenu/index.vue";
 import MeihuaSvg from "../components/MeihuaSvg/MeihuaSvg.vue";
+import { useRouter } from "vue-router";
+const route = useRouter();
 
 const steps = ["1", "2"];
 const step = ref(1);
@@ -140,6 +143,10 @@ const isError = ref(false);
 const captcha = ref("");
 const captchaInput = ref("");
 const isSuccess = ref(false); // 重置密码状态
+
+const gologin = (() => {
+  route.push('/userInfo')
+})
 
 message.config({
   duration: 3,
@@ -308,7 +315,7 @@ function handleStepClick(targetStep) {
     h2 {
       text-align: center;
       margin-bottom: 1rem;
-      color: #2585db;
+      color: $assistance-7;
     }
 
     // 步骤条
@@ -336,7 +343,7 @@ function handleStepClick(targetStep) {
           left: 0;
           height: 4px;
           width: calc(50% * var(--step));
-          background: #2585db;
+          background: $assistance-7;
           z-index: 1;
           transition: width 0.3s;
           pointer-events: none;
@@ -377,8 +384,8 @@ function handleStepClick(targetStep) {
         // 新增：高亮所有已完成（当前及之前）圆点
         &.active .dot,
         &.completed .dot {
-          background: #2585db;
-          border-color: #2585db;
+          background: $assistance-7;
+          border-color: $assistance-7;
 
           .step-num {
             color: #fdfdfd;
@@ -426,13 +433,13 @@ function handleStepClick(targetStep) {
           }
 
           &:focus {
-            border-bottom: 2px solid #4096e1;
+            border-bottom: 2px solid $assistance-7;
             outline: none;
           }
 
           &:focus+.input__label,
           &[data-has-value="true"]+.input__label {
-            color: #4096e1;
+            color: $assistance-7;
             transform: translateY(-1.5em) scale(0.9);
           }
         }
@@ -477,7 +484,7 @@ function handleStepClick(targetStep) {
       font-size: 0.9rem;
       min-width: 100px;
       padding: 0.4rem 0.75rem;
-      background-color: #2585db;
+      background-color: $assistance-7;
       background-image: -webkit-gradient(linear,
           left top,
           left bottom,
@@ -533,7 +540,7 @@ function handleStepClick(targetStep) {
         0px 8px 5px rgba(0, 0, 0, 0.5);
 
       &:hover {
-        background-color: #87effa;
+        // background-color: #87effa;
 
         background-image: -webkit-gradient(linear,
             left top,
@@ -587,7 +594,8 @@ function handleStepClick(targetStep) {
       transition-timing-function: ease, ease;
 
       &:hover {
-        color: #155fde;
+        // color: #efefef;
+        cursor: pointer;
         text-decoration: underline;
       }
     }
@@ -627,7 +635,7 @@ function handleStepClick(targetStep) {
         #fda085 10px,
         #fff 20px);
 
-    color: #eb1558;
+    color: $primary-sub;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     border: 1px solid #fda085;
     transition: background 0.2s;

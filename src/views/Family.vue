@@ -647,6 +647,8 @@ onUnmounted(() => {
       .module {
         width: 100%;
         font-family: "gtpy";
+        // background-color: #fff;
+        margin: 0.2rem 0;
 
         ul {
           @include flexCenter(row, space-between);
@@ -701,12 +703,12 @@ onUnmounted(() => {
               --color3: #e0c27c;
               --color4: #36b6f7;
               position: absolute;
-              top: 0.5rem;
-              right: 2rem;
+              top: 0.9rem;
+              right: 2.1rem;
 
               .case {
-                width: 60px;
-                height: 60px;
+                width: 45px;
+                height: 45px;
                 display: flex;
                 flex-wrap: wrap;
                 position: absolute;
@@ -884,7 +886,8 @@ onUnmounted(() => {
         backdrop-filter: blur(0.25rem);
         width: 100vw;
         overflow: hidden;
-        background: $pages-background-color;
+        // background: $pages-background-color;
+        background-color: rgb(255, 255, 255, .8);
 
         // 模块一
         .main {
@@ -901,11 +904,12 @@ onUnmounted(() => {
             &:before {
               content: "";
               position: absolute;
-              width: 5px;
-              height: 100%;
+              width: 3px;
+              height: 95%;
               top: 0;
               left: 165px;
               background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJUlEQVQIW2NkQAP/gYARWQwkAOLDBeECjEAAkkEWAKtEFwAJAgAZEBP+oM1IkwAAAABJRU5ErkJggg==);
+              background-color: #f26328;
             }
 
             .event {
@@ -925,7 +929,7 @@ onUnmounted(() => {
                 transition: all 0.6s ease-in-out 0.2s;
 
                 span {
-                  color: #ffffff;
+                  color: #41838e;
                   width: 100%;
                   text-align: center;
                   font-weight: 700;
@@ -973,11 +977,12 @@ onUnmounted(() => {
 
                   .content-inner {
                     position: relative;
-                    padding: 20px;
+                    padding: 1rem;
+                    width: 40vw;
                     border: none;
-                    border-left: 5px solid #41838e;
+                    border-left: 3px solid #41838e;
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    background: #fff;
+                    background: $pages-background-color;
                     font-family: "lmst";
                     letter-spacing: 1px;
                     transition: box-shadow 0.8s linear 0.2s;
@@ -1171,16 +1176,15 @@ onUnmounted(() => {
           display: flex;
           align-items: flex-start;
           justify-content: center;
-          margin: 5rem 0;
+          margin: 6rem 0;
 
           .gallery__image {
             padding: 0.5rem 0.5rem 1.5rem;
-            background: white;
+            // background: white;
             position: relative;
-            // box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
             box-shadow: 3px 3px 6px 0px #ccdbe8 inset, -3px -3px 6px 1px #fff inset;
             transform-origin: center -5rem;
-            z-index: -1;
             border-radius: 0.25rem;
 
             // 竖线
@@ -1191,8 +1195,9 @@ onUnmounted(() => {
               width: 2px;
               background: saddlebrown;
               position: absolute;
-              bottom: 100%;
+              bottom: 80%;
               left: 50%;
+              z-index: -1;
             }
 
             &:nth-child(1) {
@@ -1203,6 +1208,7 @@ onUnmounted(() => {
               img {
                 width: 360px;
                 height: 220px;
+                transform: translateY(5%);
               }
             }
 
@@ -1212,8 +1218,8 @@ onUnmounted(() => {
               transform: rotate(8deg);
 
               img {
-                // width: 280px;
                 height: 280px;
+                transform: translateY(10%);
               }
             }
 

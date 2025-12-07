@@ -32,7 +32,7 @@ const props = defineProps({
             fftSize: 612,
             barWidth: 5,
             gap: 2,
-            color: '#f24257',
+            color: '#5de9e0',
             height: 80,
             maxBars: 128
         })

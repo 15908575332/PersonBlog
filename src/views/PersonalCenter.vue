@@ -4,7 +4,6 @@
         <div class="backPhoto"></div>
         <!-- 遮罩 -->
         <div class="mask"></div>
-
         <!-- 导航 -->
         <Navigation></Navigation>
         <!-- 会员卡片 -->
@@ -19,8 +18,6 @@
                 <img class="level" :src="utils.getAssetsFile('icon/level/lv' + userStore.user.vipLevel + '.svg')"
                     alt="level">
             </div>
-
-
             <div class="form-wrap">
                 <form>
                     <!-- 批量编辑区域 -->
