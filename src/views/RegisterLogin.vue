@@ -10,9 +10,6 @@
                 <form class="form" id="a-form" :model="registerData">
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
-
-
-
                     <div class="login_email">
                         <input class="form__input" type="text" placeholder="用户名" required
                             v-model="registerData.userName">
@@ -148,7 +145,7 @@ async function UserRegister(e) {
             userName: registerData.value.userName,
             userEmail: registerData.value.userEmail,
             userPassword: registerData.value.userPassword,
-            avatarUrl: '/src/assets/img/profile_picture/' + registerData.value.userEmail.split('@')[0] + '.png'
+            avatar_url: '/src/assets/img/profile_picture/' + registerData.value.userEmail.split('@')[0] + '.png'
         });
         message.success('注册成功！正在跳转登录页面...');
         setTimeout(() => {
@@ -293,6 +290,7 @@ onBeforeUnmount(() => {
     height: 30rem;
     border-radius: 0.75rem;
     margin: 18vh auto;
+    z-index: 1;
 }
 
 // 按钮公共样式

@@ -16,7 +16,7 @@
                 random-channel="true" is-suspend="true" speeds="100" debounce="800">
                 <template v-slot:dm="{ index, danmu }">
                     <div class="message-img">
-                        <img :src="danmu.avatarUrl" alt="">
+                        <img :src="danmu.avatar_url" alt="">
                     </div>
                     <span :style="{ color: danmu.color }">{{ danmu.name }}：{{ danmu.text }}</span>
                 </template>
@@ -68,7 +68,7 @@ const fetchMessages = async () => {
         const response = await axios.get('http://localhost:3000/getMessageList');
         danmus.value = response.data.data.map(item => ({
             ...item,
-            avatarUrl: item.avatar_url,
+            avatar_url: item.avatar_url,
             name: item.username,
             text: item.content,
             color: getRandomColor() // 前端生成随机颜色

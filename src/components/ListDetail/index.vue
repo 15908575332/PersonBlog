@@ -254,7 +254,7 @@
                                 <div class="louyt">
                                     <div style="display: flex;">
                                         <div class="profile__picture">
-                                            <img :src="message.user.avatarUrl" alt="avatar">
+                                            <img :src="message.user.avatar_url" alt="avatar">
                                         </div>
                                         <div class="time__name">
                                             <div class="nickname">
@@ -279,7 +279,7 @@
                                 <div class="louyt">
                                     <div style="display: flex;">
                                         <div class="profile__picture">
-                                            <img :src="value.user.avatarUrl" alt="avatar">
+                                            <img :src="value.user.avatar_url" alt="avatar">
                                         </div>
                                         <div class="time__name">
                                             <div class="nickname">
@@ -435,7 +435,7 @@
                     <div class="modal__content">
                         <!-- 头像 -->
                         <div class="modal__avatar">
-                            <img :src="userStore.user.avatarUrl" alt="头像">
+                            <img :src="userStore.user.avatar_url" alt="头像">
                         </div>
                         <!-- 分享时间 -->
                         <p class="dateTime">

@@ -161,8 +161,6 @@ const closeModal = () => { // 关闭购买界面
         padding: 1rem;
         margin: 5rem auto;
         font-family: 'gtpy';
-        position: relative;
-        z-index: 1;
 
         .pricing-card {
             width: 18rem;

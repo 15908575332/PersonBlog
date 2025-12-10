@@ -281,7 +281,8 @@ onUnmounted(() => {
     width: 100%;
     height: 100vh;
     overflow: hidden;
-    z-index: 1;
+    pointer-events: none;
+    z-index: 80;
 
     .sakura-canvas {
         position: absolute;

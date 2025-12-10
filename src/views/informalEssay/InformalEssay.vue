@@ -37,7 +37,7 @@
           <div class="left">
             <div class="personCard box__shadow">
               <div class="profilePicture">
-                <img :src="authStore.user.avatarUrl" alt="profilePicture" />
+                <img :src="authStore.user.avatar_url" alt="profilePicture" />
               </div>
               <div class="nickname">
                 <h1>{{ authStore.user.username }}</h1>
@@ -219,7 +219,7 @@ const getScrollMessageData = (async () => {
   try {
     const response = await axios.get('http://localhost:3000/getMessageList');
     messageList.value = response.data.data.map(item => ({
-      avatar: item.avatarUrl,
+      avatar: item.avatar_url,
       text: item.message_content,
       username: item.username
     }));
