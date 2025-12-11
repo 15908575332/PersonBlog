@@ -113,7 +113,6 @@ const toggleGlobalEdit = () => {
     if (isEditingAll.value) {
         resetForm();
     }
-
     isEditingAll.value = !isEditingAll.value;
     handleInput();
 };

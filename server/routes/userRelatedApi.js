@@ -28,7 +28,7 @@ router.post('/register', validateRegister, async (req, res) => {
 
         // 插入新用户
         await sqlQuery(
-            'INSERT INTO users (user_id, username, email, password_hash, avatarUrl, created_at, updated_at) VALUES (?,?, ?, ?, ?, NOW(), NOW())',
+            'INSERT INTO users (user_id, username, email, password_hash, avatar_url, created_at, updated_at) VALUES (?,?, ?, ?, ?, NOW(), NOW())',
             [userId, userName, userEmail, hashedPassword, avatarUrl]
         );
 
@@ -126,7 +126,7 @@ router.post('/updateUserInfo', validateUpdateInfo, async (req, res) => {
 
         // 返回更新后的用户信息
         const [updatedUser] = await sqlQuery(
-            'SELECT user_id, username, email, avatarUrl, sex, introduce FROM users WHERE user_id = ?',
+            'SELECT user_id, username, email, avatar_url, sex, introduce FROM users WHERE user_id = ?',
             [userId]
         );
 

@@ -79,13 +79,13 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `
-          @import "@/styles/global.scss";
-          @import "@/styles/color.scss";
+          @use  "@/styles/global.scss" as *;
+          @use  "@/styles/color.scss" as *;  
         `,
         api: 'modern-compiler', // or 'modern'
         charset: false
       }
     }
-  }
+  },
 })
 

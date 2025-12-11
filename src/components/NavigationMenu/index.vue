@@ -81,7 +81,7 @@
             <!-- 已登录 -->
             <li v-if="userStore.isAuthenticated && userStore.user" class="loginSuccess">
               <div class="profilePicture" @click="showModalFun" @mouseleave="dropLeave">
-                <img :src="userStore.user.avatar_url" alt="头像" />
+                <img :src="userStore.user.avatarUrl" alt="头像" />
               </div>
               <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
                 <div class="modal-content" @click.stop>

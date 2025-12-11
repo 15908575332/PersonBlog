@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
             iat.value = response.data.user.iat; //生效时间
             // 保存到本地存储
             localStorage.setItem('user', JSON.stringify(response.data.user))
+            console.log(response.data.user)
             localStorage.setItem('token', response.data.token); //token
             localStorage.setItem('iat', response.data.user.iat); //生成时间
             return response.data;
@@ -36,7 +37,6 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref(JSON.parse(localStorage.getItem('user') || null))
     const token = ref(localStorage.getItem('token') || null)
     const iat = ref(localStorage.getItem('iat') || null)
-
     // 注销方法
     const logout = () => {
         user.value = null
