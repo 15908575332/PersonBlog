@@ -79,7 +79,7 @@ router.post('/login', validateLoginNotnull, async (req, res) => {
                 introduce: user.introduce,
                 registerTime: user.created_at,
                 vipLevel: user.vip_level,
-                iat: Math.floor(Date.now() / 1000), // 签发时间
+                //iat: Math.floor(Date.now() / 1000), // 签发时间
             }
         });
     } catch (error) {
@@ -126,7 +126,9 @@ router.post('/updateUserInfo', validateUpdateInfo, async (req, res) => {
 
         // 返回更新后的用户信息
         const [updatedUser] = await sqlQuery(
-            'SELECT user_id, username, email, avatar_url, sex, introduce FROM users WHERE user_id = ?',
+            'SELECT user_id AS userId, username, email, avatar_url as avatarUrl, sex, introduce, ' +
+            'vip_level AS vipLevel, created_at AS registerTime ' +
+            'FROM users WHERE user_id = ?',
             [userId]
         );
 

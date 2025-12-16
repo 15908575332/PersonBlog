@@ -205,11 +205,5 @@ export default {
       border-bottom: 0.3rem solid #a9a7a7;
     }
   }
-
-  @include media-to("phone") {
-    display: none;
-    width: 0;
-    height: 0;
-  }
 }
 </style>

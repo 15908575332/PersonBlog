@@ -301,7 +301,6 @@ onBeforeUnmount(() => {
     padding: 8px 40px;
     border-radius: 20px;
     transition: all 0.3s ease-out !important;
-
 }
 
 .container {
@@ -466,7 +465,6 @@ onBeforeUnmount(() => {
     padding: 3.13rem 3.44rem;
     transition: 1.25s;
 }
-
 
 /**/
 .is-txr {

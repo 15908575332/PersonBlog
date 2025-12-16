@@ -1264,7 +1264,7 @@ onUnmounted(() => {
           padding: 4rem 0;
 
           @function randomNum($max, $min: 0, $u: 1) {
-            @return ($min + random($max)) * $u;
+            @return ($min + math.random($max)) * $u;
           }
 
           @function randomColor() {
@@ -1290,7 +1290,6 @@ onUnmounted(() => {
 
               &::after {
                 content: "#{$i}";
-                // content: '';
                 color: white;
               }
             }

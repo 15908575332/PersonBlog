@@ -19,7 +19,7 @@ const app = express()
 // 公共中间件配置
 app.use(authenticateToken)
 app.use(cors({
-    origin: 'https://192.168.0.209:8008',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 

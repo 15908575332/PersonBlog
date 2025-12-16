@@ -45,7 +45,6 @@ const $http = instance.appContext.config.globalProperties.$http;
 import { useAuthStore } from '@/store/auth';
 const authStore = useAuthStore();
 
-
 // 获取收藏夹数据
 const favoriteData = ref([]);
 const getFavorites = (async () => {
@@ -78,7 +77,7 @@ onMounted(() => {
     margin: 0 auto;
     font-family: 'gtpy';
     //内容盒子宽度
-    $front_end_width: 63rem;
+    $front_end_width: 75vw;
 
     .navigation {
         background-color: transparent;
@@ -365,6 +364,7 @@ onMounted(() => {
         width: 50%;
         margin: 15vh auto 0 auto;
         height: 7rem;
+        min-width: 20rem;
         overflow: hidden;
         position: relative;
         background-color: rgb(189, 189, 189);
@@ -372,7 +372,7 @@ onMounted(() => {
 
         h1 {
             position: absolute;
-            color: #fff;
+            color: $general-black;
             font-size: 1.5rem;
             top: 1rem;
             left: 1rem;
@@ -396,19 +396,18 @@ onMounted(() => {
         h3 {
             font-size: 1.5rem;
             font-weight: 600;
-            // text-align: center;
             padding: 1rem;
-            color: #fff;
         }
 
         ul {
-            @include flexCenter(row, flex-start);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+            gap: 15px;
             flex-wrap: wrap;
-            gap: 1.2rem;
+            gap: 1.5rem;
             font-weight: 700;
 
             a {
-                width: 13.5rem;
                 min-height: 3.8rem;
                 overflow: hidden;
                 @include flexCenter(row, space-between);

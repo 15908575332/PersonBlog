@@ -846,10 +846,6 @@ onMounted(async () => {
             transform: translateY(-1rem);
             animation: zoomInDown 0.6s ease-out forwards;
 
-            @include media-to('phone') {
-                height: 16rem;
-            }
-
         }
 
         // 遮罩
@@ -910,25 +906,6 @@ onMounted(async () => {
             }
         }
 
-        // 手机样式
-        @include media-to ('phone') {
-            height: 14rem;
-
-            .mask {
-                height: 16rem;
-            }
-
-            .back__text {
-                .title {
-                    font-size: 1.3rem;
-                }
-
-                .subtitle {
-                    font-size: 0.9rem;
-                    margin-top: 2rem;
-                }
-            }
-        }
     }
 
     //内容主体

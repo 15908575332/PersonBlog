@@ -79,8 +79,9 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `
-          @use  "@/styles/global.scss" as *;
-          @use  "@/styles/color.scss" as *;  
+          @use "@/styles/global.scss" as *;
+          @use "@/styles/color.scss" as *;
+          @use "sass:math";
         `,
         api: 'modern-compiler', // or 'modern'
         charset: false

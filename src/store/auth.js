@@ -19,12 +19,12 @@ export const useAuthStore = defineStore('auth', () => {
             iat.value = response.data.user.iat; //生效时间
             // 保存到本地存储
             localStorage.setItem('user', JSON.stringify(response.data.user))
-            console.log(response.data.user)
             localStorage.setItem('token', response.data.token); //token
             localStorage.setItem('iat', response.data.user.iat); //生成时间
             return response.data;
 
         } catch (error) {
+            console.log(error);
             if (error.code === 'ERR_NETWORK') {
                 alert('网络错误，后端拒绝连接');
             }

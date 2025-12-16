@@ -485,15 +485,19 @@ onUnmounted(() => {
                 background-color: rgb(0, 0, 0, .6);
               }
             }
+
             .baidu {
               transform: translateY(0);
             }
+
             .bing {
               transform: translateY(100%);
             }
+
             .google {
               transform: translateY(200%);
             }
+
             &:hover {
               .webicon {
                 opacity: 1 !important;
@@ -566,10 +570,6 @@ onUnmounted(() => {
               color: $primary-hover;
               text-decoration: underline;
             }
-
-            @include media-to("phone") {
-              font-size: 0.8rem;
-            }
           }
         }
       }
@@ -611,28 +611,24 @@ onUnmounted(() => {
       height: 100%;
       z-index: 1;
       position: relative;
+      @include flexCenter(column, center);
 
       .front-end {
         padding: 1rem 1.5rem;
-        width: 75rem;
+        width: 80vw;
         color: white;
-        position: absolute;
-        transform: translate(-50%, -50%);
-        left: 50%;
-        top: 50%;
-        margin-left: auto;
-        margin-right: auto;
         background-color: rgba(81, 79, 79, 0.3);
         backdrop-filter: blur(0.1rem);
         border-radius: 0.5rem;
+        overflow-y: auto;
 
         ul {
-          @include flexCenter(row, flex-start);
-          flex-wrap: wrap;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
           gap: 1rem;
 
           li {
-            width: 13.5rem;
+            width: auto;
             font-weight: 700;
             padding: 0.25rem;
             min-height: 3.8rem;
@@ -710,21 +706,6 @@ onUnmounted(() => {
 
     }
   }
-
-  // 手机端样式
-  @include media-to("phone") {
-
-    // 时间
-    .h-minute {
-
-      .hour,
-      .minute,
-      .blinking-colon {
-        font-size: 3.5rem;
-
-      }
-    }
-  }
 }
 
 // 日期组件 : 闪烁动画
@@ -791,8 +772,5 @@ onUnmounted(() => {
   bottom: 15rem;
   left: 1.5rem;
 
-  @include media-to("phone") {
-    display: none;
-  }
 }
 </style>

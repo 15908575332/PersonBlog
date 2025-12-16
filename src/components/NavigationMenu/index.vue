@@ -3,16 +3,10 @@
     <div class="navigate" :class="{ hoverStyle: isHover }" :style="colorStyles">
       <div class="logo">
         <img src="/logo.png" alt="logo" />
-        <!-- <span>BLOG</span> -->
       </div>
-      <!-- 导航控制 -->
-      <div @click="toggleSidebar" class="button phone-none">
-        <img src="@/assets/icon/phone/phone-navigateMenu.svg" alt="navi" />
-      </div>
-      <div class="phone__menu" :class="{ visible: isSidebarVisible }" @click="isInOutSide">
+      <div class="phone_menu">
         <div class="min200">
-          <ul class="nav-btn" ref="navBtn" :class="{ visible: isSidebarVisible }">
-            <h1 class="phone__navigate-title phone-none">手机端导航</h1>
+          <ul class="nav-btn" ref="navBtn">
             <li class="nav-item">
               <a href="/home">
                 <img src="@/components/NavigationMenu/icon/home-icon.svg" alt="home" />
@@ -26,7 +20,6 @@
                 <img src="@/components/NavigationMenu/icon/family-icon.svg" alt="family" />
                 <span>家</span>
               </a>
-
               <div class="br"></div>
             </li>
             <li class="nav-item record">
@@ -36,8 +29,6 @@
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
                 <DropdoenMenu :options="record_options"></DropdoenMenu>
-                <!-- 移动端使用下面组件 -->
-                <TreeMenu></TreeMenu>
               </div>
               <div class="br"></div>
             </li>
@@ -56,8 +47,6 @@
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
                 <DropdoenMenu :options="treasureBox_options"></DropdoenMenu>
-                <!-- 移动端使用下面组件 -->
-                <TreeMenu></TreeMenu>
               </div>
               <div class="br"></div>
             </li>
@@ -134,7 +123,7 @@
             <!-- 未登录 -->
             <li v-else class="nav-item login">
               <a href="/userInfo">
-                <img class="phone-none" src="@/assets/icon/phone/PhongLogin-icon.svg" alt="login" />
+                <img src="@/assets/icon/phone/PhongLogin-icon.svg" alt="login" />
                 <span>登录</span>
               </a>
             </li>
@@ -146,14 +135,11 @@
 </template>
 <script setup>
 import DropdoenMenu from "@/components/DropdownMenu/index.vue";
-import TreeMenu from "@/components/TreeMenu/index.vue";
 import { ref, onMounted, computed } from "vue";
 import utils from "@/utils/getAssetsFile";
 import { useRouter } from "vue-router";
-
 import { useAuthStore } from "@/store/auth";
 const userStore = useAuthStore();
-
 const route = useRouter();
 // 路由跳转函数
 const changeRouter = (routeUrl) => {
@@ -165,8 +151,6 @@ const quitLogin = () => {
   userStore.logout();
   route.push("/userInfo");
 };
-
-
 // 新增颜色props并设置默认值
 const props = defineProps({
   bgColor: {
@@ -191,7 +175,6 @@ const colorStyles = computed(() => ({
 }))
 const isVisible = ref(false);
 const isHover = ref(false);
-const isSidebarVisible = ref();
 const record_options = ref([
   {
     value: "option1",
@@ -277,26 +260,9 @@ const dropEnter = () => {
 const dropLeave = () => {
   isHover.value = !isHover.value;
 };
-const toggleSidebar = () => {
-  isSidebarVisible.value = !isSidebarVisible.value;
-};
-const navBtn = ref();
-const isInOutSide = (event) => {
-  if (!navBtn.value.contains(event.target)) {
-    isSidebarVisible.value = false;
-  }
-};
 onMounted(async () => { });
 </script>
 <style scoped lang="scss">
-.phone-none {
-  display: none;
-
-  @include media-to("phone") {
-    display: block;
-  }
-}
-
 // PC端样式
 .navigate {
   width: 100%;
@@ -317,7 +283,6 @@ onMounted(async () => { });
     }
   }
 
-
   &:hover {
     background-color: var(--hover-bg-color);
     transition: all 0.3s linear;
@@ -335,6 +300,10 @@ onMounted(async () => { });
     span {
       font-size: 1.1rem;
     }
+  }
+
+  .mobile {
+    display: none;
   }
 
   // 导航按钮
@@ -416,7 +385,7 @@ onMounted(async () => { });
           background-color: rgb(255, 255, 255);
           top: 3rem;
           right: 1rem;
-          width: 12.5rem;
+          width: 11rem;
           height: 18rem;
           cursor: auto;
           position: absolute;
@@ -461,7 +430,7 @@ onMounted(async () => { });
 
           ul {
             width: 100%;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem;
             @include flexCenter(column, space-around);
             background-color: rgba(255, 255, 255);
 
@@ -572,89 +541,6 @@ onMounted(async () => { });
     }
   }
 
-  // 手机样式
-  @include media-to("phone") {
-    padding: 0.5rem 0.8rem;
-
-    .logo,
-    .button {
-      img {
-        width: 1.5rem;
-      }
-
-      span {
-        font-size: 0.9rem;
-      }
-    }
-
-    .phone__menu {
-      width: 100vw;
-      height: 100vh;
-      position: absolute;
-      left: 0;
-      top: 0;
-      transform: translateX(-100%);
-      overflow: hidden;
-      transition: all 0.5s ease-in-out;
-      background-color: #00000040;
-      z-index: 9;
-
-      .min200 {
-        width: 65%;
-        min-width: 200px;
-        background-image: url("@/assets/img/phone/slider-back.jpg");
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-
-        .nav-btn {
-          //ul
-          display: flex;
-          flex-direction: column;
-          flex-wrap: wrap;
-          justify-content: flex-start;
-          align-items: flex-start;
-          align-content: flex-start;
-
-          transform: translateX(2rem);
-
-          .phone__navigate-title {
-            font-size: 1.3rem;
-            margin: 1.5rem 0 3rem;
-          }
-
-          .nav-item {
-            font-size: 1.2rem;
-            font-weight: 400;
-
-            a {
-              padding: 0.4rem;
-            }
-
-            .br {
-              height: 0;
-            }
-          }
-
-          .login {
-            a {
-              background: none;
-              margin: 0;
-
-              span {
-                margin-left: 0.1rem;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    // 显示导航栏
-    .visible {
-      transform: translateX(0%);
-    }
-  }
 }
 
 // 背景变化

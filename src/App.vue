@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="pagesOption">
+    <div class="pagesOption" @click="handlePageClick">
       <ClickRipple></ClickRipple>
-      <flowerAnimate :is-animating="isAnimating" :sakura-count="sakuraCount" :speed="speed" />
+      <!-- <flowerAnimate :is-animating="isAnimating" :sakura-count="sakuraCount" :speed="speed" /> -->
       <router-view></router-view>
     </div>
     <div class="floot_right" v-if="showRippleToggle">
@@ -70,14 +70,23 @@ import { useRoute } from 'vue-router'
 import { useMainStore } from '@/store/maincontent'
 import pauseIcon from '@/assets/icon/public/icons8-pause-100.png'
 import playIcon from '@/assets/icon/public/icons8-play-100.png'
+
 /** ------------------------ 全局花瓣飘落动画 ------------------------ */
 const showControlPanel = ref(false)
+const flowersControl = ref();
 const toggleControlPanel = () => {
   showControlPanel.value = !showControlPanel.value
 }
 const isAnimating = ref(true);
 const sakuraCount = ref(localStorage.getItem('flowerAnimateSakuraCount') || 50);
 const speed = ref(localStorage.getItem('flowerAnimateSpeed') || 5);
+
+const handlePageClick = (event) => {
+  if (!showControlPanel.value) return; // 如果面板未显示，直接返回
+  if (flowersControl.value && !flowersControl.value.contains(event.target)) {
+    showControlPanel.value = false; // 点击面板外部时隐藏面板
+  }
+};
 
 const toggleAnimation = () => { // 花瓣动画暂停/播放
   isAnimating.value = !isAnimating.value;

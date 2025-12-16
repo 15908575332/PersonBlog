@@ -516,12 +516,10 @@ const click_env = () => {
 
             li {
                 width: 14vw;
-                // min-width: 10rem;
-                height: 16.5vw;
+                height: auto;
                 flex-wrap: wrap;
                 box-shadow: 1px 1px 3px #b9b7b7;
                 border-radius: .5rem;
-                overflow: hidden;
 
                 .c4-izmir {
                     --text-color: #ffffff; //字体颜色

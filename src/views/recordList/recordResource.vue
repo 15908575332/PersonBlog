@@ -260,9 +260,6 @@ onMounted(() => {
       top: 0;
       animation: zoomInDown 0.6s ease-out forwards;
 
-      @include media-to("phone") {
-        height: 16rem;
-      }
     }
 
     // 遮罩
@@ -294,26 +291,6 @@ onMounted(() => {
       .subtitle {
         margin-top: 3.13rem;
         font-size: 1.3rem;
-      }
-    }
-
-    // 手机样式
-    @include media-to("phone") {
-      height: 14rem;
-
-      .mask {
-        height: 16rem;
-      }
-
-      .back__text {
-        .title {
-          font-size: 1.3rem;
-        }
-
-        .subtitle {
-          font-size: 0.9rem;
-          margin-top: 2rem;
-        }
       }
     }
   }
@@ -554,19 +531,6 @@ onMounted(() => {
             border-radius: 0.15rem;
             margin-right: 0.5rem;
           }
-        }
-      }
-    }
-
-    // 手机样式
-    @include media-to("phone") {
-      padding: 0.7rem;
-
-      .button__navigate {
-        padding: 0.7rem;
-
-        button {
-          margin: 0.5rem;
         }
       }
     }

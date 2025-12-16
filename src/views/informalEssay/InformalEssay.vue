@@ -208,11 +208,11 @@ const dataContent = ref([]);
 const getContentData = async () => {
   await Promise.all(navData.value.map(async (category) => {
     const categoryId = category.category_id;
-    await mainStore.fetchMainContent(categoryId, authStore.user.userId);
+    await mainStore.fetchMainContent(categoryId, authStore.user.user_id);
     dataContent.value[categoryId] = mainStore.contentData; // 按分类ID存储数据
   }));
 }
-
+console.log(authStore)
 /** ------------------------ 获取留言（左侧滚动留言） ------------------------ */
 const messageList = ref([]);
 const getScrollMessageData = (async () => {
