@@ -207,21 +207,21 @@ const treasureBox_options = ref([
     value: "option1",
     text: "音乐",
     router: "treasureBox/music",
-    iconUrl: utils.getAssetsFile("icon/treasureBox/music_navigate_icon.svg"),
+    iconUrl: utils.getAssetsFile("iconmusic_navigate_icon.svg"),
   },
   {
     value: "option2",
     text: "收藏夹",
     router: "treasureBox/favorites",
     iconUrl: utils.getAssetsFile(
-      "icon/treasureBox/favorites_navigate_icon.svg"
+      "iconfavorites_navigate_icon.svg"
     ),
   },
   {
     value: "option3",
     text: "友情链接",
     router: "treasureBox/friendshipLink",
-    iconUrl: utils.getAssetsFile("icon/treasureBox/helpLink_navigate_icon.svg"),
+    iconUrl: utils.getAssetsFile("iconhelpLink_navigate_icon.svg"),
   },
 ]);
 // 随笔二级目录

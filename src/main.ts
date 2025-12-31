@@ -36,7 +36,6 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 hljs.registerLanguage('javascript', javascript);
 import utils from '@/utils/getAssetsFile';
-
 //@ts-ignore
 import request from '@/utils/request';
 function setRemUnit() {
