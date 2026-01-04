@@ -5,16 +5,22 @@
                 <img :src="msg.avatar" alt="avatar" class="avatar-icon" />
             </div>
             <div class="content-wrapper">
-                <p class="time">{{ formatTime(msg.time) }}</p>
-                <p class="message-content">{{ msg.content }}</p>
+                <!-- <p class="time">{{ formatTime(msg.time) }}</p> -->
+                <!-- 图片消息 -->
+                <div v-if="msg.image" class="image-message">
+                    <img class="message-image" :src="msg.image" @click="previewImage(msg.image)" alt="img">
+                    <div class="image-loading" v-if="imageLoading[msg.id]">加载中...</div>
+                </div>
+                <!-- 文本消息 -->
+                <p v-if="msg.content" class="message-content">{{ msg.content }}</p>
+
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { watch, ref, nextTick, onMounted } from 'vue';
-
+import { watch, ref, nextTick, onMounted, defineExpose } from 'vue';
 const props = defineProps({
     messages: {
         type: Array,
@@ -22,15 +28,63 @@ const props = defineProps({
     }
 });
 
-// 处理图片URL（如果是File对象则创建临时URL）
-const getImageUrl = (imageData) => {
-    if (typeof imageData === 'string') {
-        return imageData // 已经是Base64或URL
-    } else if (imageData instanceof File) {
-        return URL.createObjectURL(imageData) // 创建临时URL
-    }
-    return ''
-}
+const imageLoading = ref({});
+
+// 处理图片加载
+const handleImageLoad = (msgId) => {
+    imageLoading.value[msgId] = false;
+};
+
+const handleImageError = (msgId) => {
+    imageLoading.value[msgId] = false;
+    console.error('图片加载失败:', msgId);
+};
+
+// 图片预览
+const previewImage = (imageUrl) => {
+    // 创建图片预览模态框
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        cursor: zoom-out;
+    `;
+
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.style.cssText = `
+        max-width: 80%;
+        max-height: 80%;
+        border-radius: 8px;
+        cursor: default;
+    `;
+
+    modal.appendChild(img);
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+        }
+    };
+
+    document.body.appendChild(modal);
+};
+
+// 默认头像处理
+const getDefaultAvatar = () => {
+    return 'src/assets/icon/instantMessaging/icons8-people-48.png';
+};
+
+const handleAvatarError = (event) => {
+    event.target.src = getDefaultAvatar();
+};
 
 function formatTime(timeString) { //时间格式化
     const date = new Date(timeString)
@@ -50,15 +104,15 @@ let scrollTimeout = null;
 function isNearBottom() {
     const container = scrollContainer.value;
     if (!container) return true;
-    const threshold = 100; // 距离底部100px以内算作底部
+    const threshold = 190; // 距离底部100px以内算作底部
     return container.scrollTop + container.clientHeight >= container.scrollHeight - threshold;
 }
 
 // 平滑滚动到底部
-function scrollToBottom() {
+function scrollToBottom(force = false) { //force参数强制滚动
     nextTick(() => {
         const container = scrollContainer.value;
-        if (container && isNearBottom()) {
+        if (container && (force || isNearBottom())) {
             container.scrollTo({
                 top: container.scrollHeight,
                 behavior: 'smooth'
@@ -67,10 +121,25 @@ function scrollToBottom() {
     });
 }
 
+// 强制滚动到底部（忽略用户滚动状态）
+function forceScrollToBottom() {
+    nextTick(() => {
+        const container = scrollContainer.value;
+        if (container) {
+            container.scrollTo({
+                top: container.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    });
+}
+
+defineExpose({
+    forceScrollToBottom
+});
 // 处理滚动事件
 function handleScroll() {
     isUserScrolling = true;
-
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(() => {
         isUserScrolling = false;
@@ -86,25 +155,20 @@ watch(() => props.messages, (newMessages, oldMessages) => {
 }, { deep: true });
 
 onMounted(() => {
-    scrollToBottom();
+    forceScrollToBottom();
 });
 </script>
 
 <style scoped lang="scss">
 .chat-messages {
-    height: 50vh;
-    padding: 0.5rem;
-    flex: 1;
+    padding: 0.5rem 1rem;
+    height: 100%;
     overflow-y: auto;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
 
     .message-bubble {
         @include flexCenter(row, flex-start);
-        margin-bottom: 0.5rem;
         gap: 0.5rem;
+        padding: 0.5rem 0;
 
         .avatar {
             @include flexCenter(row, center);
@@ -137,6 +201,37 @@ onMounted(() => {
                 /* 长单词/URL 自动换行 */
                 overflow-wrap: anywhere;
                 /* 现代浏览器兼容写法 */
+                width: 100%;
+
+            }
+
+            .image-message {
+                position: relative;
+
+                .message-image {
+                    max-width: 200px;
+                    max-height: 200px;
+                    border-radius: 8px;
+                    cursor: zoom-in;
+                    border: 1px solid #e8e8e8;
+                    transition: transform 0.2s;
+
+                    &:hover {
+                        // transform: scale(1.02);
+                    }
+
+                    .image-loading {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: rgba(0, 0, 0, 0.7);
+                        color: white;
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        font-size: 0.75rem;
+                    }
+                }
             }
 
             .time {

@@ -11,7 +11,7 @@
                     <h2 class="form_title title incline_en">创建账户</h2>
                     <span class="form__span">或者使用你的邮箱进行注册</span>
                     <div class="login_email">
-                        <input class="form__input" type="text" placeholder="用户名" required
+                        <input class="form__input" type="text" placeholder="用户名" required max="8"
                             v-model="registerData.userName">
                         <img v-if="registerData.userName" @click="clearFields('userName')"
                             src="@/assets/icon/registerLogin/input_del.svg" />

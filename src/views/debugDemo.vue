@@ -138,7 +138,7 @@
                     <!-- 聊天详情 -->
                     <div v-else-if="activeMenu === 'chat'" class="detail-section chat-section">
                         <div class="chatMessage">
-                            <ChatMessage :messages="selectedItem.messages" @scroll="scrollToBottom"/>
+                            <ChatMessage :messages="selectedItem.messages" ref="chatMessageRef" />
                         </div>
                         <div class="chatInput">
                             <ChatInput @send="handleSendMessage" />
@@ -167,7 +167,7 @@
                                 <p>
                                     <strong>个人简介：</strong>
                                     <span v-if="selectedItem.introduce" class="introduce">{{ selectedItem.introduce
-                                        }}</span>
+                                    }}</span>
                                     <span v-else>无</span>
                                 </p>
                                 <p class="level">
@@ -216,7 +216,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, getCurrentInstance, watchEffect } from 'vue'
+import { ref, computed, onMounted, getCurrentInstance, nextTick } from 'vue'
 import systemIcon from '@/assets/icon/instantMessaging/icons8-system-40.png'
 import chatMessageIcon from '@/assets/icon/instantMessaging/icons8-message-64.png'
 import groupMessageIcon from '@/assets/icon/instantMessaging/icons8-group-50.png'
@@ -292,7 +292,8 @@ function handleSendMessage(messageData) {
         content: messageData.text || '', // 文本内容
         image: messageData.image || null, // 图片数据（File对象或Base64）
         time: new Date().toISOString(),
-        isMine: true
+        isMine: true,
+        // avatar: useAuthStore.user.avatarUrl
     };
 
     // 添加到对应聊天记录
@@ -307,27 +308,41 @@ function handleSendMessage(messageData) {
         const previewText = messageData.image ? '[图片]' : messageData.text;
         chatSessions.value[sessionIndex].preview = previewText;
         chatSessions.value[sessionIndex].time = newMessage.time;
+        // 将当前会话置顶
+        const session = chatSessions.value.splice(sessionIndex, 1)[0];
+        chatSessions.value.unshift(session);
     }
 
     // 更新当前显示的聊天记录
-    selectedItem.value.messages = [...chatMessages.value[chatId]];
-
+    if (selectedItem.value?.id === chatId) {
+        selectedItem.value.messages = [...chatMessages.value[chatId]];
+        // 滚动到底部
+        nextTick(() => {
+            chatMessageRef.value.forceScrollToBottom(true);
+        });
+    }
     // 可以添加模拟回复
-    simulateReply(chatId);
+    simulateReply(chatId, messageData.image ? '[图片]' : messageData.text);
 }
 
-function simulateReply(chatId) { // 模拟回复
+// 修改模拟回复函数，支持图片回复
+function simulateReply(chatId, originalContent) {
     setTimeout(() => {
+        const isImage = originalContent === '[图片]';
+        const replyContent = isImage ? '[图片]' : `收到：${originalContent}`;
+
         const replyMessage = {
             id: Date.now() + 1,
             sender: chatId.startsWith('friend_')
                 ? chatSessions.value.find(s => s.id === chatId)?.name || '好友'
                 : '群成员',
-            content: '收到你的消息了！',
+            content: replyContent,
+            image: isImage ? 'src/assets/icon/instantMessaging/icons8-image-64.png' : null, // 模拟回复图片
             time: new Date().toISOString(),
             isMine: false,
-            avatar: 'src/assets/img/profile_picture/10010.png'
-
+            avatar: chatId.startsWith('friend_')
+                ? chatSessions.value.find(s => s.id === chatId)?.avatar
+                : 'src/assets/icon/instantMessaging/icons8-group-64.png'
         };
 
         chatMessages.value[chatId].push(replyMessage);
@@ -335,7 +350,7 @@ function simulateReply(chatId) { // 模拟回复
         // 更新会话预览
         const sessionIndex = chatSessions.value.findIndex(session => session.id === chatId);
         if (sessionIndex !== -1) {
-            chatSessions.value[sessionIndex].preview = replyMessage.content;
+            chatSessions.value[sessionIndex].preview = replyContent;
             chatSessions.value[sessionIndex].time = replyMessage.time;
             chatSessions.value[sessionIndex].unreadCount += 1;
         }
@@ -343,11 +358,16 @@ function simulateReply(chatId) { // 模拟回复
         // 如果当前正在查看这个聊天，更新显示
         if (selectedItem.value?.id === chatId) {
             selectedItem.value.messages = [...chatMessages.value[chatId]];
+            nextTick(() => {
+                chatMessageRef.value.forceScrollToBottom(true);
+            });
         }
     }, 2000);
 }
 
 /** ------------------------ 公共属性 ------------------------ */
+const chatMessageRef = ref(null);
+
 function formatDate(dateString) { //日期格式化
     const date = new Date(dateString)
     return date.toLocaleDateString('zh-CN', {
@@ -397,13 +417,12 @@ function startChat(target) { //发送消息按钮
     };
     // 切换到聊天界面
     activeMenu.value = 'chat';
+    nextTick(() => {
+        if (chatMessageRef.value) {
+            chatMessageRef.value.forceScrollToBottom();
+        }
+    });
 }
-
-function scrollToBottom() { //发送新消息时自动滚动到底部
-    // const container = document.querySelector('.chat-messages');
-    // if (container) container.scrollTop = container.scrollHeight;
-}
-
 function selectChatSession(session) {  // 获取选中会话的聊天记录
     const messages = chatMessages.value[session.id] || [];
     selectedItem.value = {
@@ -416,6 +435,12 @@ function selectChatSession(session) {  // 获取选中会话的聊天记录
     if (sessionIndex !== -1) {
         chatSessions.value[sessionIndex].unreadCount = 0;
     }
+    // 在下一个tick确保DOM更新后滚动到底部
+    nextTick(() => {
+        if (chatMessageRef.value) {
+            chatMessageRef.value.forceScrollToBottom();
+        }
+    });
 }
 
 const filteredChatSessions = computed(() => { // 聊天记录过滤逻辑
@@ -465,6 +490,38 @@ const chatMessages = ref({ //聊天数据列表
             time: '2023-06-16T10:30:00Z',
             isMine: true,
             avatar: 'src/assets/img/profile_picture/10008.png'
+        },
+        {
+            id: 2,
+            sender: '张三',
+            content: '晚上一起吃饭？',
+            time: '2023-06-16T10:31:00Z',
+            isMine: false,
+            avatar: 'src/assets/img/profile_picture/10009.png'
+        },
+        {
+            id: 2,
+            sender: '张三',
+            content: '晚上一起吃饭？',
+            time: '2023-06-16T10:31:00Z',
+            isMine: false,
+            avatar: 'src/assets/img/profile_picture/10009.png'
+        },
+        {
+            id: 1,
+            sender: '你',
+            content: '今天有空吗？',
+            time: '2023-06-16T10:30:00Z',
+            isMine: true,
+            avatar: 'src/assets/img/profile_picture/10008.png'
+        },
+        {
+            id: 2,
+            sender: '张三',
+            content: '晚上一起吃饭？',
+            time: '2023-06-16T10:31:00Z',
+            isMine: false,
+            avatar: 'src/assets/img/profile_picture/10009.png'
         },
         {
             id: 2,
@@ -620,15 +677,15 @@ onMounted(async () => {
 }
 
 .app-container {
-    display: flex;
+    // display: flex;
     width: 60vw;
     height: 80vh;
     margin: 10vh auto;
-    background-color: #f0f2f5;
     color: #333;
     box-shadow: $shadow-card;
     border-radius: 0.4rem;
-    overflow: hidden;
+    // overflow: hidden;
+    @include flexCenter(row, flex-start);
 }
 
 /* 左侧导航栏样式 */
@@ -722,377 +779,372 @@ onMounted(async () => {
 /* 中间列表区域样式 */
 .list-container {
     width: 320px;
+    max-width: 320px;
+    overflow: hidden;
     background-color: white;
     border-right: 1px solid #e8e8e8;
     display: flex;
     flex-direction: column;
     height: 100%;
-}
 
-.list-header {
-    padding: 10px;
-    border-bottom: 1px solid #e8e8e8;
-}
-
-.search-box {
-    position: relative;
-}
-
-.search-input {
-    width: 100%;
-    padding: 6px 20px;
-    border: 1px solid #d9d9d9;
-    border-radius: 20px;
-    outline: none;
-    transition: all 0.3s;
-    font-size: 16px;
-}
-
-.search-input:focus {
-    border-color: #40a9ff;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-}
-
-.list-content {
-    flex: 1;
-    overflow-y: auto;
-}
-
-.list-section {
-    padding: 10px 0;
-    overflow: hidden;
-    max-width: 11.5rem;
-}
-
-.addFriend {
-    height: 56px;
-    gap: 0.5rem;
-    @include flexCenter(row, center);
-
-    &:hover {
-        background-color: #e6f7ff;
+    .list-header {
+        padding: 10px;
+        border-bottom: 1px solid #e8e8e8;
     }
 
-    span {
-        font-size: 18px;
+    .search-box {
+        position: relative;
     }
 
-    img {
-        width: 25px;
-        height: 25px;
+    .search-input {
+        width: 100%;
+        padding: 6px 20px;
+        border: 1px solid #d9d9d9;
+        border-radius: 20px;
+        outline: none;
+        transition: all 0.3s;
+        font-size: 16px;
     }
-}
 
-.countFriend {
-    height: 24px;
-    margin: 0.5rem 0;
-    text-align: center;
-    position: relative;
+    .search-input:focus {
+        border-color: #40a9ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    }
 
-    span {
-        font-size: 12px;
-        max-width: 4rem;
-        display: inline-block;
+    .list-content {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .list-section {
+        padding: 10px 0;
         overflow: hidden;
-        height: 100%;
-        text-align: center;
-        line-height: 24px;
-        color: #999;
+        max-width: 11.5rem;
     }
 
-    &::after,
-    &::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        display: block;
-        width: 33%;
-        height: 1px;
-        background-color: #eee;
-    }
-
-    &::before {
-        right: 0.5rem;
-    }
-
-    &::after {
-        left: 0.5rem;
-    }
-}
-
-.list-item {
-    display: flex;
-    padding: 12px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    .avatar {
+    .addFriend {
+        height: 56px;
+        gap: 0.5rem;
         @include flexCenter(row, center);
-        margin-right: 0.5rem;
-        background-color: #ccc;
 
-        .avatar-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 0.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
+        &:hover {
+            background-color: #e6f7ff;
+        }
+
+        span {
+            font-size: 18px;
+        }
+
+        img {
+            width: 25px;
+            height: 25px;
         }
     }
 
-    &:hover {
-        background-color: #f5f7fa;
+    .countFriend {
+        height: 24px;
+        margin: 0.5rem 0;
+        text-align: center;
+        position: relative;
+
+        span {
+            font-size: 12px;
+            max-width: 4rem;
+            display: inline-block;
+            overflow: hidden;
+            height: 100%;
+            text-align: center;
+            line-height: 24px;
+            color: #999;
+        }
+
+        &::after,
+        &::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            display: block;
+            width: 33%;
+            height: 1px;
+            background-color: #eee;
+        }
+
+        &::before {
+            right: 0.5rem;
+        }
+
+        &::after {
+            left: 0.5rem;
+        }
     }
 
-    &.active {
-        background-color: #e6f7ff;
+    .list-item {
+        display: flex;
+        padding: 12px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        .avatar {
+            @include flexCenter(row, center);
+            margin-right: 0.5rem;
+            background-color: #ccc;
+            width: 35px;
+            height: 35px;
+            overflow: hidden;
+
+            .avatar-icon {
+                width: 100%;
+                height: 100%;
+                border-radius: 0.2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+            }
+        }
+
+        &:hover {
+            background-color: #f5f7fa;
+        }
+
+        &.active {
+            background-color: #e6f7ff;
+        }
+
+        // 好友列表
+        .friend-list {
+            @include flexCenter(row, flex-start);
+        }
+
+        //消息列表
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
     }
 
-    // 好友列表
-    .friend-list {
-        @include flexCenter(row, flex-start);
+    .title {
+        font-weight: 500;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 18px;
     }
 
-    //消息列表
-    .content {
-        flex: 1;
-        min-width: 0;
+    .preview,
+    .members {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-}
 
-.title {
-    font-weight: 500;
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 18px;
-}
-
-.preview,
-.members {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.time {
-    font-size: 12px;
-    color: #999;
+    .time {
+        font-size: 12px;
+        color: #999;
+    }
 }
 
 /* 右侧详情区域样式 */
 .detail-container {
     width: 100%;
-    display: flex;
-    flex-direction: column;
+    height: 100%;
+    height: inherit;
+    @include flexCenter(column, flex-start);
 
     .detail-content {
         width: 100%;
-        height: 80vh;
-        @include flexCenter(column, space-between);
+        height: 100%;
 
         //右侧顶部标题栏
         .detail-header {
+            padding: 0.5rem;
+            height: 56px;
+            width: 100%;
             display: flex;
             align-items: center;
-            padding: 0.5rem;
-            background-color: #fff;
-            height: 58px;
-            width: 100%;
 
             h2 {
                 font-size: 18px;
+                line-height: 56px;
             }
         }
+
 
         //右侧详情内容区
         .detail-section {
             height: 100%;
             width: 100%;
-        }
 
-        //输入框及聊天内容展示区域
-        .chat-section {
-            // background-color: rebeccapurple;
-            @include flexCenter(column, space-between);
+            .detail-body {
+                line-height: 1.6;
+                padding: 1rem;
+                padding-right: 3rem;
 
-            //聊天内容展示区域
-            .chatMessage {
-                width: 100%;
-            //     flex: 1;
-            //     min-height: 0;
-            //     overflow: hidden;
+                .message-bubble {
+                    @include flexCenter(row, flex-start);
+                    align-items: flex-start;
+
+                    .time {
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+
+                    .selectedContent {
+                        background-color: #cfe7ff;
+                        padding: 0.2rem 0.5rem;
+                        font-size: 16px;
+                        border-radius: 0.2rem;
+                    }
+                }
             }
 
-            // //输入框
+            .info-card {
+                @include flexCenter(column, flex-start);
+                align-items: flex-start;
+                gap: 0.5rem;
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                padding: 16px;
+
+                .email {
+                    @include flexCenter(row, flex-start);
+
+                    img {
+                        width: 18px;
+                        height: 18px;
+                        margin-bottom: 0.2rem;
+                    }
+                }
+
+                span {
+                    font-size: 18px;
+                }
+
+                .level {
+                    @include flexCenter(row, flex-start);
+
+                    .level-icon {
+                        width: 26px;
+                        height: 26px;
+                        margin-right: 0.5rem;
+                    }
+
+                    .sun {
+                        width: 18px;
+                        height: auto;
+                        animation: rotateAndScale 3.5s linear infinite;
+                    }
+
+                    @keyframes rotateAndScale {
+                        0% {
+                            transform: rotate(0deg) scale(1);
+                        }
+
+                        50% {
+                            transform: rotate(180deg) scale(0.95);
+                        }
+
+                        100% {
+                            transform: rotate(360deg) scale(1);
+                        }
+                    }
+
+                    div {
+                        @include flexCenter(row, center);
+                    }
+                }
+
+                strong {
+                    padding: 0 0.5rem;
+                }
+
+            }
+
+            .group-info {
+                margin-bottom: 20px;
+            }
+
+            .actions {
+                display: flex;
+                gap: 12px;
+                margin-top: 24px;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                background-color: #1890ff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .btn:hover {
+                background-color: #40a9ff;
+            }
+
+            .btn.secondary {
+                background-color: #f0f0f0;
+                color: #333;
+            }
+
+            .btn.secondary:hover {
+                background-color: #d9d9d9;
+            }
+
+            .reply-box {
+                margin-top: 20px;
+            }
+
+            .reply-box textarea {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #d9d9d9;
+                border-radius: 4px;
+                resize: vertical;
+                margin-bottom: 12px;
+            }
+        }
+
+        .chat-section {
+            height: calc(100% - 56px) !important;
+            @include flexCenter (column, space-between);
+            background-color: #f8f8f8;
+
+            .chatMessage {
+                overflow-y: hidden;
+                width: 100%;
+            }
+
             .chatInput {
                 width: 100%;
-            //     flex-shrink: 0; //禁止收缩
+                background-color: $general-white;
             }
         }
-
-
     }
 
+    .empty-detail {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #999;
 
-
-}
-
-.empty-detail {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #999;
-}
-
-.empty-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
-}
-
-.empty-detail h3 {
-    margin-bottom: 10px;
-    font-weight: 500;
-}
-
-
-
-
-.detail-body {
-    line-height: 1.6;
-    padding: 1rem;
-    padding-right: 3rem;
-
-    .message-bubble {
-        @include flexCenter(row, flex-start);
-        align-items: flex-start;
-
-        .time {
-            font-size: 14px;
-            font-weight: 700;
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
         }
 
-        .selectedContent {
-            background-color: #cfe7ff;
-            padding: 0.2rem 0.5rem;
-            font-size: 16px;
-            border-radius: 0.2rem;
+        h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
         }
     }
-}
-
-.info-card {
-    @include flexCenter(column, flex-start);
-    align-items: flex-start;
-    gap: 0.5rem;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 16px;
-
-    .email {
-        @include flexCenter(row, flex-start);
-
-        img {
-            width: 20px;
-            height: 20px;
-        }
-    }
-
-    span {
-        font-size: 18px;
-    }
-
-    .level {
-        @include flexCenter(row, flex-start);
-
-        .level-icon {
-            width: 26px;
-            height: 26px;
-            margin-right: 0.5rem;
-        }
-
-        .sun {
-            width: 18px;
-            height: auto;
-            animation: rotateAndScale 3.5s linear infinite;
-        }
-
-        @keyframes rotateAndScale {
-            0% {
-                transform: rotate(0deg) scale(1);
-            }
-
-            50% {
-                transform: rotate(180deg) scale(0.95);
-            }
-
-            100% {
-                transform: rotate(360deg) scale(1);
-            }
-        }
-
-        div {
-            @include flexCenter(row, center);
-        }
-    }
-
-    strong {
-        padding: 0 0.5rem;
-    }
-
-}
-
-.group-info {
-    margin-bottom: 20px;
-}
-
-.actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
-}
-
-.btn {
-    padding: 8px 16px;
-    background-color: #1890ff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background-color: #40a9ff;
-}
-
-.btn.secondary {
-    background-color: #f0f0f0;
-    color: #333;
-}
-
-.btn.secondary:hover {
-    background-color: #d9d9d9;
-}
-
-.reply-box {
-    margin-top: 20px;
-}
-
-.reply-box textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    resize: vertical;
-    margin-bottom: 12px;
 }
 </style>
