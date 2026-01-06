@@ -5,44 +5,55 @@
                 <img :src="msg.avatar" alt="avatar" class="avatar-icon" />
             </div>
             <div class="content-wrapper">
-                <!-- <p class="time">{{ formatTime(msg.time) }}</p> -->
                 <!-- 图片消息 -->
                 <div v-if="msg.image" class="image-message">
                     <img class="message-image" :src="msg.image" @click="previewImage(msg.image)" alt="img">
                     <div class="image-loading" v-if="imageLoading[msg.id]">加载中...</div>
                 </div>
-                <!-- 文本消息 -->
-                <p v-if="msg.content" class="message-content">{{ msg.content }}</p>
 
+                <!-- 消息内容区域 -->
+                <div v-if="msg.content || (msg.emojis && msg.emojis.length)" class="message-content">
+                    <!-- 文本内容 -->
+                    <span class="text-content">{{ msg.content }}</span>
+                    <!-- 表情内容 -->
+                    <div v-if="msg.emojis && msg.emojis.length" class="emojis-container">
+                        <div v-for="(emoji, index) in msg.emojis" :key="index" class="emoji-item">
+                            <div class="lottie-emoji" :ref="el => setEmojiRef(el, msg.id, index, emoji.id, emoji.url)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { watch, ref, nextTick, onMounted, defineExpose } from 'vue';
+import { watch, ref, nextTick, onMounted, onUnmounted, defineExpose } from 'vue';
+import lottie from 'lottie-web';
+
 const props = defineProps({
     messages: {
         type: Array,
         default: () => []
     }
 });
+console.log('props:' + props)
+// 默认头像
+const getDefaultAvatar = () => {
+    return '/src/assets/icon/instantMessaging/icons8-people-48.png';
+};
 
+// 头像加载错误处理
+const handleAvatarError = (event) => {
+    event.target.src = getDefaultAvatar();
+};
+
+// 图片加载状态
 const imageLoading = ref({});
-
-// 处理图片加载
-const handleImageLoad = (msgId) => {
-    imageLoading.value[msgId] = false;
-};
-
-const handleImageError = (msgId) => {
-    imageLoading.value[msgId] = false;
-    console.error('图片加载失败:', msgId);
-};
 
 // 图片预览
 const previewImage = (imageUrl) => {
-    // 创建图片预览模态框
     const modal = document.createElement('div');
     modal.style.cssText = `
         position: fixed;
@@ -77,85 +88,121 @@ const previewImage = (imageUrl) => {
     document.body.appendChild(modal);
 };
 
-// 默认头像处理
-const getDefaultAvatar = () => {
-    return 'src/assets/icon/instantMessaging/icons8-people-48.png';
-};
+// 时间格式化
+function formatTime(timeString) {
+    if (!timeString) return '';
 
-const handleAvatarError = (event) => {
-    event.target.src = getDefaultAvatar();
-};
-
-function formatTime(timeString) { //时间格式化
-    const date = new Date(timeString)
-    return date.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    })
-}
-const scrollContainer = ref(null);
-let isUserScrolling = false;
-let scrollTimeout = null;
-
-// 检查是否在底部附近
-function isNearBottom() {
-    const container = scrollContainer.value;
-    if (!container) return true;
-    const threshold = 190; // 距离底部100px以内算作底部
-    return container.scrollTop + container.clientHeight >= container.scrollHeight - threshold;
+    try {
+        const date = new Date(timeString);
+        return date.toLocaleString('zh-CN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+    } catch (error) {
+        console.error('时间格式化错误:', error);
+        return '时间错误';
+    }
 }
 
-// 平滑滚动到底部
-function scrollToBottom(force = false) { //force参数强制滚动
-    nextTick(() => {
-        const container = scrollContainer.value;
-        if (container && (force || isNearBottom())) {
-            container.scrollTo({
-                top: container.scrollHeight,
-                behavior: 'smooth'
-            });
+// Lottie 动画相关
+const emojiRefs = new Map();
+const animationInstances = new Map();
+
+// 修改表情引用设置方法
+const setEmojiRef = (el, msgId, emojiIndex, emojiId, emojiUrl) => {
+    if (el && emojiUrl) {
+        const uniqueKey = `${msgId}-${emojiIndex}-${emojiId}`;
+        if (!animationInstances.has(uniqueKey)) {
+            initAnimation(el, uniqueKey, emojiUrl);
+        }
+    }
+};
+
+// 修改动画初始化方法
+const initAnimation = (emojiElement, uniqueKey, emojiUrl) => {
+    if (!emojiElement || !emojiUrl) return;
+
+    try {
+        const animation = lottie.loadAnimation({
+            container: emojiElement,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: emojiUrl,
+        });
+        animation.setSpeed(0.8);
+        animationInstances.set(uniqueKey, animation);
+    } catch (error) {
+        console.error('表情动画加载失败:', error);
+    }
+};
+
+// 添加清理特定消息动画的方法
+const cleanupMessageAnimations = (msgId) => {
+    const keysToDelete = [];
+    animationInstances.forEach((animation, key) => {
+        if (key.startsWith(`${msgId}-`)) {
+            try {
+                animation.destroy();
+            } catch (error) {
+                console.error('清理动画实例失败:', error);
+            }
+            keysToDelete.push(key);
         }
     });
-}
+    keysToDelete.forEach(key => animationInstances.delete(key));
+};
 
-// 强制滚动到底部（忽略用户滚动状态）
+// 修改消息监听，清理旧消息的动画
+watch(() => props.messages, (newMessages, oldMessages) => {
+    // 清理已删除消息的动画
+    if (oldMessages.length > newMessages.length) {
+        const remainingIds = new Set(newMessages.map(msg => msg.id));
+        oldMessages.forEach(oldMsg => {
+            if (!remainingIds.has(oldMsg.id)) {
+                cleanupMessageAnimations(oldMsg.id);
+            }
+        });
+    }
+    forceScrollToBottom();
+}, { deep: true });
+
+// 处理滚动事件
+const scrollContainer = ref('');
 function forceScrollToBottom() {
     nextTick(() => {
         const container = scrollContainer.value;
         if (container) {
             container.scrollTo({
                 top: container.scrollHeight,
-                behavior: 'smooth'
-            });
+                behvior: 'smooth'
+            })
         }
-    });
+    })
+};
+function handleScroll() {
+    // 可以根据需要实现滚动加载更多
 }
 
+// 暴露方法给父组件
 defineExpose({
     forceScrollToBottom
 });
-// 处理滚动事件
-function handleScroll() {
-    isUserScrolling = true;
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-        isUserScrolling = false;
-    }, 1000);
-}
 
-// 监听messages变化
-watch(() => props.messages, (newMessages, oldMessages) => {
-    if (newMessages.length > oldMessages.length) {
-        // 只有新消息增加时才滚动
-        scrollToBottom();
-    }
-}, { deep: true });
+// 监听消息变化
+// watch(() => props.messages, () => {
+//     forceScrollToBottom();
+// }, { deep: true });
 
+// 组件挂载时滚动到底部
 onMounted(() => {
     forceScrollToBottom();
+});
+
+// 组件卸载时清理资源
+onUnmounted(() => {
+    cleanupAnimations();
 });
 </script>
 
@@ -164,72 +211,73 @@ onMounted(() => {
     padding: 0.5rem 1rem;
     height: 100%;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
     .message-bubble {
-        @include flexCenter(row, flex-start);
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
         gap: 0.5rem;
         padding: 0.5rem 0;
+        margin: 0.5rem 0;
 
         .avatar {
-            @include flexCenter(row, center);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             .avatar-icon {
-                width: 30px;
+                width: 35px;
                 height: 35px;
-                border-radius: 0.2rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 20px;
+                border-radius: 50%;
+                object-fit: cover;
+                background-color: #f0f0f0;
             }
         }
 
         .content-wrapper {
-            @include flexCenter(column, flex-start);
             max-width: 70%;
-            align-items: flex-start;
+            min-width: 60px;
+            overflow: hidden;
 
             .message-content {
-                background-color: #e8e8e8;
-                padding: 0.2rem 0.5rem;
-                border-radius: 0.2rem;
-                font-size: 0.85rem;
-                line-height: 1rem;
-                white-space: pre-wrap;
-                /* 允许换行（保留空白符） */
-                word-wrap: break-word;
-                /* 长单词/URL 自动换行 */
-                overflow-wrap: anywhere;
-                /* 现代浏览器兼容写法 */
-                width: 100%;
+                background-color: #58f614;
+                border-radius: 0.4rem;
+                font-size: 0.9rem;
+                text-align: center;
+                line-height: 1.2;
+                padding: 0.4rem;
 
-            }
+                .text-content {
+                    display: inline;
+                    width: 100%;
+                }
 
-            .image-message {
-                position: relative;
+                .emojis-container {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    gap: 0.2rem;
+                    vertical-align: middle;
 
-                .message-image {
-                    max-width: 200px;
-                    max-height: 200px;
-                    border-radius: 8px;
-                    cursor: zoom-in;
-                    border: 1px solid #e8e8e8;
-                    transition: transform 0.2s;
+                    // 每个emoji表情
+                    .emoji-item {
+                        @include flexCenter(row, center);
 
-                    &:hover {
-                        // transform: scale(1.02);
-                    }
+                        .lottie-emoji {
+                            width: 40px;
+                            height: 40px;
 
-                    .image-loading {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: rgba(0, 0, 0, 0.7);
-                        color: white;
-                        padding: 4px 8px;
-                        border-radius: 4px;
-                        font-size: 0.75rem;
+                            /* 确保SVG正确渲染 */
+                            svg {
+                                width: 100%;
+                                height: 100%;
+                            }
+                        }
                     }
                 }
             }
@@ -237,29 +285,44 @@ onMounted(() => {
             .time {
                 font-size: 0.7rem;
                 color: #999;
-                padding-left: 0.2rem;
+                margin-top: 0.2rem;
+                padding: 0 0.5rem;
+            }
+
+            // 图片消息样式
+            .image-message {
+                margin-bottom: 0.5rem;
+
+                .message-image {
+                    max-width: 200px;
+                    max-height: 200px;
+                    border-radius: 0.5rem;
+                    cursor: zoom-in;
+                    border: 1px solid #e8e8e8;
+                    background-color: #f9f9f9;
+                }
             }
         }
-    }
 
-    .is-mine {
-        flex-direction: row-reverse;
-    }
-
-    .is-mine .content-wrapper {
-        align-items: flex-end;
-
-        .message-content {
-            background-color: #c8eec9;
+        // 自己发送的消息
+        &.is-mine {
+            flex-direction: row-reverse;
             align-self: flex-end;
+            width: 100%;
 
+            .content-wrapper {
+                align-items: flex-end;
+
+                .message-content {
+                    background-color: #1890ff;
+                    color: white;
+                }
+
+                .time {
+                    text-align: right;
+                }
+            }
         }
-
-        .time {
-            padding-left: 0;
-            padding-right: 0.2rem !important;
-        }
-
     }
 }
 </style>

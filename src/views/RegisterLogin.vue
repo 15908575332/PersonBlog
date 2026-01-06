@@ -4,73 +4,75 @@
         <div class="backPhoto" :style=currentPageBackground></div>
         <!-- 遮罩 -->
         <div class="mask"></div>
-        <div class="main">
-            <!-- 注册 sign up -->
-            <div class="container a-container" id="a-container">
-                <form class="form" id="a-form" :model="registerData">
-                    <h2 class="form_title title incline_en">创建账户</h2>
-                    <span class="form__span">或者使用你的邮箱进行注册</span>
-                    <div class="login_email">
-                        <input class="form__input" type="text" placeholder="用户名" required max="8"
-                            v-model="registerData.userName">
-                        <img v-if="registerData.userName" @click="clearFields('userName')"
-                            src="@/assets/icon/registerLogin/input_del.svg" />
-                    </div>
+        <div class="layout">
+            <div class="main">
+                <!-- 注册 sign up -->
+                <div class="container a-container" id="a-container">
+                    <form class="form" id="a-form" :model="registerData">
+                        <h2 class="form_title title incline_en">创建账户</h2>
+                        <span class="form__span">或者使用你的邮箱进行注册</span>
+                        <div class="login_email">
+                            <input class="form__input" type="text" placeholder="用户名" required max="8"
+                                v-model="registerData.userName">
+                            <img v-if="registerData.userName" @click="clearFields('userName')"
+                                src="@/assets/icon/registerLogin/input_del.svg" />
+                        </div>
 
-                    <div class="login_email">
-                        <input class="form__input" type="email" required autocomplete="userEmail" placeholder="邮箱"
-                            v-model="registerData.userEmail">
-                        <img v-if="registerData.userEmail" @click="clearFields('userEmail')"
-                            src="@/assets/icon/registerLogin/input_del.svg" />
-                    </div>
+                        <div class="login_email">
+                            <input class="form__input" type="email" required autocomplete="userEmail" placeholder="邮箱"
+                                v-model="registerData.userEmail">
+                            <img v-if="registerData.userEmail" @click="clearFields('userEmail')"
+                                src="@/assets/icon/registerLogin/input_del.svg" />
+                        </div>
 
-                    <input class="form__input" type="password" autocomplete="current-password" placeholder="密码"
-                        v-model="registerData.userPassword">
-                    <input class="form__input" type="password" autocomplete="new-password" placeholder="再次输入密码"
-                        v-model="registerData.rePassword">
+                        <input class="form__input" type="password" autocomplete="current-password" placeholder="密码"
+                            v-model="registerData.userPassword">
+                        <input class="form__input" type="password" autocomplete="new-password" placeholder="再次输入密码"
+                            v-model="registerData.rePassword">
 
-                    <button class="form__button button submit" type="submit"
-                        @click="UserRegister"><span>注册</span></button>
-                </form>
-            </div>
-
-            <!-- 登录 sign in -->
-            <div class="container b-container" id="b-container">
-                <form class="form" id="b-form" method="" :model="defaultLoginInfo">
-                    <h2 class="form_title title incline_en"><span>登录</span></h2>
-                    <span class="form__span">或者使用你的电子邮箱账户</span>
-                    <div class="login_email">
-                        <input class="form__input form__input--email" autocomplete="username" type="email" required
-                            placeholder="电子邮箱" v-model="defaultLoginInfo.loginEmail">
-                        <img v-if="defaultLoginInfo.loginEmail" @click="clearFields('loginEmail')"
-                            src="@/assets/icon/registerLogin/input_del.svg" />
-                    </div>
-
-                    <input class="form__input" type="password" autocomplete="current-password" placeholder="请输入你的密码"
-                        v-model="defaultLoginInfo.loginPassword">
-                    <a href="/resetPassword" class="form__link">忘记密码</a>
-                    <button class="form__button button submit" @click="login"><span>登录</span></button>
-                </form>
-            </div>
-            <!-- login/register 切换按钮 -->
-            <div class="switch" id="switch-cnt">
-                <div class="switch__circle"></div>
-                <div class="switch__circle switch__circle--t"></div>
-                <div class="switch__container" id="switch-c1">
-                    <h2 class="switch__title title incline_en">没有账号？</h2>
-                    <p class="switch__description description">
-                        <img src="@/assets/icon/registerLogin/register-icon.svg"></img>
-                        <span>立即注册吧</span>
-                    </p>
-                    <button class="switch__button button switch-btn"><span>注册</span></button>
+                        <button class="form__button button submit" type="submit"
+                            @click="UserRegister"><span>注册</span></button>
+                    </form>
                 </div>
-                <div class="switch__container is-hidden" id="switch-c2">
-                    <h2 class="switch__title title incline_en">已有账号？</h2>
-                    <p class="switch__description description">
-                        <img src="@/assets/icon/registerLogin/login-icon.svg"></img>
-                        <span>请登录</span>
-                    </p>
-                    <button class="switch__button button"><span>登录</span></button>
+
+                <!-- 登录 sign in -->
+                <div class="container b-container" id="b-container">
+                    <form class="form" id="b-form" method="" :model="defaultLoginInfo">
+                        <h2 class="form_title title incline_en"><span>登录</span></h2>
+                        <span class="form__span">或者使用你的电子邮箱账户</span>
+                        <div class="login_email">
+                            <input class="form__input form__input--email" autocomplete="username" type="email" required
+                                placeholder="电子邮箱" v-model="defaultLoginInfo.loginEmail">
+                            <img v-if="defaultLoginInfo.loginEmail" @click="clearFields('loginEmail')"
+                                src="@/assets/icon/registerLogin/input_del.svg" />
+                        </div>
+
+                        <input class="form__input" type="password" autocomplete="current-password" placeholder="请输入你的密码"
+                            v-model="defaultLoginInfo.loginPassword">
+                        <a href="/resetPassword" class="form__link">忘记密码</a>
+                        <button class="form__button button submit" @click="login"><span>登录</span></button>
+                    </form>
+                </div>
+                <!-- login/register 切换按钮 -->
+                <div class="switch" id="switch-cnt">
+                    <div class="switch__circle"></div>
+                    <div class="switch__circle switch__circle--t"></div>
+                    <div class="switch__container" id="switch-c1">
+                        <h2 class="switch__title title incline_en">没有账号？</h2>
+                        <p class="switch__description description">
+                            <img src="@/assets/icon/registerLogin/register-icon.svg"></img>
+                            <span>立即注册吧</span>
+                        </p>
+                        <button class="switch__button button switch-btn"><span>注册</span></button>
+                    </div>
+                    <div class="switch__container is-hidden" id="switch-c2">
+                        <h2 class="switch__title title incline_en">已有账号？</h2>
+                        <p class="switch__description description">
+                            <img src="@/assets/icon/registerLogin/login-icon.svg"></img>
+                            <span>请登录</span>
+                        </p>
+                        <button class="switch__button button"><span>登录</span></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -284,13 +286,20 @@ onBeforeUnmount(() => {
     }
 }
 
-.main {
-    position: relative;
-    width: 40rem;
-    height: 30rem;
-    border-radius: 0.75rem;
-    margin: 18vh auto;
-    z-index: 1;
+.layout {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .main {
+        width: 40rem;
+        height: 30rem;
+        border-radius: 0.75rem;
+        margin: 0 auto;
+        z-index: 1;
+        position: relative;
+    }
 }
 
 // 按钮公共样式

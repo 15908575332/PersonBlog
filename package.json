@@ -24,6 +24,7 @@
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
     "live2d-render": "^0.0.6",
+    "lottie-web": "^5.13.0",
     "lunar-javascript": "^1.6.12",
     "pinia": "^2.2.7",
     "uuid": "^13.0.0",

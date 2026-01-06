@@ -280,20 +280,19 @@ const chatSessions = ref([ //聊天列表
 
 /** ------------------------ 右侧聊天详情 ------------------------ */
 function handleSendMessage(messageData) {
-    console.log('发送的消息数据:', messageData);
-    if (!selectedItem.value || (!messageData.text && !messageData.image)) return;
-
+    if (!selectedItem.value || (!messageData.text && !messageData.emojis.length && !messageData.image)) return;
     const chatId = selectedItem.value.id;
 
-    // 创建新消息 - 正确处理图片和文本
+    // 创建新消息 - 正确处理表情
     const newMessage = {
         id: Date.now(),
         sender: "你",
-        content: messageData.text || '', // 文本内容
-        image: messageData.image || null, // 图片数据（File对象或Base64）
+        content: messageData.text || '', // 纯文本内容
+        emojis: messageData.emojis || [], // 表情数组
+        image: messageData.image || null,
         time: new Date().toISOString(),
         isMine: true,
-        // avatar: useAuthStore.user.avatarUrl
+        avatar: userStore.user.avatarUrl
     };
 
     // 添加到对应聊天记录
@@ -305,9 +304,20 @@ function handleSendMessage(messageData) {
     // 更新会话预览
     const sessionIndex = chatSessions.value.findIndex(session => session.id === chatId);
     if (sessionIndex !== -1) {
-        const previewText = messageData.image ? '[图片]' : messageData.text;
+        let previewText = '';
+        if (messageData.image) {
+            previewText = '[图片]';
+        } else if (messageData.emojis.length > 0) {
+            previewText = messageData.text ?
+                `${messageData.text} [表情]` :
+                `[${messageData.emojis.length}个表情]`;
+        } else {
+            previewText = messageData.text;
+        }
+
         chatSessions.value[sessionIndex].preview = previewText;
         chatSessions.value[sessionIndex].time = newMessage.time;
+
         // 将当前会话置顶
         const session = chatSessions.value.splice(sessionIndex, 1)[0];
         chatSessions.value.unshift(session);
@@ -316,20 +326,32 @@ function handleSendMessage(messageData) {
     // 更新当前显示的聊天记录
     if (selectedItem.value?.id === chatId) {
         selectedItem.value.messages = [...chatMessages.value[chatId]];
-        // 滚动到底部
         nextTick(() => {
             chatMessageRef.value.forceScrollToBottom(true);
         });
     }
-    // 可以添加模拟回复
-    simulateReply(chatId, messageData.image ? '[图片]' : messageData.text);
+
+    // 模拟回复
+    simulateReply(chatId, messageData);
 }
 
-// 修改模拟回复函数，支持图片回复
-function simulateReply(chatId, originalContent) {
+// 修改模拟回复函数，支持表情
+function simulateReply(chatId, originalMessage) {
     setTimeout(() => {
-        const isImage = originalContent === '[图片]';
-        const replyContent = isImage ? '[图片]' : `收到：${originalContent}`;
+        const isImage = originalMessage.image;
+        const hasEmojis = originalMessage.emojis && originalMessage.emojis.length > 0;
+
+        let replyContent = '';
+        let replyEmojis = [];
+
+        if (isImage) {
+            replyContent = '[图片]';
+        } else if (hasEmojis) {
+            replyContent = originalMessage.text || '';
+            replyEmojis = [...originalMessage.emojis]; // 复制表情
+        } else {
+            replyContent = `收到：${originalMessage.text}`;
+        }
 
         const replyMessage = {
             id: Date.now() + 1,
@@ -337,12 +359,13 @@ function simulateReply(chatId, originalContent) {
                 ? chatSessions.value.find(s => s.id === chatId)?.name || '好友'
                 : '群成员',
             content: replyContent,
-            image: isImage ? 'src/assets/icon/instantMessaging/icons8-image-64.png' : null, // 模拟回复图片
+            emojis: replyEmojis,
+            image: isImage ? '/src/assets/icon/instantMessaging/icons8-image-64.png' : null,
             time: new Date().toISOString(),
             isMine: false,
             avatar: chatId.startsWith('friend_')
                 ? chatSessions.value.find(s => s.id === chatId)?.avatar
-                : 'src/assets/icon/instantMessaging/icons8-group-64.png'
+                : '/src/assets/icon/instantMessaging/icons8-group-64.png'
         };
 
         chatMessages.value[chatId].push(replyMessage);
@@ -350,7 +373,18 @@ function simulateReply(chatId, originalContent) {
         // 更新会话预览
         const sessionIndex = chatSessions.value.findIndex(session => session.id === chatId);
         if (sessionIndex !== -1) {
-            chatSessions.value[sessionIndex].preview = replyContent;
+            let previewText = '';
+            if (isImage) {
+                previewText = '[图片]';
+            } else if (hasEmojis) {
+                previewText = originalMessage.text ?
+                    `${originalMessage.text} [表情]` :
+                    `[${originalMessage.emojis.length}个表情]`;
+            } else {
+                previewText = replyContent;
+            }
+
+            chatSessions.value[sessionIndex].preview = previewText;
             chatSessions.value[sessionIndex].time = replyMessage.time;
             chatSessions.value[sessionIndex].unreadCount += 1;
         }
