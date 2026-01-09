@@ -68,7 +68,6 @@
                             <a-badge v-if="session.unreadCount > 0" :count="session.unreadCount" />
                         </div>
                     </div>
-
                     <!-- 好友列表 -->
                     <div v-else-if="activeMenu === 'friend'" class="list-section">
                         <div class="addFriend">
@@ -138,7 +137,8 @@
                     <!-- 聊天详情 -->
                     <div v-else-if="activeMenu === 'chat'" class="detail-section chat-section">
                         <div class="chatMessage">
-                            <ChatMessage :messages="selectedItem.messages" ref="chatMessageRef" />
+                            <ChatMessage :messages="selectedItem.messages"
+                                :show-sender-name="selectedItem.type === 'group'" ref="chatMessageRef" />
                         </div>
                         <div class="chatInput">
                             <ChatInput @send="handleSendMessage" />
@@ -167,7 +167,7 @@
                                 <p>
                                     <strong>个人简介：</strong>
                                     <span v-if="selectedItem.introduce" class="introduce">{{ selectedItem.introduce
-                                    }}</span>
+                                        }}</span>
                                     <span v-else>无</span>
                                 </p>
                                 <p class="level">
@@ -280,15 +280,23 @@ const chatSessions = ref([ //聊天列表
 
 /** ------------------------ 右侧聊天详情 ------------------------ */
 function handleSendMessage(messageData) {
-    if (!selectedItem.value || (!messageData.text && !messageData.emojis.length && !messageData.image)) return;
+    if (!selectedItem.value) return;
+
+    const hasMixedContent = messageData.mixedContent && messageData.mixedContent.length > 0;
+    const hasImage = messageData.image;
+
+    if (!hasMixedContent && !hasImage) {
+        alert('消息内容不能为空');
+        return;
+    }
+
     const chatId = selectedItem.value.id;
 
-    // 创建新消息 - 正确处理表情
+    // 创建新消息
     const newMessage = {
         id: Date.now(),
         sender: "你",
-        content: messageData.text || '', // 纯文本内容
-        emojis: messageData.emojis || [], // 表情数组
+        mixedContent: messageData.mixedContent || [],
         image: messageData.image || null,
         time: new Date().toISOString(),
         isMine: true,
@@ -305,14 +313,12 @@ function handleSendMessage(messageData) {
     const sessionIndex = chatSessions.value.findIndex(session => session.id === chatId);
     if (sessionIndex !== -1) {
         let previewText = '';
+
         if (messageData.image) {
             previewText = '[图片]';
-        } else if (messageData.emojis.length > 0) {
-            previewText = messageData.text ?
-                `${messageData.text} [表情]` :
-                `[${messageData.emojis.length}个表情]`;
-        } else {
-            previewText = messageData.text;
+        } else if (hasMixedContent) {
+            // 从混合内容生成预览文本
+            previewText = generatePreviewFromMixedContent(messageData.mixedContent);
         }
 
         chatSessions.value[sessionIndex].preview = previewText;
@@ -327,7 +333,7 @@ function handleSendMessage(messageData) {
     if (selectedItem.value?.id === chatId) {
         selectedItem.value.messages = [...chatMessages.value[chatId]];
         nextTick(() => {
-            chatMessageRef.value.forceScrollToBottom(true);
+            chatMessageRef.value?.forceScrollToBottom(true);
         });
     }
 
@@ -335,22 +341,50 @@ function handleSendMessage(messageData) {
     simulateReply(chatId, messageData);
 }
 
-// 修改模拟回复函数，支持表情
+/** ------------------------ 预览生成 ------------------------ */
+function generatePreviewFromMixedContent(mixedContent, options = {}) {
+    if (!mixedContent || mixedContent.length === 0) return '';
+
+    const {
+        maxLength = 50, // 最大预览长度
+        truncateSuffix = '...', // 截断后缀
+    } = options;
+
+    let preview = mixedContent.map(item => {
+        if (item.type === 'text') {
+            return item.content;
+        } else if (item.type === 'emoji') {
+            return '[表情]' + `[${item.id}]`;
+        } else if (item.type === 'image') {
+            return '[图片]';
+        } else if (item.type === 'file') {
+            return '[文件]';
+        }
+        return '';
+    }).filter(text => text.trim() !== '').join(' ');
+
+    // 截断过长的预览
+    if (preview.length > maxLength) {
+        preview = preview.substring(0, maxLength) + truncateSuffix;
+    }
+
+    return preview.trim();
+}
+
+
+// 模拟回复，支持表情
 function simulateReply(chatId, originalMessage) {
     setTimeout(() => {
         const isImage = originalMessage.image;
-        const hasEmojis = originalMessage.emojis && originalMessage.emojis.length > 0;
+        const hasMixedContent = originalMessage.mixedContent && originalMessage.mixedContent.length > 0;
 
-        let replyContent = '';
-        let replyEmojis = [];
+        let replyMixedContent = [];
 
         if (isImage) {
-            replyContent = '[图片]';
-        } else if (hasEmojis) {
-            replyContent = originalMessage.text || '';
-            replyEmojis = [...originalMessage.emojis]; // 复制表情
-        } else {
-            replyContent = `收到：${originalMessage.text}`;
+            // 图片回复逻辑
+        } else if (hasMixedContent) {
+            // 复制混合内容
+            replyMixedContent = JSON.parse(JSON.stringify(originalMessage.mixedContent));
         }
 
         const replyMessage = {
@@ -358,8 +392,7 @@ function simulateReply(chatId, originalMessage) {
             sender: chatId.startsWith('friend_')
                 ? chatSessions.value.find(s => s.id === chatId)?.name || '好友'
                 : '群成员',
-            content: replyContent,
-            emojis: replyEmojis,
+            mixedContent: replyMixedContent,
             image: isImage ? '/src/assets/icon/instantMessaging/icons8-image-64.png' : null,
             time: new Date().toISOString(),
             isMine: false,
@@ -376,12 +409,10 @@ function simulateReply(chatId, originalMessage) {
             let previewText = '';
             if (isImage) {
                 previewText = '[图片]';
-            } else if (hasEmojis) {
-                previewText = originalMessage.text ?
-                    `${originalMessage.text} [表情]` :
-                    `[${originalMessage.emojis.length}个表情]`;
-            } else {
-                previewText = replyContent;
+            } else if (hasMixedContent) {
+                previewText = generatePreviewFromMixedContent(originalMessage.mixedContent, {
+                    maxLength: 30,
+                });
             }
 
             chatSessions.value[sessionIndex].preview = previewText;
@@ -393,7 +424,7 @@ function simulateReply(chatId, originalMessage) {
         if (selectedItem.value?.id === chatId) {
             selectedItem.value.messages = [...chatMessages.value[chatId]];
             nextTick(() => {
-                chatMessageRef.value.forceScrollToBottom(true);
+                chatMessageRef.value?.forceScrollToBottom(true);
             });
         }
     }, 2000);
@@ -452,9 +483,11 @@ function startChat(target) { //发送消息按钮
     // 切换到聊天界面
     activeMenu.value = 'chat';
     nextTick(() => {
-        if (chatMessageRef.value) {
-            chatMessageRef.value.forceScrollToBottom();
-        }
+        setTimeout(() => {
+            if (chatMessageRef.value) {
+                chatMessageRef.value.forceScrollToBottom();
+            }
+        }, 100);
     });
 }
 function selectChatSession(session) {  // 获取选中会话的聊天记录
@@ -471,9 +504,11 @@ function selectChatSession(session) {  // 获取选中会话的聊天记录
     }
     // 在下一个tick确保DOM更新后滚动到底部
     nextTick(() => {
-        if (chatMessageRef.value) {
-            chatMessageRef.value.forceScrollToBottom();
-        }
+        setTimeout(() => {
+            if (chatMessageRef.value) {
+                chatMessageRef.value.forceScrollToBottom();
+            }
+        }, 50);
     });
 }
 
@@ -520,47 +555,78 @@ const chatMessages = ref({ //聊天数据列表
         {
             id: 1,
             sender: '你',
-            content: '今天有空吗？',
+            mixedContent: [
+                {
+                    content: '今天有空吗？',
+                    type: 'text'
+                }
+            ],
             time: '2023-06-16T10:30:00Z',
             isMine: true,
-            avatar: 'src/assets/img/profile_picture/10008.png'
+            avatar: 'src/assets/img/profile_picture/10008.png',
+
         },
         {
             id: 2,
             sender: '张三',
-            content: '晚上一起吃饭？',
+            mixedContent: [
+                {
+                    content: '晚上一起吃饭？',
+                    type: 'text'
+                }
+            ],
             time: '2023-06-16T10:31:00Z',
             isMine: false,
             avatar: 'src/assets/img/profile_picture/10009.png'
         },
         {
-            id: 2,
+            id: 3,
             sender: '张三',
-            content: '晚上一起吃饭？',
+            mixedContent: [
+                {
+                    content: '晚上一起吃饭？',
+                    type: 'text'
+                }
+            ],
             time: '2023-06-16T10:31:00Z',
             isMine: false,
             avatar: 'src/assets/img/profile_picture/10009.png'
         },
         {
-            id: 1,
+            id: 4,
             sender: '你',
-            content: '今天有空吗？',
+            mixedContent: [
+                {
+                    content: '今天有空吗？',
+                    type: 'text'
+                }
+            ],
             time: '2023-06-16T10:30:00Z',
             isMine: true,
             avatar: 'src/assets/img/profile_picture/10008.png'
         },
         {
-            id: 2,
+            id: 5,
             sender: '张三',
-            content: '晚上一起吃饭？',
+            mixedContent: [
+                {
+                    content: '晚上一起吃饭？',
+                    type: 'text'
+                }
+            ],
             time: '2023-06-16T10:31:00Z',
             isMine: false,
             avatar: 'src/assets/img/profile_picture/10009.png'
         },
         {
-            id: 2,
+            id: 6,
             sender: '张三',
-            content: '晚上一起吃饭？',
+            mixedContent: [
+                {
+                    content: '今天有空吗？',
+                    type: 'text'
+                }
+            ],
             time: '2023-06-16T10:31:00Z',
             isMine: false,
             avatar: 'src/assets/img/profile_picture/10009.png'
@@ -607,8 +673,8 @@ const getSystemNotice = async () => {
 };
 
 /** ------------------------ 好友列表 ------------------------ */
-const friends = ref([]); //好友列表
-const friendCounts = ref(0); //好友数量
+const friends = ref([]); //列表
+const friendCounts = ref(0); //数量
 
 const getFriendsList = async () => {
     //传入当前用户ID，获取好友列表
@@ -624,19 +690,6 @@ const getFriendsList = async () => {
         console.error('获取好友列表失败:', error);
     }
 };
-
-// const pendingFriends = ref([]); //状态为1的好友列表
-// const filteredFriends = ref([]); //搜索后的好友列表
-// watchEffect(friends, (newFriends) => {
-//     pendingFriends.value = newFriends.filter(friend => friend.friend_status === 1);
-//     if (!searchQuery.value) {
-//         filteredFriends.value = pendingFriends.value;
-//     } else {
-//         filteredFriends.value = pendingFriends.value.filter(friend =>
-//             friend.username.includes(searchQuery.value)
-//         );
-//     }
-// }, { immediate: true, deep: true });
 
 const pendingFriends = computed(() => {
     return friends.value?.filter(friend => friend.friend_status === 1);
@@ -924,12 +977,12 @@ onMounted(async () => {
             background-color: #ccc;
             width: 35px;
             height: 35px;
-            overflow: hidden;
+            border-radius: 0.2rem;
+            // overflow: hidden;
 
             .avatar-icon {
                 width: 100%;
                 height: 100%;
-                border-radius: 0.2rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;

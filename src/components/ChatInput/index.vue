@@ -3,8 +3,9 @@
     <div class="chat-input-wrapper">
         <!-- 工具栏 -->
         <div class="toolbar">
-            <div class="toolbar-item" @click="toggleEmojiPicker" :class="{ active: showEmojiPicker }">
-                😊
+            <div class="toolbar-item" v-for="category in emojiCategories" @click="toggleEmojiPicker(category)"
+                :class="{ active: showEmojiPicker && currentCategory === category.id }">
+                <span @click="handleCategoryChange(category)">{{ category.icon }}</span>
             </div>
             <div class="toolbar-item" @click="uploadImage">
                 🖼️
@@ -26,17 +27,15 @@
                 <button class="close-btn" @click="showEmojiPicker = false">×</button>
             </div>
 
-            <div class="emoji-categories">
-                <button v-for="category in emojiCategories" :key="category.id"
-                    :class="{ active: currentCategory === category.id }" @click="currentCategory = category.id">
-                    {{ category.icon }}
-                </button>
-            </div>
-
-            <div class="emoji-grid">
+            <div class="emoji-grid" :class="{ 'text-emoji-grid': isTextEmojiCategory }">
                 <div v-for="emoji in filteredEmojis" :key="emoji.id" class="emoji-item" @click="insertEmoji(emoji)">
-                    <div class="emoji-preview" :ref="el => setEmojiRef(el, emoji.id)"></div>
-                    <span class="emoji-name">{{ emoji.name }}</span>
+                    <!-- 文字表情显示文字内容 -->
+                    <div v-if="emoji.emojiType === 'text'" class="text-emoji-preview">
+                        {{ emoji.emojiUrl }}
+                    </div>
+                    <!-- Lottie表情保持原有逻辑 -->
+                    <div v-else class="emoji-preview" :ref="el => setEmojiRef(el, emoji.id)"></div>
+                    <span v-if="emoji.name" class="emoji-name">{{ emoji.name }}</span>
                 </div>
             </div>
         </div>
@@ -58,17 +57,17 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, nextTick, onMounted, onUnmounted, getCurrentInstance } from 'vue';
 import lottie from 'lottie-web';
+const instance = getCurrentInstance();
+const $http = instance.appContext.config.globalProperties.$http;
 
-
-// 定义事件
 const emit = defineEmits(['send']);
+
 
 /** ------------------------ 图片上传 ------------------------ */
 const previewImage = ref(null);
 const selectedFile = ref(null);
-
 const uploadImage = () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -101,70 +100,114 @@ const uploadImage = () => {
     };
     input.click();
 };
-
 const clearPreview = () => {
     previewImage.value = null;
     selectedFile.value = null;
 };
 
 /** ------------------------ 表情选择器 ------------------------ */
-const showEmojiPicker = ref(false);
-const currentCategory = ref('reactions');
-const editableDiv = ref(null);
-const contentText = ref('');
+const showEmojiPicker = ref(false); //容器
+const currentCategory = ref('reactions'); //类别
+const editableDiv = ref(null); //输入框结构
+const contentText = ref(''); //内容
+const loadingEmojis = ref(false); // 加载状态
 
-// 表情分类
-const emojiCategories = [
-    { id: 'reactions', name: '反应', icon: '👍' },
-    { id: 'emotions', name: '情绪', icon: '😊' },
-    { id: 'animals', name: '动物', icon: '🐱' },
-    { id: 'objects', name: '物品', icon: '🎁' }
-];
-
-// 表情数据
-const emojis = [
-    {
-        id: 'cryingCat',
-        name: '哭泣',
-        category: 'emotions',
-        url: '/lottie/LottieCryingCat.json',
-        preview: '/lottie/LottieCryingCat.json',
-    },
-    {
-        id: 'loveCat',
-        name: '喜欢',
-        category: 'emotions',
-        url: '/lottie/LottieLoveCat.json',
-        preview: '/lottie/LottieLoveCat.json',
-    },
-];
-
-// 计算属性
-const filteredEmojis = computed(() => {
-    return emojis.filter(emoji => emoji.category === currentCategory.value);
+// 判断当前分类是否为文字表情
+const isTextEmojiCategory = computed(() => {
+    const category = emojiCategories.find(cat => cat.id === currentCategory.value);
+    return category ? category.em_type === 'text' : false;
 });
 
-const hasContent = computed(() => {
+const emojiCategories = [ // 表情分类
+    { id: 'reactions', name: '反应', icon: '👍', em_type: 'text' },
+    { id: 'emotions', name: '情绪', icon: '😬', em_type: 'text' },
+    { id: 'animals', name: '动物', icon: '🐱', em_type: 'lottie' },
+    { id: 'space', name: '人物', icon: '🕵🏻', em_type: 'lottie' }
+];
+
+const emojiItemList = ref([]); // 表情数据
+const loadedCategories = new Set(); // 缓存已加载的分类，避免重复请求
+
+const processEmojiData = (apiData, categoryId) => { // 处理接口返回的表情数据
+    const emojiList = apiData.emoji_list || apiData || [];
+
+    return emojiList.map(item => ({
+        id: item.id || `${categoryId}_${Date.now()}_${Math.random()}`,
+        name: item.name || '', // 不存在名字就为空
+        category: categoryId,
+        emojiType: item.em_type || 'lottie', // 默认为lottie类型
+        preview: item.content,
+        emojiUrl: item.content // 文字表情的内容
+    }));
+};
+
+const getEmojisList = async (category) => {
+    const categoryId = category.id || currentCategory.value;
+    const emojiType = category.em_type || 'text';
+
+    // 如果已经加载过该分类，直接返回
+    if (loadedCategories.has(categoryId.value)) {
+        return;
+    }
+    loadingEmojis.value = true;
+
+    try {
+        const response = await $http.get('/instansMessaging/im_emojis', {
+            params: {
+                category: categoryId,
+                em_type: emojiType,
+                is_active: 1
+            }
+        });
+
+        if (response && response.result) {
+            // 处理返回的表情数据
+            const categoryEmojis = processEmojiData(response.result, categoryId);
+            // 添加到表情列表中
+            emojiItemList.value = [...emojiItemList.value, ...categoryEmojis];
+            // 标记该分类已加载
+            loadedCategories.add(categoryId);
+        }
+    } catch (error) {
+        console.error(`获取 ${categoryId} 分类表情失败:`, error);
+        // 可以在这里添加错误处理，比如显示错误提示
+    } finally {
+        loadingEmojis.value = false;
+    }
+};
+
+//切换分类
+const handleCategoryChange = async (category) => {
+    currentCategory.value = category.id;
+    if (!loadedCategories.has(category.id)) {
+        await getEmojisList(category);
+    }
+}
+
+const filteredEmojis = computed(() => { // 对应分类下的表情内容
+    return emojiItemList.value.filter(item => item.category === currentCategory.value);
+});
+
+const hasContent = computed(() => { //判断输入框是否为空
     return contentText.value.trim().length > 0 || selectedFile.value;
 });
 
-const textMessagePlaceholder = computed(() => {
+const textMessagePlaceholder = computed(() => { //placeholder值
     return '输入回复... (Enter发送 | Shift+Enter换行)';
 });
 
-// Lottie实例存储
-const emojiRefs = new Map();
-const animationInstances = new Map(); // 新增：存储动画实例
-
-const toggleEmojiPicker = () => {
+const toggleEmojiPicker = () => { //容器显示/隐藏控制
     showEmojiPicker.value = !showEmojiPicker.value;
 };
 
-const setEmojiRef = (el, emojiId) => {
+const emojiRefs = new Map(); // Lottie实例存储
+const animationInstances = new Map(); // 存储动画实例
+
+const setEmojiRef = (el, emojiId) => { //渲染表情数据
     if (el) {
         emojiRefs.set(emojiId, el);
-        const emoji = emojis.find(e => e.id === emojiId);
-        if (emoji) {
+        const emojiItem = emojiItemList.value.find(e => e.id === emojiId);
+        if (emojiItem) {
             // 如果动画实例不存在或者容器不匹配，重新初始化
             if (!animationInstances.has(emojiId) ||
                 animationInstances.get(emojiId).container !== el) {
@@ -173,7 +216,7 @@ const setEmojiRef = (el, emojiId) => {
                     animationInstances.get(emojiId).destroy();
                     animationInstances.delete(emojiId);
                 }
-                initAnimation(el, emoji);
+                initAnimation(el, emojiItem);
             }
         }
     } else {
@@ -181,8 +224,8 @@ const setEmojiRef = (el, emojiId) => {
         emojiRefs.delete(emojiId);
     }
 };
-// 初始化动画
-const initAnimation = (emojiElement, emoji) => {
+
+const initAnimation = (emojiElement, emojiItem) => { // 初始化动画
     if (!emojiElement) return;
 
     const animation = lottie.loadAnimation({
@@ -190,16 +233,15 @@ const initAnimation = (emojiElement, emoji) => {
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        path: emoji.preview || emoji.url,
+        path: emojiItem.emojiUrl,
     });
     animation.setSpeed(0.5);
 
     // 为动画实例添加容器引用，方便后续比较
     animation.container = emojiElement;
-    animationInstances.set(emoji.id, animation);
+    animationInstances.set(emojiItem.id, animation);
 };
 
-// 插入表情函数
 const insertEmoji = async (emoji) => {
     if (!editableDiv.value) return;
 
@@ -218,21 +260,20 @@ const insertEmoji = async (emoji) => {
     }
 
     const savedRange = range.cloneRange();
-
     try {
         range.deleteContents();
 
-        // 创建带有完整数据的span元素
-        const span = document.createElement('span');
-        span.className = 'emoji-marker';
-        span.setAttribute('data-emoji-id', emoji.id);
-        span.setAttribute('data-emoji-name', emoji.name);
-        span.setAttribute('data-emoji-url', emoji.url);
-        span.setAttribute('data-emoji-preview', emoji.preview);
-        span.textContent = `[${emoji.name}]`; // 显示友好的名称
+        let insertedNode;
+        if (emoji.emojiType === 'text') {
+            // 文字表情：直接插入文本内容
+            insertedNode = document.createTextNode(emoji.preview + ' '); // 加空格方便连续输入
+        } else {
+            // Lottie表情：插入占位符文本
+            insertedNode = document.createTextNode(`[${emoji.name}]`);
+        }
 
-        range.insertNode(span);
-        range.setStartAfter(span);
+        range.insertNode(insertedNode);
+        range.setStartAfter(insertedNode);
         range.collapse(true);
 
         selection.removeAllRanges();
@@ -247,81 +288,105 @@ const insertEmoji = async (emoji) => {
     editableDiv.value.dispatchEvent(event);
     updateContent();
 };
-// 新增：更新内容函数
-const updateContent = () => {
+
+/** ------------------------ 内容处理 ------------------------ */
+const updateContent = () => { // 更新内容
     if (!editableDiv.value) return;
     contentText.value = editableDiv.value.textContent || '';
 
 };
 
-// 获取内容
 const getContent = () => {
-    if (!editableDiv.value) return { text: '', emojis: [] };
+    if (!editableDiv.value) return { mixedContent: [] };
 
-    const text = editableDiv.value.textContent || '';
-    const emojis = [];
+    const mixedContent = [];
+    const textContent = editableDiv.value.textContent || '';
 
-    // 从DOM中提取表情数据
-    const emojiElements = editableDiv.value.querySelectorAll('.emoji-marker');
-    emojiElements.forEach(element => {
-        emojis.push({
-            id: element.getAttribute('data-emoji-id'),
-            name: element.getAttribute('data-emoji-name'),
-            url: element.getAttribute('data-emoji-url'),
-            preview: element.getAttribute('data-emoji-preview')
-        });
-    });
+    // 使用正则表达式匹配占位符 [表情名]
+    const emojiPattern = /\[([^\]]+)\]/g;
+    let lastIndex = 0;
+    let match;
 
-    // 纯文本内容（移除表情标记）
-    const pureText = Array.from(editableDiv.value.childNodes)
-        .filter(node => node.nodeType === Node.TEXT_NODE ||
-            (node.nodeType === Node.ELEMENT_NODE && !node.classList.contains('emoji-marker')))
-        .map(node => node.textContent)
-        .join('')
-        .trim();
+    while ((match = emojiPattern.exec(textContent)) !== null) {
+        // 添加匹配前的文本
+        if (match.index > lastIndex) {
+            const text = textContent.substring(lastIndex, match.index).trim();
+            if (text) {
+                mixedContent.push({
+                    type: 'text',
+                    content: text
+                });
+            }
+        }
 
-    return {
-        text: pureText,
-        emojis: emojis,
-        rawText: text
-    };
+        // 查找对应的表情数据
+        const emojiName = match[1];
+        const emoji = emojiItemList.value.find(e => e.name === emojiName);
+
+        if (emoji) {
+            // 添加表情数据
+            mixedContent.push({
+                type: 'emoji',
+                id: emoji.id,
+                name: emoji.name,
+                url: emoji.emojiUrl
+            });
+        } else {
+            // 如果没有找到对应的表情，保留为文本
+            mixedContent.push({
+                type: 'text',
+                content: match[0]
+            });
+        }
+
+        lastIndex = emojiPattern.lastIndex;
+    }
+
+    // 添加剩余的文本
+    if (lastIndex < textContent.length) {
+        const text = textContent.substring(lastIndex).trim();
+        if (text) {
+            mixedContent.push({
+                type: 'text',
+                content: text
+            });
+        }
+    }
+
+    return { mixedContent };
 };
-// 发送消息
+
 function sendMessage() {
+
     const content = getContent();
-    console.log(content)
-    if (!content.text && !content.rawText && !content.emojis.length && !selectedFile.value) {
+    const mixedContent = content.mixedContent;
+
+    if (mixedContent.length === 0 && !selectedFile.value) {
         alert('消息内容不能为空');
         return;
     }
 
     const messageData = {
-        text: content.text,
-        emojis: content.emojis,
-        rawText: content.rawText, // 传递原始文本
+        mixedContent: mixedContent, // 使用解析后的混合内容
         image: previewImage.value,
         timestamp: new Date().toISOString()
     };
-
-    console.log('发送消息:', messageData);
+    showEmojiPicker.value = false;//关闭表情选择器
     emit('send', messageData);
     clearInput();
     clearPreview();
-}
+};
 
 // 输入处理
 const onInput = () => {
     updateContent();
 };
-
 const onFocus = () => {
     // 输入框获得焦点时的处理
 };
-
 const onBlur = () => {
     // 输入框失去焦点时的处理
 };
-
 const onPaste = async (event) => {
     event.preventDefault();
     const text = event.clipboardData.getData('text/plain');
@@ -344,8 +409,6 @@ const onPaste = async (event) => {
         updateContent(); // 添加内容更新
     }
 };
-
-
 
 // 清空输入
 const clearInput = () => {
@@ -387,7 +450,7 @@ onUnmounted(() => {
 let observer = null;
 
 // MutationObserver
-onMounted(() => {
+onMounted(async () => {
     if (editableDiv.value) {
         editableDiv.value.focus();
     }
@@ -423,17 +486,17 @@ onMounted(() => {
         width: 100%;
         height: 2rem;
         padding: 0.5rem 0;
-        gap: 1rem;
 
         .toolbar-item {
             cursor: pointer;
             padding: 4px 8px;
             border-radius: 4px;
             transition: background-color 0.2s;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            user-select: none;
 
             &:hover {
                 background-color: #f0f0f0;
@@ -442,9 +505,11 @@ onMounted(() => {
             &.active {
                 background-color: #e0e0e0;
             }
+
         }
     }
 
+    // 图片选择预览区域
     .preview-area {
         width: 100%;
         padding: 0.5rem 0;
@@ -454,18 +519,18 @@ onMounted(() => {
             display: inline-block;
 
             .preview-img {
-                max-width: 200px;
-                max-height: 150px;
+                max-width: 100px;
+                max-height: 50px;
                 border-radius: 4px;
                 border: 1px solid #d9d9d9;
             }
 
             .close-btn {
                 position: absolute;
-                top: -8px;
-                right: -8px;
-                width: 20px;
-                height: 20px;
+                top: -4px;
+                right: -4px;
+                width: 12px;
+                height: 12px;
                 background: #ff4d4f;
                 color: white;
                 border-radius: 50%;
@@ -489,9 +554,21 @@ onMounted(() => {
         border: 1px solid #d9d9d9;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 1000;
+        z-index: 100;
         padding: 12px;
-        margin-bottom: 10px;
+        animation: slideDownRetourn 0.5s;
+
+        @keyframes slideDownRetourn {
+            from {
+                opacity: 0;
+                transform: translate3d(-10%, 10%, 0);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
 
         .emoji-picker-header {
             display: flex;
@@ -506,19 +583,19 @@ onMounted(() => {
             .close-btn {
                 background: none;
                 border: none;
-                font-size: 20px;
+                font-size: 16px;
                 cursor: pointer;
-                color: #666;
+                color: #ff0c0c;
                 padding: 0;
-                width: 24px;
-                height: 24px;
+                width: 18px;
+                height: 18px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
 
-                &:hover {
-                    color: #333;
-                }
+                // &:hover {
+                //     color: #ff0000;
+                // }
             }
         }
 
@@ -533,7 +610,7 @@ onMounted(() => {
                 border-radius: 6px;
                 background: white;
                 cursor: pointer;
-                font-size: 16px;
+                font-size: 18px;
                 transition: all 0.2s;
 
                 &:hover {
@@ -547,18 +624,19 @@ onMounted(() => {
             }
         }
 
+        //通用表情布局
         .emoji-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
             max-height: 200px;
             overflow-y: auto;
+            transition: all ease 5s;
 
             .emoji-item {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 8px;
+                padding: 4px;
                 border-radius: 6px;
                 cursor: pointer;
                 transition: background-color 0.2s;
@@ -569,6 +647,16 @@ onMounted(() => {
                 -ms-user-select: none;
                 /* Internet Explorer/Edge */
                 user-select: none;
+
+                //文字表情
+                .text-emoji-preview {
+                    font-size: 18px;
+                    line-height: 1;
+                    padding: 0.4rem 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
 
                 &:hover {
                     background-color: #f5f5f5;
@@ -600,6 +688,11 @@ onMounted(() => {
                 }
             }
         }
+
+        //文字表情布局
+        .text-emoji-grid {
+            grid-template-columns: repeat(5, 1fr);
+        }
     }
 
     .input-area {
@@ -608,12 +701,12 @@ onMounted(() => {
 
         .editable-input {
             width: 100%;
-            min-height: 4rem;
+            min-height: 5rem;
             max-height: 8rem;
             padding: 8px;
             border: 1px solid #d9d9d9;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 1.5;
             outline: none;
             overflow-y: auto;
@@ -650,11 +743,12 @@ onMounted(() => {
             background-color: #1890ff;
             color: white;
             border: none;
-            font-size: 14px;
+            font-size: 16px;
             padding: 6px 16px;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.2s;
+            font-family: inherit;
 
             &:hover:not(:disabled) {
                 background-color: #40a9ff;

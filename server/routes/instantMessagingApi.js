@@ -79,4 +79,60 @@ router.get('/im_friend_list', async (req, res) => { //好友列表（多状态�
         });
     }
 })
+
+router.get('/im_emojis', async (req, res) => { // 获取所有表情图
+    try {
+        const { category, em_type, is_active = true } = req.query;
+        let query = 'SELECT * FROM im_emojis WHERE is_active = ?';
+        const params = [is_active];
+
+        if (category) {
+            query += ' AND category = ?';
+            params.push(category);
+        }
+
+        if (em_type) {
+            query += ' AND em_type = ?';
+            params.push(em_type);
+        }
+
+        query += ' ORDER BY sort_order ASC, id ASC';
+
+        const result = await sqlQuery(query, params);
+        res.status(200).json({
+            result: result
+        });
+
+    } catch (error) {
+        console.error('获取表情失败:', error);
+        res.status(500).json({
+            message: '服务器内部错误',
+            error: process.env.NODE_ENV === 'development' ? error.message : null
+        });
+    }
+});
+
+router.get('/im_emojis/:id', async (req, res) => { // 根据ID获取单个表情
+    try {
+        const result = await sqlQuery(
+            'SELECT * FROM im_emojis WHERE id = ? AND is_active = true',
+            [req.params.id]
+        );
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: '表情不存在' });
+        }
+
+        res.status(200).json({
+            emoji: result[0]
+        });
+    } catch (error) {
+        console.error('获取表情详情失败:', error);
+        res.status(500).json({
+            message: '服务器内部错误',
+            error: process.env.NODE_ENV === 'development' ? error.message : null
+        });
+    }
+});
+
 export default router;
