@@ -2,7 +2,7 @@
   <div>
     <div class="pagesOption" @click="handlePageClick">
       <ClickRipple></ClickRipple>
-      <!-- <flowerAnimate :is-animating="isAnimating" :sakura-count="sakuraCount" :speed="speed" /> -->
+      <flowerAnimate :is-animating="isAnimating" :sakura-count="sakuraCount" :speed="speed" />
       <router-view></router-view>
     </div>
     <div class="floot_right" v-if="showRippleToggle">

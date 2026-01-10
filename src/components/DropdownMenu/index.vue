@@ -1,7 +1,8 @@
 <template>
   <div class="dropdown">
-    <div class="dropdown-content" @click.self="closeDropdownIfNeeded" @click="selectOption($event, option)">
-      <div class="dropdown-item" v-for="option in options" :key="option.value" data-value="option.value">
+    <div class="dropdown-content" @click.self="closeDropdownIfNeeded">
+      <div class="dropdown-item" v-for="option in options" :key="option.value" data-value="option.value"
+        @click="selectOption($event, option)">
         <button @click="RouterJump('/' + option.router)" :class="[option.engTitle ? 'btn-12' : 'btn1']">
           <!-- button icon -->
           <img v-if="option.iconUrl" :src="option.iconUrl" alt="btn_icon" />
@@ -13,36 +14,31 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-export default {
-  name: "DropdownMenu",
-  props: {
-    options: {
-      type: Array,
-      requiresd: true,
-      default: () => [],
-    },
-  },
-  setup(props) {
-    const route = useRouter();
-    const selectedOption = ref(null);
-    const closeDropdownIfNeeded = () => { };
 
-    const selectOption = (event, option) => {
-      event.stopPropagation();
-      selectedOption.value = option;
-    };
-    const RouterJump = (router) => {
-      route.push(router);
-    };
-    return {
-      selectedOption,
-      RouterJump,
-      selectOption,
-    };
+// 定义 props
+const props = defineProps({
+  options: {
+    type: Array,
+    required: true,
+    default: () => [],
   },
+});
+
+const router = useRouter();
+const selectedOption = ref(null);
+
+const closeDropdownIfNeeded = () => { };
+
+const selectOption = (event, option) => {
+  event.stopPropagation();
+  selectedOption.value = option;
+};
+
+const RouterJump = (path) => {
+  router.push(path);
 };
 </script>
 

@@ -4,6 +4,19 @@
         <div class="backPhoto" :style=currentPageBackground></div>
         <!-- 遮罩 -->
         <div class="mask"></div>
+
+        <!-- 验证 -->
+        <ModalBox :isVisible="isShowModal" @close="handChangeModal" :animationType="selectedAnimation">
+            <!-- 注册验证码组件 -->
+            <Captcha v-if="formState.currentOption === 'register'" :onSuccess="onCaptchaSuccess"
+                :onCancel="onCaptchaCancel" />
+            <!-- 登录验证码组件 -->
+            <slide-verify v-else ref="block" :w="400" :h="200" :imgs="customImages" :show="false"
+                :slider-text="placeholderText" @again="onAgain" @success="onSuccess" @fail="onFail" @refresh="onRefresh"
+                style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);"></slide-verify>
+            <div class="verification-msg" :style="{ color: msgColor }">{{ msg }}</div>
+        </ModalBox>
+
         <div class="layout">
             <div class="main">
                 <!-- 注册 sign up -->
@@ -50,7 +63,8 @@
                         <input class="form__input" type="password" autocomplete="current-password" placeholder="请输入你的密码"
                             v-model="defaultLoginInfo.loginPassword">
                         <a href="/resetPassword" class="form__link">忘记密码</a>
-                        <button class="form__button button submit" @click="login"><span>登录</span></button>
+                        <button class="form__button button submit" @click="login"
+                            :disabled="isLoginLoading"><span>登录</span></button>
                     </form>
                 </div>
                 <!-- login/register 切换按钮 -->
@@ -85,13 +99,39 @@ import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthStore } from '@/store/auth';
+import ModalBox from '@/components/ModalBox/index.vue';
+
+import Captcha from '@/components/Captcha/index.vue';
+import SlideVerify from 'vue3-slide-verify';
+import "vue3-slide-verify/dist/style.css";
+
 const $http = getCurrentInstance().appContext.config.globalProperties.$http;
 const route = useRouter();
 
-/** ------------------------ 全局消息提示配置 ------------------------ */
+/** ------------------------ 全局配置 ------------------------ */
+const isShowModal = ref(false); //验证框
+const captchaVerified = ref(false);
+
+const handChangeModal = () => {
+    isShowModal.value = false;
+}
 message.config({
     duration: 3,
-    maxCount: 1,
+    maxCount: 3,
+});
+
+/** ------------------------ 动画切换 ------------------------ */
+const formState = ref({
+    isRegisterForm: false, // false表示登录表单，true表示注册表单
+    currentOption: 'login' // 当前操作类型
+});
+const toggleForm = () => { //类型切换
+    msg.value = '';
+    formState.value.isRegisterForm = !formState.value.isRegisterForm;
+    formState.value.currentOption = formState.value.isRegisterForm ? 'register' : 'login';
+};
+const selectedAnimation = computed(() => { //返回选中动画名
+    return formState.value.currentOption === 'register' ? 'spaceInUp' : 'zoomIn';
 });
 
 /** ------------------------ 背景图切换 ------------------------ */
@@ -120,9 +160,44 @@ const registerData = ref({
     userPassword: '',
     rePassword: '' //二次密码
 });
+
 const userId = `user-${uuidv4()}`;
+const onCaptchaSuccess = () => {
+    captchaVerified.value = true;
+    isShowModal.value = false;
+    handleRegisterAfterCaptcha();
+};
+
+const onCaptchaCancel = () => {
+    isShowModal.value = false;
+    captchaVerified.value = false;
+};
+// 注册后的验证码处理
+const handleRegisterAfterCaptcha = async () => {
+    try {
+        const atIndex = registerData.value.userEmail.indexOf('@');
+        const profileName = atIndex === -1 ? registerData.value.userEmail : registerData.value.userEmail.slice(0, atIndex);
+
+        await $http.post('/user/register', {
+            userId: userId,
+            userName: registerData.value.userName,
+            userEmail: registerData.value.userEmail,
+            userPassword: registerData.value.userPassword,
+            avatar_url: '/src/assets/img/profile_picture/' + profileName + '.png'
+        });
+
+        message.success('注册成功！正在跳转登录页面...');
+        setTimeout(() => {
+            window.location.href = '/userInfo';
+        }, 2000);
+    } catch (error) {
+        message.error(error.response.data.message);
+    }
+};
+
 async function UserRegister(e) {
     e.preventDefault()  //防止表单默认提交
+
     if (!registerData.value.userName) {
         alert('用户名不能为空')
         return false
@@ -139,32 +214,83 @@ async function UserRegister(e) {
         alert('两次密码不一致')
         return false
     }
-    try {
-        const atIndex = str.indexOf('@');
-        profileName === -1 ? str : str.slice(0, atIndex);
-        await $http.post('/user/register', {
-            userId: userId,
-            userName: registerData.value.userName,
-            userEmail: registerData.value.userEmail,
-            userPassword: registerData.value.userPassword,
-            avatar_url: '/src/assets/img/profile_picture/' + registerData.value.userEmail.split('@')[0] + '.png'
-        });
-        message.success('注册成功！正在跳转登录页面...');
-        setTimeout(() => {
-            window.location.href = '/userInfo';
-        }, 2000);
-    } catch (error) {
-        message.error(error.response.data.message);
-    }
+
+    // 设置当前操作类型为注册
+    isShowModal.value = true;
 }
 
 /** ------------------------ 登录 ------------------------ */
+
 const defaultLoginInfo = ref({
     loginEmail: 'henry@163.com',
     loginPassword: '123456',
 })
+const msg = ref('向右滑动');
+const block = ref('');
+const msgColor = ref(); //文本颜色
+const placeholderText = ref('按住箭头向右拖动滑块'); //滑块提示文本
+const isLoginLoading = ref(false); //登录状态 
+const customImages = ref([ //可滑动图片
+    new URL('@/assets/img/public/public-33.png', import.meta.url).href,
+    new URL('@/assets/img/public/public-34.png', import.meta.url).href,
+    new URL('@/assets/img/public/public-35.png', import.meta.url).href,
+    new URL('@/assets/img/public/public-36.png', import.meta.url).href,
+    new URL('@/assets/img/public/public-37.png', import.meta.url).href,
+    new URL('@/assets/img/public/public-38.png', import.meta.url).href,
+])
+
+const onAgain = () => {
+    msg.value = "检测到非人为操作的哦！ try again";
+    // 刷新
+    block.value?.refresh();
+};
+const onSuccess = (...args) => {
+    msgColor.value = 'green';
+    msg.value = `login success, 耗时${(args[0]?.timestamp / 1000).toFixed(1)}s`;
+    setTimeout(() => {
+        isShowModal.value = false;
+        isLoginLoading.value = true;
+        message.loading({
+            content: '验证成功，正在前往首页...',
+            duration: 2,
+            onClose() {
+                handleLoginAfterCaptcha();
+            }
+        });
+    }, 1000);
+};
+
+const onFail = () => { //失败后自动调用刷新方法
+    msg.value = "验证不通过";
+    msgColor.value = 'red';
+};
+
+// 登录后的验证码处理
+const handleLoginAfterCaptcha = async () => {
+    try {
+        await useAuthStore().login({
+            loginEmail: defaultLoginInfo.value.loginEmail,
+            loginPassword: defaultLoginInfo.value.loginPassword
+        });
+
+        // 模拟网络延迟
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        route.replace('/home');
+    } catch (error) {
+        if (error.response) {
+            message.error(error.response.data.message);
+        }
+        // 登录失败时重置验证状态
+        captchaVerified.value = false;
+        isLoginLoading.value = false;
+    }
+};
+
 const login = async (e) => {
     e.preventDefault();
+    if (isLoginLoading.value) { //防止频繁点击
+        return;
+    }
     if (!defaultLoginInfo.value.loginEmail) {
         alert('邮箱不能为空')
         return false
@@ -179,25 +305,8 @@ const login = async (e) => {
         alert('密码不能为空')
         return false
     }
-    try {
-        await useAuthStore().login({
-            loginEmail: defaultLoginInfo.value.loginEmail,
-            loginPassword: defaultLoginInfo.value.loginPassword
-        })
-        message.loading({
-            content: '登录成功，正在前往首页...',
-            duration: 2
-        });
-        // 模拟网络延迟
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        route.replace('/home');
-    } catch (error) {
-        if (error.response) {
-            message.error(error.response.data.message)
-        }
-    } finally {
-        // message.destroy();
-    }
+
+    isShowModal.value = true;
 }
 
 /** ------------------------ 输入框一键清空 ------------------------ */
@@ -235,6 +344,7 @@ onMounted(() => {
         bContainer.classList.toggle("is-txl");
         aContainer.classList.toggle("is-z200");
         switchC2.classList.toggle("is-z200");
+        toggleForm();
     };
     let mainF = e => {
         for (var i = 0; i < allButtons.length; i++) {
@@ -271,6 +381,14 @@ onBeforeUnmount(() => {
         top: 0;
         z-index: -1;
 
+    }
+
+    //验证组件样式
+    .verification-msg {
+        height: 2rem;
+        line-height: 2rem;
+        text-align: left;
+        width: 100%;
     }
 
     .backPhoto {

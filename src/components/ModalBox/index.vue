@@ -1,19 +1,28 @@
 <template>
     <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
-        <div class="modal-content" @click.stop>
-            <button @click="closeModal"><img src="./img/Plant.gif" alt="close"></button>
+        <div class="modal-content" @click.stop :class="animationClass">
+            <button @click="closeModal"><img src="./img/icons8-close-50.png" style="width: 1rem;" alt="close"></button>
             <slot></slot>
         </div>
     </div>
 </template>
 
 <script setup>
-import { watch } from 'vue';
+import { watch, computed } from 'vue';
 const props = defineProps({
     isVisible: Boolean,
+    animationType: {
+        type: String,
+        default: 'clipRectSpIn',
+    }
 });
 
 const emit = defineEmits(['close']);
+
+// 根据传入的动画类型返回对应的CSS类名
+const animationClass = computed(() => {
+    return `animation-${props.animationType}`;
+});
 
 const closeModal = () => {
     emit('close');
@@ -34,6 +43,7 @@ watch(() => props.isVisible, (newValue) => {
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 998;
@@ -42,24 +52,39 @@ watch(() => props.isVisible, (newValue) => {
     height: 100%;
 
     .modal-content {
-        background-color: white;
+        position: relative;
+        background-image: url('./img/fH11Fdidh.png');
+        background-position: center center;
+        background-size: cover;
         padding: 2rem;
         border-radius: 8px;
         min-width: 300px;
         max-width: 60%;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         cursor: auto;
-        position: relative;
         user-select: none;
-        animation: clipRectSpIn 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+        display: flex;
+        @include flexCenter(column, center);
+
+        &.animation-clipRectSpIn {
+            animation: clipRectSpIn 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+        }
+
+        &.animation-zoomIn {
+            animation: zoomIn 1s both;
+        }
+
+        &.animation-spaceInUp {
+            animation: spaceInUp 1s both;
+        }
 
         button {
+            display: inline-block;
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
+            top: 0.4rem;
+            right: 0.3rem;
 
             img {
-                width: 2rem;
                 transition: all 0.2s linear;
             }
 
@@ -76,6 +101,31 @@ watch(() => props.isVisible, (newValue) => {
 
         100% {
             clip-path: polygon(50% 0%, 0% 0%, 0% 50%, 0% 100%, 50% 100%, 100% 100%, 100% 50%, 100% 0%);
+        }
+    }
+
+    @keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale3d(0.3, 0.3, 0.3);
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes spaceInUp {
+        0% {
+            opacity: 0;
+            transform-origin: 50% 0%;
+            transform: scale(.2) translate(0%, -200%);
+        }
+
+        100% {
+            opacity: 1;
+            transform-origin: 50% 0%;
+            transform: scale(1) translate(0%, 0%);
         }
     }
 }
