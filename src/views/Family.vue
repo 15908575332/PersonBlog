@@ -114,8 +114,8 @@
         <div class="module">
           <ul>
             <li v-for="(item, index) in module_data" @click="changeModule = item.id" :key="item.id">
-              <div class="card__left">
-                <img :src="item.img" alt="image" />
+              <div class="card__left" :style="{ backgroundImage: `url(${item.img})` }">
+                <!-- <img :src="item.img" alt="image" /> -->
               </div>
               <div class="card__right">
                 <div class="card__title">{{ item.title }}</div>
@@ -674,11 +674,8 @@ onUnmounted(() => {
               height: 5rem;
               border-radius: 50%;
               overflow: hidden;
-
-              img {
-                width: 100%;
-                height: 100%;
-              }
+              background-position: center center;
+              background-size: cover;
             }
 
             .card__right {

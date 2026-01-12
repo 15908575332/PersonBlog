@@ -69,54 +69,57 @@
             </li>
             <!-- 已登录 -->
             <li v-if="userStore.isAuthenticated && userStore.user" class="loginSuccess">
+              <!-- 头像 -->
               <div class="profilePicture" @click="showModalFun" @mouseleave="dropLeave">
-                <img :src="userStore.user.avatarUrl" alt="头像" />
+                <img class="avatar-icon" :src="userStore.user.avatarUrl" alt="头像" />
               </div>
+              <!-- 个人中心导航 -->
               <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
                 <div class="modal-content" @click.stop>
-                  <button @click="closeModal">
+                  <!-- <button class="close-btn" @click="closeModal">
                     <img src="./icon/close.svg" alt="close" />
-                  </button>
+                  </button> -->
                   <div class="info">
                     <span>{{ userStore.user.username }}</span>
                     <img class="level" :src="utils.getAssetsFile('icon/level/lv' + userStore.user.vipLevel + '.svg')"
                       alt="level">
                   </div>
-                  <ul>
+
+                  <ul class="info-list">
                     <li class="item" @click="changeRouter('/personalCenter')">
                       <div class="item__left">
                         <img src="./icon/personCenter.svg" alt="" />
                         <span>个人中心</span>
                       </div>
-                      <img src="./icon/rightArrow.svg" alt="" />
+                      <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
                     </li>
-                    <li class="item" @click="changeRouter('/memberCenter')">
+                    <!-- <li class="item" @click="changeRouter('/memberCenter')">
                       <div class="item__left">
                         <img src="./icon/member.svg" alt="" />
                         <span>会员中心</span>
                       </div>
-                      <img src="./icon/rightArrow.svg" alt="" />
-                    </li>
-                    <li class="item">
+                      <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
+                    </li> -->
+                    <!-- <li class="item">
                       <div class="item__left">
                         <img src="./icon/like.svg" alt="" />
                         <span>收藏</span>
                       </div>
-                      <img src="./icon/rightArrow.svg" alt="" />
-                    </li>
-                    <li class="item">
+                      <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
+                    </li> -->
+                    <li class="item" @click="changeRouter('/contactUs')">
                       <div class="item__left">
                         <img src="./icon/collect.svg" alt="" />
-                        <span>点赞</span>
+                        <span>联系我们</span>
                       </div>
-                      <img src="./icon/rightArrow.svg" alt="" />
+                      <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
                     </li>
                     <li class="item" @click="quitLogin">
                       <img src="./icon/quite.svg" alt="" />
                       <span>退出登录</span>
                     </li>
                   </ul>
-                  <img class="decoration" src="./img/SantaDeers.gif" alt="logo" />
+                  <!-- <img class="decoration" src="./img/SantaDeers.gif" alt="logo" /> -->
                 </div>
               </div>
             </li>
@@ -351,8 +354,9 @@ onMounted(async () => { });
       margin: 0 0.4rem;
       margin-left: 1.5rem;
       position: relative;
-      color: black;
+      color: $general-black;
 
+      //头像
       .profilePicture {
         width: 1.9rem;
         height: 1.9rem;
@@ -364,7 +368,7 @@ onMounted(async () => { });
           box-shadow: 0 0 0 2px #ffa89f;
         }
 
-        img {
+        .avatar-icon {
           width: 100%;
         }
       }
@@ -380,68 +384,52 @@ onMounted(async () => { });
         height: 100vh;
 
         .modal-content {
-          background-color: rgb(255, 255, 255);
+          position: absolute;
           top: 3rem;
           right: 1rem;
-          width: 11rem;
-          height: 18rem;
           cursor: auto;
-          position: absolute;
           user-select: none;
           border-radius: 0.5rem;
-          min-height: 18rem;
+          background: $general-white;
           box-shadow: 1px 1px 3px #b9b7b7;
           animation: fadeOutBottomRight 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-
-          button {
-            position: absolute;
-            top: 0;
-            right: 0;
-
-            img {
-              width: 1rem;
-
-              &:hover {
-                filter: invert(3) sepia(1) saturate(10) hue-rotate(180deg);
-                cursor: pointer;
-              }
-            }
-          }
+          background-image: url('./img/view.jpg');
+          background-position: center center;
+          background-size: cover;
 
           .info {
-            padding-top: 1rem;
+            padding: 0.2rem 0;
             @include flexCenter(row, center);
             font-family: "gtpy";
             border-bottom: 2px solid #ee9999;
 
             span {
-              font-size: 1rem;
+              font-size: 0.9rem;
               font-weight: 700;
               padding-right: 0.5rem;
               font-family: inherit;
             }
 
-            img {
-              width: 1.2rem;
+            .level {
+              width: 1rem;
             }
           }
 
-          ul {
+          .info-list {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.2rem;
             @include flexCenter(column, space-around);
-            background-color: rgba(255, 255, 255);
 
             .item {
-              padding: 0.5rem;
+              padding: 0.4rem 0.5rem;
               width: 100%;
-              font-size: 0.9rem;
+              font-size: 0.8rem;
               color: #303132;
               transition: all 0.3s;
-              border-radius: 5px;
+              // border-radius: 5px;
               margin: 0.2rem 0;
               @include flexCenter(row, space-between);
-              transition: all 0.3s;
+              transition: all 0.2s;
 
               .item__left {
                 @include flexCenter(row, flex-start);
@@ -453,21 +441,25 @@ onMounted(async () => { });
                 height: 100%;
               }
 
+              // 右箭头
+              .rightArrowIcon {
+                height: 0.5rem;
+              }
+
+              //图标
               img {
-                height: 0.9rem;
+                width: 0.9rem;
                 margin-right: 0.3rem;
               }
 
               &:hover {
-                background-color: #ffa500;
+                background-color: pink;
                 cursor: pointer;
               }
 
               &:last-child {
                 border-top: 1px solid #e8e8e8;
                 @include flexCenter(row, flex-start);
-                margin-top: 0.5rem;
-                padding: 1rem 0.5rem;
               }
             }
           }

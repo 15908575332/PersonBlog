@@ -137,6 +137,9 @@ const router = createRouter({
         {
             path: "/memberCenter", component: () => import("@/views/MemberCenter.vue") //会员中心
         },
+        {
+            path: "/contactUs", component: () => import("@/views/InstantMessage.vue") //即时通讯
+        },
         // 404 页面
         {
             path: '/:pathMatch(.*)*',

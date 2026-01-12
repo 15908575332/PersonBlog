@@ -441,6 +441,7 @@ onMounted(async () => {
   font-family: "gtpy";
   height: 100vh;
   background-image: url("@/assets/img/treasureBox/banner.png");
+  background-position: center center;
   background-size: cover;
   @include flexCenter(column, center);
   overflow: hidden;

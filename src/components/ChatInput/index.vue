@@ -132,7 +132,7 @@ const processEmojiData = (apiData, categoryId) => { // 处理接口返回的表�
     const emojiList = apiData.emoji_list || apiData || [];
 
     return emojiList.map(item => ({
-        id: item.id || `${categoryId}_${Date.now()}_${Math.random()}`,
+        id: item.code || `${categoryId}_${Date.now()}_${Math.random()}`,
         name: item.name || '', // 不存在名字就为空
         category: categoryId,
         emojiType: item.em_type || 'lottie', // 默认为lottie类型

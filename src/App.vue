@@ -74,12 +74,15 @@ import playIcon from '@/assets/icon/public/icons8-play-100.png'
 /** ------------------------ 全局花瓣飘落动画 ------------------------ */
 const showControlPanel = ref(false)
 const flowersControl = ref();
+const speed = ref(1); // 默认值
+const sakuraCount = ref(10); // 默认值
 const toggleControlPanel = () => {
   showControlPanel.value = !showControlPanel.value
 }
 const isAnimating = ref(true);
-const sakuraCount = ref(localStorage.getItem('flowerAnimateSakuraCount') || 50);
-const speed = ref(localStorage.getItem('flowerAnimateSpeed') || 5);
+
+// const sakuraCount = ref(localStorage.getItem('flowerAnimateSakuraCount') || 10);
+// const speed = ref(localStorage.getItem('flowerAnimateSpeed') || 1);
 
 const handlePageClick = (event) => {
   if (!showControlPanel.value) return; // 如果面板未显示，直接返回
@@ -94,8 +97,8 @@ const toggleAnimation = () => { // 花瓣动画暂停/播放
 const resetAnimation = () => { //重置属性
   localStorage.removeItem('flowerAnimateSakuraCount', 'flowerAnimateSpeed');
   isAnimating.value = true;
-  sakuraCount.value = 50;
-  speed.value = 5;
+  sakuraCount.value = 10;
+  speed.value = 1;
 }
 const changeSakuraCount = () => { //修改花瓣数量
   localStorage.setItem('flowerAnimateSakuraCount', sakuraCount.value);
@@ -123,6 +126,15 @@ async function fetchData() {
 }
 onMounted(() => {
   fetchData() // 页面加载时获取数据
+  const savedSpeed = localStorage.getItem('flowerAnimateSpeed');
+  const savedCount = localStorage.getItem('flowerAnimateSakuraCount');
+
+  if (savedSpeed !== null) {
+    speed.value = Number(savedSpeed);
+  }
+  if (savedCount !== null) {
+    sakuraCount.value = Number(savedCount);
+  }
 })
 
 /** ------------------------ 启动console自动输出 ------------------------ */

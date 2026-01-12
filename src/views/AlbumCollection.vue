@@ -2,7 +2,7 @@
   <div>
     <!-- 导航栏 -->
     <div class="navigate">
-      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" bgColor="#f0f4f5" />
+      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" bgColor="#fff" />
     </div>
 
     <div class="active-page1" id="AlbumCollection" ref="AlbumCollection">
@@ -836,7 +836,7 @@ onBeforeUnmount(() => {
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-  z-index: 1000;
+  z-index: 1;
   -webkit-transition: opacity 0.5s,
     -webkit-transform 0.5s cubic-bezier(0.57, 1.2, 0.68, 2.6);
   transition: opacity 0.5s, transform 0.5s cubic-bezier(0.57, 1.2, 0.68, 2.6);

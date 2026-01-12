@@ -11,7 +11,7 @@ onMounted(async () => {
     // 模型配置文件 (.model3.json) 的路径
     ResourcesPath: '/live2d/Angel/tianshi.model3.json',
     // 画布大小
-    CanvasSize: { height: 400, width: 200 },
+    CanvasSize: { height: 350, width: 200 },
     // 背景透明度 [R, G, B, A]
     BackgroundRGBA: [0, 0, 0, 0],
     // 是否显示工具箱（可用于切换表情等）
