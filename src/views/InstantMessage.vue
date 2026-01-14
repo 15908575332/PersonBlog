@@ -16,8 +16,8 @@
 
                 <!-- 底部图标 -->
                 <div class="bottom-icons">
-                    <div class="icon-btn" @click="handleOpenMoments">
-                        <img src="@/assets/icon/instantMessaging/icons8-aperture-64.png" alt="settings">
+                    <div class="icon-btn" @click="handOpenMoments">
+                        <img src="@/assets/icon/instantMessaging/icons8-aperture-64.png" alt="moments">
                     </div>
                     <div class="icon-btn" @click="handleSettings">
                         <img src="@/assets/icon/instantMessaging/icons8-setting-100.png" alt="settings">
@@ -208,9 +208,12 @@
                 </div>
             </div>
         </div>
+
         <!-- 朋友圈 -->
-        <div class="modal">
-            <ModalBox :isVisible="showModal" @close="handCloseMoments" />
+        <div class="moments">
+            <ModalBox :isVisible="showModal" @close="handCloseMoments">
+                <GridImageAnime></GridImageAnime>
+            </ModalBox>
         </div>
     </div>
 </template>
@@ -223,13 +226,20 @@ import groupMessageIcon from '@/assets/icon/instantMessaging/icons8-group-50.png
 import friendIcon from '@/assets/icon/instantMessaging/icons8-people-48.png'
 import ChatMessage from '@/components/ChatMessage/index.vue'
 import ChatInput from '@/components/ChatInput/index.vue'
+import GridImageAnime from '@/components/GridImageAnime/index.vue'
+
+import ModalBox from '@/components/ModalBox/index.vue'
+
+
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
+
 import { useAuthStore } from "@/store/auth";
 const userStore = useAuthStore();
+
 import { useRouter } from 'vue-router';
 const route = useRouter();
-import ModalBox from '@/components/ModalBox/index.vue'
+
 import utils from '@/utils/getAssetsFile';
 /** ------------------------ 左侧slider ------------------------ */
 const activeMenu = ref('system') // 当前激活的菜单
@@ -737,13 +747,14 @@ function deleteItem(id) { //删除聊天记录及其列表
     // 实际应用中这里会有API调用
 }
 
-function handleOpenMoments() { //打开朋友圈
-    showModal.value = true;
-}
 
-const handCloseMoments = () => { //关闭朋友圈
+const handOpenMoments = (() => {
+    showModal.value = true;
+})
+const handCloseMoments = (() => {
     showModal.value = false;
-}
+})
+
 
 function handleSettings() { //设置
     route.push('/personalCenter');
@@ -766,6 +777,14 @@ onMounted(async () => {
 .container {
     background-image: url('@/assets/img/instantMessage/fH2rlwC8A.png');
     background-size: cover;
+    position: relative;
+
+    .moments {
+        position: absolute;
+        z-index: 999;
+        top: 0;
+        left: 0;
+    }
 }
 
 .app-container {

@@ -1,8 +1,13 @@
 <template>
     <div class="demo-2">
         <main>
-            <div class="content--fixed">
-                <button class="menu-trigger" @click="openMenu">点击这里展开菜单</button>
+            <div class="content--fixed" @click="openMenu">
+                加载更多
+                <div class="arrows">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
 
             <!-- 内容区域使用循环 -->
@@ -26,7 +31,7 @@
                     <div v-if="menuItem.content" class="grim__item-content">
                         <div class="grim__item-inner">
                             <button class="menu-trigger menu-trigger--close" @click="closeMenu">
-                                关闭
+                                close
                             </button>
                         </div>
                     </div>
@@ -55,18 +60,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted,watch } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 
-const props = defineProps({ //组件状态
-    isOpen: {
-        type: Boolean,
-        default: false
-    }
-});
-const emit = defineEmits(['update:isOpen', 'menu-toggle']);
+const emit = defineEmits(['menu-toggle']);
 
 // 响应式数据
-// const isMenuOpen = ref(false);
+const isMenuOpen = ref(false);
 const currentContent = ref(0);
 const grim = ref(null);
 let menuInstance = null;
@@ -150,45 +149,34 @@ const menuItems = ref([
 ]);
 
 // 处理菜单项点击
-const handleMenuItemClick = (contentIndex) => {
+const handleMenuItemClick = async (contentIndex) => {
     if (
         contentIndex !== undefined &&
         contentIndex >= 0 &&
         contentIndex < contentList.value.length
     ) {
         currentContent.value = contentIndex;
+        // 确保 DOM 更新完成
+        await nextTick();
         closeMenu();
     }
 };
 
-// 监听父组件传递的 isOpen 变化
-watch(() => props.isOpen, (newVal) => {
-    if (newVal) {
-        openMenu();
-    } else {
-        closeMenu();
-    }
-});
-// 修改打开菜单方法
+//打开菜单
 const openMenu = () => {
-    if (menuInstance) {
+    if (menuInstance && !isMenuOpen.value) {
         menuInstance.open();
-        // 通知父组件状态已更新
-        emit('update:isOpen', true);
-        emit('menu-toggle', true);
+        isMenuOpen.value = true;
     }
 };
 
-// 修改关闭菜单方法
+// 关闭菜单
 const closeMenu = () => {
-    if (menuInstance) {
+    if (menuInstance && isMenuOpen.value) {
         menuInstance.close();
-        // 通知父组件状态已更新
-        emit('update:isOpen', false);
-        emit('menu-toggle', false);
+        isMenuOpen.value = false;
     }
 };
-
 // 原有的Box和Menu类保持不变
 class Box {
     constructor(el, pos) {
@@ -370,7 +358,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .demo-2 {
     font-family: "Josefin Sans", sans-serif;
     --color-text: #000;
@@ -393,58 +381,93 @@ onUnmounted(() => {
     flex-direction: column;
     height: auto;
     min-height: 0;
+    margin: 0 auto;
+    min-height: 80vh;
+    min-width: 80vw;
 }
 
 .content--switch {
     padding: 2.5rem 1rem;
 }
 
-@media screen and (min-width: 55em) {
-    .content {
-        margin: 0 auto;
-        min-height: 100vh;
-    }
+.content--switch {
+    display: none;
+}
 
-    .content--switch {
-        display: none;
-    }
+.content--switch-current {
+    display: flex;
+}
 
-    .content--switch-current {
-        display: flex;
-    }
+.content--fixed {
+    @include flexCenter(row, center);
+    position: absolute;
+    z-index: 10;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    min-height: 0;
+    padding: 0.5rem;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'gtpy';
+    text-align: center;
 
-    .content--fixed {
-        background-color: rebeccapurple;
-        position: fixed;
-        z-index: 10;
-        bottom: 0;
-        left: 0;
-        min-height: 0;
-        padding: 0.5rem;
+    // 展开按钮
+    .arrows {
+        background-color: #fff;
+        @include flexCenter(row, flex-start);
 
-        // 展开按钮
-        .menu-trigger {
-            display: inline-block;
-            background: none;
-            border: 0;
-            grid-area: menu;
-            justify-self: start;
-            align-self: end;
-            cursor: pointer;
-            pointer-events: auto;
-            font-family: inherit;
-            color: inherit;
-            position: relative;
-            padding: 0;
-            color: #fff;
-            white-space: nowrap;
-            background-color: red;
+        div {
+            --arrowSize: 0.4rem;
+            --arrowColor: currentColor;
+
+            width: var(--arrowSize);
+            height: var(--arrowSize);
+            margin: calc(var(--arrowSize) * -1.5) 0;
+            background: transparent;
+            border: calc(var(--arrowSize) * 0.11) solid;
+            border-color: transparent transparent var(--arrowColor) var(--arrowColor);
+            transform: rotate(-135deg);
+            -webkit-animation: arrow 2s infinite linear;
+            animation: arrow 2s infinite linear;
+
+            &:nth-of-type(1) {
+                -webkit-animation-delay: -0.8s;
+                animation-delay: -0.8s;
+            }
+
+            &:nth-of-type(2) {
+                -webkit-animation-delay: -0.4s;
+                animation-delay: -0.4s;
+            }
+
+            &:nth-of-type(3) {
+                -webkit-animation-delay: 0s;
+                animation-delay: 0s;
+            }
+        }
+
+        @keyframes arrow {
+            0% {
+                opacity: 0;
+            }
+
+            40% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
         }
     }
+}
 
-    .content--fixed a {
-        pointer-events: auto;
-    }
+.content--fixed a {
+    pointer-events: auto;
 }
 
 @import url("https://fonts.googleapis.com/css?family=Josefin+Sans:400,700|Playfair+Display");
@@ -473,9 +496,6 @@ onUnmounted(() => {
     }
 }
 
-.grim {
-    display: none;
-}
 
 .content--switch {
     background-size: cover;
@@ -517,15 +537,34 @@ onUnmounted(() => {
 
 .grim {
     display: grid;
-    position: fixed;
+    position: absolute;
     z-index: 1000;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
-    grid-template-columns: repeat(32, 3.125vw);
-    grid-template-rows: repeat(32, 3.125vh);
+    height: 100%;
+    // 使用 fr 单位实现自适应
+    grid-template-columns: repeat(32, minmax(0, 1fr));
+    grid-template-rows: repeat(32, minmax(0, 1fr));
     pointer-events: none;
+
+    // 确保不会超出视口
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+// 添加响应式媒体查询
+@media (max-width: 768px) {
+    .grim {
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+        grid-template-rows: repeat(16, minmax(0, 1fr));
+    }
+
+    // 调整网格区域以适应小屏幕
+    .grim__item:nth-child(n+5) {
+        grid-area: auto / auto / span 4 / span 4;
+    }
 }
 
 .grim--open {
@@ -668,6 +707,8 @@ $grim-bg-colors: (
     .menu-trigger--close {
         color: #000;
         align-self: center;
+        font-size: 14px;
+        background-color: rgb(254, 0, 216);
     }
 }
 
