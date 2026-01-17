@@ -289,7 +289,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                                }}</div>
+                                            }}</div>
                                         </div>
                                     </div>
 
@@ -1583,9 +1583,30 @@ onMounted(async () => {
     //操作按钮
     .feed {
         width: 100%;
-        height: 10rem;
-        margin: 1rem auto;
         @include flexCenter(column, center);
+        position: relative;
+        margin: 2rem 0;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #a1c4fd);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
 
         .btn,
         .btn:before {
@@ -1685,44 +1706,11 @@ onMounted(async () => {
 
         .card {
             @include flexCenter(row, center);
-            $borderWidthSum: 0.2rem;
             width: 100%;
             height: 60%;
-            padding: 3px;
             position: relative;
-            border-radius: 2px;
             background-color: #ecf8ff;
-
-            &::before {
-                content: "";
-                width: calc(100% + $borderWidthSum);
-                height: calc(100% + $borderWidthSum);
-                border-radius: $borderWidthSum / 4;
-                background-image: linear-gradient(var(--rotate),
-                        $primary-color,
-                        $primary-hover 43%,
-                        $primary-sub,
-                    );
-                position: absolute;
-                z-index: -1;
-                top: -($borderWidthSum / 2);
-                left: -($borderWidthSum / 2);
-                animation: spin 5s linear infinite;
-            }
-
-            @keyframes spin {
-                0% {
-                    --rotate: 0deg;
-                }
-
-                50% {
-                    --rotate: 180deg;
-                }
-
-                100% {
-                    --rotate: 360deg;
-                }
-            }
+            padding: 2rem 0;
         }
 
     }

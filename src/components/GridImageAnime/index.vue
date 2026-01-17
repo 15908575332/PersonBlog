@@ -1,6 +1,7 @@
 <template>
     <div class="demo-2">
         <main>
+            <!-- 菜单打开按钮 -->
             <div class="content--fixed" @click="openMenu">
                 加载更多
                 <div class="arrows">
@@ -20,11 +21,11 @@
             <!-- 菜单区域使用循环 -->
             <nav class="grim" :class="{ 'grim--open': isMenuOpen }" ref="grim">
                 <div v-for="(menuItem, index) in menuItems" :key="index" class="grim__item">
-                    <div :class="['grim__item-bg', `grim__item-bg--${index + 1}`]"></div>
+                    <div :class="['grim__item-bg', `grim__item-bg--${menuItem.bgClass}`]"></div>
 
                     <!-- 图片区域 -->
                     <!-- :class="['grim__item-img', `grim__item-img--${index + 1}`]" -->
-                    <div v-if="menuItem.image" class="grim__item-img"
+                    <div v-if="menuItem.image" :class="['grim__item-img', `grim__item-img--${menuItem.bgClass}`]"
                         :style="{ backgroundImage: `url('${menuItem.image}')` }"></div>
 
                     <!-- 内容区域 -->
@@ -82,28 +83,23 @@ const contentList = ref([
 
 // 菜单项配置
 const menuItems = ref([
-    {
-        bgClass: 1,
-    },
-    {
-        bgClass: 2,
-
-    },
+    { bgClass: 1 },
+    { bgClass: 2 },
     {
         bgClass: 3,
-        content: true,
+        content: true
     },
     { bgClass: 4 },
     {
         bgClass: 5,
         link: "#content-1",
         title: "Home",
-        image: "src/assets/img/public/public-20.png",
+        image: "src/assets/img/public/public-3.png",
         contentIndex: 0,
     },
     {
         bgClass: 6,
-        image: "src/assets/img/public/public-1.png",
+        image: "src/assets/img/public/public-4.png",
         link: "#content-2",
         title: "Beach",
         desc: "Lift your spirits",
@@ -112,7 +108,7 @@ const menuItems = ref([
     },
     {
         bgClass: 7,
-        image: "src/assets/img/public/public-2.png",
+        image: "src/assets/img/public/public-5.png",
         link: "#content-3",
         title: "Desert",
         desc: "Find yourself",
@@ -121,7 +117,7 @@ const menuItems = ref([
     },
     {
         bgClass: 8,
-        image: "src/assets/img/public/public-3.png",
+        image: "src/assets/img/public/public-6.png",
         link: "#content-4",
         title: "Ocean",
         desc: "Uncover beauty",
@@ -130,7 +126,7 @@ const menuItems = ref([
     },
     {
         bgClass: 9,
-        image: "src/assets/img/public/public-26.png",
+        image: "src/assets/img/public/public-7.png",
         link: "#content-5",
         title: "Jungle",
         desc: "Feel nature",
@@ -139,7 +135,7 @@ const menuItems = ref([
     },
     {
         bgClass: 10,
-        image: "src/assets/img/public/public-18.png",
+        image: "src/assets/img/public/public-8.png",
         link: "#content-6",
         title: "Mountains",
         desc: "Explore your limits",
@@ -208,6 +204,7 @@ class Box {
                 scaleY: this.pos % 2 === 0 ? [0, 1] : 1,
                 scaleX: Math.abs(this.pos % 2) == 1 ? [0, 1] : 1,
                 complete: () => {
+
                     if (this.DOM.img && this.DOM.cover) {
                         this.DOM.img.style.opacity = 1;
                         this.DOM.cover.style.opacity = 1;
@@ -335,20 +332,8 @@ class Menu {
 onMounted(() => {
     // 直接初始化，无需等待图片加载
     document.body.classList.remove("loading");
-
     if (grim.value) {
         menuInstance = new Menu(grim.value);
-
-        // 绑定打开/关闭按钮事件
-        const openBtn = document.querySelector(".menu-trigger");
-        const closeBtn = document.querySelector(".menu-trigger--close");
-
-        if (openBtn) {
-            openBtn.addEventListener("click", () => openMenu());
-        }
-        if (closeBtn) {
-            closeBtn.addEventListener("click", () => closeMenu());
-        }
     }
 });
 
@@ -371,113 +356,144 @@ onUnmounted(() => {
         position: relative;
         width: 100%;
     }
-}
 
-.content {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: auto;
-    min-height: 0;
-    margin: 0 auto;
-    min-height: 80vh;
-    min-width: 80vw;
-}
+    // 菜单打开按钮
+    .content--fixed {
+        @include flexCenter(row, center);
+        position: absolute;
+        z-index: 10;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        min-height: 0;
+        padding: 0.5rem;
+        color: #fff;
+        font-size: 16px;
+        font-family: 'gtpy';
+        text-align: center;
 
-.content--switch {
-    padding: 2.5rem 1rem;
-}
+        // 展开按钮
+        .arrows {
+            background-color: #fff;
+            @include flexCenter(row, flex-start);
 
-.content--switch {
-    display: none;
-}
+            div {
+                --arrowSize: 0.4rem;
+                --arrowColor: currentColor;
 
-.content--switch-current {
-    display: flex;
-}
+                width: var(--arrowSize);
+                height: var(--arrowSize);
+                margin: calc(var(--arrowSize) * -1.5) 0;
+                background: transparent;
+                border: calc(var(--arrowSize) * 0.11) solid;
+                border-color: transparent transparent var(--arrowColor) var(--arrowColor);
+                transform: rotate(-135deg);
+                -webkit-animation: arrow 2s infinite linear;
+                animation: arrow 2s infinite linear;
 
-.content--fixed {
-    @include flexCenter(row, center);
-    position: absolute;
-    z-index: 10;
-    bottom: 0.5rem;
-    left: 0.5rem;
-    min-height: 0;
-    padding: 0.5rem;
-    color: #fff;
-    font-size: 16px;
-    font-family: 'gtpy';
-    text-align: center;
+                &:nth-of-type(1) {
+                    -webkit-animation-delay: -0.8s;
+                    animation-delay: -0.8s;
+                }
 
-    // 展开按钮
-    .arrows {
-        background-color: #fff;
-        @include flexCenter(row, flex-start);
+                &:nth-of-type(2) {
+                    -webkit-animation-delay: -0.4s;
+                    animation-delay: -0.4s;
+                }
 
-        div {
-            --arrowSize: 0.4rem;
-            --arrowColor: currentColor;
-
-            width: var(--arrowSize);
-            height: var(--arrowSize);
-            margin: calc(var(--arrowSize) * -1.5) 0;
-            background: transparent;
-            border: calc(var(--arrowSize) * 0.11) solid;
-            border-color: transparent transparent var(--arrowColor) var(--arrowColor);
-            transform: rotate(-135deg);
-            -webkit-animation: arrow 2s infinite linear;
-            animation: arrow 2s infinite linear;
-
-            &:nth-of-type(1) {
-                -webkit-animation-delay: -0.8s;
-                animation-delay: -0.8s;
+                &:nth-of-type(3) {
+                    -webkit-animation-delay: 0s;
+                    animation-delay: 0s;
+                }
             }
 
-            &:nth-of-type(2) {
-                -webkit-animation-delay: -0.4s;
-                animation-delay: -0.4s;
-            }
+            @keyframes arrow {
+                0% {
+                    opacity: 0;
+                }
 
-            &:nth-of-type(3) {
-                -webkit-animation-delay: 0s;
-                animation-delay: 0s;
-            }
-        }
+                40% {
+                    opacity: 1;
+                }
 
-        @keyframes arrow {
-            0% {
-                opacity: 0;
-            }
+                80% {
+                    opacity: 0;
+                }
 
-            40% {
-                opacity: 1;
-            }
-
-            80% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 0;
+                100% {
+                    opacity: 0;
+                }
             }
         }
     }
 }
 
-.content--fixed a {
-    pointer-events: auto;
+.content {
+    position: relative;
+    @include flexCenter(column, center);
+    height: auto;
+    min-height: 0;
+    margin: 0 auto;
+    min-height: 80vh;
+    min-width: 80vw;
+    background-position: center center;
+    display: none;
+    padding: 2.5rem 1rem;
 }
+
+#content-1 {
+    background-image: url("@/assets/img/public/public-3.png");
+}
+
+#content-2 {
+    background-image: url("@/assets/img/public/public-4.png");
+}
+
+#content-3 {
+    background-image: url("@/assets/img/public/public-5.png");
+}
+
+#content-4 {
+    background-image: url("@/assets/img/public/public-6.png");
+}
+
+#content-5 {
+    background-image: url("@/assets/img/public/public-7.png");
+}
+
+#content-6 {
+    background-image: url("@/assets/img/public/public-8.png");
+}
+
+//当前激活内容
+.content--switch-current {
+    display: flex;
+}
+
+.content--switch {
+    background-size: cover;
+
+    &::after {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        width: 100%;
+        height: 20%;
+        bottom: 0;
+        background: linear-gradient(transparent, #000);
+    }
+}
+
 
 @import url("https://fonts.googleapis.com/css?family=Josefin+Sans:400,700|Playfair+Display");
 
+// 内容标题
 .content__title {
     font-family: "Playfair Display", serif;
     font-size: 8vw;
     margin: 0;
     position: relative;
     font-weight: normal;
+    color: $general-white;
 }
 
 // 内容区域副标题
@@ -486,6 +502,7 @@ onUnmounted(() => {
     padding: 1rem 0;
     letter-spacing: 2px;
     text-indent: 2px;
+    color: $general-white;
 
     &::after {
         content: "\2014";
@@ -496,44 +513,6 @@ onUnmounted(() => {
     }
 }
 
-
-.content--switch {
-    background-size: cover;
-}
-
-.content--switch::after {
-    content: "";
-    pointer-events: none;
-    position: absolute;
-    width: 100%;
-    height: 20%;
-    bottom: 0;
-    /* background: linear-gradient(transparent, #000); */
-}
-
-#content-1 {
-    background-image: url("@/assets/img/public/public-20.png");
-}
-
-#content-2 {
-    background-image: url("@/assets/img/public/public-1.png");
-}
-
-#content-3 {
-    background-image: url("@/assets/img/public/public-2.png");
-}
-
-#content-4 {
-    background-image: url("@/assets/img/public/public-3.png");
-}
-
-#content-5 {
-    background-image: url("@/assets/img/public/public-26.png");
-}
-
-#content-6 {
-    background-image: url("@/assets/img/public/public-.png");
-}
 
 .grim {
     display: grid;
@@ -594,11 +573,11 @@ $grid-areas: (
 );
 
 @each $area in $grid-areas {
-    $child-num: nth($area, 1);
-    $row-start: nth($area, 2);
-    $col-start: nth($area, 3);
-    $row-end: nth($area, 4);
-    $col-end: nth($area, 5);
+    $child-num: list.nth($area, 1);
+    $row-start: list.nth($area, 2);
+    $col-start: list.nth($area, 3);
+    $row-end: list.nth($area, 4);
+    $col-end: list.nth($area, 5);
 
     .grim__item:nth-child(#{$child-num}) {
         grid-area: #{$row-start} / #{$col-start} / #{$row-end} / #{$col-end};
@@ -617,16 +596,16 @@ $grid-areas: (
 }
 
 $grim-bg-colors: (
-    1: #f1d3b9,
-    2: #df9e98,
-    3: #fcfdff,
-    4: #9ed4d4,
-    5: #ffc0cb,
-    6: #7296de,
-    7: #7c95b5,
-    8: #86bfbf,
-    9: #af9b9b,
-    10: #c57d76,
+    1: $assistance-1,
+    2: $assistance-2,
+    3: $assistance-3,
+    4: $assistance-4,
+    5: $assistance-5,
+    6: $assistance-6,
+    7: $assistance-7,
+    8: $assistance-8,
+    9: $assistance-9,
+    10: $assistance-10
 );
 
 @each $num, $color in $grim-bg-colors {
@@ -717,6 +696,7 @@ $grim-bg-colors: (
     margin: 0;
     font-size: 4vmax;
     font-family: "Playfair Display", serif;
+    color: #fff;
 }
 
 .grim__item:nth-child(-n + 6) .grim__item-title {
@@ -730,6 +710,7 @@ $grim-bg-colors: (
 .grim__item-desc {
     font-size: 0.85rem;
     margin: 0.5rem 0 0 0;
+    color: #fff;
 }
 
 .grim__item-desc::after {

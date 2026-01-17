@@ -2,14 +2,12 @@
     <div id="personalCenter">
         <!-- 背景图 -->
         <div class="backPhoto" :style="{ backgroundImage: `url(${backImgUrl})` }"></div>
-        <!-- 遮罩 -->
-        <div class="mask"></div>
         <!-- 导航 -->
         <Navigation></Navigation>
-        <!-- 会员卡片 -->
+
         <div class="layout">
-            <div class="content" :style="{ backgroundColor: containerBgColor }">
-                <div class="nav-container">
+            <div class="content">
+                <div class="nav-container" :style="{ backgroundColor: containerBgColor }">
                     <menu class="menu" ref="menuRef">
                         <button v-for="(item, index) in menuItems" :key="item.id" class="menu__item"
                             :class="{ active: activeIndex === index }" :style="`--bgColorItem: ${item.color}`"
@@ -32,38 +30,46 @@
                         </svg>
                     </div>
                 </div>
-                <div class="personalCard" v-if="userStore.user">
-                    <div class="avatar">
-                        <img :src="userStore.user.avatarUrl" alt="头像">
+                <!-- 基础信息卡片 -->
+                <div class="personalCard card-all" v-if="userStore.user && menuItems[activeIndex]?.id === 'info'">
+                    <div class="avatar-left">
+                        <div class="levelsbox">
+                            <h2>会员等级：</h2>
+                            <img class="level"
+                                :src="utils.getAssetsFile('icon/level/lv' + userStore.user.vipLevel + '.svg')"
+                                alt="level">
+                        </div>
+                        <div class="avatar">
+                            <img :src="userStore.user.avatarUrl" alt="头像">
+                        </div>
+                        <div class="personal-introduce">
+                            文章发布数或者其它数据
+                        </div>
                     </div>
-                    <div class="levelsbox">
-                        <img class="level" :src="utils.getAssetsFile('icon/level/member.svg')" alt="icon">
-                        <h2>会员等级：</h2>
-                        <img class="level"
-                            :src="utils.getAssetsFile('icon/level/lv' + userStore.user.vipLevel + '.svg')" alt="level">
-                    </div>
-                    <div class="form-wrap">
+
+                    <!-- detailInfo-right -->
+                    <div class="detailInfo-right">
                         <form>
                             <!-- 批量编辑区域 -->
                             <div v-if="isEditingAll" class="batch-edit-area">
                                 <div class="item">
-                                    <label>名称：</label>
+                                    <label>U-name：</label>
                                     <input v-model="formData.username" />
                                 </div>
                                 <div class="item">
-                                    <label>邮箱：</label>
+                                    <label>E-mail：</label>
                                     <input v-model="formData.email" type="email" />
                                 </div>
 
                                 <div class="item">
-                                    <label>性别：</label>
+                                    <label>Gender：</label>
                                     <select v-model="formData.sex">
                                         <option value="男" selected>男</option>
                                         <option value="女">女</option>
                                     </select>
                                 </div>
                                 <div class="item benefits">
-                                    <label>简介：</label>
+                                    <label>Introduction：</label>
                                     <textarea v-model="formData.introduce" :maxlength="maxlength"
                                         @input="handleInput"></textarea>
 
@@ -74,30 +80,31 @@
                                 </div>
                             </div>
 
-                            <div v-else>
+                            <div v-else class="batch-noedit-area">
                                 <!-- 默认展示区域 -->
-                                <div class="item">
-                                    <label for="username">名称：</label>
+                                <div class="item username">
+                                    <!-- <label for="username">名称：</label> -->
                                     <span>{{ userStore.user.username }}</span>
                                 </div>
                                 <div class="item">
-                                    <label>邮箱：</label>
+                                    <label>E-mail：</label>
                                     <span>{{ userStore.user.email }}</span>
                                 </div>
                                 <div class="item">
-                                    <label>性别：</label>
+                                    <label>Gender：</label>
                                     <div class="boy">
                                         <span class="box"></span>
                                         <span>{{ userStore.user.sex }}</span>
                                     </div>
                                 </div>
                                 <div class="item">
-                                    <label>注册时间：</label>
+                                    <label>Registration date：</label>
                                     <span>{{ dayjs(userStore.user.registerTime).format('YYYY-MM-DD HH:mm:ss') }}</span>
                                 </div>
                                 <div class="item">
-                                    <label for="introduce">简介：</label>
-                                    <p>{{ userStore.user.introduce }}</p>
+                                    <label for="introduce">Introduction：</label>
+                                    <p v-if="userStore.user.introduce">{{ userStore.user.introduce }}</p>
+                                    <p v-else>暂无</p>
                                 </div>
                             </div>
                         </form>
@@ -110,6 +117,48 @@
                         </div>
                     </div>
                 </div>
+                <!-- 订阅卡片 -->
+                <div class="subscribeCard card-all" v-if="menuItems[activeIndex]?.id === 'subscribe'">
+                    <div class="subscribe-content">
+                        <div class="subscribe-item">
+                            <figure class="c4-izmir c4-border-center c4-image-zoom-out c4-gradient-bottom-right">
+                                <img src="https://blog.qiushaodong.top/static/webAvatar/Sara11719116679859717.jpg"
+                                    alt="">
+                                <figcaption>
+                                    <div class="c4-reveal-down c4-delay-200">
+                                        <h4>
+                                            三岁就很酷
+                                        </h4>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <!-- 点赞卡片 -->
+                <div class="likeCard card-all" v-if="menuItems[activeIndex]?.id === 'like'">
+                    <div class="like-content">
+                        <div class="like-item">
+                            <figure class="c4-izmir c4-border-corners-2 c4-image-zoom-in c4-gradient-bottom-right">
+                                <img src="https://blog.qiushaodong.top/static/webAvatar/Sara11719116679859717.jpg"
+                                    alt="">
+                                <figcaption>
+                                    <div class="c4-reveal-down c4-delay-200">
+                                        <h4>
+                                            三岁就很酷
+                                        </h4>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <!-- 会员卡片 -->
+                <div class="memberCard card-all" v-if="menuItems[activeIndex]?.id === 'member'">
+                    <div class="member-content">
+                        <button><a href="/memberCenter" style="color: black;">查看更多</a></button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -118,10 +167,13 @@
 import utils from '@/utils/getAssetsFile';
 import Navigation from '../components/NavigationMenu/index.vue';
 import { ref, computed, onMounted, reactive, watchEffect, onUnmounted, nextTick } from 'vue';
+
 import dayjs from 'dayjs';
+
 import { useAuthStore } from "@/store/auth";
-import { message } from 'ant-design-vue';
 const userStore = useAuthStore();
+
+import { message } from 'ant-design-vue';
 const maxlength = ref(110);
 
 message.config({
@@ -129,45 +181,41 @@ message.config({
 })
 
 // 响应式数据
-const containerBgColor = ref('#ffb457')
-const activeIndex = ref(0)
-const menuRef = ref(null)
-const menuBorderRef = ref(null)
+const containerBgColor = ref('#ffa3f4');
+const activeIndex = ref(0);
+const menuRef = ref(null);
+const menuBorderRef = ref(null);
 const menuItemRefs = ref([]);//所有菜单项
 // 菜单配置数据
-const bgColorsBody = ["#003366", "#ff96bd", "#9999fb", "#ffe797", "#cffff1"]
-
+const bgColorsBody = ['#ffa3f4', '#05b9e3', '#f47870', '#f69f98']
 const menuItems = ref([
     {
-        id: 'svg1',
-        color: '#ADD8E6',
+        id: 'info',
+        color: '#f37ee6',
         svgPath: '<path d="M3.8,6.6h16.4" /><path d="M20.2,12.1H3.8" /><path d="M3.8,17.5h16.4" />',
-        navTitle: '首页',
-        backImgUrl: 'src/assets/img/public/public-1.png'
+        navTitle: '信息',
+        backImgUrl: 'src/assets/img/personCenter/bg1.jpg'
     },
     {
-        id: 'svg2',
-        color: '#f54888',
+        id: 'subscribe',
+        color: '#54b346',
         svgPath: '<path d="M6.7,4.8h10.7c0.3,0,0.6,0.2,0.7,0.5l2.8,7.3c0,0.1,0,0.2,0,0.3v5.6c0,0.4-0.4,0.8-0.8,0.8H3.8C3.4,19.3,3,19,3,18.5v-5.6c0-0.1,0-0.2,0.1-0.3L6,5.3C6.1,5,6.4,4.8,6.7,4.8z" /><path d="M3.4,12.9H8l1.6,2.8h4.9l1.5-2.8h4.6" />',
-        navTitle: '收藏',
-        backImgUrl: 'src/assets/img/public/public-2.png'
-
+        navTitle: '订阅',
+        backImgUrl: 'src/assets/img/personCenter/bg2.jpg'
     },
     {
-        id: 'svg3',
-        color: '#4343f5',
+        id: 'like',
+        color: '#bb9726',
         svgPath: '<path d="M3.4,11.9l8.8,4.4l8.4-4.4" /><path d="M3.4,16.2l8.8,4.5l8.4-4.5" /><path d="M3.7,7.8l8.6-4.5l8,4.5l-8,4.3L3.7,7.8z" />',
         navTitle: '点赞',
-        backImgUrl: 'src/assets/img/public/public-3.png'
-
+        backImgUrl: 'src/assets/img/personCenter/bg3.jpg'
     },
     {
-        id: 'svg4',
-        color: '#e0b115',
+        id: 'member',
+        color: '#f66f3b',
         svgPath: '<path d="M5.1,3.9h13.9c0.6,0,1.2,0.5,1.2,1.2v13.9c0,0.6-0.5,1.2-1.2,1.2H5.1c-0.6,0-1.2-0.5-1.2-1.2V5.1C3.9,4.4,4.4,3.9,5.1,3.9z" /><path d="M4.2,9.3h15.6" /><path d="M9.1,9.5v10.3" />',
         navTitle: '会员',
-        backImgUrl: 'src/assets/img/public/public-4.png'
-
+        backImgUrl: 'src/assets/img/personCenter/bg4.jpg'
     },
     // {
     //     id: 'svg5',
@@ -176,10 +224,10 @@ const menuItems = ref([
     // }
 ])
 
-// 方法
+// 背景图
 const backImgUrl = ref(menuItems.value[0].backImgUrl)
-
 const clickItem = async (index) => {
+
     if (activeIndex.value === index) return
 
     // 移除动画延时属性
@@ -309,26 +357,16 @@ onUnmounted(() => {
         color: rgba(255, 140, 0, .5);
     }
 
-    .mask {
-        background-color: rgba(50, 50, 50, 0.1);
-        z-index: inherit;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: -1;
-    }
 
     .layout {
         width: 100%;
-        height: calc(100% - 3rem);
+        height: calc(100% - 6rem);
         @include flexCenter(column, center);
 
         .content {
             box-shadow: $shadow-card;
-            backdrop-filter: blur(15px);
-            border-radius: 0.2rem;
+            backdrop-filter: blur(10px);
+            background-color: rgb(255, 255, 255, .7);
         }
 
         // 导航
@@ -337,22 +375,20 @@ onUnmounted(() => {
             --bgColorMenu: #1d1d27;
             --duration: .7s;
             backdrop-filter: blur(15px);
-            border-bottom: 1px solid #ffffff;
-            border-radius: 0.2rem;
+            border-bottom: 1px solid #f37ee6;
 
             .menu {
                 position: relative;
                 @include flexCenter(row, space-between);
                 margin: 0;
                 width: 50vw;
-                min-width: 40rem;
+                min-width: 30rem;
                 font-size: 1.5rem;
-
             }
 
             .menu__item {
                 @include flexCenter(column, center);
-                padding: 1rem;
+                padding: 0.2rem;
                 flex-grow: 1;
                 z-index: 100;
                 cursor: pointer;
@@ -373,8 +409,8 @@ onUnmounted(() => {
                 display: block;
                 content: "";
                 z-index: -1;
-                width: 3rem;
-                height: 3rem;
+                width: 2.5rem;
+                height: 2.5rem;
                 border-radius: 50%;
                 position: absolute;
                 transform: scale(0);
@@ -391,8 +427,8 @@ onUnmounted(() => {
             }
 
             .icon {
-                width: 1.5rem;
-                height: 1.5rem;
+                width: 1.2rem;
+                height: 1.2rem;
                 stroke: white;
                 fill: transparent;
                 stroke-width: 1pt;
@@ -416,7 +452,7 @@ onUnmounted(() => {
                 left: 0;
                 bottom: 99%;
                 width: 9.9rem;
-                height: 2rem;
+                height: 1.5rem;
                 position: absolute;
                 clip-path: url(#menu);
                 will-change: transform;
@@ -436,40 +472,46 @@ onUnmounted(() => {
             }
         }
 
+        // 所有卡片公共样式 
+        .card-all {
+            @include flexCenter(row, space-around);
+            height: 45vh;
+            min-height: 18rem;
+            font-family: 'gtpy';
+            overflow-y: scroll
+        }
+
+        //会员卡片
         .personalCard {
-            @include flexCenter(column, center);
-            width: 50vw;
-            min-width: 40rem;
-            padding: 1rem;
+            .avatar-left {
+                @include flexCenter(column, space-around);
+                height: 100%;
+                padding: 1rem 2rem;
+                font-size: 0.8rem;
+                background-color: rgb(255, 163, 244, .7);
 
-            .avatar {
-                width: 4rem;
-                height: 4rem;
-                border-radius: 50%;
-                overflow: hidden;
+                .levelsbox {
+                    @include flexCenter(row, center);
 
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-            }
+                    .level {
+                        width: 1.2rem;
+                        height: 1.2rem;
+                        gap: 0.5rem;
 
-            .levelsbox {
-                @include flexCenter(row, center);
 
-                h2 {
-                    font-size: 1rem;
-                    font-weight: 700;
-                    font-family: 'lmst';
-                    color: #ffa500;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
                 }
 
-                .level {
-                    width: 1.5rem;
-                    height: 1.5rem;
-                    gap: 0.5rem;
-
+                .avatar {
+                    width: 4rem;
+                    height: 4rem;
+                    border-radius: 0.5rem;
+                    overflow: hidden;
 
                     img {
                         width: 100%;
@@ -477,27 +519,29 @@ onUnmounted(() => {
                         object-fit: cover;
                     }
                 }
+
+                .personal-introduce {
+                    flex-wrap: wrap;
+                }
             }
 
+            .detailInfo-right {
+                height: 100%;
+                flex: 1;
+                @include flexCenter(column, space-around);
 
-            .form-wrap {
-                padding: 1rem;
-                min-width: 80%;
-                width: 80%;
-
-                font-family: 'gtpy';
-
+                // 每行
                 .item {
                     @include flexCenter(row, flex-start);
                     gap: 1rem;
-                    margin: 1rem 0;
+                    padding: 0.8rem;
                     position: relative;
 
                     span,
                     p,
                     input,
                     select {
-                        font-size: 1rem;
+                        font-size: 0.9rem;
                         color: #7c7873;
                         font-family: inherit;
                         text-shadow: 0px 1px 0px #4e8faf;
@@ -515,7 +559,8 @@ onUnmounted(() => {
                         text-shadow: 0px 1px 0px #4e8faf;
                         display: block;
                         text-wrap: nowrap;
-
+                        width: 8rem;
+                        text-align: center;
                     }
 
                     input,
@@ -526,7 +571,6 @@ onUnmounted(() => {
                         background: white;
                         font-size: 0.9rem;
                         padding: 0.25rem 0.5rem;
-                        width: 100%;
                         border: none;
                         border-radius: 0.25rem;
                         box-shadow: inset 0px 0px 1px #b3a895;
@@ -550,16 +594,28 @@ onUnmounted(() => {
                         height: 6rem;
                         min-height: 6rem;
                     }
+                }
 
-                    &::after {
-                        content: '';
-                        background-color: #d5cdcd;
-                        position: absolute;
-                        bottom: -5px;
-                        height: 1px;
-                        width: 100%;
-                        pointer-events: none;
 
+                // 可编辑状态
+                .batch-edit-area {
+                    .item {
+                        padding: 0.5rem 0;
+                    }
+                }
+
+                // 不可编辑状态
+                .batch-noedit-area {
+
+                    // 用户名
+                    .username {
+
+                        span {
+                            width: 100%;
+                            text-align: center;
+                            font-size: 1.5rem;
+                            color: $general-black;
+                        }
                     }
                 }
 
@@ -579,6 +635,7 @@ onUnmounted(() => {
                 // 提交按钮
                 .submit-item {
                     @include flexCenter(row, space-around);
+                    gap: 1rem;
                     font-size: 0.8rem;
 
                     button {
@@ -597,12 +654,50 @@ onUnmounted(() => {
                         color: #fff;
                         font-size: 0.8rem;
                         border-radius: 0.25rem;
-                        background-color: #ffa500; // 修改按钮
+                        background-color: #7296de; // 修改按钮
                         cursor: pointer;
                     }
                 }
             }
         }
+
+        // 订阅卡片
+        .subscribeCard,
+        .likeCard {
+
+            .subscribe-content,
+            .like-content {
+                display: grid;
+                grid-template-columns: repeat(3, auto);
+                gap: 1rem;
+                padding: 1rem;
+                height: 100%;
+
+
+                .subscribe-item,
+                .like-item {
+                    width: 200px;
+                    height: 200px;
+                    border: 25px solid #ff7a7a;
+                    border-image: url('@/assets/img/personCenter/fIgVPKVXE.png') 120 fill;
+                    padding: 0.4rem;
+
+                    p {
+                        background-color: rebeccapurple;
+                    }
+                }
+            }
+        }
+
+        // 点赞卡片
+        .like {
+            .like-content {
+                .like-item {
+                    border-image: url('@/assets/img/personCenter/fIgWEE8vv.png') 50 fill;
+                }
+            }
+        }
+
     }
 }
 </style>

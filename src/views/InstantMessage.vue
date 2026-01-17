@@ -211,7 +211,7 @@
 
         <!-- 朋友圈 -->
         <div class="moments">
-            <ModalBox :isVisible="showModal" @close="handCloseMoments">
+            <ModalBox :isVisible="showModal" @close="handCloseMoments" animationType="clipRectSpIn">
                 <GridImageAnime></GridImageAnime>
             </ModalBox>
         </div>
@@ -229,7 +229,6 @@ import ChatInput from '@/components/ChatInput/index.vue'
 import GridImageAnime from '@/components/GridImageAnime/index.vue'
 
 import ModalBox from '@/components/ModalBox/index.vue'
-
 
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;

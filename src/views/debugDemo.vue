@@ -38,7 +38,7 @@
                             <h3 class="grim__item-title">{{ menuItem.title }}</h3>
                             <span v-if="menuItem.desc" class="grim__item-desc">{{
                                 menuItem.desc
-                                }}</span>
+                            }}</span>
                         </div>
                     </a>
 
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted,watch } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 
 const props = defineProps({ //组件状态
     isOpen: {
@@ -555,11 +555,11 @@ $grid-areas: (
 );
 
 @each $area in $grid-areas {
-    $child-num: nth($area, 1);
-    $row-start: nth($area, 2);
-    $col-start: nth($area, 3);
-    $row-end: nth($area, 4);
-    $col-end: nth($area, 5);
+    $child-num: list.nth($area, 1);
+    $row-start: list.nth($area, 2);
+    $col-start: list.nth($area, 3);
+    $row-end: list.nth($area, 4);
+    $col-end: list.nth($area, 5);
 
     .grim__item:nth-child(#{$child-num}) {
         grid-area: #{$row-start} / #{$col-start} / #{$row-end} / #{$col-end};

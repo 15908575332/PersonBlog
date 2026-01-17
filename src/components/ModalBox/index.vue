@@ -67,7 +67,7 @@ watch(() => props.isVisible, (newValue) => {
         @include flexCenter(column, center);
 
         &.animation-clipRectSpIn {
-            animation: clipRectSpIn 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+            animation: clipRectSpIn 1s both;
         }
 
         &.animation-zoomIn {
@@ -96,12 +96,19 @@ watch(() => props.isVisible, (newValue) => {
 
     @keyframes clipRectSpIn {
         0% {
-            clip-path: polygon(50% 20%, 50% 50%, 20% 50%, 50% 50%, 50% 80%, 50% 50%, 80% 50%, 50% 50%);
+            opacity: 0;
+            transform-origin: 50% 50%;
+            transform: scale(2, 2);
+            -webkit-filter: blur(90px);
         }
 
         100% {
-            clip-path: polygon(50% 0%, 0% 0%, 0% 50%, 0% 100%, 50% 100%, 100% 100%, 100% 50%, 100% 0%);
+            opacity: 1;
+            transform-origin: 50% 50%;
+            transform: scale(1, 1);
+            -webkit-filter: blur(0px);
         }
+
     }
 
     @keyframes zoomIn {

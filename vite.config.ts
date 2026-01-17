@@ -83,6 +83,7 @@ export default defineConfig({
           @use "@/styles/color.scss" as *;
           @use "sass:math";
           @use "sass:color";
+          @use "sass:list";
         `,
         api: 'modern-compiler', // or 'modern'
         charset: false

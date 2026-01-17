@@ -267,36 +267,21 @@ onUnmounted(() => {
             //每条聊天记录框
             .message-item {
                 width: fit-content;
-                background-color: $primary-hover;
-                border-radius: 0.4rem;
                 font-size: 0.8rem;
-                padding: 0 0.4rem;
+                padding: 0.2rem 0.4rem;
                 @include flexCenter(row, center);
                 justify-content: flex-start;
                 flex-wrap: wrap;
                 max-width: 100%;
                 color: $general-black;
-                min-height: 35px;
-                line-height: 35px;
+                line-height: 25px;
                 position: relative;
-
-                &::before {
-                    content: '';
-                    position: absolute;
-                    width: 0;
-                    height: 0;
-                    left: -6px;
-                    top: 0;
-                    border: 10px solid transparent;
-                    border-top-color: #82dbf4;
-                    z-index: 0;
-                }
+                border: 10px solid transparent;
+                border-image: url('@/assets/img/instantMessaging/fIcEuLlnl.png') 400 round;
 
                 .text-item {
                     display: inline-block;
-                    // white-space: pre-wrap;
-                    // word-break: break-word;
-                    // width: 100%;
+                    border-radius: 0.5rem;
                 }
 
                 .emoji-item {
@@ -348,23 +333,13 @@ onUnmounted(() => {
                 }
 
                 .message-item {
-                    background-color: #85ed89;
+                    // border: 10px solid transparent;
+                    border-image: url('@/assets/img/instantMessaging/fIgM4RBOc.png') 200 round;
 
                     &::before {
                         display: none;
                     }
 
-                    &::after {
-                        content: '';
-                        position: absolute;
-                        width: 0;
-                        height: 0;
-                        right: -6px;
-                        top: 0;
-                        border: 10px solid transparent;
-                        border-top-color: #85ed89;
-                        z-index: 0;
-                    }
                 }
             }
         }
