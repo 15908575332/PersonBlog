@@ -8,15 +8,6 @@
     <!-- 遮罩 -->
     <div class="mask"></div>
     <div class="text">
-      <!-- <div class="text-effect">
-        <span>直</span>
-        <span>挂</span>
-        <span>云</span>
-        <span>帆</span>
-        <span>济</span>
-        <span>沧</span>
-        <span>海</span>
-      </div> -->
       <h1 class="text-effect">直挂云帆济沧海</h1>
     </div>
     <div class="container">
@@ -37,7 +28,7 @@
           <div class="left">
             <div class="personCard box__shadow">
               <div class="profilePicture">
-                <img :src="authStore.user.avatar_url" alt="profilePicture" />
+                <img :src="authStore.user.avatarUrl" alt="profilePicture" />
               </div>
               <div class="nickname">
                 <h1>{{ authStore.user.username }}</h1>
@@ -203,16 +194,44 @@ const getNavData = () => {
   navData.value = mainStore.navData;
 }
 
+/** ------------------------ 修复数据加载逻辑 ------------------------ */
+const loading = ref(true);
+
+// 使用 async/await 确保顺序执行
+const initializeData = async () => {
+  try {
+    loading.value = true;
+
+    // 1. 先获取导航数据
+    getNavData();
+
+    console.log(navData.value)
+    // 2. 等待导航数据加载完成后，再获取内容数据
+    if (navData.value && navData.value.length > 0) {
+      await getContentData();
+    }
+
+    // 3. 最后获取滚动消息
+    await getScrollMessageData();
+
+  } catch (error) {
+    console.error('数据初始化失败:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
 /** ------------------------ 获取所有内容，根据分类id分别存储 ------------------------ */
 const dataContent = ref([]);
 const getContentData = async () => {
   await Promise.all(navData.value.map(async (category) => {
     const categoryId = category.category_id;
-    await mainStore.fetchMainContent(categoryId, authStore.user.user_id);
+    console.log(authStore.user)
+    await mainStore.fetchMainContent(categoryId, authStore.user.userId);
     dataContent.value[categoryId] = mainStore.contentData; // 按分类ID存储数据
   }));
 }
-console.log(authStore)
+
 /** ------------------------ 获取留言（左侧滚动留言） ------------------------ */
 const messageList = ref([]);
 const getScrollMessageData = (async () => {
@@ -240,6 +259,7 @@ const scrollToSection = (sectionId) => {
 
 /** ------------------------ 传入文章id值详情页ListDetail ------------------------ */
 import { useRouter } from "vue-router";
+import { get } from "jquery";
 const route = useRouter();
 const listDetail = (id) => {
   route.push({
@@ -270,9 +290,10 @@ const
 
 onMounted(() => {
   window.addEventListener("scroll", debouncedHandleScroll);
-  getScrollMessageData(); //滚动消息
-  getNavData(); //获取分类
-  getContentData(); //获取主要内容模块
+  initializeData();
+  // getScrollMessageData(); //滚动消息
+  // getNavData(); //获取分类
+  // getContentData(); //获取主要内容模块
 });
 
 onBeforeUnmount(() => {

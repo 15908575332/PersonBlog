@@ -289,7 +289,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                            }}</div>
+                                                }}</div>
                                         </div>
                                     </div>
 
@@ -1643,7 +1643,6 @@ onMounted(async () => {
                 z-index: -1;
             }
 
-            &:focus,
             &:hover {
                 &::before {
                     top: 0%;

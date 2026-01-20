@@ -281,6 +281,7 @@ onUnmounted(() => {
                 transition: transform 0.3s ease;
                 cursor: pointer;
                 border-radius: 10px;
+                background-color: transparent;
 
                 .card-main {
                     padding: 30px;
@@ -478,7 +479,7 @@ onUnmounted(() => {
         z-index: 1;
         font-family: 'gtpy';
         margin: auto;
-        background: linear-gradient(45deg, $assistance-1, $assistance-2, $assistance-3);
+        background: linear-gradient(45deg, $assistance-1, $assistance-2, $assistance-4);
         animation: hueRotate 10s infinite alternate;
 
         @keyframes hueRotate {

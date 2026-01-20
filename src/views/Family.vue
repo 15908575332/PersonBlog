@@ -63,9 +63,9 @@
             }}分{{ countdown.seconds }}秒
           </p>
         </div>
-        <!-- 飞车传信 -->
+        <!-- 探索未知 -->
         <div class="letter">
-          <h1>飞车传信</h1>
+          <h1>探索未知</h1>
           <!-- 图标 -->
           <span>
             <svg data-v-16b23934="" viewBox="0 0 1024 1024" width="40" height="40">
@@ -596,7 +596,7 @@ onUnmounted(() => {
         }
       }
 
-      //飞车传信
+      //探索未知
       .letter {
         background-color: #fff;
         position: relative;
@@ -1177,12 +1177,13 @@ onUnmounted(() => {
 
           .gallery__image {
             padding: 0.5rem 0.5rem 1.5rem;
-            // background: white;
+            // background: rgb(255, 0, 0);
             position: relative;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
             box-shadow: 3px 3px 6px 0px #ccdbe8 inset, -3px -3px 6px 1px #fff inset;
             transform-origin: center -5rem;
             border-radius: 0.25rem;
+            // overflow: hidden;
 
             // 竖线
             &::before {
@@ -1204,7 +1205,7 @@ onUnmounted(() => {
 
               img {
                 width: 360px;
-                height: 220px;
+                height: auto;
                 transform: translateY(5%);
               }
             }

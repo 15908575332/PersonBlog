@@ -1,6 +1,5 @@
 //站点主要内容store 全局
 import axios from 'axios';
-import { param } from 'jquery';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 export const useMainStore = defineStore('main', () => {

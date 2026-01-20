@@ -117,42 +117,58 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- 订阅卡片 -->
                 <div class="subscribeCard card-all" v-if="menuItems[activeIndex]?.id === 'subscribe'">
                     <div class="subscribe-content">
                         <div class="subscribe-item">
-                            <figure class="c4-izmir c4-border-center c4-image-zoom-out c4-gradient-bottom-right">
-                                <img src="https://blog.qiushaodong.top/static/webAvatar/Sara11719116679859717.jpg"
-                                    alt="">
-                                <figcaption>
-                                    <div class="c4-reveal-down c4-delay-200">
-                                        <h4>
-                                            三岁就很酷
-                                        </h4>
-                                    </div>
-                                </figcaption>
-                            </figure>
+                            <div class="text-box">
+                                <h2 class="title">山景</h2>
+                                <p class="copy">看看这些令人惊叹的山地旅行，正如你所猜想的，它们都有美丽的山景</p>
+                                <button class="btn">查看</button>
+                            </div>
+                        </div>
+                        <div class="subscribe-item">
+                            <div class="text-box">
+                                <h2 class="title">山景</h2>
+                                <p class="copy">看看这些令人惊叹的山地旅行，正如你所猜想的，它们都有美丽的山景</p>
+                                <button class="btn">查看</button>
+                            </div>
+                        </div>
+                        <div class="subscribe-item">
+                            <div class="text-box">
+                                <h2 class="title">山景</h2>
+                                <p class="copy">看看这些令人惊叹的山地旅行，正如你所猜想的，它们都有美丽的山景</p>
+                                <button class="btn">查看</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- 点赞卡片 -->
                 <div class="likeCard card-all" v-if="menuItems[activeIndex]?.id === 'like'">
                     <div class="like-content">
                         <div class="like-item">
-                            <figure class="c4-izmir c4-border-corners-2 c4-image-zoom-in c4-gradient-bottom-right">
-                                <img src="https://blog.qiushaodong.top/static/webAvatar/Sara11719116679859717.jpg"
-                                    alt="">
-                                <figcaption>
-                                    <div class="c4-reveal-down c4-delay-200">
-                                        <h4>
-                                            三岁就很酷
-                                        </h4>
-                                    </div>
-                                </figcaption>
-                            </figure>
+
+                            <div class="wrapper">
+                                <img src="@/assets/img/personCenter/dark_rider-cover.jpg" class="cover-image" />
+                            </div>
+                            <img src="@/assets/img/personCenter/dark_rider-title.png" class="title" />
+                            <img src="@/assets/img/personCenter/dark_rider-character.webp" class="character" />
+
                         </div>
+
+                        <div class="like-item">
+                            <div class="wrapper">
+                                <img src="@/assets/img/personCenter/force_mage-cover.jpg" class="cover-image" />
+                            </div>
+                            <img src="@/assets/img/personCenter/force_mage-title.png" class="title" />
+                            <img src="@/assets/img/personCenter/force_mage-character.webp" class="character" />
+                        </div>
+
                     </div>
                 </div>
+
                 <!-- 会员卡片 -->
                 <div class="memberCard card-all" v-if="menuItems[activeIndex]?.id === 'member'">
                     <div class="member-content">
@@ -456,7 +472,6 @@ onUnmounted(() => {
                 position: absolute;
                 clip-path: url(#menu);
                 will-change: transform;
-                // background-color: var(--bgColorMenu);
                 transition: transform var(--timeOut, var(--duration));
             }
 
@@ -661,7 +676,6 @@ onUnmounted(() => {
             }
         }
 
-        // 订阅卡片
         .subscribeCard,
         .likeCard {
 
@@ -671,29 +685,302 @@ onUnmounted(() => {
                 grid-template-columns: repeat(3, auto);
                 gap: 1rem;
                 padding: 1rem;
-                height: 100%;
-
 
                 .subscribe-item,
                 .like-item {
-                    width: 200px;
-                    height: 200px;
                     border: 25px solid #ff7a7a;
                     border-image: url('@/assets/img/personCenter/fIgVPKVXE.png') 120 fill;
+                    max-width: 224px;
+                    height: 300px;
                     padding: 0.4rem;
+                    border-radius: 0.2rem;
+                }
+            }
+        }
 
-                    p {
-                        background-color: rebeccapurple;
+        // 订阅卡片
+        .subscribeCard {
+            .subscribe-content {
+
+                --d: 700ms;
+                --e: cubic-bezier(0.19, 1, 0.22, 1);
+                font-family: 'gtpy';
+
+                .subscribe-item {
+                    position: relative;
+                    display: flex;
+                    align-items: flex-end;
+                    overflow: hidden;
+                    text-align: center;
+                    color: whitesmoke;
+
+                    &:nth-child(1)::before {
+                        background-image: url("@/assets/img/personCenter/subscribe1.jpg");
                     }
+
+                    &:nth-child(2)::before {
+                        background-image: url("@/assets/img/personCenter/subscribe2.jpg");
+                    }
+
+                    &:nth-child(3)::before {
+                        background-image: url("@/assets/img/personCenter/subscribe3.jpg");
+                    }
+                }
+
+                .subscribe-item:before {
+                    content: "";
+                    position: absolute;
+                    width: 100%;
+                    height: 110%;
+                    top: 0;
+                    left: 0;
+                    z-index: -1;
+                    background-size: cover;
+                    background-position: 0 0;
+                    transition: transform calc(var(--d) * 1.5) var(--e);
+                    pointer-events: none;
+
+
+                }
+
+                // 文字背景遮罩
+                .subscribe-item:after {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    top: 2px;
+                    left: 0;
+                    width: 100%;
+                    height: 200%;
+                    pointer-events: none;
+                    background-image: linear-gradient(to bottom,
+                            rgba(0, 0, 0, 0) 0%,
+                            rgba(0, 0, 0, 0.009) 11.7%,
+                            rgba(0, 0, 0, 0.034) 22.1%,
+                            rgba(0, 0, 0, 0.072) 31.2%,
+                            rgba(0, 0, 0, 0.123) 39.4%,
+                            rgba(0, 0, 0, 0.182) 46.6%,
+                            rgba(0, 0, 0, 0.249) 53.1%,
+                            rgba(0, 0, 0, 0.32) 58.9%,
+                            rgba(0, 0, 0, 0.394) 64.3%,
+                            rgba(0, 0, 0, 0.468) 69.3%,
+                            rgba(0, 0, 0, 0.54) 74.1%,
+                            rgba(0, 0, 0, 0.607) 78.8%,
+                            rgba(0, 0, 0, 0.668) 83.6%,
+                            rgba(0, 0, 0, 0.721) 88.7%,
+                            rgba(0, 0, 0, 0.762) 94.1%,
+                            rgba(0, 0, 0, 0.79) 100%);
+                    transform: translateY(-50%);
+                    transition: transform calc(var(--d) * 2) var(--e);
+                }
+
+                .text-box {
+                    position: relative;
+                    @include flexCenter(column, center);
+                    width: 100%;
+                    padding: 0.5rem;
+                    transition: transform var(--d) var(--e);
+                    z-index: 1;
+                    font-size: 1rem;
+                    background-color: transparent;
+                }
+
+                .text-box>*+* {
+                    margin-top: 1rem;
+                }
+
+                .title {
+                    font-size: 0.9rem;
+                    font-weight: bold;
+                }
+
+                // 文字内容
+                .copy {
+                    font-size: 0.8rem;
+                    font-style: italic;
+                    line-height: 1.1;
+                }
+
+                .btn {
+                    cursor: pointer;
+                    margin-top: 1.5rem;
+                    padding: 0.4rem 1.5rem;
+                    font-size: 0.5rem;
+                    font-weight: bold;
+                    letter-spacing: 0.025rem;
+                    text-transform: uppercase;
+                    color: white;
+                    background-color: $primary-sub;
+                    border: none;
+                    font-family: inherit;
+                }
+
+                // .btn:hover {
+                //     background-color: #0d0d0d;
+                // }
+
+                // .btn:focus {
+                //     outline: 1px dashed yellow;
+                //     outline-offset: 3px;
+                // }
+
+                @media (hover: hover) and (min-width: 600px) {
+                    .subscribe-item:after {
+                        transform: translateY(0);
+                    }
+
+                    .text-box {
+                        transform: translateY(calc(100% - 4.5rem));
+                    }
+
+                    .text-box>*:not(.title) {
+                        opacity: 0;
+                        transform: translateY(1rem);
+                        transition:
+                            transform var(--d) var(--e),
+                            opacity var(--d) var(--e);
+                    }
+
+                    .subscribe-item:hover,
+                    .subscribe-item:focus-within {
+                        align-items: center;
+                    }
+
+                    .subscribe-item:hover:before,
+                    .subscribe-item:focus-within:before {
+                        transform: translateY(-4%);
+                    }
+
+                    .subscribe-item:hover:after,
+                    .subscribe-item:focus-within:after {
+                        transform: translateY(-50%);
+                    }
+
+                    .subscribe-item:hover .text-box,
+                    .subscribe-item:focus-within .text-box {
+                        transform: translateY(0);
+                    }
+
+                    .subscribe-item:hover .text-box>*:not(.title),
+                    .subscribe-item:focus-within .text-box>*:not(.title) {
+                        opacity: 1;
+                        transform: translateY(0);
+                        transition-delay: calc(var(--d) / 8);
+                    }
+
+                    .subscribe-item:focus-within:before,
+                    .subscribe-item:focus-within:after,
+                    .subscribe-item:focus-within .text-box,
+                    .subscribe-item:focus-within .text-box>*:not(.title) {
+                        transition-duration: 0s;
+                    }
+
                 }
             }
         }
 
         // 点赞卡片
-        .like {
+        .likeCard {
             .like-content {
+
+                // 单个卡片
                 .like-item {
-                    border-image: url('@/assets/img/personCenter/fIgWEE8vv.png') 50 fill;
+                    position: relative;
+                    display: flex;
+                    align-items: flex-end;
+                    perspective: 2500px; //景深
+                    border-image: url('@/assets/img/personCenter/fIgWEE8vv.png') 50 fill !important;
+                    background-color: #14232b;
+
+
+                    &:hover {
+                        .wrapper {
+                            transform: perspective(900px) translateY(-5%) rotateX(20deg) translateZ(0);
+                            box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+                            -webkit-box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+                            -moz-box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+
+                            &::before,
+                            &::after {
+                                opacity: 1;
+                            }
+
+                            &::after {
+                                height: 120px;
+                            }
+                        }
+
+                        .title {
+                            transform: translate3d(0%, -50px, 100px);
+                        }
+
+                        .character {
+                            opacity: 1;
+                            transform: translate3d(0%, -25%, 100px);
+                        }
+                    }
+                }
+
+                //图片容器
+                .wrapper {
+                    transition: all 0.5s;
+                    position: absolute;
+                    width: calc(100% - 0.8rem);
+                    /* 减去左右padding */
+                    height: calc(100% - 0.8rem);
+                    /* 减去上下padding */
+                    top: 0.4rem;
+                    left: 0.4rem;
+                    z-index: -1;
+
+                    //图片
+                    .cover-image {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    &::before,
+                    &::after {
+                        content: "";
+                        opacity: 0;
+                        width: 100%;
+                        height: 80px;
+                        transition: all 0.5s;
+                        position: absolute;
+                        left: 0;
+                    }
+
+                    &::before {
+                        top: 0;
+                        height: 100%;
+                        background-image: linear-gradient(to top,
+                                transparent 46%,
+                                rgba(12, 13, 19, 0.5) 68%,
+                                rgba(12, 13, 19) 97%);
+                    }
+
+                    &::after {
+                        bottom: 0;
+                        opacity: 1;
+                        background-image: linear-gradient(to bottom,
+                                transparent 46%,
+                                rgba(12, 13, 19, 0.5) 68%,
+                                rgba(12, 13, 19) 97%);
+                    }
+                }
+
+                .title {
+                    width: 100%;
+                    transition: transform 0.5s;
+                }
+
+                .character {
+                    width: 100%;
+                    opacity: 0;
+                    transition: all 0.5s;
+                    position: absolute;
+                    z-index: -1;
                 }
             }
         }
