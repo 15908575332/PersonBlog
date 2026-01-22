@@ -29,12 +29,12 @@ const props = defineProps({
     config: {
         type: Object,
         default: () => ({
-            fftSize: 612,
-            barWidth: 5,
+            fftSize: 712,
+            barWidth: 1,
             gap: 2,
             color: '#5de9e0',
-            height: 80,
-            maxBars: 128
+            height: 30,
+            maxBars: 108
         })
     }
 })
@@ -191,9 +191,7 @@ onBeforeUnmount(() => {
     transform: translateZ(0);
     box-sizing: border-box;
     image-rendering: crisp-edges;
-    padding-top: 1rem;
-    box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.5);
-    margin: 1rem 0;
+    /* box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.5); */
     border-radius: 0.25rem;
     padding: 0 0.2rem;
 }

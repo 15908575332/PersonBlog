@@ -78,6 +78,12 @@ watch(() => props.isVisible, (newValue) => {
             animation: spaceInUp 1s both;
         }
 
+        &.animation-slideUpFromBottom {
+            animation: slideUpFromBottom 0.7s ease forwards;
+            will-change: transform, opacity;
+            /* 优化性能 */
+        }
+
         button {
             display: inline-block;
             position: absolute;
@@ -133,6 +139,20 @@ watch(() => props.isVisible, (newValue) => {
             opacity: 1;
             transform-origin: 50% 0%;
             transform: scale(1) translate(0%, 0%);
+        }
+    }
+
+    @keyframes slideUpFromBottom {
+        0% {
+            opacity: 0;
+            transform: translateY(100vh);
+            /* 从屏幕底部开始 */
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+            /* 移动到中心 */
         }
     }
 }
