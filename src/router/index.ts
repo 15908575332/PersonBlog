@@ -83,7 +83,25 @@ const router = createRouter({
                 {
                     path: "music",
                     name: "music",
-                    component: () => import('@/views/treasureBox/Music.vue')
+                    component: () => import('@/views/treasureBox/Music.vue'),
+                    redirect: '/treasureBox/music/recommend', // 默认重定向到推荐页
+                    children: [
+                        {
+                            path: "recommend",
+                            name: "musicRecommend",
+                            component: () => import('@/components/Music/Recommend.vue')
+                        },
+                        {
+                            path: "treasure",
+                            name: "musicTreasure",
+                            component: () => import('@/components/Music/Treasure.vue')
+                        },
+                        {
+                            path: "favorite",
+                            name: "musicFavorite",
+                            component: () => import('@/components/Music/MineFavorite.vue')
+                        }
+                    ]
                 },
                 {
                     path: "favorites",

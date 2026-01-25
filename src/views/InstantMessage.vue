@@ -224,8 +224,10 @@ import systemIcon from '@/assets/icon/instantMessaging/icons8-system-40.png'
 import chatMessageIcon from '@/assets/icon/instantMessaging/icons8-message-64.png'
 import groupMessageIcon from '@/assets/icon/instantMessaging/icons8-group-50.png'
 import friendIcon from '@/assets/icon/instantMessaging/icons8-people-48.png'
-import ChatMessage from '@/components/ChatMessage/index.vue'
-import ChatInput from '@/components/ChatInput/index.vue'
+
+import ChatMessage from '@/components/InstantMessage/ChatMessage.vue'
+import ChatInput from '@/components/InstantMessage/ChatInput.vue'
+
 import GridImageAnime from '@/components/GridImageAnime/index.vue'
 
 import ModalBox from '@/components/ModalBox/index.vue'
