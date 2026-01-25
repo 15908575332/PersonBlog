@@ -28,7 +28,6 @@
             </li>
           </ul>
         </div>
-
         <div class="ismine">
           <h5 class="classification">我的音乐</h5>
           <ul class="nav-list">
@@ -73,7 +72,8 @@
           <div class="player-content">
             <!-- 歌曲图片 -->
             <div class="music-pic" @click="openMore">
-              <img :src="currentSong.picture" alt="music-pic" />
+              <img v-if="currentSong.picture" :src="currentSong.picture" alt="music-pic" />
+              <img v-else src="@/assets/img/treasureBox/default.jpg" alt="default">
               <div class="arrows">
                 <!-- <div></div> -->
                 <div></div>
@@ -83,16 +83,17 @@
             <!-- 控制面板 -->
             <div class="play-control">
               <div class="progress-container">
-                <!-- <span>{{ formatTime(currentTime) }}</span> -->
+                <span>{{ formatTime(currentTime) }}</span>
                 <div class="progress-bar" @click="seek">
                   <div class="progress" :style="{ width: progress + '%' }"></div>
                 </div>
-                <!-- <span>{{ formatTime(duration) }}</span> -->
+                <span>{{ formatTime(duration) }}</span>
               </div>
               <div class="text-info-change">
                 <!-- 歌名、作者 -->
                 <div class="title-auther">
-                  <p>{{ currentSong.name }}-{{ currentSong.artist }}</p>
+                  <p v-if="currentSong.name">{{ currentSong.name }}-{{ currentSong.artist }}</p>
+                  <p v-else>暂无正在播放的音乐</p>
                 </div>
                 <!-- 频谱组件 -->
                 <Spectrum :audio-element="audioElement" :is-playing="isPlaying"></Spectrum>
@@ -145,7 +146,8 @@
           <!-- 专辑图片 -->
           <transition name="album" mode="out-in">
             <div class="album-pic" :key="currentSong.picture" :class="{ playing: isPlaying, paused: !isPlaying }">
-              <img :src="currentSong.picture" alt="专辑" />
+              <img v-if="currentSong.picture" :src="currentSong.picture" alt="music-pic" />
+              <img v-else src="@/assets/img/treasureBox/default.jpg" alt="default">
             </div>
           </transition>
         </div>
@@ -180,200 +182,60 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, nextTick, watch } from "vue";
-import utils from "@/utils/getAssetsFile";
-import Spectrum from "@/components/Music/Spectrum.vue";
-import AOS from "aos";
-import ModalBox from '@/components/ModalBox/index.vue';
+import { ref, computed, onMounted, nextTick, watch } from "vue";
 
-AOS.init({
-  offset: 0,
-});
-//暂停/播放图标
+import Spectrum from "@/components/Music/Spectrum.vue";
+import ModalBox from '@/components/ModalBox/index.vue';
+const formatTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  seconds = Math.floor(seconds % 60);
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+};
+
+/** ------------------------ 播放器 ------------------------ */
 import playImg from "@/assets/icon/treasureBox/play.png";
 import pauseImg from "@/assets/icon/treasureBox/pause.png";
-//随机/循环图标
 import randomImg from "@/assets/icon/treasureBox/random.svg";
 import cycleImg from "@/assets/icon/treasureBox/cycle.svg";
-
-//静音/取消静音图标
 import volumeImg from "@/assets/icon/treasureBox/volume.png";
 import mutedImg from "@/assets/icon/treasureBox/mute.png";
 
-const audioElement = ref("");
-const isPlaying = ref(false);
-const currentTime = ref(0);
-const duration = ref(0);
-const volume = ref(80);
+const currentPlaylist = ref([]); // 当前播放列表
+const currentSongIndex = ref(null); // 当前播放歌曲索引
+const currentSong = ref(''); // 当前播放歌曲
+const muted = ref(false); // 静音
+const volumeContainer = ref(null);// 音量调节容器
+const audioElement = ref(""); // 播放容器
+const isPlaying = ref(false); // 歌曲播放状态
+const currentTime = ref(0); //歌曲当前播放时间默认0开始
+const duration = ref(0); // 歌曲总时长
+const volume = ref(80); // 音量
+const playMode = ref("order"); //播放模式，默认按顺序
+const shuffleList = ref([]); //随机播放列表
 
-const currentPlaylist = ref([]); //当前播放列表
-const currentSongIndex = ref(0); //当前播放歌曲索引
-const currentSong = ref(''); //当前播放歌曲
-// 接收子组件传递的播放参数
-const handlePlaySong = (payload) => {
-  console.log(payload)
+const handlePlaySong = (payload) => { // 接收子组件传递的播放参数
   currentPlaylist.value = payload.playlist;
   currentSong.value = payload.song;
   currentSongIndex.value = payload.startIndex;
-  playSong(payload.startIndex)
+  playSong(payload.song, payload.startIndex)
 }
 
-const isDragging = ref(false);
-const muted = ref(false);
-const volumeContainer = ref(null);
-
-const isShowModal = ref(false); // 控制模态框显示
-const handChangeModal = () => {
-  isShowModal.value = false;
-};
-
-//播放模式，默认按顺序
-const playMode = ref("order");
-//随机播放列表
-const shuffleList = ref([]);
-// 切换播放模式
-const togglePlayMode = () => {
+const togglePlayMode = () => { // 切换播放模式
   playMode.value = playMode.value === "order" ? "random" : "order";
   if (playMode.value === "random") {
     generateShuffleList();
   }
 };
-// 生成随机播放列表（排除当前歌曲）
-const generateShuffleList = () => {
-  const allIndexes = playlist.map((_, index) => index);
+
+const generateShuffleList = () => { // 生成随机播放列表（排除当前歌曲）
+  const allIndexes = currentPlaylist.value.map((_, index) => index);
   const current = currentSongIndex.value;
   shuffleList.value = allIndexes
     .filter((i) => i !== current)
     .sort(() => Math.random() - 0.5);
 };
 
-const openMore = () => {
-  isShowModal.value = true;
-};
-
-// 歌词相关
-// const currentLyrics = ref([]);
-// const currentLyricIndex = ref(-1);
-// const lyricsWrapper = ref(null);
-// const lyricLine = ref(null);
-// // LRC解析器
-// const parseLRC = (lrcText) => {
-//   const lyrics = [];
-//   const lines = lrcText.split("\n");
-//   const timeRegex = /\[(\d+):(\d+)(\.\d+)?\]/g;
-
-//   lines.forEach((line) => {
-//     const text = line.replace(/\[.*?\]/g, "").trim();
-//     if (!text) return;
-
-//     const timeMatches = [...line.matchAll(timeRegex)];
-//     timeMatches.forEach((match) => {
-//       const minutes = parseInt(match[1]);
-//       const seconds = parseInt(match[2]);
-//       const milliseconds = match[3] ? parseFloat(match[3]) * 1000 : 0;
-//       const time = minutes * 60 + seconds + milliseconds / 1000;
-
-//       lyrics.push({
-//         time: Number(time.toFixed(2)),
-//         text,
-//       });
-//     });
-//   });
-//   return lyrics.sort((a, b) => a.time - b.time);
-// };
-
-// // 自动加载歌词
-// watch(
-//   currentSongIndex,
-//   async (newIndex) => {
-//     const song = playlist[newIndex];
-//     if (!song.lrc) {
-//       currentLyrics.value = [];
-//       return;
-//     }
-//     try {
-//       // 使用 fetch 加载歌词文件
-//       const response = await fetch(song.lrc);
-//       if (!response.ok) {
-//         throw new Error("歌词文件加载失败");
-//       }
-//       const lrcText = await response.text();
-//       currentLyrics.value = parseLRC(lrcText); // 解析歌词
-//     } catch (error) {
-//       console.error("歌词加载失败:", error);
-//       currentLyrics.value = []; // 加载失败时清空歌词
-//     }
-//   },
-//   {
-//     // 立即执行
-//     immediate: true,
-//   }
-// );
-
-// // 歌词滚动控制
-// const scrollToLyric = (index) => {
-//   nextTick(() => {
-//     if (!lyricsWrapper.value || !currentLyrics.value.length) return
-
-//     const targetLine = lyricLine.value[index]
-//     if (!targetLine) return
-
-//     const container = lyricsWrapper.value
-//     const containerHeight = container.clientHeight
-//     const lineTop = targetLine.offsetTop
-//     const lineHeight = targetLine.clientHeight
-//     const currentScrollTop = container.scrollTop
-
-//     // 计算歌词行在容器中的可见性
-//     const isLineVisible = lineTop >= currentScrollTop &&
-//       (lineTop + lineHeight) <= (currentScrollTop + containerHeight)
-
-//     // 计算歌词行是否在中间区域（中间40%区域）
-//     const middleZoneStart = currentScrollTop + containerHeight * 0.3
-//     const middleZoneEnd = currentScrollTop + containerHeight * 0.7
-//     const isInMiddleZone = lineTop >= middleZoneStart &&
-//       (lineTop + lineHeight) <= middleZoneEnd
-
-//     // 只有当歌词不在中间区域或者不可见时才滚动
-//     if (!isLineVisible || !isInMiddleZone) {
-//       const scrollTop = lineTop - containerHeight / 2 + lineHeight / 2
-//       container.scrollTo({
-//         top: Math.max(0, scrollTop),
-//         behavior: 'smooth'
-//       })
-//     }
-//   })
-// }
-
-// // 修改歌词索引监听
-// watch(currentLyricIndex, (newIndex) => {
-//   if (newIndex === -1) return
-
-//   // 添加延迟，确保DOM更新完成
-//   setTimeout(() => {
-//     scrollToLyric(newIndex)
-//   }, 100)
-// })
-
-// // 3. 修复歌词同步检测
-// watch(currentTime, (newTime) => {
-//   if (!currentLyrics.value.length) return
-
-//   let newIndex = -1
-//   for (let i = 0; i < currentLyrics.value.length; i++) {
-//     if (newTime >= currentLyrics.value[i].time) {
-//       newIndex = i
-//     } else {
-//       break
-//     }
-//   }
-
-//   if (newIndex !== currentLyricIndex.value) {
-//     currentLyricIndex.value = newIndex
-//   }
-// })
-
-const setVolume = (e) => {
+const setVolume = (e) => { //音量控制
   if (!volumeContainer.value) return;
   const rect = volumeContainer.value.getBoundingClientRect();
   let newVolume = ((e.clientX - rect.left) / rect.width) * 100;
@@ -383,126 +245,282 @@ const setVolume = (e) => {
   muted.value = false;
 };
 
-const startDrag = (e) => {
-  isDragging.value = true;
-  document.addEventListener("mousemove", handleDrag);
-  document.addEventListener("mouseup", stopDrag);
-};
-
-const handleDrag = (e) => {
-  if (!isDragging.value) return;
-  setVolume(e);
-};
-
-const stopDrag = () => {
-  isDragging.value = false;
-  document.removeEventListener("mousemove", handleDrag);
-  document.removeEventListener("mouseup", stopDrag);
-};
-
-const toggleMute = () => {
+const toggleMute = () => { //静音状态切换
   muted.value = !muted.value;
   audioElement.value.volume = muted.value ? 0 : volume.value / 100;
 };
 
-// const currentSong = computed(() => playlist[currentSongIndex.value]);
-
-const progress = computed(
+const progress = computed( //进度条
   () => (currentTime.value / duration.value) * 100 || 0
 );
 
-//预加载音频时长
-// const loadAudioDuration = async () => {
-//   for (const song of playlist) {
-//     const audio = new Audio(song.url);
-//     await new Promise((resolve) => {
-//       audio.addEventListener("loadedmetadata", () => {
-//         song.duration = audio.duration;
-//         resolve();
-//       });
-//       audio.load();
-//     });
-//   }
-// };
 
-const updateTime = () => {
+const updateTime = () => { //更新（获取）歌曲时长
   currentTime.value = audioElement.value.currentTime;
-  //从预加载获取时长
-  // duration.value = playlist[currentSongIndex.value].duration;
+  //获取时长
+  duration.value = currentSong.value.duration;
 };
 
-const seek = (e) => {
+const seek = (e) => { //调整进度控制歌曲时间
   if (!audioElement.value) return;
   const rect = e.target.getBoundingClientRect();
   const percentage = (e.clientX - rect.left) / rect.width;
   audioElement.value.currentTime = percentage * duration.value;
 };
 
-const formatTime = (seconds) => {
-  const minutes = Math.floor(seconds / 60);
-  seconds = Math.floor(seconds % 60);
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-};
+const playSong = (song, index) => { // 播放歌曲
+  if (!song || !audioElement.value) {
+    console.error('播放参数错误:', { song, audioElement: audioElement.value });
+    return;
+  }
 
-// 简化播放函数，直接使用传递的参数
-const playSong = (index) => {
-  currentSongIndex.value = index
-  if (audioElement.value) {
-    console.log(currentPlaylist.value[index].url)
-    audioElement.value.src = currentPlaylist.value[index].url
-    audioElement.value.play()
-    isPlaying.value = true
+  // 确保更新当前歌曲索引和歌曲信息
+  currentSongIndex.value = index;
+  currentSong.value = song;
+
+  try {
+    audioElement.value.src = song.url;
+    audioElement.value.play().then(() => {
+      isPlaying.value = true;
+      // 确保界面同步更新
+      updateTime();
+    }).catch(error => {
+      console.error('播放失败:', error);
+      isPlaying.value = false;
+    });
+  } catch (error) {
+    console.error('播放异常:', error);
   }
 }
-// 下一首
-const nextSong = () => {
+
+const nextSong = () => { // 下一首
+  console.log('nextSong 被调用');
+  if (currentPlaylist.value.length === 0) {
+    console.log('播放列表为空');
+    return;
+  }
+
+  let nextIndex;
   if (playMode.value === "random") {
     if (shuffleList.value.length === 0) generateShuffleList();
-    currentSongIndex.value = shuffleList.value.shift();
+    nextIndex = shuffleList.value.shift();
   } else {
-    currentSongIndex.value = (currentSongIndex.value + 1) % playlist.length;
+    nextIndex = (currentSongIndex.value + 1) % currentPlaylist.value.length;
   }
-  playSong(currentSongIndex.value);
+
+  const song = currentPlaylist.value[nextIndex];
+  if (song) {
+    playSong(song, nextIndex);
+  } else {
+    console.error('获取下一首歌曲失败，索引:', nextIndex);
+  }
 };
 
-// 上一首
-const prevSong = () => {
+const prevSong = () => { // 上一首
+  if (currentPlaylist.value.length === 0) return;
+
+  let prevIndex;
   if (playMode.value === "random") {
     // 随机模式不支持历史记录，改为顺序上一首
-    currentSongIndex.value =
-      (currentSongIndex.value - 1 + playlist.length) % playlist.length;
+    prevIndex = (currentSongIndex.value - 1 + currentPlaylist.value.length) % currentPlaylist.value.length;
   } else {
-    currentSongIndex.value =
-      (currentSongIndex.value - 1 + playlist.length) % playlist.length;
+    prevIndex = (currentSongIndex.value - 1 + currentPlaylist.value.length) % currentPlaylist.value.length;
   }
-  playSong(currentSongIndex.value);
+
+  // 使用计算后的新索引获取歌曲
+  const song = currentPlaylist.value[prevIndex];
+  if (song) {
+    playSong(song, prevIndex);
+  } else {
+    console.error('获取上一首歌曲失败，索引:', prevIndex);
+  }
 };
 
-//播放/暂停
-const togglePlay = () => {
-  if (!audioElement.value) return;
-
-  if (isPlaying.value) {
-    audioElement.value.pause();
-  } else {
-    audioElement.value.play();
+const togglePlay = () => { // 播放/暂停
+  if (!audioElement.value || !currentSong.value || currentSong.value === '') {
+    console.log('无法播放：没有音频元素或当前歌曲');
+    return;
   }
-  isPlaying.value = !isPlaying.value;
+
+  try {
+    if (isPlaying.value) {
+      // 暂停播放
+      audioElement.value.pause();
+      isPlaying.value = false;
+      console.log('已暂停播放');
+    } else {
+      // 开始播放
+      audioElement.value.play().then(() => {
+        isPlaying.value = true;
+        console.log('开始播放:', currentSong.value.name);
+      }).catch(error => {
+        console.error('播放失败:', error);
+        isPlaying.value = false;
+      });
+    }
+  } catch (error) {
+    console.error('播放异常:', error);
+    isPlaying.value = false;
+  }
 };
 
-// 生命周期
+/** ------------------------ 歌词 ------------------------ */
+
+const currentLyrics = ref([]); // 当前歌词
+const currentLyricIndex = ref(-1); // 当前歌词索引
+const lyricsWrapper = ref(null); //容器
+const lyricLine = ref(null); // 歌词行
+const isShowModal = ref(false); // 歌词框显示
+
+const openMore = () => { //打开
+  isShowModal.value = true;
+};
+
+const handChangeModal = () => { //关闭
+  isShowModal.value = false;
+};
+
+const parseLRC = (lrcText) => { // LRC解析器
+  const lyrics = [];
+  const lines = lrcText.split("\n");
+  const timeRegex = /\[(\d+):(\d+)(\.\d+)?\]/g;
+
+  lines.forEach((line) => {
+    const text = line.replace(/\[.*?\]/g, "").trim();
+    if (!text) return;
+
+    const timeMatches = [...line.matchAll(timeRegex)];
+    timeMatches.forEach((match) => {
+      const minutes = parseInt(match[1]);
+      const seconds = parseInt(match[2]);
+      const milliseconds = match[3] ? parseFloat(match[3]) * 1000 : 0;
+      const time = minutes * 60 + seconds + milliseconds / 1000;
+
+      lyrics.push({
+        time: Number(time.toFixed(2)),
+        text,
+      });
+    });
+  });
+  return lyrics.sort((a, b) => a.time - b.time);
+};
+
+watch( // 自动加载歌词
+  currentSongIndex,
+  async () => {
+    if (!currentSong.value.lrc) {
+      currentLyrics.value = [];
+      return;
+    }
+    try {
+      // 使用 fetch 加载歌词文件
+      const response = await fetch(currentSong.value.lrc);
+      if (!response.ok) {
+        throw new Error("歌词文件加载失败");
+      }
+      const lrcText = await response.text();
+      currentLyrics.value = parseLRC(lrcText); // 解析歌词
+    } catch (error) {
+      console.error("歌词加载失败:", error);
+      currentLyrics.value = []; // 加载失败时清空歌词
+    }
+  },
+  {
+    // 立即执行
+    immediate: true,
+  }
+);
+
+const scrollToLyric = (index) => {// 歌词滚动控制
+  nextTick(() => {
+    if (!lyricsWrapper.value || !currentLyrics.value.length) return
+
+    const targetLine = lyricLine.value[index]
+    if (!targetLine) return
+
+    const container = lyricsWrapper.value
+    const containerHeight = container.clientHeight
+    const lineTop = targetLine.offsetTop
+    const lineHeight = targetLine.clientHeight
+    const currentScrollTop = container.scrollTop
+
+    // 计算歌词行在容器中的可见性
+    const isLineVisible = lineTop >= currentScrollTop &&
+      (lineTop + lineHeight) <= (currentScrollTop + containerHeight)
+
+    // 计算歌词行是否在中间区域（中间40%区域）
+    const middleZoneStart = currentScrollTop + containerHeight * 0.3
+    const middleZoneEnd = currentScrollTop + containerHeight * 0.7
+    const isInMiddleZone = lineTop >= middleZoneStart &&
+      (lineTop + lineHeight) <= middleZoneEnd
+
+    // 只有当歌词不在中间区域或者不可见时才滚动
+    if (!isLineVisible || !isInMiddleZone) {
+      const scrollTop = lineTop - containerHeight / 2 + lineHeight / 2
+      container.scrollTo({
+        top: Math.max(0, scrollTop),
+        behavior: 'smooth'
+      })
+    }
+  })
+}
+
+watch(currentLyricIndex, (newIndex) => { // 修改歌词索引监听
+  if (newIndex === -1) return
+
+  // 添加延迟，确保DOM更新完成
+  setTimeout(() => {
+    scrollToLyric(newIndex)
+  }, 100)
+})
+
+watch(currentTime, (newTime) => { // 歌词同步检测
+  if (!currentLyrics.value.length) return
+
+  let newIndex = -1
+  for (let i = 0; i < currentLyrics.value.length; i++) {
+    if (newTime >= currentLyrics.value[i].time) {
+      newIndex = i
+    } else {
+      break
+    }
+  }
+
+  if (newIndex !== currentLyricIndex.value) {
+    currentLyricIndex.value = newIndex
+  }
+})
+
+// const startDrag = (e) => {
+//   isDragging.value = true;
+//   document.addEventListener("mousemove", handleDrag);
+//   document.addEventListener("mouseup", stopDrag);
+// };
+
+// const handleDrag = (e) => {
+//   if (!isDragging.value) return;
+//   setVolume(e);
+// };
+
+// const stopDrag = () => {
+//   isDragging.value = false;
+//   document.removeEventListener("mousemove", handleDrag);
+//   document.removeEventListener("mouseup", stopDrag);
+// };
+
 onMounted(async () => {
-  // audioElement.value = new Audio(playlist[currentSongIndex.value].url);
+
+  audioElement.value = new Audio();  // 初始化音频元素
   audioElement.value.addEventListener("timeupdate", updateTime);
-  // 播放结束时处理（修改现有代码）
-  audioElement.value.addEventListener("ended", () => {
+
+  audioElement.value.addEventListener("ended", () => {  // 播放结束事件
     if (playMode.value === "random" && shuffleList.value.length === 0) {
       generateShuffleList();
     }
     nextSong();
   });
-  await loadAudioDuration();
-  audioElement.value.volume = volume.value / 100;
+
+  audioElement.value.volume = volume.value / 100;  // 设置初始音量
 });
 
 </script>
