@@ -88,28 +88,14 @@
                   <ul class="info-list">
                     <li class="item" @click="changeRouter('/personalCenter')">
                       <div class="item__left">
-                        <img src="./icon/personCenter.svg" alt="" />
+                        <img src="./icon/personCenter.png" alt="peisonal" />
                         <span>个人中心</span>
                       </div>
                       <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
                     </li>
-                    <!-- <li class="item" @click="changeRouter('/memberCenter')">
-                      <div class="item__left">
-                        <img src="./icon/member.svg" alt="" />
-                        <span>会员中心</span>
-                      </div>
-                      <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
-                    </li> -->
-                    <!-- <li class="item">
-                      <div class="item__left">
-                        <img src="./icon/like.svg" alt="" />
-                        <span>收藏</span>
-                      </div>
-                      <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
-                    </li> -->
                     <li class="item" @click="changeRouter('/contactUs')">
                       <div class="item__left">
-                        <img src="./icon/collect.svg" alt="" />
+                        <img src="./icon/contactUs.png" alt="contactUs" />
                         <span>联系我们</span>
                       </div>
                       <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />

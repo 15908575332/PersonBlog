@@ -60,7 +60,7 @@
       <div class="right-content">
         <!-- 搜索栏 -->
         <div class="search-bar">
-          <input type="text" placeholder="搜索音乐、MV、歌单">
+          <input type="text" v-model.lazy="searchValue" placeholder="搜索音乐、MV、歌单">
         </div>
 
         <!-- 内容视图 -->
@@ -191,6 +191,9 @@ const formatTime = (seconds) => {
   seconds = Math.floor(seconds % 60);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
+
+/** ------------------------ 搜索栏 ------------------------ */
+const searchValue = ref(); //搜索内容
 
 /** ------------------------ 播放器 ------------------------ */
 import playImg from "@/assets/icon/treasureBox/play.png";
@@ -528,7 +531,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .player-container {
   $primary-color: #c20c0c;
-  font-family: "gtpy";
+  font-family: "lmst";
   height: calc(100vh - 3rem);
   width: 100vw;
   @include flexCenter(row, space-between);
@@ -881,8 +884,8 @@ onMounted(async () => {
   border-radius: 0.5rem;
   box-shadow: 0 0 20px rgba(23, 24, 44, 0.72);
   gap: 1rem;
-  font-family: 'gtpy';
   position: relative;
+  background-image: linear-gradient(180deg, #2e2e2e 30%, #121212 100%);
 
   // 专辑图片
   .album-pic {
@@ -918,7 +921,7 @@ onMounted(async () => {
     @include flexCenter(row, center);
     gap: 2rem;
     padding: 0.5rem;
-    box-shadow: 0 2px 10px black;
+    box-shadow: 0 1px 10px rgb(255, 255, 255, .2);
 
     div {
       cursor: pointer;
@@ -930,23 +933,22 @@ onMounted(async () => {
   }
 
   .lyrics-container {
-    height: 14rem;
-    min-height: 14rem;
+    height: 16rem;
+    min-height: 16rem;
     width: 40vw;
     min-width: 20rem;
     scrollbar-width: none;
     overflow-y: auto;
     @include flexCenter(center, center);
+    font-family: 'lmst';
 
     .lyrics-wrapper {
       height: 100%;
       width: 50%;
-      max-height: 14rem;
+      max-height: 16rem;
       text-align: center;
       overflow-y: auto;
       overscroll-behavior: contain;
-      // background-color: rebeccapurple;
-
 
       /* IE 10+ */
       &::-webkit-scrollbar {
@@ -955,14 +957,14 @@ onMounted(async () => {
       }
 
       .lyric-line {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         color: rgba(255, 255, 255);
         padding: 0.5rem 0.2rem;
         transition: all 0.3s ease;
         line-height: 24px;
 
         &.active {
-          color: $primary-color;
+          color: $primary-hover;
           font-size: 0.9rem;
           font-weight: bold;
           transform: scale(1.05);

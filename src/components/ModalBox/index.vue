@@ -53,13 +53,12 @@ watch(() => props.isVisible, (newValue) => {
 
     .modal-content {
         position: relative;
-        background-image: url('./img/fH11Fdidh.png');
+        background-color: #fff;
         background-position: center center;
         background-size: cover;
         padding: 2rem;
         border-radius: 8px;
         min-width: 300px;
-        // max-width: 60%;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         cursor: auto;
         user-select: none;

@@ -66,7 +66,7 @@
                             <img src="@/assets/icon/treasureBox/music-play.png" alt="play-icon" class="play-icon"
                                 :class="{ 'playing-animation': activeIndex === index && isPlaying }" />
                             <span class="song-name" :class="{ 'text-glow': activeIndex === index }">{{ song.name
-                            }}</span>
+                                }}</span>
                         </div>
                     </div>
                     <div class="song-duration">{{ formatTime(song.duration) }}</div>
@@ -75,32 +75,57 @@
 
                     <!-- 操作按钮 -->
                     <div class="song-control" @click.stop>
-                        <svg class="icon" width="18" height="18" viewBox="0 0 24 24" @click="toggleFavorite(song.index)"
-                            :style="{ color: song.favorite ? '#e60026' : '#666' }">
-                            <path fill="currentColor"
-                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                        </svg>
-
-                        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
-                        </svg>
-                        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
-                        </svg>
-                        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-                        </svg>
-                        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                        </svg>
+                        <a-tooltip placement="leftTop">
+                            <template #title>
+                                <span>喜欢/取消喜欢</span>
+                            </template>
+                            <svg class="icon" width="18" height="18" viewBox="0 0 24 24"
+                                @click="toggleFavorite(song.index)"
+                                :style="{ color: song.favorite ? '#e60026' : '#666' }">
+                                <path fill="currentColor"
+                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            </svg>
+                        </a-tooltip>
+                        <a-tooltip placement="leftTop">
+                            <template #title>
+                                <span>收藏</span>
+                            </template>
+                            <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+                            </svg>
+                        </a-tooltip>
+                        <a-tooltip placement="leftTop">
+                            <template #title>
+                                <span>下载</span>
+                            </template>
+                            <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
+                            </svg>
+                        </a-tooltip>
+                        <a-tooltip placement="leftTop">
+                            <template #title>
+                                <span>分享</span>
+                            </template>
+                            <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                            </svg>
+                        </a-tooltip>
+                        <a-tooltip placement="leftTop">
+                            <template #title>
+                                <span>删除</span>
+                            </template>
+                            <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
+                        </a-tooltip>
                     </div>
                 </li>
             </ul>
@@ -288,7 +313,7 @@ onMounted(() => {
                     color: var(--primary-red);
                     padding: 3px 8px;
                     border-radius: 4px;
-                    font-size: 12px;
+                    font-size: 0.65rem;
                     font-weight: 600;
                 }
             }
@@ -385,11 +410,12 @@ onMounted(() => {
         padding: 1rem 0;
         overflow: hidden;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        font-size: 0.8rem;
+        font-size: 0.9rem;
 
         .songs-header {
             display: flex;
-            padding: 15px 20px;
+            padding: 0.75rem 1rem;
+            padding-left: 0;
             background-color: var(--medium-gray);
             font-weight: 600;
             border-bottom: 1px solid var(--primary-red);
@@ -423,6 +449,9 @@ onMounted(() => {
         @include flexCenter(row, center);
         gap: 0.4rem;
         margin-right: 2rem;
+        .ant-tooltip-open {
+            font-family: 'lmst' !important;
+        }
     }
 
     .song-list {
@@ -560,15 +589,15 @@ onMounted(() => {
 
 @keyframes text-glow {
     0% {
-        text-shadow: 0 0 2px rgba(230, 0, 38, 0.5);
+        text-shadow: 0 0 1px rgba(230, 0, 38, 0.5);
     }
 
     50% {
-        text-shadow: 0 0 8px rgba(230, 0, 38, 0.8);
+        text-shadow: 0 0 6px rgba(230, 0, 38, 0.8);
     }
 
     100% {
-        text-shadow: 0 0 2px rgba(230, 0, 38, 0.5);
+        text-shadow: 0 0 1px rgba(230, 0, 38, 0.5);
     }
 }
 
