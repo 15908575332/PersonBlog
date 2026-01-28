@@ -285,27 +285,42 @@ router.get('/getMessageSessions', authenticateToken, async (req, res) => {
  * 发送单人聊天消息
  * POST /instansMessaging/sendMessage
  */
+// 消息类型定义
+const MESSAGE_TYPES = {
+    TEXT: 1,        // 文本（包含表情）
+    IMAGE: 2,       // 图片
+};
+
 router.post('/sendMessage', authenticateToken, async (req, res) => {
     try {
         const {
             session_id,
             receiver_id,
-            msg_type = 1,
+            msg_type = MESSAGE_TYPES.TEXT, // 默认文本类型
             content,
             file_url = null,
             file_size = null,
             file_duration = null,
-            latitude = null,
-            longitude = null,
-            location_name = null
+            is_simulated = false,        // 是否模拟回复
+            simulated_sender_id = null   // 模拟回复的发送者ID
         } = req.body;
-        const sender_id = req.user.user_id;
+
+        // 确定发送者ID
+        let sender_id;
+        if (is_simulated && simulated_sender_id) {
+            // 模拟回复：使用指定的发送者ID
+            sender_id = simulated_sender_id;
+        } else {
+            // 正常消息：使用当前登录用户
+            sender_id = req.user.user_id;
+        }
 
         // 验证会话存在且用户有权访问
         const session = await sqlQuery(
-            `SELECT session_id FROM im_single_chat_sessions 
+            `SELECT session_id, user1_id, user2_id 
+             FROM im_single_chat_sessions 
              WHERE session_id = ? AND (user1_id = ? OR user2_id = ?)`,
-            [session_id, sender_id, sender_id]
+            [session_id, req.user.user_id, req.user.user_id]
         );
 
         if (!Array.isArray(session) || session.length === 0) {
@@ -315,16 +330,60 @@ router.post('/sendMessage', authenticateToken, async (req, res) => {
             });
         }
 
-        // 插入消息记录
+        // 验证模拟回复的发送者必须是会话中的对方用户
+        if (is_simulated) {
+            const sessionData = session[0];
+            const validSenderIds = [sessionData.user1_id, sessionData.user2_id];
+
+            if (!validSenderIds.includes(simulated_sender_id)) {
+                return res.status(403).json({
+                    code: 403,
+                    message: '模拟回复的发送者ID无效'
+                });
+            }
+
+            if (simulated_sender_id === req.user.user_id) {
+                return res.status(403).json({
+                    code: 403,
+                    message: '不能模拟自己发送消息'
+                });
+            }
+        }
+
+        // 验证消息内容
+        if (!content || content.trim() === '') {
+            return res.status(400).json({
+                code: 400,
+                message: '消息内容不能为空'
+            });
+        }
+
+        // 图片消息需要文件URL
+        if (msg_type === MESSAGE_TYPES.IMAGE && !file_url) {
+            return res.status(400).json({
+                code: 400,
+                message: '图片消息必须提供文件URL'
+            });
+        }
+
+        // 插入消息记录（严格按照SQL表结构）
         const insertResult = await sqlQuery(
             `INSERT INTO im_single_chat_messages 
              (session_id, sender_id, receiver_id, msg_type, content, 
-              file_url, file_size, file_duration, latitude, longitude, location_name,
+              file_url, file_size, file_duration, is_read, is_received,
               created_at, updated_at) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
             [
-                session_id, sender_id, receiver_id, msg_type, content,
-                file_url, file_size, file_duration, latitude, longitude, location_name
+                session_id,
+                sender_id,
+                receiver_id,
+                msg_type,
+                content,
+                file_url,
+                file_size,
+                file_duration,
+                0,  // is_read: 0-未读
+                0   // is_received: 0-未送达（稍后可以更新为已送达）
             ]
         );
 
@@ -337,17 +396,36 @@ router.post('/sendMessage', authenticateToken, async (req, res) => {
 
         // 获取新插入的消息详情
         const newMessage = await sqlQuery(
-            `SELECT * FROM im_single_chat_messages WHERE msg_id = ?`,
+            `SELECT 
+                msg_id,
+                session_id,
+                sender_id,
+                receiver_id,
+                msg_type,
+                content,
+                file_url,
+                file_size,
+                file_duration,
+                is_read,
+                read_at,
+                is_received,
+                received_at,
+                created_at,
+                updated_at
+             FROM im_single_chat_messages 
+             WHERE msg_id = ?`,
             [insertResult.insertId]
         );
 
-        // 更新会话的最后一条消息
-        await updateSessionLastMessage(session_id, {
-            messageId: insertResult.insertId,
-            content: content,
-            messageType: msg_type,
-            senderId: sender_id
-        });
+        if (!Array.isArray(newMessage) || newMessage.length === 0) {
+            return res.status(500).json({
+                code: 500,
+                message: '获取新消息详情失败'
+            });
+        }
+
+        // 更新会话的最后一条消息和未读计数
+        await updateSessionLastMessage(session_id, newMessage[0]);
 
         res.json({
             code: 200,
@@ -359,43 +437,59 @@ router.post('/sendMessage', authenticateToken, async (req, res) => {
         console.error('发送消息失败:', error);
         res.status(500).json({
             code: 500,
-            message: '服务器内部错误'
+            message: '服务器内部错误',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 });
 
-// 封装更新会话最后消息的函数
+/**
+ * 更新会话最后消息
+ */
 async function updateSessionLastMessage(sessionId, messageData) {
-    const { messageId, content, messageType, senderId } = messageData;
+    try {
+        const { msg_id, content, msg_type, sender_id } = messageData;
 
-    const session = await sqlQuery(
-        'SELECT user1_id, user2_id FROM im_single_chat_sessions WHERE session_id = ?',
-        [sessionId]
-    );
-
-    if (Array.isArray(session) && session.length > 0) {
-        const sessionData = session[0];
-        const isUser1 = senderId === sessionData.user1_id;
-
-        await sqlQuery(
-            `UPDATE im_single_chat_sessions 
-             SET last_msg_id = ?, 
-                 last_msg_content = ?, 
-                 last_msg_type = ?, 
-                 last_msg_time = NOW(),
-                 unread_count1 = unread_count1 + ?,
-                 unread_count2 = unread_count2 + ?,
-                 updated_at = NOW()
-             WHERE session_id = ?`,
-            [
-                messageId,
-                content,
-                messageType,
-                isUser1 ? 0 : 1,
-                isUser1 ? 1 : 0,
-                sessionId
-            ]
+        const session = await sqlQuery(
+            'SELECT user1_id, user2_id FROM im_single_chat_sessions WHERE session_id = ?',
+            [sessionId]
         );
+
+        if (Array.isArray(session) && session.length > 0) {
+            const sessionData = session[0];
+            const isUser1 = sender_id === sessionData.user1_id;
+
+            // 更新会话表的相关字段
+            await sqlQuery(
+                `UPDATE im_single_chat_sessions 
+                 SET 
+                     last_msg_id = ?, 
+                     last_msg_content = ?, 
+                     last_msg_type = ?, 
+                     last_msg_time = NOW(),
+                     unread_count1 = CASE 
+                         WHEN user1_id = ? THEN unread_count1 
+                         ELSE unread_count1 + 1 
+                     END,
+                     unread_count2 = CASE 
+                         WHEN user2_id = ? THEN unread_count2 
+                         ELSE unread_count2 + 1 
+                     END,
+                     updated_at = NOW()
+                 WHERE session_id = ?`,
+                [
+                    msg_id,
+                    content,
+                    msg_type,
+                    sender_id,  // 对于user1_id的判断
+                    sender_id,  // 对于user2_id的判断
+                    sessionId
+                ]
+            );
+        }
+    } catch (error) {
+        console.error('更新会话最后消息失败:', error);
+        // 不抛出错误，避免影响主流程
     }
 }
 
@@ -403,10 +497,10 @@ async function updateSessionLastMessage(sessionId, messageData) {
  * 获取会话聊天记录
  * GET /instansMessaging/messages/:sessionId
  */
+// 在 instantMessagingApi.js 中修改获取消息接口
 router.get('/messages/:sessionId', authenticateToken, async (req, res) => {
     try {
         const { sessionId } = req.params;
-        const { page = 1, pageSize = 50, lastMsgId } = req.query;
         const currentUserId = req.user.user_id;
 
         // 验证会话权限
@@ -423,8 +517,9 @@ router.get('/messages/:sessionId', authenticateToken, async (req, res) => {
             });
         }
 
-        let query = `
-            SELECT 
+        // 获取消息
+        const messages = await sqlQuery(
+            `SELECT 
                 m.msg_id,
                 m.session_id,
                 m.sender_id,
@@ -434,44 +529,37 @@ router.get('/messages/:sessionId', authenticateToken, async (req, res) => {
                 m.file_url,
                 m.file_size,
                 m.file_duration,
-                m.latitude,
-                m.longitude,
-                m.location_name,
                 m.is_read,
                 m.read_at,
                 m.is_received,
                 m.received_at,
-                m.is_recalled,
-                m.recalled_at,
                 m.created_at,
                 u.username as sender_name,
                 u.avatar_url as sender_avatar
             FROM im_single_chat_messages m
             LEFT JOIN users u ON m.sender_id = u.user_id
-            WHERE m.session_id = ? AND m.is_recalled = 0
-        `;
+            WHERE m.session_id = ?
+            ORDER BY m.created_at ASC`,
+            [sessionId]
+        );
 
-        const params = [sessionId];
-
-        if (lastMsgId) {
-            query += ' AND m.msg_id < ?';
-            params.push(lastMsgId);
-        }
-
-        query += ' ORDER BY m.created_at DESC LIMIT ?';
-        params.push(parseInt(pageSize));
-
-        const messages = await sqlQuery(query, params);
-
-        // 反转顺序，让最早的消息在前
-        const reversedMessages = messages.reverse();
-
+        // 解析每条消息的内容
+        const processedMessages = await Promise.all(
+            messages.map(async (msg) => {
+                if (msg.msg_type === 1) { // 文本消息
+                    return {
+                        ...msg,
+                        parsed_content: await parseMessageContent(msg.content)
+                    };
+                }
+                // 图片消息直接返回
+                return msg;
+            })
+        );
         res.json({
             code: 200,
             data: {
-                messages: reversedMessages,
-                hasMore: messages.length === parseInt(pageSize),
-                total: messages.length
+                messages: processedMessages
             },
             message: '获取消息成功'
         });
@@ -484,65 +572,88 @@ router.get('/messages/:sessionId', authenticateToken, async (req, res) => {
         });
     }
 });
-/**
- * 标记消息为已读
- * PUT /instansMessaging/messages/:msgId/read
- */
-router.put('/messages/:msgId/read', authenticateToken, async (req, res) => {
-    try {
-        const { msgId } = req.params;
-        const currentUserId = req.user.user_id;
 
-        // 验证消息存在且接收者是当前用户
-        const message = await sqlQuery(
-            `SELECT msg_id, receiver_id, session_id FROM im_single_chat_messages 
-             WHERE msg_id = ? AND receiver_id = ?`,
-            [msgId, currentUserId]
-        );
+// 简化的消息解析函数
+async function parseMessageContent(content) {
+    if (!content) return [];
 
-        if (!Array.isArray(message) || message.length === 0) {
-            return res.status(404).json({
-                code: 404,
-                message: '消息不存在或无权操作'
-            });
+    const result = [];
+    const emojiRegex = /\[emoji:([^|\]]+)\|([^\]]+)\]/g;
+    let lastIndex = 0;
+    let match;
+    while ((match = emojiRegex.exec(content)) !== null) {
+        // 添加表情前的文本
+        if (match.index > lastIndex) {
+            const text = content.substring(lastIndex, match.index);
+            if (text.trim()) {
+                result.push({ type: 'text', content: text });
+            }
         }
 
-        // 更新消息为已读
+        // 查询表情URL
+        const emojiCode = match[1];
+        const emojiText = match[2];
+        const emojiUrl = await getEmojiUrl(emojiCode);
+        // 添加表情
+        result.push({
+            type: 'emoji',
+            code: emojiCode,
+            text: emojiText,
+            url: emojiUrl
+        });
+
+        lastIndex = match.index + match[0].length;
+    }
+
+    // 添加剩余文本
+    if (lastIndex < content.length) {
+        const text = content.substring(lastIndex);
+        if (text.trim()) {
+            result.push({ type: 'text', content: text });
+        }
+    }
+
+    return result;
+}
+
+// 查询表情URL
+async function getEmojiUrl(emojiCode) {
+    try {
+        const result = await sqlQuery(
+            'SELECT content FROM im_emojis WHERE code = ? AND is_active = 1',
+            [emojiCode]
+        );
+        return result[0]?.content || null;
+    } catch (error) {
+        console.error('查询表情URL失败:', error);
+        return null;
+    }
+}
+
+//  标记消息为已读
+router.post('/sessions/:sessionId/read-all', authenticateToken, async (req, res) => {
+    try {
+        const { sessionId } = req.params;
+        const currentUserId = req.user.user_id;
+        // 批量更新该会话中所有未读消息为已读
         await sqlQuery(
             `UPDATE im_single_chat_messages 
-             SET is_read = 1, read_at = NOW(), updated_at = NOW()
-             WHERE msg_id = ?`,
-            [msgId]
+             SET is_read = 1, read_at = NOW() 
+             WHERE session_id = ? AND receiver_id = ? AND is_read = 0`,
+            [sessionId, currentUserId]
         );
-
-        // 更新会话未读计数
-        const msgData = message[0];
+        // 重置会话未读计数
         await sqlQuery(
             `UPDATE im_single_chat_sessions 
-             SET unread_count1 = CASE 
-                 WHEN user1_id = ? THEN GREATEST(0, unread_count1 - 1) 
-                 ELSE unread_count1 
-             END,
-                 unread_count2 = CASE 
-                 WHEN user2_id = ? THEN GREATEST(0, unread_count2 - 1) 
-                 ELSE unread_count2 
-             END,
-                 updated_at = NOW()
+             SET unread_count1 = CASE WHEN user1_id = ? THEN 0 ELSE unread_count1 END,
+                 unread_count2 = CASE WHEN user2_id = ? THEN 0 ELSE unread_count2 END
              WHERE session_id = ?`,
-            [currentUserId, currentUserId, msgData.session_id]
+            [currentUserId, currentUserId, sessionId]
         );
-
-        res.json({
-            code: 200,
-            message: '消息已标记为已读'
-        });
-
+        res.json({ code: 200, message: '会话消息已全部标记为已读' });
     } catch (error) {
-        console.error('标记消息已读失败:', error);
-        res.status(500).json({
-            code: 500,
-            message: '服务器内部错误'
-        });
+        console.error('批量标记已读失败:', error);
+        res.status(500).json({ code: 500, message: '服务器内部错误' });
     }
 });
 

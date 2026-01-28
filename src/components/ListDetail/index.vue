@@ -1639,7 +1639,7 @@ onMounted(async () => {
                 transform: rotate(45deg);
                 top: 90%;
                 left: -110%;
-                background-color: $primary-sub;
+                background-color: $primary-hover;
                 z-index: -1;
             }
 
@@ -1648,7 +1648,6 @@ onMounted(async () => {
                     top: 0%;
                     left: -12%;
                 }
-
             }
 
             img {

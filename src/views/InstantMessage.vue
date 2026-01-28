@@ -169,7 +169,7 @@
                                 <p>
                                     <strong>个人简介：</strong>
                                     <span v-if="selectedItem.introduce" class="introduce">{{ selectedItem.introduce
-                                        }}</span>
+                                    }}</span>
                                     <span v-else>无</span>
                                 </p>
                                 <p class="level">
@@ -218,7 +218,7 @@
                 <div class="menu-item" @click="deleteChatSession">
                     <i>🗑️</i> 删除会话
                 </div>
-                <div class="menu-item" @click="markAsReadChatSession">
+                <div class="menu-item" @click="selectChatSession">
                     <i>📨</i> 标记为已读
                 </div>
                 <div class="menu-item" @click="clearChatHistory">
@@ -418,37 +418,66 @@ async function getAllSessions() {
     }
 }
 
-/**
- * 聊天记录推送（会话表更新最后一次聊天内容已包含在此api中）
- */
+
+// 消息类型定义
+const MESSAGE_TYPES = {
+    TEXT: 1,  // 文本
+    IMAGE: 2, // 图片
+};
+
+// 更新会话预览
+function updateSessionPreview(sessionId, previewText) {
+    const sessionIndex = chatSessions.value.findIndex(session =>
+        session.session_id === sessionId
+    );
+    if (sessionIndex !== -1) {
+        // 更新会话的最后消息内容和时间
+        chatSessions.value[sessionIndex].last_msg_content = previewText;
+        chatSessions.value[sessionIndex].last_msg_time = new Date().toISOString();
+
+        // 将更新的会话移动到列表顶部（置顶）
+        const session = chatSessions.value.splice(sessionIndex, 1)[0];
+        chatSessions.value.unshift(session);
+    }
+}
+
+// 发送消息
 async function handleSendMessage(messageData) {
     if (!selectedItem.value) return;
 
     try {
-        // 构建消息内容
         let content = '';
-        let msgType = 1; // 默认为文本消息
+        let msgType = 1; // 默认为文本类型
+        let fileUrl = null;
 
         if (messageData.image) {
-            // 图片消息处理
+            console.log(messageData.image)
+            // 图片消息
             msgType = 2;
             content = '[图片]';
-        } else if (messageData.mixedContent && messageData.mixedContent.length > 0) {
-            // 处理混合内容
-            content = generatePreviewFromMixedContent(messageData.mixedContent);
+            fileUrl = messageData.image;
+        } else if (messageData.content) {
+            // 文本消息（包含表情标记）
+            msgType = 1;
+            content = messageData.content;
         } else {
-            alert('消息内容不能为空');
+            message.error('消息内容不能为空');
             return;
         }
-
-
+        // console.log('发送到后端的数据:', {
+        //     session_id: selectedItem.value.session_id,
+        //     receiver_id: selectedItem.value.other_user_id,
+        //     msg_type: msgType,
+        //     content: content,
+        //     file_url: fileUrl
+        // });
         // 调用后端API发送消息
         const response = await $http.post('/instansMessaging/sendMessage', {
             session_id: selectedItem.value.session_id,
             receiver_id: selectedItem.value.other_user_id,
             msg_type: msgType,
             content: content,
-            file_url: messageData.image || null
+            file_url: fileUrl
         });
 
         if (response.code !== 200) {
@@ -456,28 +485,30 @@ async function handleSendMessage(messageData) {
         }
 
         const newMessage = response.data;
-
+        console.log(newMessage)
         // 更新前端消息列表
         if (!selectedItem.value.messages) {
             selectedItem.value.messages = [];
         }
 
+        // 将后端返回的消息解析为 mixedContent 用于前端渲染
         const formattedMessage = {
             id: newMessage.msg_id,
             sender: "你",
-            mixedContent: messageData.mixedContent || [],
-            image: messageData.image || null,
+            mixedContent: parseMessageContent(newMessage), // 解析后端返回的消息内容
             time: newMessage.created_at,
-            isMine: true,
             avatar: userStore.user.avatarUrl,
-            // 添加后端返回的原始数据
             rawMessage: newMessage
         };
 
         selectedItem.value.messages.push(formattedMessage);
 
         // 更新会话预览
-        updateSessionPreview(selectedItem.value.session_id, content);
+        const previewText = generatePreview(content);
+        updateSessionPreview(selectedItem.value.session_id, previewText);
+
+        // 模拟回复
+        await simulateReply(selectedItem.value.session_id, messageData);
 
         // 滚动到底部
         nextTick(() => {
@@ -486,24 +517,106 @@ async function handleSendMessage(messageData) {
 
     } catch (error) {
         console.error('发送消息失败:', error);
-        // 使用项目中的消息提示组件
         message.error('发送消息失败，请重试');
     }
 }
 
-// 更新会话预览的
-function updateSessionPreview(sessionId, previewText) {
-    const sessionIndex = chatSessions.value.findIndex(session =>
-        session.session_id === sessionId
-    );
+// 会话内容预览
+function generatePreview(content) {
+    if (!content) return '';
 
-    if (sessionIndex !== -1) {
-        chatSessions.value[sessionIndex].last_msg_content = previewText;
-        chatSessions.value[sessionIndex].last_msg_time = new Date().toISOString();
+    // 简单截断处理
+    if (content.length > 50) {
+        return content.substring(0, 50) + '...';
+    }
+    return content;
+}
 
-        // 置顶当前会话
-        const session = chatSessions.value.splice(sessionIndex, 1)[0];
-        chatSessions.value.unshift(session);
+// 修改模拟回复函数
+async function simulateReply(sessionId, originalMessage) {
+    if (!selectedItem.value || selectedItem.value.session_id !== sessionId) {
+        return;
+    }
+
+    try {
+        // 模拟延迟回复
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        let replyContent = '';
+        let msgType = 1;
+        let fileUrl = null;
+
+        // 直接复制用户发送的内容
+        if (originalMessage.image) {
+            // 图片消息
+            msgType = 2;
+            replyContent = '[图片]';
+            fileUrl = originalMessage.image;
+        } else if (originalMessage.content) {
+            // 文本消息
+            msgType = 1;
+            replyContent = originalMessage.content;
+        } else {
+            replyContent = '收到消息';
+        }
+
+        // 调用后端API发送模拟回复消息
+        const response = await $http.post('/instansMessaging/sendMessage', {
+            session_id: sessionId,
+            receiver_id: userStore.user.userId,
+            simulated_sender_id: selectedItem.value.other_user_id,
+            is_simulated: true,
+            msg_type: msgType,
+            content: replyContent,
+            file_url: fileUrl
+        });
+
+        if (response.code === 200) {
+            const simulatedMessage = response.data;
+
+            const replyMessage = {
+                id: simulatedMessage.msg_id,
+                sender: selectedItem.value.other_username,
+                mixedContent: parseMessageContent(simulatedMessage),
+                time: simulatedMessage.created_at,
+                avatar: selectedItem.value.other_avatar,
+                rawMessage: simulatedMessage
+            };
+
+            if (!selectedItem.value.messages) {
+                selectedItem.value.messages = [];
+            }
+            selectedItem.value.messages.push(replyMessage);
+
+            // 更新会话预览
+            const previewText = generatePreview(replyContent);
+            updateSessionPreview(sessionId, previewText);
+
+            nextTick(() => {
+                chatMessageRef.value?.forceScrollToBottom(true);
+            });
+
+        } else {
+            throw new Error(response.message || '模拟回复保存失败');
+        }
+
+    } catch (error) {
+        console.error('模拟回复失败:', error);
+    }
+}
+
+// 后端数据重组
+function parseMessageContent(message) {
+    if (message.msg_type === MESSAGE_TYPES.IMAGE) {  // 图片消息
+        return [{ type: 'image', content: message.file_url || message.content }];
+    } else {  // 文本消息
+        // 优先使用后端解析的混合数据
+        if (message.parsed_content && Array.isArray(message.parsed_content)) {
+            return message.parsed_content;
+        } else {
+            // 如果没有解析内容，创建纯文本消息
+            return [{ type: 'text', content: message.content || '' }];
+        }
     }
 }
 
@@ -525,11 +638,9 @@ async function selectChatSession(session) {
             sender: msg.sender_id === userStore.user.userId ? "你" : msg.sender_name,
             mixedContent: parseMessageContent(msg),
             time: msg.created_at,
-            isMine: msg.sender_id === userStore.user.userId,
             avatar: msg.sender_avatar || '/src/assets/icon/instantMessaging/icons8-people-48.png',
             rawMessage: msg
         }));
-
         selectedItem.value = {
             ...session,
             messages: messages
@@ -553,32 +664,37 @@ async function selectChatSession(session) {
     }
 }
 
-// 新增消息内容解析函数
-function parseMessageContent(message) {
-    if (message.msg_type === 1) { // 文本消息
-        return [{ type: 'text', content: message.content }];
-    } else if (message.msg_type === 2) { // 图片消息
-        return [{ type: 'image', content: message.file_url }];
-    }
-    // 其他消息类型...
-    return [{ type: 'text', content: message.content }];
-}
-
-// 新增标记消息为已读的函数
+// 标记消息为已读的函数
 async function markMessagesAsRead(sessionId) {
     try {
-        // 这里可以批量标记会话中的所有未读消息为已读
-        await $http.put(`/instansMessaging/sessions/${sessionId}/read-all`);
+        // 调用新的批量标记已读端点
+        await $http.post(`/instansMessaging/sessions/${sessionId}/read-all`);
 
-        // 更新会话列表的未读计数
-        const sessionIndex = chatSessions.value.findIndex(s =>
-            s.session_id === sessionId
-        );
-        if (sessionIndex !== -1) {
-            chatSessions.value[sessionIndex].unread_count = 0;
-        }
+        // 立即更新前端状态，无需等待后端响应
+        updateFrontendUnreadCount(sessionId);
+
     } catch (error) {
         console.error('标记消息已读失败:', error);
+        // 即使后端失败，也尝试更新前端状态（乐观更新）
+        updateFrontendUnreadCount(sessionId);
+    }
+}
+
+// 新增：更新前端未读计数
+function updateFrontendUnreadCount(sessionId) {
+    // 更新会话列表的未读计数
+    const sessionIndex = chatSessions.value.findIndex(s =>
+        s.session_id === sessionId
+    );
+    if (sessionIndex !== -1) {
+        chatSessions.value[sessionIndex].unread_count = 0;
+        chatSessions.value[sessionIndex].unreadCount = 0;
+    }
+
+    // 如果当前选中的会话就是被标记的会话，也更新选中项的状态
+    if (selectedItem.value && selectedItem.value.session_id === sessionId) {
+        selectedItem.value.unread_count = 0;
+        selectedItem.value.unreadCount = 0;
     }
 }
 // 删除聊天会话
@@ -617,7 +733,6 @@ async function deleteChatSession() {
         hideChatContextMenu();
     }
 }
-
 /** ------------------------ 好友 ------------------------ */
 const friends = ref([]); //列表
 const friendCounts = ref(0); //数量
@@ -672,94 +787,6 @@ const filteredGroups = computed(() => { // 群组列表过滤逻辑（用作搜�
         group.name.includes(searchQuery.value)
     )
 })
-
-/** ------------------------ 预览生成 ------------------------ */
-function generatePreviewFromMixedContent(mixedContent, options = {}) {
-    if (!mixedContent || mixedContent.length === 0) return '';
-
-    const {
-        maxLength = 50, // 最大预览长度
-        truncateSuffix = '...', // 截断后缀
-    } = options;
-
-    let preview = mixedContent.map(item => {
-        if (item.type === 'text') {
-            return item.content;
-        } else if (item.type === 'emoji') {
-            return '[表情]' + `[${item.id}]`;
-        } else if (item.type === 'image') {
-            return '[图片]';
-        } else if (item.type === 'file') {
-            return '[文件]';
-        }
-        return '';
-    }).filter(text => text.trim() !== '').join(' ');
-
-    // 截断过长的预览
-    if (preview.length > maxLength) {
-        preview = preview.substring(0, maxLength) + truncateSuffix;
-    }
-
-    return preview.trim();
-}
-
-// 模拟回复，支持表情
-function simulateReply(chatId, originalMessage) {
-    setTimeout(() => {
-        const isImage = originalMessage.image;
-        const hasMixedContent = originalMessage.mixedContent && originalMessage.mixedContent.length > 0;
-
-        let replyMixedContent = [];
-
-        if (isImage) {
-            // 图片回复逻辑
-        } else if (hasMixedContent) {
-            // 复制混合内容
-            replyMixedContent = JSON.parse(JSON.stringify(originalMessage.mixedContent));
-        }
-
-        const replyMessage = {
-            id: Date.now() + 1,
-            sender: chatId.startsWith('friend_')
-                ? chatSessions.value.find(s => s.id === chatId)?.name || '好友'
-                : '群成员',
-            mixedContent: replyMixedContent,
-            image: isImage ? '/src/assets/icon/instantMessaging/icons8-image-64.png' : null,
-            time: new Date().toISOString(),
-            isMine: false,
-            avatar: chatId.startsWith('friend_')
-                ? chatSessions.value.find(s => s.id === chatId)?.avatar
-                : '/src/assets/icon/instantMessaging/icons8-group-64.png'
-        };
-
-        chatMessages.value[chatId].push(replyMessage);
-
-        // 更新会话预览
-        const sessionIndex = chatSessions.value.findIndex(session => session.id === chatId);
-        if (sessionIndex !== -1) {
-            let previewText = '';
-            if (isImage) {
-                previewText = '[图片]';
-            } else if (hasMixedContent) {
-                previewText = generatePreviewFromMixedContent(originalMessage.mixedContent, {
-                    maxLength: 30,
-                });
-            }
-
-            chatSessions.value[sessionIndex].preview = previewText;
-            chatSessions.value[sessionIndex].time = replyMessage.time;
-            chatSessions.value[sessionIndex].unreadCount += 1;
-        }
-
-        // 如果当前正在查看这个聊天，更新显示
-        if (selectedItem.value?.id === chatId) {
-            selectedItem.value.messages = [...chatMessages.value[chatId]];
-            nextTick(() => {
-                chatMessageRef.value?.forceScrollToBottom(true);
-            });
-        }
-    }, 2000);
-}
 
 /** ------------------------ 公共属性 ------------------------ */
 const chatMessageRef = ref(null); //message实际渲染容器

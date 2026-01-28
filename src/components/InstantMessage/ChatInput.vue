@@ -242,6 +242,7 @@ const initAnimation = (emojiElement, emojiItem) => { // 初始化动画
     animationInstances.set(emojiItem.id, animation);
 };
 
+// 插入表情
 const insertEmoji = async (emoji) => {
     if (!editableDiv.value) return;
 
@@ -263,15 +264,16 @@ const insertEmoji = async (emoji) => {
     try {
         range.deleteContents();
 
-        let insertedNode;
+        let insertedText;
         if (emoji.emojiType === 'text') {
             // 文字表情：直接插入文本内容
-            insertedNode = document.createTextNode(emoji.preview + ' '); // 加空格方便连续输入
+            insertedText = emoji.preview;
         } else {
-            // Lottie表情：插入占位符文本
-            insertedNode = document.createTextNode(`[${emoji.name}]`);
+            // Lottie表情：插入格式化的表情标记
+            insertedText = serializeEmoji(emoji);
         }
 
+        const insertedNode = document.createTextNode(insertedText + ' ');
         range.insertNode(insertedNode);
         range.setStartAfter(insertedNode);
         range.collapse(true);
@@ -290,88 +292,43 @@ const insertEmoji = async (emoji) => {
 };
 
 /** ------------------------ 内容处理 ------------------------ */
+const EMOJI_MARKERS = {
+    START: '[emoji:',      // 表情开始标记
+    END: ']',              // 表情结束标记
+    SEPARATOR: '|'         // 表情ID和内容分隔符
+};
 const updateContent = () => { // 更新内容
     if (!editableDiv.value) return;
     contentText.value = editableDiv.value.textContent || '';
-
 };
 
 const getContent = () => {
-    if (!editableDiv.value) return { mixedContent: [] };
+    if (!editableDiv.value) return '';
 
-    const mixedContent = [];
-    const textContent = editableDiv.value.textContent || '';
-
-    // 使用正则表达式匹配占位符 [表情名]
-    const emojiPattern = /\[([^\]]+)\]/g;
-    let lastIndex = 0;
-    let match;
-
-    while ((match = emojiPattern.exec(textContent)) !== null) {
-        // 添加匹配前的文本
-        if (match.index > lastIndex) {
-            const text = textContent.substring(lastIndex, match.index).trim();
-            if (text) {
-                mixedContent.push({
-                    type: 'text',
-                    content: text
-                });
-            }
-        }
-
-        // 查找对应的表情数据
-        const emojiName = match[1];
-        const emoji = emojiItemList.value.find(e => e.name === emojiName);
-
-        if (emoji) {
-            // 添加表情数据
-            mixedContent.push({
-                type: 'emoji',
-                id: emoji.id,
-                name: emoji.name,
-                url: emoji.emojiUrl
-            });
-        } else {
-            // 如果没有找到对应的表情，保留为文本
-            mixedContent.push({
-                type: 'text',
-                content: match[0]
-            });
-        }
-
-        lastIndex = emojiPattern.lastIndex;
-    }
-
-    // 添加剩余的文本
-    if (lastIndex < textContent.length) {
-        const text = textContent.substring(lastIndex).trim();
-        if (text) {
-            mixedContent.push({
-                type: 'text',
-                content: text
-            });
-        }
-    }
-
-    return { mixedContent };
+    // 直接返回输入框的文本内容（已经包含表情标记）
+    return editableDiv.value.textContent || '';
 };
 
+// 简化：序列化表情为标记文本
+function serializeEmoji(emoji) {
+    return `${EMOJI_MARKERS.START}${emoji.id}${EMOJI_MARKERS.SEPARATOR}${emoji.name}${EMOJI_MARKERS.END}`;
+}
+
 function sendMessage() {
-
     const content = getContent();
-    const mixedContent = content.mixedContent;
 
-    if (mixedContent.length === 0 && !selectedFile.value) {
+    if (!content.trim() && !selectedFile.value) {
         alert('消息内容不能为空');
         return;
     }
 
+    // 简化：只发送文本内容和图片
     const messageData = {
-        mixedContent: mixedContent, // 使用解析后的混合内容
+        content: content,        // 序列化后的文本内容
         image: previewImage.value,
         timestamp: new Date().toISOString()
     };
-    showEmojiPicker.value = false;//关闭表情选择器
+    showEmojiPicker.value = false; // 关闭表情选择器
     emit('send', messageData);
     clearInput();
     clearPreview();

@@ -1,14 +1,14 @@
 <template>
     <div class="chat-messages" ref="scrollContainer" @scroll="handleScroll">
-        <div v-for="msg in messages" :key="msg.id" :class="['message-bubble', { 'is-mine': msg.isMine }]">
-
+        <div v-for="msg in messages" :key="msg.id"
+            :class="['message-bubble', { 'is-mine': msg.rawMessage.sender_id === userStore.user.userId }]">
             <div class="avatar">
-                <img :src="msg.avatar" alt="avatar" class="avatar-icon" />
+                <img :src="msg.avatar" alt="avatar" @error="handleAvatarError" class="avatar-icon" />
             </div>
-
             <div class="content-wrapper">
-                <p class="sender-name" v-if="showSenderName && !msg.isMine" :class="{ 'is-mine': msg.isMine }">{{
-                    msg.sender }}
+                <p class="sender-name" v-if="showSenderName && !msg.rawMessage.sender_id === userStore.user.userId"
+                    :class="{ 'is-mine': msg.rawMessage.sender_id === userStore.user.userId }">{{
+                        msg.sender }}
                 </p>
                 <!-- 图片消息 -->
                 <div v-if="msg.image" class="image-message">
@@ -20,7 +20,6 @@
                     <template v-for="(item, index) in msg.mixedContent" :key="index">
                         <!-- 文本内容 -->
                         <span v-if="item.type === 'text'" class="text-item">{{ item.content }}</span>
-
                         <!-- 表情内容 - 只显示动画 -->
                         <div v-else-if="item.type === 'emoji'" class="emoji-item">
                             <div class="lottie-emoji" :style="{ width: '100px', height: '100px' }"
@@ -37,6 +36,8 @@
 <script setup>
 import { watch, ref, nextTick, onMounted, onUnmounted, defineExpose } from 'vue';
 import lottie from 'lottie-web';
+import { useAuthStore } from '@/store/auth';
+const userStore = useAuthStore(); //当前登录用户信息
 
 const props = defineProps({
     messages: {  //聊天内容
@@ -96,7 +97,6 @@ const previewImage = (imageUrl) => { //图片预览
             document.body.removeChild(modal);
         }
     };
-
     document.body.appendChild(modal);
 };
 
@@ -106,6 +106,7 @@ const animationInstances = new Map(); //动画实例
 const setEmojiRef = (el, msgId, emojiIndex, emojiId, emojiUrl) => { // 表情引用设置方法
     if (el && emojiUrl) {
         const uniqueKey = `${msgId}-${emojiIndex}-${emojiId}`;
+
         if (!animationInstances.has(uniqueKey)) {
             initAnimation(el, uniqueKey, emojiUrl);
         }

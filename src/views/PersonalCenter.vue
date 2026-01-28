@@ -1,7 +1,12 @@
 <template>
     <div id="personalCenter">
-        <!-- 背景图 -->
-        <div class="backPhoto" :style="{ backgroundImage: `url(${backImgUrl})` }"></div>
+
+        <!-- 背景图容器 -->
+        <div class="background-container">
+            <div v-for="(item, index) in menuItems" :key="index" class="background-layer"
+                :class="{ active: activeIndex === index }" :style="{ backgroundImage: `url(${item.backImgUrl})` }">
+            </div>
+        </div>
         <!-- 导航 -->
         <Navigation></Navigation>
 
@@ -182,7 +187,7 @@
 <script setup>
 import utils from '@/utils/getAssetsFile';
 import Navigation from '../components/NavigationMenu/index.vue';
-import { ref, computed, onMounted, reactive, watchEffect, onUnmounted, nextTick } from 'vue';
+import { ref, computed, onMounted, reactive, watchEffect, onUnmounted, nextTick, watch } from 'vue';
 
 import dayjs from 'dayjs';
 
@@ -208,40 +213,46 @@ const menuItems = ref([
     {
         id: 'info',
         color: '#f37ee6',
-        svgPath: '<path d="M3.8,6.6h16.4" /><path d="M20.2,12.1H3.8" /><path d="M3.8,17.5h16.4" />',
+        svgPath: '<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />',
         navTitle: '信息',
         backImgUrl: 'src/assets/img/personCenter/bg1.jpg'
     },
     {
         id: 'subscribe',
         color: '#54b346',
-        svgPath: '<path d="M6.7,4.8h10.7c0.3,0,0.6,0.2,0.7,0.5l2.8,7.3c0,0.1,0,0.2,0,0.3v5.6c0,0.4-0.4,0.8-0.8,0.8H3.8C3.4,19.3,3,19,3,18.5v-5.6c0-0.1,0-0.2,0.1-0.3L6,5.3C6.1,5,6.4,4.8,6.7,4.8z" /><path d="M3.4,12.9H8l1.6,2.8h4.9l1.5-2.8h4.6" />',
+        svgPath: '<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9" />',
         navTitle: '订阅',
         backImgUrl: 'src/assets/img/personCenter/bg2.jpg'
     },
     {
         id: 'like',
         color: '#bb9726',
-        svgPath: '<path d="M3.4,11.9l8.8,4.4l8.4-4.4" /><path d="M3.4,16.2l8.8,4.5l8.4-4.5" /><path d="M3.7,7.8l8.6-4.5l8,4.5l-8,4.3L3.7,7.8z" />',
+        svgPath: '<path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />',
         navTitle: '点赞',
         backImgUrl: 'src/assets/img/personCenter/bg3.jpg'
     },
     {
         id: 'member',
         color: '#f66f3b',
-        svgPath: '<path d="M5.1,3.9h13.9c0.6,0,1.2,0.5,1.2,1.2v13.9c0,0.6-0.5,1.2-1.2,1.2H5.1c-0.6,0-1.2-0.5-1.2-1.2V5.1C3.9,4.4,4.4,3.9,5.1,3.9z" /><path d="M4.2,9.3h15.6" /><path d="M9.1,9.5v10.3" />',
+        svgPath: '<path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />',
         navTitle: '会员',
         backImgUrl: 'src/assets/img/personCenter/bg4.jpg'
     },
-    // {
-    //     id: 'svg5',
-    //     color: '#65ddb7',
-    //     svgPath: '<path d="M5.1,3.9h13.9c0.6,0,1.2,0.5,1.2,1.2v13.9c0,0.6-0.5,1.2-1.2,1.2H5.1c-0.6,0-1.2-0.5,1.2-1.2V5.1C3.9,4.4,4.4,3.9,5.1,3.9z" /><path d="M5.5,20l9.9-9.9l4.7,4.7" /><path d="M10.4,8.8c0,0.9-0.7,1.6-1.6,1.6c-0.9,0-1.6-0.7-1.6-1.6C7.3,8,8,7.3,8.9,7.3C9.7,7.3,10.4,8,10.4,8.8z" />'
-    // }
 ])
 
-// 背景图
-const backImgUrl = ref(menuItems.value[0].backImgUrl)
+// 背景图切换动画相关
+const backgroundTransition = ref(false);
+
+// 监听activeIndex变化，添加过渡效果
+watch(activeIndex, (newIndex, oldIndex) => {
+    backgroundTransition.value = true;
+
+    // 过渡完成后重置状态
+    setTimeout(() => {
+        backgroundTransition.value = false;
+    }, 1000); // 与CSS过渡时间保持一致
+});
+
 const clickItem = async (index) => {
 
     if (activeIndex.value === index) return
@@ -252,7 +263,6 @@ const clickItem = async (index) => {
     // 更新活动项和背景色
     activeIndex.value = index
     containerBgColor.value = bgColorsBody[index]
-    backImgUrl.value = menuItems.value[index].backImgUrl // 切换背景图片
     await nextTick(); //DOM更新和动画过渡是异步的
     // 更新菜单边框位置
     offsetMenuBorder()
@@ -347,7 +357,6 @@ const handleUpdate = async () => {
 };
 // 生命周期
 onMounted(() => {
-    backImgUrl.value = menuItems.value[0].backImgUrl // 设置初始背景
     offsetMenuBorder()
     window.addEventListener('resize', handleResize)
 })
@@ -362,16 +371,59 @@ onUnmounted(() => {
     width: 100vw;
     height: 100vh;
 
-    .backPhoto {
+    // 背景图
+    // 背景图容器样式
+    .background-container {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        background-size: cover;
-        position: absolute;
-        left: 0;
-        top: 0;
         z-index: -1;
-        color: rgba(255, 140, 0, .5);
+        overflow: hidden;
+
+        // 基础配置
+        .background-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+
+            &.active {
+                opacity: 1;
+            }
+        }
+
+        // 动画配置
+        .background-layer {
+            // 缩放动画
+            transform: scale(1.1);
+            transition: opacity 1s ease-in-out, transform 8s ease-in-out;
+
+            &.active {
+                transform: scale(1);
+            }
+
+            // 滑动动画效果
+            &:nth-child(odd) {
+                transform: translateX(-10px) scale(1.1);
+            }
+
+            &:nth-child(even) {
+                transform: translateX(10px) scale(1.1);
+            }
+
+            &.active {
+                transform: translateX(0) scale(1);
+            }
+        }
     }
+
 
 
     .layout {
@@ -445,13 +497,13 @@ onUnmounted(() => {
             .icon {
                 width: 1.2rem;
                 height: 1.2rem;
-                stroke: white;
+                stroke: $general-white; //描边颜色
                 fill: transparent;
-                stroke-width: 1pt;
+                stroke-width: 1pt; //线条宽度
                 stroke-miterlimit: 10;
                 stroke-linecap: round;
                 stroke-linejoin: round;
-                stroke-dasharray: 400;
+                stroke-dasharray: 400; //虚线图案。可以设置多个值，如5,10,5表示虚线长5，间隙10，再虚线长5，然后重复
             }
 
             .menu__item.active .icon {
@@ -571,7 +623,7 @@ onUnmounted(() => {
                         font-size: 0.9rem;
                         color: #191918;
                         font-weight: 700;
-                        text-shadow: 0px 1px 0px #4e8faf;
+                        // text-shadow: 0px 1px 0px #4e8faf;
                         display: block;
                         text-wrap: nowrap;
                         width: 8rem;

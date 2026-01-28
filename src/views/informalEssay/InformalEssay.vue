@@ -226,7 +226,6 @@ const dataContent = ref([]);
 const getContentData = async () => {
   await Promise.all(navData.value.map(async (category) => {
     const categoryId = category.category_id;
-    console.log(authStore.user)
     await mainStore.fetchMainContent(categoryId, authStore.user.userId);
     dataContent.value[categoryId] = mainStore.contentData; // 按分类ID存储数据
   }));
