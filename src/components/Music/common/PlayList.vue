@@ -16,8 +16,7 @@
                 </div>
 
                 <div class="creator-info">
-                    <div class="creator-avatar" :style="{ backgroundImage: `url(${playlistData.creatorAvatar})` }">
-                    </div>
+                    <img class="creator-avatar" :src=playlistData.creatorAvatar />
                     <span class="creator-name">{{ playlistData.creatorName }}</span>
                     <span class="create-date">{{ playlistData.createDate }}</span>
                 </div>
@@ -449,6 +448,7 @@ onMounted(() => {
         @include flexCenter(row, center);
         gap: 0.4rem;
         margin-right: 2rem;
+
         .ant-tooltip-open {
             font-family: 'lmst' !important;
         }

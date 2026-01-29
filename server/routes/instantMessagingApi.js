@@ -658,64 +658,6 @@ router.post('/sessions/:sessionId/read-all', authenticateToken, async (req, res)
 });
 
 /**
- * 撤回消息
- * PUT /instansMessaging/messages/:msgId/recall
- */
-router.put('/messages/:msgId/recall', authenticateToken, async (req, res) => {
-    try {
-        const { msgId } = req.params;
-        const currentUserId = req.user.user_id;
-
-        // 验证消息存在且发送者是当前用户
-        const message = await sqlQuery(
-            `SELECT msg_id, sender_id, created_at FROM im_single_chat_messages 
-             WHERE msg_id = ? AND sender_id = ?`,
-            [msgId, currentUserId]
-        );
-
-        if (!Array.isArray(message) || message.length === 0) {
-            return res.status(404).json({
-                code: 404,
-                message: '消息不存在或无权操作'
-            });
-        }
-
-        // 检查消息是否超过2分钟（撤回时间限制）
-        const msgData = message[0];
-        const messageTime = new Date(msgData.created_at);
-        const now = new Date();
-        const diffMinutes = (now - messageTime) / (1000 * 60);
-
-        if (diffMinutes > 2) {
-            return res.status(400).json({
-                code: 400,
-                message: '消息发送超过2分钟，无法撤回'
-            });
-        }
-
-        // 标记消息为撤回状态
-        await sqlQuery(
-            `UPDATE im_single_chat_messages 
-             SET is_recalled = 1, recalled_at = NOW(), updated_at = NOW()
-             WHERE msg_id = ?`,
-            [msgId]
-        );
-
-        res.json({
-            code: 200,
-            message: '消息撤回成功'
-        });
-
-    } catch (error) {
-        console.error('撤回消息失败:', error);
-        res.status(500).json({
-            code: 500,
-            message: '服务器内部错误'
-        });
-    }
-});
-
-/**
  * 删除聊天会话
  * DELETE /chat-sessions/:sessionId
  */

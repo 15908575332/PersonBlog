@@ -184,6 +184,7 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from "vue";
 
+
 import Spectrum from "@/components/Music/Spectrum.vue";
 import ModalBox from '@/components/ModalBox/index.vue';
 const formatTime = (seconds) => {

@@ -5,6 +5,8 @@
 
 <script setup>
 import { onMounted, reactive } from 'vue'
+import { useAuthStore } from "@/store/auth";
+const userStore = useAuthStore();
 import utils from "@/utils/getAssetsFile";
 import PlayList from '@/components/Music/common/PlayList.vue'
 
@@ -20,15 +22,26 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['play-song'])
+function formatTime(timeString) { //时间格式化
+    const date = new Date(timeString)
+    return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    })
+}
 
+const emit = defineEmits(['play-song'])
+console.log(userStore.user)
 // 歌单头部数据配置
 const playlistData = {
     title: "我喜欢的音乐",
     tag: "歌单",
-    creatorName: "Alcastar_RS",
-    creatorAvatar: "",
-    createDate: "2019-01-03 创建",
+    creatorName: userStore.user.username,
+    creatorAvatar: userStore.user.avatarUrl,
+    createDate: formatTime(userStore.user.registerTime),
     playCount: 1603,
     coverImage: utils.getAssetsFile("img/treasureBox/0.jpg")
 }

@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted, onUnmounted, getCurrentInstance } from 'vue';
+import { ref, computed, nextTick, onMounted, onUnmounted, getCurrentInstance, render } from 'vue';
 import lottie from 'lottie-web';
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
@@ -68,6 +68,7 @@ const emit = defineEmits(['send']);
 /** ------------------------ 图片上传 ------------------------ */
 const previewImage = ref(null);
 const selectedFile = ref(null);
+
 const uploadImage = () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -81,6 +82,13 @@ const uploadImage = () => {
                 return;
             }
 
+            // 验证文件类型
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+            if (!allowedTypes.includes(file.type)) {
+                message.error('请选择图片文件（JPEG、PNG、GIF、WebP）')
+                return
+            }
+
             if (file.size > 5 * 1024 * 1024) {
                 alert('图片大小不能超过5MB');
                 return;
@@ -89,13 +97,14 @@ const uploadImage = () => {
             selectedFile.value = file;
             const reader = new FileReader();
             reader.onload = () => {
-                previewImage.value = reader.result;
+                previewImage.value = reader.result; // 本地预览使用DataURL
+             
             };
             reader.onerror = () => {
                 alert('图片读取失败，请重试');
                 clearPreview();
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file); // 转换为base64格式在本地预览
         }
     };
     input.click();
