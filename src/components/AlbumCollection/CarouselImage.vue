@@ -1,4 +1,5 @@
 <template>
+    <!-- 旋转轮播 -->
     <div class="marquee-container" ref="container">
         <div class="marquee-content" :style="contentStyle">
             <div v-for="(image, index) in extendedImages" :key="index" class="marquee-item">

@@ -185,8 +185,9 @@
 import { ref, computed, onMounted, nextTick, watch } from "vue";
 
 
+
 import Spectrum from "@/components/Music/Spectrum.vue";
-import ModalBox from '@/components/ModalBox/index.vue';
+import ModalBox from '@/components/common/ModalBox.vue';
 const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
   seconds = Math.floor(seconds % 60);
@@ -525,25 +526,24 @@ onMounted(async () => {
   });
 
   audioElement.value.volume = volume.value / 100;  // 设置初始音量
+
 });
 
 </script>
 
 <style scoped lang="scss">
 .player-container {
-  $primary-color: #c20c0c;
   font-family: "lmst";
   height: calc(100vh - 3rem);
   width: 100vw;
   @include flexCenter(row, space-between);
   overflow: hidden;
+  @include gradient-background('bg-gradient-color-start', 'bg-gradient-color-end', 135deg);
 
   .left-nav {
     height: 100%;
     width: 15%;
-    background-color: #f9fafb;
     padding: 2rem;
-    color: #354157;
 
     // 导航svg图标
     .size-6 {
@@ -554,6 +554,7 @@ onMounted(async () => {
     .nav-list {
       padding: 0.5rem 0;
 
+
       li {
         padding: 0.2rem 0.5rem;
         border-radius: 0.2rem;
@@ -561,7 +562,7 @@ onMounted(async () => {
       }
 
       a {
-        color: #354157;
+        @include text-color('text-color');
         font-size: 0.9rem;
         @include flexCenter(row, flex-start);
         align-items: center;
@@ -571,16 +572,16 @@ onMounted(async () => {
 
     // 分类标题
     .classification {
-      color: #7c8492;
+      @include text-color('text-sec-color');
       font-size: 0.8rem;
     }
 
     // 当前激活导航样式
     .nav-active {
-      background-image: linear-gradient(45deg, #e73636 0%, #c20c0c 100%);
+      background-image: linear-gradient(75deg, #e73636 10%, #c20c0c 120%);
 
       a {
-        color: $general-white;
+        @include text-color('primary-text-color');
       }
     }
 
@@ -599,7 +600,6 @@ onMounted(async () => {
       z-index: 1;
       font-family: 'gtpy';
       padding-left: 2rem;
-      background-color: $general-white;
 
       input {
         border-radius: 2rem;
@@ -618,7 +618,8 @@ onMounted(async () => {
 
     // 播放器
     .audio-player {
-      background-image: linear-gradient(180deg, #2e2e2e 10%, #121212 100%);
+      @include gradient-background('bg-gradient-color-start', 'bg-gradient-color-end', 182deg);
+      @include boxshaow('shadow-card');
       @include flexCenter(row, center);
       position: fixed;
       bottom: 0;

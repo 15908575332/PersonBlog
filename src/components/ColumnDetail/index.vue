@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- 专栏 -->
         <div style="position: relative;top: 0; z-index: 1; width: 100%;">
             <Navigation hoverBgColor="#ecf8ff" textColor="#585858" style="z-index: 1;" />
         </div>
@@ -113,8 +114,8 @@ import { useRoute } from 'vue-router'
 import CryptoJS from 'crypto-js';
 const route = useRoute()
 import dayjs from "dayjs";
-import Navigation from '@/components/NavigationMenu/index.vue'
-import ListDetail from '@/components/ListDetail/index.vue'
+import Navigation from '@/components/common/NavigationMenu.vue'
+import ListDetail from '@/components/informalEssay/ListDetail.vue'
 
 // 解密函数
 const decryptTag = (encryptedTag) => {

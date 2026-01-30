@@ -110,7 +110,7 @@
                 <div class="comment__show" v-else>
                     <div class=" text">评论可见</div>
                     <div class="warring">
-                        <img src="./icon/warring-icon.svg" alt="warring">
+                        <img src="@/components/informalEssay/icon/ListDetail/warring-icon.svg" alt="warring">
                         <span>此处内容已隐藏</span>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     <div class="card">
                         <div class="collectBtn btn" @click="shareLike">
                             <p>收藏</p>
-                            <img src="./icon/icons8-favorite-48.png" alt="favorite">
+                            <img src="@/components/informalEssay/icon/ListDetail/icons8-favorite-48.png" alt="favorite">
                         </div>
                         <button class="likeBtn btn" @click="handleLikeClick(recordDetail.article_id)">
                             <p style="text-wrap: nowrap;">点赞</p>
@@ -135,14 +135,14 @@
                         </button>
                         <div class="shareBtn btn" @click="shareLike">
                             <p>分享</p>
-                            <img src="./icon/icons8-share-48.png" alt="share">
+                            <img src="@/components/informalEssay/icon/ListDetail/icons8-share-48.png" alt="share">
                         </div>
                     </div>
                 </div>
                 <!-- 评论区 -->
                 <div class="comment">
                     <h1 class="title">
-                        <img src="./icon/icons8-write-64.png" alt="edit">
+                        <img src="@/components/informalEssay/icon/ListDetail/icons8-write-64.png" alt="edit">
                         <span>评论</span>
                     </h1>
                     <!-- 输入框 -->
@@ -150,7 +150,9 @@
                         <div class="box-inner">
                             <textarea class="input" name="comment" maxlength="500" placeholder="写下点什么..."
                                 v-model="input__message"></textarea>
-                            <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
+                            <img class="input__illustration"
+                                src="@/components/informalEssay/img/ListDetail/undraw_welcome_cats_thqn.png"
+                                alt="picture">
                         </div>
                     </div>
                     <!-- 表情/提交按钮 -->
@@ -160,7 +162,7 @@
                                 @update:text="onChangeText" theme="auto" />
                         </div>
                         <div @click="emojiIs_show" class="emoji__btn">
-                            <img src="./img/Rainbow.gif" alt="">
+                            <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="">
                         </div>
                         <button class="reMessage" @click="addMessage(recordDetail.contentId)">提交
                             <div class="star-1">
@@ -289,7 +291,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                                }}</div>
+                                            }}</div>
                                         </div>
                                     </div>
 
@@ -332,7 +334,8 @@
                     <div class="modal__input__aera">
                         <textarea class="input" name="comment" maxlength="500" :placeholder='replyUser'
                             v-model="replyContent"></textarea>
-                        <img class="input__illustration" src="./img/undraw_welcome_cats_thqn.png" alt="picture">
+                        <img class="input__illustration"
+                            src="@/components/informalEssay/img/ListDetail/undraw_welcome_cats_thqn.png" alt="picture">
                     </div>
                     <!--评论提交 -->
                     <div class="MessageSubmit">
@@ -341,7 +344,7 @@
                                 @update:text="onChangeText" theme="auto" />
                         </div>
                         <div @click="modalIs_show" class="emoji__btn">
-                            <img src="./img/Rainbow.gif" alt="">
+                            <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="">
                         </div>
                         <button class="modalSubmit" @click="handleReplyPost()">提交
                             <div class="star-1">
@@ -483,7 +486,7 @@ import { onMounted, ref, computed, getCurrentInstance, watch } from 'vue';
 import { useAuthStore } from '@/store/auth';
 import utils from '@/utils/getAssetsFile';
 import { message } from 'ant-design-vue';
-import ModalBox from '@/components/ModalBox/index.vue'
+import ModalBox from '@/components/common/ModalBox.vue'
 import 'highlight.js/lib/common';
 import 'highlight.js/styles/stackoverflow-light.css'
 import { splitParagraphs } from '@/utils/splitParagraphs'; //引入段落处理函数

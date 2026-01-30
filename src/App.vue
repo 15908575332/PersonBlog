@@ -33,7 +33,7 @@
         </template>
       </a-back-top>
     </div>
-    <!-- 花瓣动画控制面板 -->
+    <!-- 控制面板 -->
     <div class="flowersControl" :class="{ 'showFlowersControl': showControlPanel }" ref="flowersControl">
       <div class="button-group">
         <button @click="toggleAnimation" class="control-btn">
@@ -56,20 +56,37 @@
           <label for="speed">{{ speed }}</label>
         </div>
       </div>
+      <!-- 主题 -->
+      <div class="theme">
+        <button @click="switchTheme('light')" :class="{ active: currentTheme === 'light' }">
+          亮
+        </button>
+        <button @click="switchTheme('dark')" :class="{ active: currentTheme === 'dark' }">
+          暗
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import ClickRipple from "./components/ClickRipple/ClickRipple.vue";
+import ClickRipple from "./components/common/ClickRipple.vue";
 import { rippleStore } from "@/store/isEnabledRipple";
-import flowerAnimate from "./components/FlowerAnimate/index.vue"
+import flowerAnimate from "./components/common/FlowerAnimate.vue"
 import utils from "@/utils/getAssetsFile";
 import { computed, onMounted, watch, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/store/maincontent'
 import pauseIcon from '@/assets/icon/public/icons8-pause-100.png'
 import playIcon from '@/assets/icon/public/icons8-play-100.png'
+import { initTheme, setTheme, watchSystemTheme } from '@/utils/theme';
+
+/** ------------------------ 主题 ------------------------ */
+const currentTheme = ref('light');
+const switchTheme = (theme) => {
+  setTheme(theme);
+  currentTheme.value = theme;
+};
 
 /** ------------------------ 全局花瓣飘落动画 ------------------------ */
 const showControlPanel = ref(false)
@@ -80,10 +97,6 @@ const toggleControlPanel = () => {
   showControlPanel.value = !showControlPanel.value
 }
 const isAnimating = ref(true);
-
-// const sakuraCount = ref(localStorage.getItem('flowerAnimateSakuraCount') || 10);
-// const speed = ref(localStorage.getItem('flowerAnimateSpeed') || 1);
-
 const handlePageClick = (event) => {
   if (!showControlPanel.value) return; // 如果面板未显示，直接返回
   if (flowersControl.value && !flowersControl.value.contains(event.target)) {
@@ -131,10 +144,14 @@ onMounted(() => {
 
   if (savedSpeed !== null) {
     speed.value = Number(savedSpeed);
-  }
+  };
   if (savedCount !== null) {
     sakuraCount.value = Number(savedCount);
-  }
+  };
+  // 主题切换
+  currentTheme.value = initTheme();
+  watchSystemTheme();
+
 })
 
 /** ------------------------ 启动console自动输出 ------------------------ */

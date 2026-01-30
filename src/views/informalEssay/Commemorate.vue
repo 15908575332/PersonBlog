@@ -76,7 +76,7 @@
 </template>
 <script setup>
 import utils from "@/utils/getAssetsFile";
-import Navigation from "@/components/NavigationMenu/index.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
 import FireWorks from "@/components/FireWorks/index.vue";
 </script>
 <style lang="scss" scoped>

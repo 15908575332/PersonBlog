@@ -2,9 +2,10 @@
     <div class="weather" :class="{ 'cardClose': isclose }">
         <div class="content" v-for="(item, index) in weatherInfo" :key="index">
             <!-- 关闭按钮 -->
-            <button class="close" title="关闭" @click="cardClose"><img src="./icon/close-icon.svg" alt="close"></button>
+            <button class="close" title="关闭" @click="cardClose"><img
+                    src="@/components/common/icon/WeatherCard/close-icon.svg" alt="close"></button>
             <div class="address">
-                <img src="./icon/position-icon.svg" alt="weather">
+                <img src="@/components/common/icon/WeatherCard/position-icon.svg" alt="weather">
                 <p>{{ item.province }}</p>
                 <p>{{ item.city }}</p>
             </div>
@@ -112,7 +113,7 @@ onMounted(() => {
             .weather__icon {
                 width: 35px;
                 height: 35px;
-                background-image: url('./icon/weather_icon_b.png');
+                background-image: url('@/components/common/icon/WeatherCard/weather_icon_b.png');
                 background-repeat: no-repeat;
                 transform: translate(5px, 4px)
             }

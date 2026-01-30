@@ -64,7 +64,7 @@
     </div>
 </template>
 <script setup>
-import Navigation from '@/components/NavigationMenu/index.vue';
+import Navigation from '@/components/common/NavigationMenu.vue';
 import { getCurrentInstance, ref, onMounted } from 'vue';
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;

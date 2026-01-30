@@ -1,4 +1,5 @@
 <template>
+  <!-- 缩略图轮播 -->
   <div id="layout">
     <div class="carousel-container">
       <!-- 轮播主体区域（视频） -->
@@ -9,12 +10,8 @@
 
       <!-- 缩略图区域 -->
       <div class="thumbnail-container">
-        <div
-          v-for="(thumbnail, index) in thumbnails"
-          :key="index"
-          class="thumbnail"
-          :class="{ selected: index === selectedIndex }"
-        >
+        <div v-for="(thumbnail, index) in thumbnails" :key="index" class="thumbnail"
+          :class="{ selected: index === selectedIndex }">
           <img :src="thumbnail" alt="Thumbnail" />
         </div>
       </div>

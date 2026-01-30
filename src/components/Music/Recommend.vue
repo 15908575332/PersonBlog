@@ -145,6 +145,7 @@ h1 {
     width: 100%;
     font-size: 2rem;
     font-weight: bold;
+    @include text-color('text-color');
 }
 
 // 二级标题
@@ -152,6 +153,7 @@ h2 {
     font-size: 1rem;
     font-weight: bold;
     padding: 0.5rem 0;
+    @include text-color('text-sec-color');
 }
 
 // 每项内容
@@ -179,6 +181,7 @@ h2 {
         text-overflow: ellipsis;
         font-size: 0.8rem;
         padding-top: 0.5rem;
+        @include text-color('text-color');
     }
 }
 

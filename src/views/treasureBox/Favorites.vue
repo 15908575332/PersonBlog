@@ -39,7 +39,7 @@
 </template>
 <script setup>
 import { ref, onMounted, getCurrentInstance } from 'vue';
-import Navigation from '@/components/NavigationMenu/index.vue';
+import Navigation from '@/components/common/NavigationMenu.vue';
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
 import { useAuthStore } from '@/store/auth';

@@ -144,11 +144,11 @@ import {
   nextTick
 } from "vue";
 import { useRoute } from "vue-router";
-import WeatherCard from "../components/WeatherCard/index.vue";
-import Navigation from "../components/NavigationMenu/index.vue";
+import WeatherCard from "@/components/common/WeatherCard.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
 import utils from "@/utils/getAssetsFile";
 import { message, notification } from "ant-design-vue";
-import live2dModel from "@/components/live2dModel/index.vue"; //引入live2d组件
+import live2dModel from "@/components/common/live2dModel.vue"; //引入live2d组件
 import { SmileOutlined } from '@ant-design/icons-vue';
 import { Solar } from "lunar-javascript";
 const instance = getCurrentInstance();

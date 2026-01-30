@@ -129,7 +129,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import CarouselImage from "@/components/CarouselImage/index.vue";
 import ThumbnailCarousel from "@/components/ThumbnailCarousel/index.vue";
-import Navigation from "../components/NavigationMenu/index.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
 import utils from "@/utils/getAssetsFile";
 const cardImages = Array.from({ length: 7 }, (_, i) =>
   utils.getAssetsFile(`img/albumCollection/nns${i + 1}.jpg`)

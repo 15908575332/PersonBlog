@@ -247,9 +247,8 @@ import { message } from 'ant-design-vue';
 
 import ChatMessage from '@/components/InstantMessage/ChatMessage.vue'
 import ChatInput from '@/components/InstantMessage/ChatInput.vue'
-
-import GridImageAnime from '@/components/GridImageAnime/index.vue'
-import ModalBox from '@/components/ModalBox/index.vue'
+import GridImageAnime from '@/components/InstantMessage/WechatMoments.vue'
+import ModalBox from '@/components/common/ModalBox.vue'
 
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;

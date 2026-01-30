@@ -186,7 +186,7 @@
 </template>.
 <script setup>
 import utils from '@/utils/getAssetsFile';
-import Navigation from '../components/NavigationMenu/index.vue';
+import Navigation from "@/components/common/NavigationMenu.vue";
 import { ref, computed, onMounted, reactive, watchEffect, onUnmounted, nextTick, watch } from 'vue';
 
 import dayjs from 'dayjs';

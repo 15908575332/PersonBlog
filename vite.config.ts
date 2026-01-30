@@ -72,7 +72,7 @@ export default defineConfig({
         autoprefixer({
           overrideBrowserslist: ['last 2 versions', 'ie >= 11'], // 浏览器兼容性配置
           grid: true // 是否使用 grid 布局
-        })
+        }),
       ]
     },
     devSourcemap: false, // 开发环境下是否开启css sourcemap，默认false

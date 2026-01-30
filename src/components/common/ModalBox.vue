@@ -1,7 +1,8 @@
 <template>
     <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
         <div class="modal-content" @click.stop :class="animationClass">
-            <button @click="closeModal"><img src="./img/icons8-close-50.png" style="width: 1rem;" alt="close"></button>
+            <button @click="closeModal"><img src="@/components/common/img/ModalBox/icons8-close-50.png" style="width: 1rem;"
+                    alt="close"></button>
             <slot></slot>
         </div>
     </div>

@@ -263,7 +263,7 @@
 </template>
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from "vue";
-import Navigation from "@/components/NavigationMenu/index.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
 import utils from "@/utils/getAssetsFile";
 
 import dayjs from "dayjs";

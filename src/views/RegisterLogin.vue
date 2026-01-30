@@ -99,9 +99,9 @@ import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthStore } from '@/store/auth';
-import ModalBox from '@/components/ModalBox/index.vue';
+import ModalBox from '@/components/common/ModalBox.vue';
 
-import Captcha from '@/components/Captcha/index.vue';
+import Captcha from '@/components/common/Captcha.vue';
 import SlideVerify from 'vue3-slide-verify';
 import "vue3-slide-verify/dist/style.css";
 

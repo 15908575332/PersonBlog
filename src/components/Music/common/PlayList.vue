@@ -249,8 +249,6 @@ onMounted(() => {
     --primary-blue: #0c8ed3;
     --light-gray: #f8f8f8;
     --medium-gray: #f2f2f2;
-    --dark-gray: #666;
-    --text-color: #333;
     --border-color: #e0e0e0;
 
     /* 歌单头部信息 */
@@ -297,6 +295,7 @@ onMounted(() => {
             width: 100%;
             height: 10rem;
 
+
             .playlist-title {
                 @include flexCenter(row, center);
                 gap: 0.5rem;
@@ -305,11 +304,12 @@ onMounted(() => {
                     font-size: 28px;
                     font-weight: bold;
                     width: fit-content;
+                    @include text-color('text-color');
                 }
 
                 .playlist-tag {
-                    background-color: rgba(230, 0, 38, 0.1);
-                    color: var(--primary-red);
+                    background-color: var(--primary-red);
+                    color: $general-white;
                     padding: 3px 8px;
                     border-radius: 4px;
                     font-size: 0.65rem;
@@ -319,8 +319,8 @@ onMounted(() => {
 
             .creator-info {
                 @include flexCenter(row, center);
-                color: var(--dark-gray);
                 gap: 0.5rem;
+                @include text-color('text-sec-color');
 
                 .creator-avatar {
                     width: 30px;
@@ -331,7 +331,6 @@ onMounted(() => {
 
                 .creator-name {
                     font-weight: 500;
-                    color: var(--text-color);
                 }
 
                 .create-date {
@@ -343,15 +342,14 @@ onMounted(() => {
                 display: flex;
                 gap: 1.5rem;
                 padding-left: 0.5rem;
+                @include text-color('text-sec-color');
 
                 .stat-item {
-                    color: var(--dark-gray);
                     font-size: 14px;
                 }
 
                 .stat-number {
                     font-weight: 600;
-                    color: var(--text-color);
                 }
             }
 
@@ -383,7 +381,6 @@ onMounted(() => {
 
                 .btn-secondary {
                     background-color: white;
-                    color: var(--text-color);
                     border: 1px solid var(--border-color);
                 }
 
@@ -408,17 +405,17 @@ onMounted(() => {
     .songs-container {
         padding: 1rem 0;
         overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         font-size: 0.9rem;
 
         .songs-header {
             display: flex;
             padding: 0.75rem 1rem;
             padding-left: 0;
-            background-color: var(--medium-gray);
             font-weight: 600;
             border-bottom: 1px solid var(--primary-red);
             font-size: 0.9rem;
+            @include background('bg-gradient-color-start');
+            @include text-color('text-color');
         }
 
         .song-index {
@@ -433,10 +430,12 @@ onMounted(() => {
 
     .song-duration {
         width: 5rem;
+        @include text-color('text-sec-color');
     }
 
     .song-artist {
         flex: 1.1;
+        @include text-color('text-sec-color');
     }
 
     .song-album {
@@ -456,6 +455,7 @@ onMounted(() => {
 
     .song-list {
         list-style: none;
+        @include text-color('text-color');
 
         .song-item {
             @include flexCenter(row, center);
@@ -465,7 +465,7 @@ onMounted(() => {
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: var(--light-gray);
+                background-color: rgb(12, 142, 211, .2);
             }
 
             &.active {
@@ -476,7 +476,7 @@ onMounted(() => {
     }
 
     .song-index {
-        color: var(--dark-gray);
+        @include text-color('text-sec-color');
     }
 
     .song-title-content {
@@ -497,11 +497,6 @@ onMounted(() => {
 
     .song-name {
         font-weight: 500;
-    }
-
-    .song-artist,
-    .song-album {
-        color: var(--dark-gray);
     }
 
     /* 响应式设计 */

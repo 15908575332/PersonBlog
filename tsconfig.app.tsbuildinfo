@@ -1,1 +1,35 @@
-{"root":["./src/main.ts","./src/vite-env.d.ts","./src/router/index.ts","./src/types/getassetsfile.d.ts","./src/utils/getassetsfile.ts","./src/app.vue","./src/components/carouselimage/index.vue","./src/components/clickripple/clickripple.vue","./src/components/dropdownmenu/index.vue","./src/components/listdetail/index.vue","./src/components/live2d/index.vue","./src/components/modalbox/index.vue","./src/components/navigationmenu/index.vue","./src/components/phoneslider/index.vue","./src/components/spectrum/index.vue","./src/components/thumbnailcarousel/index.vue","./src/components/treemenu/index.vue","./src/components/weathercard/index.vue","./src/views/family.vue","./src/views/homepage.vue","./src/views/informalessay.vue","./src/views/messageboard.vue","./src/views/registerlogin.vue","./src/views/travelalbum.vue","./src/views/debugdemo.vue","./src/views/recordlist/recordcolumn.vue","./src/views/recordlist/recordcontent.vue","./src/views/recordlist/recordresource.vue","./src/views/treasurebox/favorites.vue","./src/views/treasurebox/music.vue","./src/views/treasurebox/friendshiplink.vue"],"version":"5.6.2"}
+{
+    "root": [
+        "./src/main.ts",
+        "./src/vite-env.d.ts",
+        "./src/router/index.ts",
+        "./src/types/getassetsfile.d.ts",
+        "./src/utils/getassetsfile.ts",
+        "./src/app.vue",
+        "./src/components/carouselimage/index.vue",
+        "./src/components/clickripple/clickripple.vue",
+        "./src/components/dropdownmenu/index.vue",
+        "./src/components/listdetail/index.vue",
+        "./src/components/live2d/index.vue",
+        "./src/components/modalbox/index.vue",
+        "./src/components/navigationmenu/index.vue",
+        "./src/components/spectrum/index.vue",
+        "./src/components/thumbnailcarousel/index.vue",
+        "./src/components/treemenu/index.vue",
+        "./src/components/weathercard/index.vue",
+        "./src/views/family.vue",
+        "./src/views/homepage.vue",
+        "./src/views/informalessay.vue",
+        "./src/views/messageboard.vue",
+        "./src/views/registerlogin.vue",
+        "./src/views/travelalbum.vue",
+        "./src/views/debugdemo.vue",
+        "./src/views/recordlist/recordcolumn.vue",
+        "./src/views/recordlist/recordcontent.vue",
+        "./src/views/recordlist/recordresource.vue",
+        "./src/views/treasurebox/favorites.vue",
+        "./src/views/treasurebox/music.vue",
+        "./src/views/treasurebox/friendshiplink.vue"
+    ],
+    "version": "5.6.2"
+}

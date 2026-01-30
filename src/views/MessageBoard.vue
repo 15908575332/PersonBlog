@@ -31,7 +31,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import Navigation from '../components/NavigationMenu/index.vue';
+import Navigation from "@/components/common/NavigationMenu.vue";
 import vueDanmaku from 'vue3-danmaku';
 import utils from '@/utils/getAssetsFile';
 import axios from 'axios';

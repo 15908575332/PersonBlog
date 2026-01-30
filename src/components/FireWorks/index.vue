@@ -1,4 +1,5 @@
 <template>
+  <!-- 烟花 -->
   <canvas id="canvas" ref="canvasRef"></canvas>
 </template>
 

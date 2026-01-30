@@ -254,7 +254,7 @@
     </div>
 </template>
 <script setup>
-import Navigation from '@/components/NavigationMenu/index.vue';
+import Navigation from '@/components/common/NavigationMenu.vue';
 
 const click_env = () => {
     const form_wrap = document.getElementById('form_wrap')

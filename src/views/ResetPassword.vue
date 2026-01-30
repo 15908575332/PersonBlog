@@ -125,7 +125,7 @@
 import { ref } from "vue";
 import { message, notification } from "ant-design-vue";
 import utils from "@/utils/getAssetsFile";
-import Navigation from "@/components/NavigationMenu/index.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
 import MeihuaSvg from "../components/MeihuaSvg/MeihuaSvg.vue";
 import { useRouter } from "vue-router";
 const route = useRouter();

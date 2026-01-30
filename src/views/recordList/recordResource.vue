@@ -87,7 +87,7 @@
 </template>
 <script setup>
 import { onMounted, ref, computed } from "vue"; //引入vue相关的api
-import Navigation from "@/components/NavigationMenu/index.vue"; //引入导航组件
+import Navigation from "@/components/common/NavigationMenu.vue"; //引入导航组件
 import utils from "@/utils/getAssetsFile"; //引入获取静态资源的方法
 import { useRouter } from "vue-router"; //引入路由相关的api
 import { useMainStore } from "@/store/maincontent"; // 引入store

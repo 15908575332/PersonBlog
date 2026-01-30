@@ -41,7 +41,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import utils from '@/utils/getAssetsFile';
-import Navigation from '@/components/NavigationMenu/index.vue';
+import Navigation from '@/components/common/NavigationMenu.vue';
 const flowers = ref([
     {
         title: '玫瑰',

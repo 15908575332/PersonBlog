@@ -8,12 +8,12 @@
     </div>
 </template>
 <script setup>
-import ListDetail from '@/components/ListDetail/index.vue'
+import ListDetail from '@/components/informalEssay/ListDetail.vue'
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const routerId = computed(() => route.params.id);
-import Navigation from "@/components/NavigationMenu/index.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
 </script>
 <style>
 .navigate {

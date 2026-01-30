@@ -99,7 +99,7 @@
           <div class="right">
             <div class="notice">
               <p>
-                <img src="@/components/ListDetail/icon/notice.svg" alt="notice" />
+                <img src="@/components/informalEssay/icon/ListDetail/notice.svg" alt="notice" />
                 <span>公告：本站为个人博客，用于记录个人学习笔记，如有侵权请联系删除</span>
               </p>
             </div>
@@ -176,8 +176,8 @@
 </template>
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import Navigation from "@/components/NavigationMenu/index.vue";
-import scrollMessage from "@/components/scrollMessage/index.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
+import scrollMessage from "@/components/informalEssay/scrollMessage.vue";
 import { useAuthStore } from "@/store/auth";
 import { useMainStore } from "@/store/maincontent";
 import dayjs from "dayjs";

@@ -21,7 +21,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { swatchbook } from "@/utils/swatchbook-native";
-import Navigation from "@/components/NavigationMenu/index.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
 const leftBottom = ref(null);
 const sbContainer = ref(null);
 const sbItems = [

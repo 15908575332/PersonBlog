@@ -244,7 +244,7 @@
 </template>
 
 <script setup>
-import Navigation from "@/components/NavigationMenu/index.vue";
+import Navigation from "@/components/common/NavigationMenu.vue";
 import { useRouter } from "vue-router"; //引入路由相关的api
 const route = useRouter(); // 实例化路由
 import { useMainStore } from "@/store/maincontent";

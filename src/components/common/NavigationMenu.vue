@@ -9,7 +9,7 @@
           <ul class="nav-btn" ref="navBtn">
             <li class="nav-item">
               <a href="/home">
-                <img src="@/components/NavigationMenu/icon/home-icon.svg" alt="home" />
+                <img src="@/components/common/icon/NavigationMenu//home-icon.svg" alt="home" />
                 <span>首页</span>
               </a>
               <!-- 底部横线 -->
@@ -17,14 +17,14 @@
             </li>
             <li class="nav-item">
               <a href="/family">
-                <img src="@/components/NavigationMenu/icon/family-icon.svg" alt="family" />
+                <img src="@/components/common/icon/NavigationMenu//family-icon.svg" alt="family" />
                 <span>家</span>
               </a>
               <div class="br"></div>
             </li>
             <li class="nav-item record">
               <a href="#">
-                <img src="@/components/NavigationMenu/icon/record-icon.svg" alt="record" />
+                <img src="@/components/common/icon/NavigationMenu//record-icon.svg" alt="record" />
                 <span>记录</span>
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
@@ -34,14 +34,14 @@
             </li>
             <li class="nav-item">
               <a href="/albumCollection">
-                <img src="@/components/NavigationMenu/icon/album-icon.svg" alt="album" />
+                <img src="@/components/common/icon/NavigationMenu//album-icon.svg" alt="album" />
                 <span>相册集</span>
               </a>
               <div class="br"></div>
             </li>
             <li class="nav-item record">
               <a href="#">
-                <img src="@/components/NavigationMenu/icon/treasureBox-icon.svg" alt="treasureBox"
+                <img src="@/components/common/icon/NavigationMenu//treasureBox-icon.svg" alt="treasureBox"
                   style="width: 0.9rem" />
                 <span>百宝箱</span>
               </a>
@@ -52,7 +52,7 @@
             </li>
             <li class="nav-item record">
               <a href="/InformalEssay">
-                <img src="@/components/NavigationMenu/icon/informalEssay-icon.svg" alt="informalEssay" />
+                <img src="@/components/common/icon/NavigationMenu/informalEssay-icon.svg" alt="informalEssay" />
                 <span>随笔</span>
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
@@ -62,7 +62,7 @@
             </li>
             <li class="nav-item">
               <a href="/message">
-                <img src="@/components/NavigationMenu/icon/message-icon.svg" alt="message" />
+                <img src="@/components/common/icon/NavigationMenu/message-icon.svg" alt="message" />
                 <span>留言</span>
               </a>
               <div class="br"></div>
@@ -88,20 +88,20 @@
                   <ul class="info-list">
                     <li class="item" @click="changeRouter('/personalCenter')">
                       <div class="item__left">
-                        <img src="./icon/personCenter.png" alt="peisonal" />
+                        <img src="@/components/common/icon/NavigationMenu/personCenter.png" alt="peisonal" />
                         <span>个人中心</span>
                       </div>
                       <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
                     </li>
                     <li class="item" @click="changeRouter('/contactUs')">
                       <div class="item__left">
-                        <img src="./icon/contactUs.png" alt="contactUs" />
+                        <img src="@/components/common/icon/NavigationMenu/contactUs.png" alt="contactUs" />
                         <span>联系我们</span>
                       </div>
                       <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
                     </li>
                     <li class="item" @click="quitLogin">
-                      <img src="./icon/quite.svg" alt="" />
+                      <img src="@/components/common/icon/NavigationMenu/quite.svg" alt="" />
                       <span>退出登录</span>
                     </li>
                   </ul>
@@ -123,7 +123,7 @@
   </div>
 </template>
 <script setup>
-import DropdoenMenu from "@/components/DropdownMenu/index.vue";
+import DropdoenMenu from "@/components/common/DropdownMenu.vue";
 import { ref, onMounted, computed } from "vue";
 import utils from "@/utils/getAssetsFile";
 import { useRouter } from "vue-router";
