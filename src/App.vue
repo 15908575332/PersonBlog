@@ -220,8 +220,8 @@ const toggleTheme = () => {
 /** ------------------------ 全局花瓣飘落动画 ------------------------ */
 const showControlPanel = ref(false)
 const controls = ref();
-const speed = ref(1); // 默认值
-const sakuraCount = ref(10); // 默认值
+const speed = ref(Number(localStorage.getItem('flowerAnimateSpeed')) || 1);
+const sakuraCount = ref(Number(localStorage.getItem('flowerAnimateSakuraCount')) || 10);
 const toggleControlPanel = () => {
   showControlPanel.value = !showControlPanel.value
 }
@@ -268,15 +268,15 @@ async function fetchData() {
 }
 onMounted(() => {
   fetchData() // 页面加载时获取数据
-  const savedSpeed = localStorage.getItem('flowerAnimateSpeed');
-  const savedCount = localStorage.getItem('flowerAnimateSakuraCount');
+  // const savedSpeed = localStorage.getItem('flowerAnimateSpeed');
+  // const savedCount = localStorage.getItem('flowerAnimateSakuraCount');
 
-  if (savedSpeed !== null) {
-    speed.value = Number(savedSpeed);
-  };
-  if (savedCount !== null) {
-    sakuraCount.value = Number(savedCount);
-  };
+  // if (savedSpeed !== null) {
+  //   speed.value = Number(savedSpeed);
+  // };
+  // if (savedCount !== null) {
+  //   sakuraCount.value = Number(savedCount);
+  // };
   // 主题切换
   currentTheme.value = initTheme();
   watchSystemTheme();

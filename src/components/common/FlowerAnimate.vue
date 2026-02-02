@@ -24,15 +24,15 @@ const props = defineProps({
     sakuraCount: { //花瓣数量
         type: Number,
         default: () => {
-            const saved = localStorage.getItem('flowerAnimateSakuraCount');
-            return saved ? Number(saved) : 10;
+            // const saved = localStorage.getItem('flowerAnimateSakuraCount');
+            // return saved ? Number(saved) : 10;
         }
     },
     speed: { //下落速度
         type: Number,
         default: () => {
-            const saved = localStorage.getItem('flowerAnimateSpeed');
-            return saved ? Number(saved) : 1;
+            // const saved = localStorage.getItem('flowerAnimateSpeed');
+            // return saved ? Number(saved) : 1;
         }
     }
 })
@@ -50,7 +50,7 @@ class Sakura {
         this.r = 0 // 初始旋转角度为0
         this.rotationSpeed = (Math.random() - 0.5) * 0.02 // 轻微的旋转速度
         this.fn = fn
-        this.speedFactor = 1
+        this.speedFactor = props.speed / 5
         this.horizontalDrift = (Math.random() - 0.5) * 0.5 // 水平飘动因子
     }
 
@@ -72,7 +72,6 @@ class Sakura {
         this.r += this.rotationSpeed
 
         this.y += (this.fn.y(this.y, this.y) - this.y) * (this.speedFactor - 1)
-
         // 边界检查
         if (
             this.x > window.innerWidth + 100 ||
@@ -224,10 +223,9 @@ watch(() => props.isAnimating, debounce((newVal) => {
 )
 
 watch(() => props.speed, debounce((newSpeed) => {
-    console.log(props.speed)
     // 调整所有樱花的速度
     if (sakuraList.value && sakuraList.value.list) {
-        const speedFactor = newSpeed / 5 // 将速度1-10映射到0.2-2.0
+        const speedFactor = newSpeed / 5// 将速度1-10映射到0.2-2.0
         sakuraList.value.list.forEach(sakura => {
             sakura.setSpeed(speedFactor)
         })
