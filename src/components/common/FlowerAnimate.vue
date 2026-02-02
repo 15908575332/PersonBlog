@@ -224,6 +224,7 @@ watch(() => props.isAnimating, debounce((newVal) => {
 )
 
 watch(() => props.speed, debounce((newSpeed) => {
+    console.log(props.speed)
     // 调整所有樱花的速度
     if (sakuraList.value && sakuraList.value.list) {
         const speedFactor = newSpeed / 5 // 将速度1-10映射到0.2-2.0

@@ -53,6 +53,10 @@ $shadow-card:
 // 通用颜色
 $general-black: #111;
 $general-white: #fff;
+$width: clamp(90px, 106px, 200px);
+$insideShadow:
+    calc($width * 0) calc($width * -0.025) calc($width * 0.025) 0 hsl(210 10% 10% / 0.15) inset,
+    calc($width * 0) calc($width * 0.025) calc($width * 0.025) 0 hsl(210 10% 10% / 0.65) inset;
 
 // 主题配置Map
 $themes: (
@@ -133,7 +137,7 @@ $themes: (
     }
 }
 // 阴影
-@mixin boxshaow($color-key) {
+@mixin boxshadow($color-key) {
     @include theme-foreach {
         box-shadow: themed($color-key);
     }

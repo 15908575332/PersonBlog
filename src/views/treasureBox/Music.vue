@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 主体 -->
-    <div class="player-container">
+    <div class="player-container" ref="playerContainer">
       <div class="left-nav">
         <div class="online">
           <h5 class="classification">在线音乐</h5>
@@ -57,16 +57,14 @@
         </div>
       </div>
 
-      <div class="right-content">
+      <div class="right-content" ref="rightContent" @scroll="debouncedHandleScroll">
         <!-- 搜索栏 -->
-        <div class="search-bar">
+        <div class="search-bar" :class="isSearchBarVisible ? 'visible' : 'hidden'" @focus="isSearchBarVisible = true">
           <input type="text" v-model.lazy="searchValue" placeholder="搜索音乐、MV、歌单">
         </div>
-
         <!-- 内容视图 -->
         <router-view :current-song-index="currentSongIndex" :is-playing="isPlaying" @play-song="handlePlaySong">
         </router-view>
-
         <!-- 播放器 -->
         <div class="audio-player">
           <div class="player-content">
@@ -182,12 +180,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, watch } from "vue";
-
-
-
+import { ref, computed, onMounted, nextTick, watch, onUnmounted } from "vue";
 import Spectrum from "@/components/Music/Spectrum.vue";
 import ModalBox from '@/components/common/ModalBox.vue';
+
 const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
   seconds = Math.floor(seconds % 60);
@@ -195,8 +191,42 @@ const formatTime = (seconds) => {
 };
 
 /** ------------------------ 搜索栏 ------------------------ */
-const searchValue = ref(); //搜索内容
+const searchValue = ref();
+const rightContent = ref(); //主内容容器
+//搜索栏滚动隐藏
+const isSearchBarVisible = ref(true); // 搜索栏显示状态
+const lastScrollTop = ref(0); // 上次滚动位置
 
+// 滚动监听函数
+const handleScroll = () => {
+  if (!rightContent.value) return;
+  const currentScrollTop = rightContent.value.scrollTop;
+  // 向下滚动且超过50px时隐藏搜索栏
+  if (currentScrollTop > lastScrollTop.value && currentScrollTop > 50) {
+    isSearchBarVisible.value = false;
+  }
+  // 向上滚动或回到顶部时显示搜索栏
+  else if (currentScrollTop < lastScrollTop.value || currentScrollTop <= 50) {
+    isSearchBarVisible.value = true;
+  }
+  lastScrollTop.value = currentScrollTop <= 0 ? 0 : currentScrollTop;
+};
+
+// 防抖函数优化性能
+const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
+// 防抖后的滚动处理
+const debouncedHandleScroll = debounce(handleScroll, 10);
 /** ------------------------ 播放器 ------------------------ */
 import playImg from "@/assets/icon/treasureBox/play.png";
 import pauseImg from "@/assets/icon/treasureBox/pause.png";
@@ -514,21 +544,29 @@ watch(currentTime, (newTime) => { // 歌词同步检测
 // };
 
 onMounted(async () => {
-
   audioElement.value = new Audio();  // 初始化音频元素
   audioElement.value.addEventListener("timeupdate", updateTime);
-
   audioElement.value.addEventListener("ended", () => {  // 播放结束事件
     if (playMode.value === "random" && shuffleList.value.length === 0) {
       generateShuffleList();
     }
     nextSong();
   });
-
   audioElement.value.volume = volume.value / 100;  // 设置初始音量
+  // 滚动隐藏搜索栏
+  // if (rightContent.value) {
+  //   rightContent.value.addEventListener('scroll', debouncedHandleScroll);
+
+  // }
 
 });
 
+onUnmounted(() => {
+  // // 清理事件监听
+  // if (rightContent.value) {
+  //   rightContent.value.removeEventListener('scroll', debouncedHandleScroll);
+  // }
+});
 </script>
 
 <style scoped lang="scss">
@@ -539,6 +577,7 @@ onMounted(async () => {
   @include flexCenter(row, space-between);
   overflow: hidden;
   @include gradient-background('bg-gradient-color-start', 'bg-gradient-color-end', 135deg);
+  transition: all 0.5s;
 
   .left-nav {
     height: 100%;
@@ -600,13 +639,31 @@ onMounted(async () => {
       z-index: 1;
       font-family: 'gtpy';
       padding-left: 2rem;
+      background-color: rebeccapurple;
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); // 使用更平滑的缓动函数
+
+      // 隐藏状态 - 宽度变小并隐藏
+      &.hidden {
+        transform: translateY(-100%) scaleX(0.3); // 水平缩放为30%
+        opacity: 0;
+        width: 90%; // 宽度变为20%
+        padding-left: 0.5rem; // 内边距相应减小
+      }
+
+      // 显示状态 - 宽度逐渐变大
+      &.visible {
+        transform: translateY(0) scaleX(1); // 水平缩放恢复100%
+        opacity: 1;
+        width: 100%; // 宽度恢复100%
+        padding-left: 2rem; // 内边距恢复
+      }
 
       input {
         border-radius: 2rem;
         padding: 0.3rem 1rem;
         font-size: 0.9rem;
         font-family: 'gtpy';
-        background-color: #f1f5f9;
+        background-color: #ffffff;
         border: 1px solid #e8eaef;
 
         &::placeholder {
@@ -618,18 +675,18 @@ onMounted(async () => {
 
     // 播放器
     .audio-player {
-      @include gradient-background('bg-gradient-color-start', 'bg-gradient-color-end', 182deg);
-      @include boxshaow('shadow-card');
-      @include flexCenter(row, center);
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
       z-index: 1;
-      color: $general-white;
       gap: 0.5rem;
       min-width: 40rem;
       padding: 1rem;
+      @include gradient-background('bg-gradient-color-start', 'bg-gradient-color-end', 182deg);
+      @include boxshadow('shadow-card');
+      @include flexCenter(row, center);
+      @include text-color('text-color');
 
       .player-content {
         width: 80%;
