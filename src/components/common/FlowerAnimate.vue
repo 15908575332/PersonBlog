@@ -50,7 +50,7 @@ class Sakura {
         this.r = 0 // 初始旋转角度为0
         this.rotationSpeed = (Math.random() - 0.5) * 0.02 // 轻微的旋转速度
         this.fn = fn
-        this.speedFactor = props.speed / 5
+        this.speedFactor = props.speed / 4
         this.horizontalDrift = (Math.random() - 0.5) * 0.5 // 水平飘动因子
     }
 
@@ -225,7 +225,7 @@ watch(() => props.isAnimating, debounce((newVal) => {
 watch(() => props.speed, debounce((newSpeed) => {
     // 调整所有樱花的速度
     if (sakuraList.value && sakuraList.value.list) {
-        const speedFactor = newSpeed / 5// 将速度1-10映射到0.2-2.0
+        const speedFactor = newSpeed / 4// 将速度1-10映射到0.2-2.0
         sakuraList.value.list.forEach(sakura => {
             sakura.setSpeed(speedFactor)
         })

@@ -197,7 +197,7 @@ h2 {
 
         .rec-music-list {
             display: grid;
-            grid-template-columns: repeat(3, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
         }
 
@@ -215,7 +215,7 @@ h2 {
 
         .hot-music-list {
             display: grid;
-            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
         }
 
@@ -234,7 +234,7 @@ h2 {
 
         .rec-menu-list {
             display: grid;
-            grid-template-columns: repeat(6, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1rem;
 
             .item {
@@ -255,7 +255,7 @@ h2 {
 
         .mv-video-list {
             display: grid;
-            grid-template-columns: repeat(3, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             gap: 1rem;
         }
 

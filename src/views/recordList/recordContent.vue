@@ -430,7 +430,6 @@ onMounted(() => {
 <style lang="scss">
 .recordContent {
   font-family: "gtpy";
-  background: $pages-background-color;
   user-select: none;
   min-height: 100vh;
   //内容盒子宽度
@@ -463,12 +462,16 @@ onMounted(() => {
   }
 
   .search {
-    @include flexCenter(column, center);
+    @include flexCenter(center, center);
+    height: 100px;
+    width: 100%;
+    position: absolute;
+    top: 15vh;
 
     .closeInput {
       position: absolute;
-      top: 20vh;
-      right: 25vw;
+      top: 10vh;
+      right: 30vw;
       color: #51c492;
       font-size: 1.5rem;
       cursor: pointer;
@@ -477,10 +480,7 @@ onMounted(() => {
     }
 
     .search__form {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: scale3d(0.9, 0.9, 1) translateX(-60%);
+      transform: scale3d(0.9, 0.9, 1);
       transition: transform 0.5s;
       transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
 
@@ -520,7 +520,7 @@ onMounted(() => {
     .search__suggestion {
       width: 40vw;
       position: absolute;
-      top: 50%;
+      top: 25vh;
       z-index: -1;
 
       .suggestion-tags {
@@ -593,7 +593,7 @@ onMounted(() => {
 
     .search__form {
       z-index: 2;
-      transform: translate3d(0, 20vh, 0) translate3d(-50%, -50%, 0) scale3d(1.2, 1.2, 1);
+      transform: translate3d(0, 15vh, 0) translate3d(0, -50%, 0) scale3d(1.2, 1.2, 1);
     }
 
     .search__suggestion {
@@ -963,7 +963,6 @@ onMounted(() => {
     margin-top: -1px;
     border-top: none;
 
-
     .nav__card {
       ul {
         width: 60rem;
@@ -1070,7 +1069,8 @@ onMounted(() => {
         gap: 1rem;
         flex-wrap: wrap;
         padding: 1.5rem 0.5rem;
-
+        position: relative;
+        z-index: 1;
 
         .specific__content {
           width: 11rem;
@@ -1084,7 +1084,7 @@ onMounted(() => {
             display: inline-block;
             border-radius: 0.5rem;
             overflow: hidden;
-            background-color: black;
+            background-color: rgb(255, 183, 183);
             position: relative;
 
             &:hover {
@@ -1117,6 +1117,7 @@ onMounted(() => {
               font-size: 0.8rem;
               font-weight: 700;
               margin: 0.5rem 0;
+              @include text-color('text-sec-color');
 
               span {
                 img {
@@ -1131,10 +1132,10 @@ onMounted(() => {
               padding: 0rem 0;
               font-size: 1rem;
               font-weight: 700;
-              color: black;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
+              @include text-color('text-color');
             }
           }
         }

@@ -979,7 +979,7 @@ onUnmounted(() => {
                     border: none;
                     border-left: 3px solid #41838e;
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    background: $pages-background-color;
+                    // background: $pages-background-color;
                     font-family: "lmst";
                     letter-spacing: 1px;
                     transition: box-shadow 0.8s linear 0.2s;

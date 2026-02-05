@@ -1,27 +1,27 @@
-// 背景色
-$pages-background-color: linear-gradient(
-    80deg,
-    #cef2fa 0%,
-    8.44482%,
-    rgb(209, 240, 236) 16.8896%,
-    38.8796%,
-    rgb(250, 239, 243) 60.8696%,
-    80.4348%,
-    #fbf3ef 100%
-);
-$pages-background-color-dark: linear-gradient(
-    80deg,
-    rgb(20, 40, 60) 0%,
-    // 深蓝色
-    8.44482%,
-    rgb(25, 45, 50) 16.8896%,
-    // 深青蓝色
-    38.8796%,
-    rgb(45, 30, 50) 60.8696%,
-    // 深紫红色
-    80.4348%,
-    rgb(40, 35, 45) 100% // 深灰色
-);
+// // 背景色
+// $pages-background-color: linear-gradient(
+//     80deg,
+//     #cef2fa 0%,
+//     8.44482%,
+//     rgb(209, 240, 236) 16.8896%,
+//     38.8796%,
+//     rgb(250, 239, 243) 60.8696%,
+//     80.4348%,
+//     #fbf3ef 100%
+// );
+// $pages-background-color-dark: linear-gradient(
+//     80deg,
+//     rgb(20, 40, 60) 0%,
+//     // 深蓝色
+//     8.44482%,
+//     rgb(25, 45, 50) 16.8896%,
+//     // 深青蓝色
+//     38.8796%,
+//     rgb(45, 30, 50) 60.8696%,
+//     // 深紫红色
+//     80.4348%,
+//     rgb(40, 35, 45) 100% // 深灰色
+// );
 
 /* 主色调 */
 $primary-color: #5de9e0; // 主蓝色
@@ -66,9 +66,6 @@ $themes: (
         --primary-sec-color: #ccffff,
         --primary-thri-color: #ffcccc,
         --primary-text-color: #fffafa,
-        // 背景
-        --bg-gradient-color-start: #ccffff,
-        --bg-gradient-color-end: #ffcccc,
         // 文字
         --text-color: #111,
         --text-sec-color: #596164,
@@ -77,13 +74,11 @@ $themes: (
     ),
 
     dark: (
+        // 基础色
         --primary-color: #ffffcc,
         --primary-sec-color: #ccffff,
         --primary-thri-color: #ffcccc,
         --primary-text-color: #fffafa,
-        // 背景
-        --bg-gradient-color-start: #313436,
-        --bg-gradient-color-end: #0a0b0c,
         // 文字
         --text-color: #f9f9f9,
         --text-sec-color: #cfd2d5,
@@ -105,7 +100,7 @@ $themes: (
     @return var(--#{$key});
 }
 
-// 动态主题
+// 应用主题变量到CSS
 @each $theme-name, $theme-map in $themes {
     [data-theme="#{$theme-name}"] {
         @each $key, $value in $theme-map {
@@ -114,20 +109,24 @@ $themes: (
     }
 }
 
-// 渐变背景Mixin
-@mixin gradient-background($start-color-key, $end-color-key, $angle: 180deg) {
-    @include theme-foreach {
-        $start-color: themed($start-color-key);
-        $end-color: themed($end-color-key);
-
-        background-image: linear-gradient($angle, $start-color 10%, $end-color 100%);
-    }
+// 定义过渡时间变量（可根据需要调整）
+$theme-transition-duration: 0.5s;
+$theme-transition-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+// 基础过渡混入
+@mixin theme-transition {
+    transition:
+        background-color $theme-transition-duration $theme-transition-timing,
+        color $theme-transition-duration $theme-transition-timing,
+        border-color $theme-transition-duration $theme-transition-timing,
+        box-shadow $theme-transition-duration $theme-transition-timing;
 }
+
 // 普通背景色
 @mixin background($color-key) {
     @include theme-foreach {
         background-color: themed($color-key);
     }
+    @include theme-transition();
 }
 //文字颜色
 @mixin text-color($color-key) {
@@ -135,10 +134,12 @@ $themes: (
         $current-color: themed($color-key);
         color: $current-color;
     }
+    @include theme-transition();
 }
 // 阴影
 @mixin boxshadow($color-key) {
     @include theme-foreach {
         box-shadow: themed($color-key);
     }
+    @include theme-transition();
 }

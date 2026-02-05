@@ -302,7 +302,7 @@ h2 {
 
         .treasure-music-list {
             display: grid;
-            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
         }
 
@@ -321,8 +321,8 @@ h2 {
 
         .exclusive-music-list {
             display: grid;
-            grid-template-columns: repeat(8, minmax(90px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 2rem;
         }
 
         .item {
@@ -367,7 +367,7 @@ h2 {
 
         .new-music-list {
             display: grid;
-            grid-template-columns: repeat(5, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
             gap: 1rem;
         }
 
@@ -403,7 +403,7 @@ h2 {
 
         .mv-video-list {
             display: grid;
-            grid-template-columns: repeat(3, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             gap: 1rem;
         }
 

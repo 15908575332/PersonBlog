@@ -122,8 +122,7 @@
                     <div class="custom-volume" ref="volumeContainer" @click="setVolume">
                       <div class="volume-bar">
                         <div class="current-volume" :style="{ width: muted ? '0%' : volume + '%' }"></div>
-                        <div class="volume-handle" :style="{ left: muted ? '0%' : volume + '%' }"
-                          @mousedown="startDrag">
+                        <div class="volume-handle" :style="{ left: muted ? '0%' : volume + '%' }">
                         </div>
                       </div>
                     </div>
@@ -202,11 +201,11 @@ const handleScroll = () => {
   if (!rightContent.value) return;
   const currentScrollTop = rightContent.value.scrollTop;
   // 向下滚动且超过50px时隐藏搜索栏
-  if (currentScrollTop > lastScrollTop.value && currentScrollTop > 50) {
+  if (currentScrollTop > lastScrollTop.value && currentScrollTop > 60) {
     isSearchBarVisible.value = false;
   }
   // 向上滚动或回到顶部时显示搜索栏
-  else if (currentScrollTop < lastScrollTop.value || currentScrollTop <= 50) {
+  else if (currentScrollTop < lastScrollTop.value || currentScrollTop <= 60) {
     isSearchBarVisible.value = true;
   }
   lastScrollTop.value = currentScrollTop <= 0 ? 0 : currentScrollTop;
@@ -526,23 +525,6 @@ watch(currentTime, (newTime) => { // 歌词同步检测
   }
 })
 
-// const startDrag = (e) => {
-//   isDragging.value = true;
-//   document.addEventListener("mousemove", handleDrag);
-//   document.addEventListener("mouseup", stopDrag);
-// };
-
-// const handleDrag = (e) => {
-//   if (!isDragging.value) return;
-//   setVolume(e);
-// };
-
-// const stopDrag = () => {
-//   isDragging.value = false;
-//   document.removeEventListener("mousemove", handleDrag);
-//   document.removeEventListener("mouseup", stopDrag);
-// };
-
 onMounted(async () => {
   audioElement.value = new Audio();  // 初始化音频元素
   audioElement.value.addEventListener("timeupdate", updateTime);
@@ -554,18 +536,18 @@ onMounted(async () => {
   });
   audioElement.value.volume = volume.value / 100;  // 设置初始音量
   // 滚动隐藏搜索栏
-  // if (rightContent.value) {
-  //   rightContent.value.addEventListener('scroll', debouncedHandleScroll);
+  if (rightContent.value) {
+    rightContent.value.addEventListener('scroll', debouncedHandleScroll);
 
-  // }
+  }
 
 });
 
 onUnmounted(() => {
-  // // 清理事件监听
-  // if (rightContent.value) {
-  //   rightContent.value.removeEventListener('scroll', debouncedHandleScroll);
-  // }
+  // 清理事件监听
+  if (rightContent.value) {
+    rightContent.value.removeEventListener('scroll', debouncedHandleScroll);
+  }
 });
 </script>
 
@@ -576,13 +558,14 @@ onUnmounted(() => {
   width: 100vw;
   @include flexCenter(row, space-between);
   overflow: hidden;
-  @include gradient-background('bg-gradient-color-start', 'bg-gradient-color-end', 135deg);
-  transition: all 0.5s;
+  position: relative;
+  z-index: 1;
 
   .left-nav {
     height: 100%;
     width: 15%;
     padding: 2rem;
+    min-width: 11rem;
 
     // 导航svg图标
     .size-6 {
@@ -606,6 +589,7 @@ onUnmounted(() => {
         @include flexCenter(row, flex-start);
         align-items: center;
         gap: 0.5rem;
+        transition: color 0s;
       }
     }
 
@@ -621,6 +605,7 @@ onUnmounted(() => {
 
       a {
         @include text-color('primary-text-color');
+        transition: color 0s;
       }
     }
 
@@ -639,12 +624,11 @@ onUnmounted(() => {
       z-index: 1;
       font-family: 'gtpy';
       padding-left: 2rem;
-      background-color: rebeccapurple;
       transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); // 使用更平滑的缓动函数
 
       // 隐藏状态 - 宽度变小并隐藏
       &.hidden {
-        transform: translateY(-100%) scaleX(0.3); // 水平缩放为30%
+        transform: translateY(-100%) scaleX(0.8); // 水平缩放为30%
         opacity: 0;
         width: 90%; // 宽度变为20%
         padding-left: 0.5rem; // 内边距相应减小
@@ -679,11 +663,10 @@ onUnmounted(() => {
       bottom: 0;
       left: 0;
       width: 100%;
-      z-index: 1;
+      z-index: 2;
       gap: 0.5rem;
       min-width: 40rem;
       padding: 1rem;
-      @include gradient-background('bg-gradient-color-start', 'bg-gradient-color-end', 182deg);
       @include boxshadow('shadow-card');
       @include flexCenter(row, center);
       @include text-color('text-color');

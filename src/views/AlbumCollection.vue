@@ -127,8 +127,8 @@
 </template>
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import CarouselImage from "@/components/CarouselImage/index.vue";
-import ThumbnailCarousel from "@/components/ThumbnailCarousel/index.vue";
+import CarouselImage from "@/components/AlbumCollection/CarouselImage.vue";
+import ThumbnailCarousel from "@/components/AlbumCollection/Thumbnails.vue";
 import Navigation from "@/components/common/NavigationMenu.vue";
 import utils from "@/utils/getAssetsFile";
 const cardImages = Array.from({ length: 7 }, (_, i) =>

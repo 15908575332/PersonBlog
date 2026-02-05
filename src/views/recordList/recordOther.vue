@@ -227,7 +227,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .otherPage {
-    background: $pages-background-color;
+    // background: $pages-background-color;
     $currentPageLinear: linear-gradient(135deg, #f0c4e4 40%, #eb6ec8 100%);
 
     .container {

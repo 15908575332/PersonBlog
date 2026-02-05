@@ -1,6 +1,13 @@
 <template>
   <div>
-    <div class="pagesOption" @click="handlePageClick">
+    <div class="pagesOption" ref="pagesOption" @click="handlePageClick" :class="currentTheme">
+      <!-- 渐变背景色增加过渡动画 -->
+      <template v-if="finalShouldShowGlobalBg">
+        <div class="background-container">
+          <div class="gradient-bg light-bg" :class="{ active: currentTheme === 'light' }"></div>
+          <div class="gradient-bg dark-bg" :class="{ active: currentTheme === 'dark' }"></div>
+        </div>
+      </template>
       <ClickRipple></ClickRipple>
       <flowerAnimate :is-animating="isAnimating" :sakura-count="sakuraCount" :speed="speed" />
       <router-view></router-view>
@@ -207,7 +214,8 @@ import playIcon from '@/assets/icon/public/icons8-play-100.png'
 
 /** ------------------------ 主题 ------------------------ */
 import { initTheme, setTheme, watchSystemTheme } from '@/utils/theme';
-const currentTheme = ref('light');
+const currentTheme = ref('');
+currentTheme.value = localStorage.getItem('app-theme') || 'light';
 const isPressd = ref(false)
 
 const toggleTheme = () => {
@@ -217,6 +225,37 @@ const toggleTheme = () => {
   currentTheme.value = newTheme;
 };
 
+
+// 路由及其所有子路由都会显示全局背景
+const noGlobalBgPrefixes = [
+  '/treasureBox',
+  '/recordList'
+];
+
+// 计算是否显示全局背景
+const shouldShowGlobalBg = computed(() => {
+  // 检查当前路由是否以排除前缀开头
+  return noGlobalBgPrefixes.some(prefix =>
+    route.path === prefix || route.path.startsWith(prefix + '/')
+  );
+});
+
+// 添加特殊路由的精确匹配不要展示背景的
+const specialNoGlobalBgPaths = [
+  // '/special/route1',
+  // '/special/route2'
+];
+
+// 最终计算属性
+const finalShouldShowGlobalBg = computed(() => {
+  // 先检查特殊路由
+  if (specialNoGlobalBgPaths.includes(route.path)) {
+    return false;
+  }
+
+  // 再检查前缀匹配
+  return shouldShowGlobalBg.value;
+})
 /** ------------------------ 全局花瓣飘落动画 ------------------------ */
 const showControlPanel = ref(false)
 const controls = ref();
@@ -268,19 +307,10 @@ async function fetchData() {
 }
 onMounted(() => {
   fetchData() // 页面加载时获取数据
-  // const savedSpeed = localStorage.getItem('flowerAnimateSpeed');
-  // const savedCount = localStorage.getItem('flowerAnimateSakuraCount');
-
-  // if (savedSpeed !== null) {
-  //   speed.value = Number(savedSpeed);
-  // };
-  // if (savedCount !== null) {
-  //   sakuraCount.value = Number(savedCount);
-  // };
   // 主题切换
   currentTheme.value = initTheme();
   watchSystemTheme();
-
+  isPressd.value = currentTheme.value === 'dark';
 })
 
 /** ------------------------ 启动console自动输出 ------------------------ */
@@ -311,6 +341,82 @@ const showRippleToggle = computed(() => {
 </script>
 
 <style scoped lang="scss">
+.pagesOption {
+  // transition: all 0.5s ease;
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+
+  //  渐变背景色增加过渡动画
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    transition: opacity $theme-transition-duration $theme-transition-timing;
+  }
+
+  .gradient-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity $theme-transition-duration $theme-transition-timing;
+  }
+
+  .light-bg {
+    background: linear-gradient(80deg,
+        #cef2fa 0%,
+        8.44482%,
+        rgb(209, 240, 236) 16.8896%,
+        38.8796%,
+        rgb(250, 239, 243) 60.8696%,
+        80.4348%,
+        #fbf3ef 100%);
+    ;
+    opacity: 1;
+
+  }
+
+  .dark-bg {
+    background: linear-gradient(80deg,
+        rgb(20, 40, 60) 0%,
+        // 深蓝色
+        8.44482%,
+        rgb(25, 45, 50) 16.8896%,
+        // 深青蓝色
+        38.8796%,
+        rgb(45, 30, 50) 60.8696%,
+        // 深紫红色
+        80.4348%,
+        rgb(40, 35, 45) 100% // 深灰色
+      );
+    ;
+    opacity: 0;
+  }
+
+  /* 激活状态 */
+  .light-bg.active {
+    opacity: 1;
+  }
+
+  .light-bg:not(.active) {
+    opacity: 0;
+  }
+
+  .dark-bg.active {
+    opacity: 1;
+  }
+
+  .dark-bg:not(.active) {
+    opacity: 0;
+  }
+}
+
 //工具栏
 .floot_right {
   border-radius: 8px;
@@ -399,7 +505,8 @@ const showRippleToggle = computed(() => {
 
   .flower {
     @include flexCenter(row, space-around);
-    background-color: #ffa9a9;
+    background-color: #f8b1c4;
+    border: 2px solid #fff;
     gap: 1rem;
     padding: 1rem;
     border-radius: 0.2rem;
@@ -498,10 +605,10 @@ const showRippleToggle = computed(() => {
   --bg: hsl(219, 30%, 88%);
   --bear-speed: 10s;
   --color: hsl(219 30% 20%);
-  // transform: rotate(90deg);
   border-radius: 0.2rem;
   padding: 1rem;
-  background-color: #ffa9a9;
+  background-color: #f8b1c4;
+  border: 2px solid $general-white;
   @include flexCenter(column, space-between);
   gap: 0.8rem;
 
@@ -781,22 +888,6 @@ const showRippleToggle = computed(() => {
     --dark: 1;
   }
 
-  // .controls {
-  //   position: fixed;
-  //   bottom: 1rem;
-  //   right: 1rem;
-  //   display: flex;
-  //   align-items: center;
-  //   gap: 0.5rem;
-  //   font-family: sans-serif;
-  //   color: var(--color);
-  //   transition: color var(--speed) var(--easing);
-  // }
-
-  // [type=checkbox] {
-  //   accent-color: var(--color);
-  //   transition: accent-color var(--speed) var(--easing);
-  // }
   .otherControl {
     @include flexCenter(row, flex-start);
     gap: 0.8rem;

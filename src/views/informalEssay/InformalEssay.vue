@@ -258,7 +258,6 @@ const scrollToSection = (sectionId) => {
 
 /** ------------------------ 传入文章id值详情页ListDetail ------------------------ */
 import { useRouter } from "vue-router";
-import { get } from "jquery";
 const route = useRouter();
 const listDetail = (id) => {
   route.push({
@@ -290,9 +289,6 @@ const
 onMounted(() => {
   window.addEventListener("scroll", debouncedHandleScroll);
   initializeData();
-  // getScrollMessageData(); //滚动消息
-  // getNavData(); //获取分类
-  // getContentData(); //获取主要内容模块
 });
 
 onBeforeUnmount(() => {
@@ -310,14 +306,6 @@ $contentWidth: 65rem; // 内容宽度
     top: 0;
     z-index: 2;
     background-color: rgb(0, 0, 0, 0.2);
-  }
-
-  .navHiddenZoomOut {
-    animation: navHiddenZoomOut 0.5s ease forwards;
-  }
-
-  .navHiddenZoomIn {
-    animation: navHiddenZoomIn 0.5s ease forwards;
   }
 
   // 通用阴影

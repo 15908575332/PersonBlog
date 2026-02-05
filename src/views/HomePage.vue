@@ -356,6 +356,10 @@ onMounted(() => {
     randomIndex.value = Math.floor(Math.random() * onOtherImgs.value.length); //背景图索引值
   }
   getFavorites();
+  // 添加定时器：每2秒更新一次时间
+  setInterval(() => {
+    currentTime.value = new Date();
+  }, 2000);
 });
 onUnmounted(() => {
 

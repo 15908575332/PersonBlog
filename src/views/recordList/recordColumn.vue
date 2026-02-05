@@ -155,7 +155,6 @@ onMounted(() => {
     height: 100%;
     //内容盒子宽度
     $category_content_width: 60rem;
-    background: $pages-background-color;
     @include flexCenter(column, center);
 
     &::after {
