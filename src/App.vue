@@ -383,19 +383,7 @@ const showRippleToggle = computed(() => {
   }
 
   .dark-bg {
-    background: linear-gradient(80deg,
-        rgb(20, 40, 60) 0%,
-        // 深蓝色
-        8.44482%,
-        rgb(25, 45, 50) 16.8896%,
-        // 深青蓝色
-        38.8796%,
-        rgb(45, 30, 50) 60.8696%,
-        // 深紫红色
-        80.4348%,
-        rgb(40, 35, 45) 100% // 深灰色
-      );
-    ;
+    background: linear-gradient(to left, #0f172a 0%, #1e293b 50%, #334155 100%);
     opacity: 0;
   }
 

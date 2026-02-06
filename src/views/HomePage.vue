@@ -129,7 +129,7 @@
         <WeatherCard></WeatherCard>
       </div>
     </div>
-    <live2dModel v-if="showRippleToggle"></live2dModel>
+    <!-- <live2dModel v-if="showRippleToggle"></live2dModel> -->
   </div>
 </template>
 

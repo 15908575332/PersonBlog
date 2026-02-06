@@ -412,7 +412,7 @@ onMounted(() => {
             padding: 0.75rem 1rem;
             padding-left: 0;
             font-weight: 600;
-            border-bottom: 1px solid var(--primary-red);
+            border-bottom: 1px solid $general-white;
             font-size: 0.9rem;
             @include background('bg-gradient-color-start');
             @include text-color('text-color');
