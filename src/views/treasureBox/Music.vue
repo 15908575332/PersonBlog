@@ -647,7 +647,7 @@ onUnmounted(() => {
         padding: 0.3rem 1rem;
         font-size: 0.9rem;
         font-family: 'gtpy';
-        background-color: #ffffff;
+        background-color: $general-white;
         border: 1px solid #e8eaef;
 
         &::placeholder {
@@ -670,6 +670,7 @@ onUnmounted(() => {
       @include boxshadow('shadow-card');
       @include flexCenter(row, center);
       @include text-color('text-color');
+      backdrop-filter: blur(15px);
 
       .player-content {
         width: 80%;
@@ -776,7 +777,6 @@ onUnmounted(() => {
       .play-control {
         width: 80%;
         @include flexCenter(column, center);
-
         //进度条
         .progress-container {
           display: flex;

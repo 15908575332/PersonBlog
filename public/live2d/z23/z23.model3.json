@@ -11,7 +11,7 @@
     ],
     "Physics": "Z23.physics3.json",
     "Motions": {
-      "": [
+      "Tap": [
         {
           "File": "motions/complete.motion3.json"
         },

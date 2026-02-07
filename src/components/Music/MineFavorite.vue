@@ -34,7 +34,6 @@ function formatTime(timeString) { //时间格式化
 }
 
 const emit = defineEmits(['play-song'])
-console.log(userStore.user)
 // 歌单头部数据配置
 const playlistData = {
     title: "我喜欢的音乐",
@@ -76,8 +75,8 @@ const songList = reactive([
     {
         id: 3,
         picture: utils.getAssetsFile("img/treasureBox/2.jpg"),
-        name: "梁静茹",
-        artist: "宁夏",
+        name: "宁夏",
+        artist: "梁静茹",
         url: song3,
         lrc: utils.getAssetsFile("music/song3.lrc"),
     },

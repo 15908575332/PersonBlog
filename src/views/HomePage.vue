@@ -109,7 +109,7 @@
               <li v-for="(module, index) in displayedData" :key="index">
                 <a :href="module.href" style="display: flex; align-items: center">
                   <div class="iconImg">
-                    <img onerror="this.src='/logo.png'" :src="module.imgSrc" alt="" />
+                    <img onerror="this.src='/logo.png'" v-lazy="module.imgSrc" alt="icon" />
                   </div>
                   <div class="text-content">
                     <h5>{{ module.subtitle }}</h5>
@@ -129,7 +129,6 @@
         <WeatherCard></WeatherCard>
       </div>
     </div>
-    <!-- <live2dModel v-if="showRippleToggle"></live2dModel> -->
   </div>
 </template>
 
@@ -148,17 +147,11 @@ import WeatherCard from "@/components/common/WeatherCard.vue";
 import Navigation from "@/components/common/NavigationMenu.vue";
 import utils from "@/utils/getAssetsFile";
 import { message, notification } from "ant-design-vue";
-import live2dModel from "@/components/common/live2dModel.vue"; //引入live2d组件
 import { SmileOutlined } from '@ant-design/icons-vue';
 import { Solar } from "lunar-javascript";
 const instance = getCurrentInstance();
 const $http = instance.appContext.config.globalProperties.$http;
 const route = useRoute();
-
-const showRippleToggle = computed(() => {
-  const hiddenRoutes = ['/home'] // 根据你的实际路由配置调整
-  return hiddenRoutes.includes(route.path)
-})
 
 /** ------------------------ 页面背景图 ------------------------ */
 const randomIndex = ref(0); // 随机数索引

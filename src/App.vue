@@ -214,20 +214,19 @@ import playIcon from '@/assets/icon/public/icons8-play-100.png'
 
 /** ------------------------ 主题 ------------------------ */
 import { initTheme, setTheme, watchSystemTheme } from '@/utils/theme';
-const currentTheme = ref('');
-currentTheme.value = localStorage.getItem('app-theme') || 'light';
-const isPressd = ref(false)
+
+const currentTheme = ref(localStorage.getItem('app-theme') || 'light');
+const isPressd = computed(() => currentTheme.value === 'dark');
 
 const toggleTheme = () => {
-  isPressd.value = !isPressd.value;
-  const newTheme = isPressd.value ? 'dark' : 'light';
+  const newTheme = currentTheme.value === 'light' ? 'dark' : 'light';
   setTheme(newTheme);
-  currentTheme.value = newTheme;
+  currentTheme.value = newTheme; // 确保状态更新
 };
+window.toggleTheme = toggleTheme;
 
 
-// 路由及其所有子路由都会显示全局背景
-const noGlobalBgPrefixes = [
+const noGlobalBgPrefixes = [ // 路由及其所有子路由都会显示全局背景
   '/treasureBox',
   '/recordList'
 ];
@@ -310,7 +309,6 @@ onMounted(() => {
   // 主题切换
   currentTheme.value = initTheme();
   watchSystemTheme();
-  isPressd.value = currentTheme.value === 'dark';
 })
 
 /** ------------------------ 启动console自动输出 ------------------------ */
@@ -377,32 +375,27 @@ const showRippleToggle = computed(() => {
         rgb(250, 239, 243) 60.8696%,
         80.4348%,
         #fbf3ef 100%);
-    ;
-    opacity: 1;
 
+    /* 激活状态 */
+    &.active {
+      opacity: 1;
+    }
   }
 
   .dark-bg {
     background: linear-gradient(to left, #0f172a 0%, #1e293b 50%, #334155 100%);
     opacity: 0;
+
+    &.active {
+      opacity: 1;
+    }
+
+    &:not(.active) {
+      opacity: 0;
+    }
   }
 
-  /* 激活状态 */
-  .light-bg.active {
-    opacity: 1;
-  }
 
-  .light-bg:not(.active) {
-    opacity: 0;
-  }
-
-  .dark-bg.active {
-    opacity: 1;
-  }
-
-  .dark-bg:not(.active) {
-    opacity: 0;
-  }
 }
 
 //工具栏

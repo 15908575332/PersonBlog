@@ -1042,11 +1042,15 @@ onMounted(() => {
     }
 
     .content__container {
+
+      // 推荐位
       .menu {
         @include flexCenter(row, space-between);
         border-bottom: 1px dashed #ccc;
         padding: 0.2rem;
         padding-top: 2rem;
+        position: relative;
+        z-index: 1;
 
         .flex__layout {
           @include flexCenter(row, center);
