@@ -22,9 +22,7 @@ var 引流 = [
 
 // 切换夜间模式
 function toggleNightMode() {
-  const html = document.querySelector('html');
-  html.classList.toggle('dark');
-  localStorage.setItem('isDark', html.classList.contains('dark')); // contains 方法判断是否包含某个类名
+  window.toggleTheme('dark'); //APP.vue全局暴露的主题切换方法
 }
 
 const initConfig = {
@@ -51,7 +49,7 @@ const initConfig = {
     homePort: '' // 首页domain端口号
   },
   night: 'toggleNightMode()',
-  model: ['/live2d/Diana/Diana.model3.json', '/live2d/Ava/Ava.model3.json'],
+  model: ['/live2d/biaoqiang/biaoqiang.model3.json', '/live2d/z23/z23.model3.json'],
   tips: true,
   onModelLoad: onModelLoad
 };

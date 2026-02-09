@@ -12,7 +12,7 @@
                 :onCancel="onCaptchaCancel" />
             <!-- 登录验证码组件 -->
             <slide-verify v-else ref="block" :w="400" :h="200" :imgs="customImages" :show="false"
-                :slider-text="placeholderText" @again="onAgain" @success="onSuccess" @fail="onFail" @refresh="onRefresh"
+                :slider-text="placeholderText" @again="onAgain" @success="onSuccess" @fail="onFail"
                 style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);"></slide-verify>
             <div class="verification-msg" :style="{ color: msgColor }">{{ msg }}</div>
         </ModalBox>
