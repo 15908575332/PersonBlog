@@ -42,7 +42,7 @@
               </router-link>
             </li>
             <li :class="{ 'nav-active': $route.name === 'fff' }">
-              <router-link>
+              <router-link to="#">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="size-6">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -96,29 +96,64 @@
                 <!-- 频谱组件 -->
                 <Spectrum :audio-element="audioElement" :is-playing="isPlaying"></Spectrum>
 
-                <!-- 声音和切换控制，随机/循环 -->
+                <!-- 播放器控制按钮 -->
                 <div class="voice-play">
-                  <!-- 控制按钮 -->
-                  <div class="controls">
-                    <div @click="prevSong">
-                      <img src="@/assets/icon/treasureBox/rewind.png" alt="" />
-                    </div>
-                    <div @click="togglePlay">
-                      <img :src="isPlaying ? pauseImg : playImg" alt="isplay" />
-                    </div>
-                    <div @click="nextSong">
-                      <img src="" alt="" />
-                      <img src="@/assets/icon/treasureBox/fastforward.png" alt="" />
-                    </div>
+                  <div @click="prevSong">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" fill="currentColor"
+                      class="size-6">
+                      <path
+                        d="M9.195 18.44c1.25.714 2.805-.189 2.805-1.629v-2.34l6.945 3.968c1.25.715 2.805-.188 2.805-1.628V8.69c0-1.44-1.555-2.343-2.805-1.628L12 11.029v-2.34c0-1.44-1.555-2.343-2.805-1.628l-7.108 4.061c-1.26.72-1.26 2.536 0 3.256l7.108 4.061Z" />
+                    </svg>
+                  </div>
+                  <div @click="togglePlay">
+                    <svg v-if="isPlaying" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24"
+                      fill="currentColor" class="size-6">
+                      <path fill-rule="evenodd"
+                        d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="currentColor"
+                      class="size-6">
+                      <path fill-rule="evenodd"
+                        d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <div @click="nextSong">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" fill="currentColor"
+                      class="size-6">
+                      <path
+                        d="M5.055 7.06C3.805 6.347 2.25 7.25 2.25 8.69v8.122c0 1.44 1.555 2.343 2.805 1.628L12 14.471v2.34c0 1.44 1.555 2.343 2.805 1.628l7.108-4.061c1.26-.72 1.26-2.536 0-3.256l-7.108-4.061C13.555 6.346 12 7.249 12 8.689v2.34L5.055 7.061Z" />
+                    </svg>
                   </div>
                   <!-- 随机/循环 -->
                   <div class="order-change" @click="togglePlayMode">
-                    <img :src="playMode === 'order' ? cycleImg : randomImg" alt="playMode" />
+                    <!-- <img :src="playMode === 'order' ? cycleImg : randomImg" alt="playMode" /> -->
+                    <svg v-if="playMode === 'order'" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24"
+                      fill="currentColor" class="size-6">
+                      <path fill-rule="evenodd"
+                        d="M12 5.25c1.213 0 2.415.046 3.605.135a3.256 3.256 0 0 1 3.01 3.01c.044.583.077 1.17.1 1.759L17.03 8.47a.75.75 0 1 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 0 0-1.06-1.06l-1.752 1.751c-.023-.65-.06-1.296-.108-1.939a4.756 4.756 0 0 0-4.392-4.392 49.422 49.422 0 0 0-7.436 0A4.756 4.756 0 0 0 3.89 8.282c-.017.224-.033.447-.046.672a.75.75 0 1 0 1.497.092c.013-.217.028-.434.044-.651a3.256 3.256 0 0 1 3.01-3.01c1.19-.09 2.392-.135 3.605-.135Zm-6.97 6.22a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.752-1.751c.023.65.06 1.296.108 1.939a4.756 4.756 0 0 0 4.392 4.392 49.413 49.413 0 0 0 7.436 0 4.756 4.756 0 0 0 4.392-4.392c.017-.223.032-.447.046-.672a.75.75 0 0 0-1.497-.092c-.013.217-.028.434-.044.651a3.256 3.256 0 0 1-3.01 3.01 47.953 47.953 0 0 1-7.21 0 3.256 3.256 0 0 1-3.01-3.01 47.759 47.759 0 0 1-.1-1.759L6.97 15.53a.75.75 0 0 0 1.06-1.06l-3-3Z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path
+                        d="M18 17.8832V16L23 19L18 22V19.9095C14.9224 19.4698 12.2513 17.4584 11.0029 14.5453L11 14.5386L10.9971 14.5453C9.57893 17.8544 6.32508 20 2.72483 20H2V18H2.72483C5.52503 18 8.05579 16.3312 9.15885 13.7574L9.91203 12L9.15885 10.2426C8.05579 7.66878 5.52503 6 2.72483 6H2V4H2.72483C6.32508 4 9.57893 6.14557 10.9971 9.45473L11 9.46141L11.0029 9.45473C12.2513 6.5416 14.9224 4.53022 18 4.09051V2L23 5L18 8V6.11684C15.7266 6.53763 13.7737 8.0667 12.8412 10.2426L12.088 12L12.8412 13.7574C13.7737 15.9333 15.7266 17.4624 18 17.8832Z">
+                      </path>
+                    </svg>
                   </div>
                   <!-- 音量控制 -->
                   <div class="volume-control">
-                    <img :src="!muted && Math.round(volume) > 0 ? volumeImg : mutedImg" alt="ismute"
-                      @click="toggleMute" />
+                    <svg v-if="!muted && Math.round(volume) > 0" @click="toggleMute" xmlns="http://www.w3.org/2000/svg"
+                      width="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path
+                        d="M2 16.0001H5.88889L11.1834 20.3319C11.2727 20.405 11.3846 20.4449 11.5 20.4449C11.7761 20.4449 12 20.2211 12 19.9449V4.05519C12 3.93977 11.9601 3.8279 11.887 3.73857C11.7121 3.52485 11.3971 3.49335 11.1834 3.66821L5.88889 8.00007H2C1.44772 8.00007 1 8.44778 1 9.00007V15.0001C1 15.5524 1.44772 16.0001 2 16.0001ZM23 12C23 15.292 21.5539 18.2463 19.2622 20.2622L17.8445 18.8444C19.7758 17.1937 21 14.7398 21 12C21 9.26016 19.7758 6.80629 17.8445 5.15557L19.2622 3.73779C21.5539 5.75368 23 8.70795 23 12ZM18 12C18 10.0883 17.106 8.38548 15.7133 7.28673L14.2842 8.71584C15.3213 9.43855 16 10.64 16 12C16 13.36 15.3213 14.5614 14.2842 15.2841L15.7133 16.7132C17.106 15.6145 18 13.9116 18 12Z">
+                      </path>
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path
+                        d="M5.88889 16.0001H2C1.44772 16.0001 1 15.5524 1 15.0001V9.00007C1 8.44778 1.44772 8.00007 2 8.00007H5.88889L11.1834 3.66821C11.3971 3.49335 11.7121 3.52485 11.887 3.73857C11.9601 3.8279 12 3.93977 12 4.05519V19.9449C12 20.2211 11.7761 20.4449 11.5 20.4449C11.3846 20.4449 11.2727 20.405 11.1834 20.3319L5.88889 16.0001ZM20.4142 12.0001L23.9497 15.5356L22.5355 16.9498L19 13.4143L15.4645 16.9498L14.0503 15.5356L17.5858 12.0001L14.0503 8.46454L15.4645 7.05032L19 10.5859L22.5355 7.05032L23.9497 8.46454L20.4142 12.0001Z">
+                      </path>
+                    </svg>
                     <div class="custom-volume" ref="volumeContainer" @click="setVolume">
                       <div class="volume-bar">
                         <div class="current-volume" :style="{ width: muted ? '0%' : volume + '%' }"></div>
@@ -126,7 +161,7 @@
                         </div>
                       </div>
                     </div>
-                    <span class="volume-number">{{ muted ? 0 : Math.round(volume) }}%</span>
+                    <div class="volume-number">{{ muted ? 0 : Math.round(volume) }}%</div>
                   </div>
                 </div>
               </div>
@@ -162,14 +197,30 @@
         <!-- 控制按钮 -->
         <div class="controls">
           <div @click="prevSong">
-            <img src="@/assets/icon/treasureBox/rewind.png" alt="" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path
+                d="M9.195 18.44c1.25.714 2.805-.189 2.805-1.629v-2.34l6.945 3.968c1.25.715 2.805-.188 2.805-1.628V8.69c0-1.44-1.555-2.343-2.805-1.628L12 11.029v-2.34c0-1.44-1.555-2.343-2.805-1.628l-7.108 4.061c-1.26.72-1.26 2.536 0 3.256l7.108 4.061Z" />
+            </svg>
           </div>
           <div @click="togglePlay">
-            <img :src="isPlaying ? pauseImg : playImg" alt="isplay" />
+            <svg v-if="isPlaying" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" fill="currentColor"
+              class="size-6">
+              <path fill-rule="evenodd"
+                d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z"
+                clip-rule="evenodd" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="currentColor"
+              class="size-6">
+              <path fill-rule="evenodd"
+                d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
+                clip-rule="evenodd" />
+            </svg>
           </div>
           <div @click="nextSong">
-            <img src="" alt="" />
-            <img src="@/assets/icon/treasureBox/fastforward.png" alt="" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path
+                d="M5.055 7.06C3.805 6.347 2.25 7.25 2.25 8.69v8.122c0 1.44 1.555 2.343 2.805 1.628L12 14.471v2.34c0 1.44 1.555 2.343 2.805 1.628l7.108-4.061c1.26-.72 1.26-2.536 0-3.256l-7.108-4.061C13.555 6.346 12 7.249 12 8.689v2.34L5.055 7.061Z" />
+            </svg>
           </div>
         </div>
       </div>
@@ -227,13 +278,6 @@ const debounce = (func, wait) => {
 // 防抖后的滚动处理
 const debouncedHandleScroll = debounce(handleScroll, 10);
 /** ------------------------ 播放器 ------------------------ */
-import playImg from "@/assets/icon/treasureBox/play.png";
-import pauseImg from "@/assets/icon/treasureBox/pause.png";
-import randomImg from "@/assets/icon/treasureBox/random.svg";
-import cycleImg from "@/assets/icon/treasureBox/cycle.svg";
-import volumeImg from "@/assets/icon/treasureBox/volume.png";
-import mutedImg from "@/assets/icon/treasureBox/mute.png";
-
 const currentPlaylist = ref([]); // 当前播放列表
 const currentSongIndex = ref(null); // 当前播放歌曲索引
 const currentSong = ref(''); // 当前播放歌曲
@@ -604,8 +648,13 @@ onUnmounted(() => {
       background-image: linear-gradient(75deg, #e73636 10%, #c20c0c 120%);
 
       a {
-        @include text-color('primary-text-color');
-        transition: color 0s;
+        span {
+          color: $general-white;
+        }
+
+        svg {
+          color: $general-white;
+        }
       }
     }
 
@@ -777,6 +826,7 @@ onUnmounted(() => {
       .play-control {
         width: 80%;
         @include flexCenter(column, center);
+
         //进度条
         .progress-container {
           display: flex;
@@ -830,24 +880,22 @@ onUnmounted(() => {
           .voice-play {
             padding: 0.5rem;
             border-radius: 0.25rem;
-            @include flexCenter(row, flex-start);
-            gap: 1rem;
+            display: flex;
+            gap: 0.5rem;
 
-            //切换
-            .controls {
-              display: flex;
-              gap: 1rem;
-              // width: 50%;
+            &>div {
+              min-width: 30px;
+              @include flexCenter(center, center);
+            }
 
-              img {
-                cursor: pointer;
-                opacity: 0.8;
+            img {
+              cursor: pointer;
+              opacity: 0.8;
 
-                transition: opacity 0.3s ease;
+              transition: opacity 0.3s ease;
 
-                &:hover {
-                  opacity: 1;
-                }
+              &:hover {
+                opacity: 1;
               }
             }
 
@@ -859,7 +907,8 @@ onUnmounted(() => {
               min-width: 167px;
               overflow: hidden;
 
-              span {
+              // 百分比
+              .volume-number {
                 font-size: 16px;
               }
 
@@ -885,6 +934,7 @@ onUnmounted(() => {
                     transition: width 0.1s ease;
                   }
 
+                  // 滑块
                   .volume-handle {
                     position: absolute;
                     top: 50%;
@@ -899,9 +949,9 @@ onUnmounted(() => {
                 }
               }
 
-              img {
-                cursor: pointer;
-              }
+              // img {
+              //   cursor: pointer;
+              // }
             }
 
             // 随机/循环
@@ -965,8 +1015,10 @@ onUnmounted(() => {
     padding: 0.5rem;
     box-shadow: 0 1px 10px rgb(255, 255, 255, .2);
 
-    div {
+    &>div {
+      min-width: 30px;
       cursor: pointer;
+      color: $general-white;
 
       img {
         width: 0.8rem;

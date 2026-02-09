@@ -298,7 +298,6 @@ onMounted(() => {
   .container-content {
     @include flexCenter(column, center);
     animation: zoomInUp 0.6s ease-out;
-    // background: $pages-background-color;
     padding-top: 1rem;
 
     // 选择按钮

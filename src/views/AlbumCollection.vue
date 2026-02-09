@@ -63,7 +63,7 @@
             </div>
             <div class="text__box">
               <h1>风住尘香花已尽，日晚倦梳头风住尘香花已尽，日晚倦梳头。</h1>
-              <h2>Date:2024-12-19</h2>
+              <h2>日期:2024-12-19</h2>
             </div>
           </div>
         </div>
@@ -91,10 +91,7 @@
       <!-- 图片倒影 -->
       <div class="inverted page page5">
         <div class="inverted_title">
-          <h1>通过CSS3的transform和box-reflect属性实现图片的倒影效果</h1>
-          <div class="thisLogo">
-            <span>Personal blog</span>
-          </div>
+          <h1>图片倒影</h1>
         </div>
         <!-- 舞台层 -->
         <div class="stage">
@@ -599,19 +596,18 @@ onBeforeUnmount(() => {
     }
 
     .flex_body {
-      @include flexCenter(row, flex-start);
-      row-gap: 30px;
-      column-gap: 30px;
-      flex-wrap: wrap;
+      @include flexCenter(row, space-around);
+      width: 80%;
 
       .box {
+        width: calc(15vw + 1rem);
         padding: 0.5rem;
         border-radius: 15px;
         box-shadow: 0px 0px 3px 1px rgba(17, 17, 26, 0.1);
 
         .img__box {
-          width: 305px;
-          height: 340px;
+          width: 100%;
+          height: 36vh;
           overflow: hidden;
           border-radius: 15px;
           box-shadow: 0px 0px 6px 2px rgba(17, 17, 26, 0.1);
@@ -628,8 +624,10 @@ onBeforeUnmount(() => {
         }
 
         .text__box {
+          font-family: 'gtpy';
+
           h1 {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             padding: 1rem 0.5rem;
             max-width: 14.5rem;
@@ -644,7 +642,7 @@ onBeforeUnmount(() => {
           }
 
           h2 {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #b4b4b4;
             padding: 0 0.5rem;
           }
@@ -659,7 +657,6 @@ onBeforeUnmount(() => {
     margin: 0;
 
     .carousel_title {
-
       h1 {
         font-size: 38px;
         padding: 1.5rem 0;
@@ -683,7 +680,7 @@ onBeforeUnmount(() => {
     }
 
     .carousel_body {
-      width: 75vw;
+      width: 80vw;
       margin: 0;
 
       .carousel-3d-container {
@@ -702,7 +699,7 @@ onBeforeUnmount(() => {
     @include flexCenter(column, center);
 
     .inverted_title {
-      transform: translateY(-20vh);
+      transform: translateY(-10vh);
 
       h1 {
         font-size: 38px;
@@ -711,19 +708,6 @@ onBeforeUnmount(() => {
         font-weight: 700;
       }
 
-      .thisLogo {
-        @include flexCenter(row, center);
-
-        span {
-          font-family: "Vampiro One";
-          font-size: 1.6rem;
-          background: -webkit-linear-gradient(0deg, $primary-color, $primary-hover);
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          height: 2.6rem;
-          line-height: 2.6rem;
-        }
-      }
     }
 
     .stage {

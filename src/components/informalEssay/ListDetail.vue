@@ -824,7 +824,6 @@ onMounted(async () => {
 #recordDetail {
     font-family: 'gtpy';
     font-size: 0.75rem;
-    // background: $pages-background-color;
     min-height: 100vh;
     width: 100%;
     background-image: linear-gradient(90deg, rgba(147, 157, 163, 0.1) 1px, #fff 0),

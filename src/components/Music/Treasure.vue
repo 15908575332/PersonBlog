@@ -267,9 +267,16 @@ h2 {
 
 // 每项内容
 .item {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.3s;
+
+    &:hover {
+        transform: translateY(-5px)
+    }
 
     .item-content {
-        border-radius: 0.5rem;
+        @include boxshadow('shadow-card');
 
         img {
             width: 100%;

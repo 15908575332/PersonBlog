@@ -57,7 +57,6 @@ onMounted(() => {
 <style scoped lang="scss">
 #life-card {
   height: 100vh;
-  background: $pages-background-color;
 }
 
 @font-face {

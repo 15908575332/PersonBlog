@@ -159,6 +159,13 @@ h2 {
 // 每项内容
 .item {
     border-radius: 0.5rem;
+    @include boxshadow('shadow-card');
+    transition: transform 0.3s, box-shadow 0.3s;
+
+    &:hover {
+        box-shadow: none;
+        transform: translateY(5px);
+    }
 
     .item-content {
         border-radius: 0.5rem;
@@ -180,7 +187,7 @@ h2 {
         overflow: hidden;
         text-overflow: ellipsis;
         font-size: 0.8rem;
-        padding-top: 0.5rem;
+        padding: 0.5rem;
         @include text-color('text-color');
     }
 }
@@ -220,6 +227,7 @@ h2 {
         }
 
         .item {
+
             .item-content {
                 overflow: hidden;
                 height: 9rem;
@@ -238,8 +246,6 @@ h2 {
             gap: 1rem;
 
             .item {
-                padding: 0.5rem;
-
                 .item-content {
                     height: 10rem;
                     min-height: 5rem;

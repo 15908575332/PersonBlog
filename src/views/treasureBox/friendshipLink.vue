@@ -267,7 +267,6 @@ const click_env = () => {
     font-family: 'gtpy';
     @include flexCenter(column, center);
     $allContentWidth: 60vw;
-    // background: $pages-background-color;
 
     .trends_nav {
         width: $allContentWidth;

@@ -226,10 +226,10 @@ const toggleTheme = () => {
 
 window.toggleTheme = toggleTheme;
 
-
 const noGlobalBgPrefixes = [ // 路由及其所有子路由都会显示全局背景
   '/treasureBox',
-  '/recordList'
+  '/recordList',
+  '/InformalEssay'
 ];
 
 // 计算是否显示全局背景
@@ -242,8 +242,7 @@ const shouldShowGlobalBg = computed(() => {
 
 // 添加特殊路由的精确匹配不要展示背景的
 const specialNoGlobalBgPaths = [
-  // '/special/route1',
-  // '/special/route2'
+  '/treasureBox/favorites'
 ];
 
 // 最终计算属性
@@ -341,7 +340,6 @@ const showRippleToggle = computed(() => {
 
 <style scoped lang="scss">
 .pagesOption {
-  // transition: all 0.5s ease;
   position: relative;
   min-height: 100vh;
   overflow: hidden;

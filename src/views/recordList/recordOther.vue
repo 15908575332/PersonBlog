@@ -2,9 +2,9 @@
     <div class="otherPage">
         <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
         <div class="container">
-            <div class="header">
+            <!-- <div class="header">
                 <p>悬停查看效果，点击卡片放大查看详细信息</p>
-            </div>
+            </div> -->
             <div class="card-wrapper" ref="cardWrapper">
                 <div class="background" :style="backgroundStyle"></div>
                 <div v-for="(flower, index) in flowers" :key="index" class="card" :ref="setCardRef" :class="{
@@ -227,8 +227,6 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .otherPage {
-    // background: $pages-background-color;
-    $currentPageLinear: linear-gradient(135deg, #f0c4e4 40%, #eb6ec8 100%);
 
     .container {
         max-width: 1200px;
@@ -236,18 +234,18 @@ onUnmounted(() => {
         padding: 40px 20px;
         font-family: 'lmst';
 
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
+        // .header {
+        //     text-align: center;
+        //     margin-bottom: 50px;
 
-            p {
-                font-size: 18px;
-                color: #7e8c9a;
-                max-width: 600px;
-                margin: 0 auto;
-                -webkit-line-clamp: unset;
-            }
-        }
+        //     p {
+        //         font-size: 18px;
+        //         color: #7e8c9a;
+        //         max-width: 600px;
+        //         margin: 0 auto;
+        //         -webkit-line-clamp: unset;
+        //     }
+        // }
 
         .card-wrapper {
             display: grid;
@@ -257,7 +255,7 @@ onUnmounted(() => {
             padding: 20px;
 
             .background {
-                background: $primary-sub;
+                background: $primary-hover;
                 border-radius: 0.5rem;
                 position: absolute;
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -340,7 +338,7 @@ onUnmounted(() => {
                             left: 0;
                             width: 50px;
                             height: 3px;
-                            background: $currentPageLinear;
+                            background: $color-5;
                             border-radius: 2px;
 
                         }
