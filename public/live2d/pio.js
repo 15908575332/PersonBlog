@@ -148,9 +148,9 @@ var Paul_Pio = function (prop) {
           text = '早上好！';
         } else if (hour > 8 && hour <= 11) {
           text = '上午好！工作顺利嘛，不要久坐，多起来走动走动哦！';
-        } else if (hour > 11 && hour <= 14) {
+        } else if (hour > 11 && hour <= 13) {
           text = '中午了，工作了一个上午，现在是午餐时间！';
-        } else if (hour > 14 && hour <= 17) {
+        } else if (hour > 13 && hour <= 17) {
           text = '午后很容易犯困呢，今天的运动目标完成了吗？';
         } else if (hour > 17 && hour <= 19) {
           text = '傍晚了！窗外夕阳的景色很美丽呢，最美不过夕阳红~';
@@ -200,7 +200,7 @@ var Paul_Pio = function (prop) {
 
       // 关于我
       elements.info.onclick = function () {
-        window.open(prop.content.link || 'https://paugram.com/coding/add-poster-girl-with-plugin.html');
+        window.location.assign(prop.content.link || 'https://192.168.236.102:8008/personalCenter');
       };
       elements.info.onmouseover = function () {
         modules.render('想了解更多关于我的信息吗？');

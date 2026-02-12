@@ -112,8 +112,13 @@
             <!-- 未登录 -->
             <li v-else class="nav-item login">
               <a href="/userInfo">
-                <img src="@/assets/icon/phone/PhongLogin-icon.svg" alt="login" />
-                <span>登录</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M11 14.0619V20H13V14.0619C16.9463 14.554 20 17.9204 20 22H4C4 17.9204 7.05369 14.554 11 14.0619ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13Z">
+                  </path>
+                </svg>
+                <!-- <img src="@/assets/icon/phone/PhongLogin-icon.svg" alt="login" />
+                <span>登录</span> -->
               </a>
             </li>
           </ul>
@@ -501,18 +506,19 @@ onMounted(async () => { });
 
     // 登录按钮
     .login {
-      &:hover {
-        a {
-          color: #fff;
-        }
-      }
-
-      a {
-        background-color: #ff8cb0;
-        border-radius: 50%;
-        padding: 0.6rem 0.1rem;
-        margin: 0 0.74rem;
-      }
+      width: 1.9rem;
+      height: 1.9rem;
+      border-radius: 50%;
+      margin: 0.5rem;
+      background: linear-gradient(135deg, #ff9ecf, #9a7cff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(154, 124, 255, 0.3);
+      @include flexCenter(center, center);
     }
   }
 

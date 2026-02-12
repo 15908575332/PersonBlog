@@ -2,12 +2,30 @@
   <div>
     <!-- 导航栏 -->
     <div class="navigate">
-      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" bgColor="#fff" />
+      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
     </div>
 
-    <div class="active-page1" id="AlbumCollection" ref="AlbumCollection">
+    <!-- 视差滚动背景 -->
+    <div class="parallax-bg" ref="parallaxBg">
+      <img :src="bgImage" alt="parallax-bg" />
+    </div>
+
+    <!-- 上层遮罩 -->
+    <div class="parallax-overlay">
+      <div class="decoration circle-left"></div>
+      <div class="decoration circle-right"></div>
+      <div class="decoration triangle" ref="triangle"></div>
+      <!-- 浮动圆点装饰 -->
+      <div class="floating-dot dot-1"></div>
+      <div class="floating-dot dot-2"></div>
+      <div class="floating-dot dot-3"></div>
+      <div class="floating-dot dot-4"></div>
+    </div>
+
+    <!-- 主体 -->
+    <div id="AlbumCollection" ref="AlbumCollection">
       <!-- 堆叠切换 -->
-      <div class="stacking_switch page page1">
+      <div class="stacking_switch page snap-section">
         <div class="content">
           <h1>人生就像一场旅行，不在于目的地，而在于沿途的风景</h1>
           <p>
@@ -25,7 +43,7 @@
       </div>
 
       <!-- 连续+缩略 -->
-      <div class="second_carousel page page2">
+      <div class="second_carousel page snap-section">
         <!-- 无限滚动 -->
         <div class="carousel">
           <div class="carousel__left">
@@ -42,7 +60,7 @@
       </div>
 
       <!-- 常见布局 -->
-      <div class="flex_layout page page3">
+      <div class="flex_layout page snap-section">
         <div class="nav">
           <ul>
             <li v-for="(item, index) in navs" :key="item.id">
@@ -70,17 +88,18 @@
       </div>
 
       <!-- vue3-carousel-3d -->
-      <div class="vue3-carousel-3d page page4">
-        <div class="carousel_title">
-          <h1>vue-carousel-3d | 基于vue.js的漂亮3D轮播图组件</h1>
-          <div class="thisLogo">
-            <span>Personal blog</span>
-          </div>
-        </div>
-
+      <div class="vue3-carousel-3d page snap-section">
+        <h1 class="special-title">
+          <!-- 标题背景底纹 -->
+          <div class="title-backdrop"></div>
+          <!-- 标题和图标 -->
+          <h1 class="gallery-title" id="main-title">轮播图</h1>
+          <!-- 标题装饰线条 -->
+          <div class="title-decoration"></div>
+        </h1>
         <div class="carousel_body">
-          <carousel-3d :controlsVisible="true" :height="280" :width="450" :autoplay="isPageVisible"
-            :autoplayTimeout="4000" :autoplayHoverPause="true">
+          <carousel-3d :controlsVisible="true" :height="280" :width="450" :autoplay="true" :autoplayTimeout="4000"
+            :autoplayHoverPause="true">
             <slide v-for="(slide, i) in carousel_images" :index="i" :key="i">
               <img :src="slide" alt="carouselImg" style="height: 100%" />
             </slide>
@@ -88,35 +107,32 @@
         </div>
       </div>
 
-      <!-- 图片倒影 -->
-      <div class="inverted page page5">
-        <div class="inverted_title">
-          <h1>图片倒影</h1>
-        </div>
-        <!-- 舞台层 -->
-        <div class="stage">
-          <!-- 控制层 -->
-          <div class="control">
-            <!-- 图片层 -->
-            <div class="imgWrap">
-              <div v-for="i in 8" :key="i" :class="`img img${i}`">
-                <img :src="utils.getAssetsFile(`img/public/public-${i}.png`)" />
-              </div>
-            </div>
+      <!-- 图片画廊 -->
+      <div class="gallery page snap-section">
+        <!-- 标题区域 -->
+        <h1 class="special-title">
+          <!-- 标题背景底纹 -->
+          <div class="title-backdrop"></div>
+          <!-- 标题和图标 -->
+          <h1 class="gallery-title">💕图片画廊</h1>
+          <!-- 标题装饰线条 -->
+          <div class="title-decoration"></div>
+        </h1>
+        <div class="items">
+          <div class="item" v-for="value in cardImages" tabindex="0" :style="{ backgroundImage: `url(${value})` }">
+          </div>
+          <div class="item" v-for="value in cardImages" tabindex="0" :style="{ backgroundImage: `url(${value})` }">
           </div>
         </div>
       </div>
     </div>
+
     <!-- 右侧导航栏 -->
     <div class="nav-panel">
-      <div class="up">
+      <div class="up" @click="scrollToPrevious">
         <img :src="utils.getAssetsFile('icon/albumCollection/upArrow.svg')" alt="upArrow">
       </div>
-      <div class="middle">
-        <img :src="utils.getAssetsFile('icon/albumCollection/snail.svg')" alt="snail">
-
-      </div>
-      <div class="down">
+      <div class="down" @click="scrollToNext">
         <img :src="utils.getAssetsFile('icon/albumCollection/downArrow.svg')" alt="downArrow">
       </div>
     </div>
@@ -128,11 +144,90 @@ import CarouselImage from "@/components/AlbumCollection/CarouselImage.vue";
 import ThumbnailCarousel from "@/components/AlbumCollection/Thumbnails.vue";
 import Navigation from "@/components/common/NavigationMenu.vue";
 import utils from "@/utils/getAssetsFile";
+
+/** ------------------------ 滚动捕捉 ------------------------ */
+const AlbumCollection = ref(null);
+const currentPage = ref(0);
+const totalPages = 5; // 总页面数
+
+// 滚动到指定页面
+function scrollToPage(pageIndex) {
+  if (AlbumCollection.value && pageIndex >= 0 && pageIndex < totalPages) {
+    const pages = AlbumCollection.value.querySelectorAll('.snap-section');
+    if (pages[pageIndex]) {
+      pages[pageIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      currentPage.value = pageIndex;
+    }
+  }
+}
+
+// 滚动到上一页
+function scrollToPrevious() {
+  if (currentPage.value > 0) {
+    scrollToPage(currentPage.value - 1);
+  }
+}
+
+// 滚动到下一页
+function scrollToNext() {
+  if (currentPage.value < totalPages - 1) {
+    scrollToPage(currentPage.value + 1);
+  }
+}
+
+// 键盘控制
+function handleKeydown(event) {
+  switch (event.key) {
+    case 'ArrowUp':
+    case 'PageUp':
+      event.preventDefault();
+      scrollToPrevious();
+      break;
+    case 'ArrowDown':
+    case 'PageDown':
+    case ' ':
+      event.preventDefault();
+      scrollToNext();
+      break;
+    case 'Home':
+      event.preventDefault();
+      scrollToPage(0);
+      break;
+    case 'End':
+      event.preventDefault();
+      scrollToPage(totalPages - 1);
+      break;
+  }
+}
+
+/** ------------------------ 视差滚动 ------------------------ */
+const bgImage = utils.getAssetsFile('img/albumCollection/bg.png'); //背景
+const parallaxBg = ref(null); //视差容器
+const triangle = ref(null);
+function handleParallaxScroll() {
+  if (parallaxBg.value) {
+    // 视差速度系数，越小越慢
+    const speed = 0.3;
+    const scrollY = window.scrollY || window.pageYOffset;
+    parallaxBg.value.style.transform = `translateY(${scrollY * speed}px)`;
+    triangle.value.style.transform = `rotate(${scrollY * 0.1}deg)`;
+  }
+}
+
+/** ------------------------ 禁用滚轮行为 ------------------------ */
+function preventWheelScroll(event) {
+  event.preventDefault();
+}
+
+/** ------------------------ 堆叠切换 ------------------------ */
 const cardImages = Array.from({ length: 7 }, (_, i) =>
   utils.getAssetsFile(`img/albumCollection/nns${i + 1}.jpg`)
 );
+
 const cards = ref([...cardImages]);
-const stackRef = ref(null);
 let autoplayInterval = null;
 let isFirstRun = true;
 function moveCard() {
@@ -151,7 +246,7 @@ function onCardClick(idx) {
   }
 }
 
-// 连续+缩略
+/** ------------------------ 连续+缩略 ------------------------ */
 const imageList_left = ref([
   10003, 10004, 10006, 10007, 10009, 10010
 ].map(num => utils.getAssetsFile(`img/albumCollection/${num}.jpg`)));
@@ -160,9 +255,7 @@ const imageList_right = ref([
   10013, 10014, 10015, 10016, 10017, 10019, 10020
 ].map(num => utils.getAssetsFile(`img/albumCollection/${num}.jpg`)));
 
-
-
-// 常见布局
+/** ------------------------ 常见布局 ------------------------ */
 const colors = ref([
   "#a3bded",
   "#c4f4fe",
@@ -223,72 +316,46 @@ const travels = ref([
 
 
 /** ------------------------ vue3-carousel-3d ------------------------ */
-const isPageVisible = ref(true);
-const handleVisibilityChange = () => {
-  if (document.hidden) {
-    this.isPageVisible = false; // 页面不可见
-  } else {
-    this.isPageVisible = true; // 页面可见
-    // 如果需要在页面重新变为可见时恢复轮播，可以在这里添加逻辑
-    // 例如，重新启动一个计时器或触发轮播的继续播放
-  }
-};
-//图片地址
-const carousel_images = Array.from({ length: 5 }, (_, i) =>
+const carousel_images = Array.from({ length: 5 }, (_, i) => //图片地址
   utils.getAssetsFile(`img/public/public-${i + 45}.png`)
 );
 
+// 更新当前页面索引
+function updateCurrentPage() {
+  const scrollTop = window.pageYOffset;
+  const pageHeight = window.innerHeight;
+  currentPage.value = Math.floor(scrollTop / pageHeight);
+}
 onMounted(() => {
-  // 只设置定时器，不主动执行 moveCard，且首次定时器触发时跳过
   isFirstRun = true;
   autoplayInterval = setInterval(moveCard, 4000);
 
-  // 页面切换导航
-  const wrap = document.getElementById("AlbumCollection");
-  const pages = document.querySelectorAll(".page").length;
-  const navPanel = document.querySelector(".nav-panel");
-  let scrolling = false;
-  let currentPage = 1;
-  function manageClasses() {
-    wrap.className = wrap.className.replace(/(^|\s)active-page\S+/g, "").trim();
-    wrap.classList.add("active-page" + currentPage);
-    scrolling = true;
-    setTimeout(() => {
-      scrolling = false;
-    }, 1000);
-  }
-  function navigateUp() {
-    if (currentPage > 1) {
-      currentPage--;
-      manageClasses();
-    }
-  }
-  function navigateDown() {
-    if (currentPage < pages) {
-      currentPage++;
-      manageClasses();
-    }
-  }
-  // 鼠标滚轮切换
-  document.addEventListener("wheel", (e) => {
-    if (!scrolling) {
-      if (e.deltaY < 0) {
-        navigateUp();
-      } else {
-        navigateDown();
-      }
-    }
-  });
-  // 上下按钮点击
-  navPanel.querySelector(".up")?.addEventListener("click", navigateUp);
-  navPanel.querySelector(".down")?.addEventListener("click", navigateDown);
+  window.addEventListener('keydown', handleKeydown);
+  window.addEventListener('scroll', updateCurrentPage, { passive: true });
 
+  // 视差滚动监听
+  window.addEventListener('scroll', handleParallaxScroll, { passive: true });
+  handleParallaxScroll(); // 初始化位置
+
+  // 禁用滚轮
+  window.addEventListener('wheel', preventWheelScroll, { passive: false });
+  document.body.style.overflow = 'hidden';
 });
 
 onBeforeUnmount(() => {
   clearInterval(autoplayInterval);
-  // 其它事件无需移除（页面卸载自动清理），如需更严格可记录事件并移除。
+
+  window.removeEventListener('keydown', handleKeydown);
+  window.removeEventListener('scroll', updateCurrentPage);
+
+  // 移除视差滚动监听
+  window.removeEventListener('scroll', handleParallaxScroll);
+
+  // 恢复滚轮
+  window.removeEventListener('wheel', preventWheelScroll);
+  document.body.style.overflow = '';
 });
+
 </script>
 <style scoped lang="scss">
 @font-face {
@@ -302,22 +369,184 @@ onBeforeUnmount(() => {
 .navigate {
   width: 100%;
   position: fixed;
-  z-index: 1;
+  z-index: 99;
 }
 
-#AlbumCollection {
-  $pagesCount: 10; // 页面数量
-  position: absolute;
+/* 更新视差背景样式 */
+.parallax-bg {
+  position: fixed;
+  top: -200%;
+  left: 0;
+  width: 100%;
+  height: 500%;
+  z-index: -2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// 添加遮罩层样式
+.parallax-overlay {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
-  -webkit-transition: -webkit-transform 1.5s;
-  transition: transform 1.5s;
-  -webkit-perspective: 3000;
-  perspective: 3000;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
+  height: 100%;
+  z-index: -1;
+
+  /* 装饰元素 */
+  .decoration {
+    position: absolute;
+    z-index: 1;
+  }
+
+  .circle-left {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.2), rgba(255, 105, 180, 0.1));
+    border-radius: 50%;
+    bottom: -50px;
+    left: -50px;
+  }
+
+  .circle-right {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(154, 124, 255, 0.15), rgba(255, 158, 207, 0.1));
+    border-radius: 50%;
+    bottom: 100px;
+    right: 50px;
+  }
+
+  .triangle {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 100px solid rgba(255, 182, 193, 0.2);
+    top: 30%;
+    right: 10%;
+    transform-origin:  center center;
+  }
+
+  /* 浮动圆点装饰 */
+  .floating-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FF9ECF, #9A7CFF);
+    opacity: 0.3;
+    z-index: -1;
+    animation: float 6s ease-in-out infinite;
+
+  }
+
+  .dot-1 {
+    width: 20px;
+    height: 20px;
+    top: 20%;
+    left: 15%;
+    animation-delay: 0s;
+  }
+
+  .dot-2 {
+    width: 15px;
+    height: 15px;
+    top: 60%;
+    left: 10%;
+    animation-delay: 1s;
+  }
+
+  .dot-3 {
+    width: 25px;
+    height: 25px;
+    top: 30%;
+    right: 15%;
+    animation-delay: 2s;
+  }
+
+  .dot-4 {
+    width: 12px;
+    height: 12px;
+    top: 70%;
+    right: 20%;
+    animation-delay: 3s;
+  }
+}
+
+#AlbumCollection {
+  @include flexCenter(column, center);
+  background: transparent;
+
+  // 所有页面
+  .page {
+    width: 100vw;
+    height: 100vh;
+    @include flexCenter(column, center);
+
+    // 标题
+    h1 {
+      padding-top: 2rem;
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      font-family: 'gtpy'
+    }
+
+    .special-title {
+      text-align: center;
+      position: relative;
+      padding: 1.5rem 0;
+
+      /* 标题背景底纹 */
+      .title-backdrop {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 120%;
+        background: linear-gradient(135deg, rgba(255, 158, 207, 0.1), rgba(154, 124, 255, 0.1));
+        border-radius: 50% 20% 50% 20%;
+        filter: blur(15px);
+        opacity: 1;
+      }
+
+      .gallery-title {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #FF9ECF 0%, #9A7CFF 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+        margin: 0;
+        position: relative;
+        padding: 0 20px;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-shadow: 0 2px 10px rgba(154, 124, 255, 0.2);
+      }
+
+      /* 标题装饰线条 */
+      .title-decoration {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 180px;
+        height: 8px;
+        background: linear-gradient(90deg, transparent, #FF9ECF, #9A7CFF, transparent);
+        border-radius: 4px;
+        opacity: 0.8;
+      }
+    }
+  }
 
   // 堆叠切换
   .stacking_switch {
@@ -325,6 +554,7 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
     place-items: center; // 现代浏览器
+    //background-color: rebeccapurple;
 
     // 兼容性写法
     >* {
@@ -360,7 +590,7 @@ onBeforeUnmount(() => {
         background-image: linear-gradient(-180deg, #ffc16f, #f76591);
         font-size: clamp(0.8rem, 8vw, 0.9rem);
         font-weight: 600;
-        color: #fff;
+        color: $general-white;
         width: max-content;
         outline: 0;
         border: 0;
@@ -461,6 +691,7 @@ onBeforeUnmount(() => {
   // 连续+缩略
   .second_carousel {
     position: relative;
+    // background-color: pink;
 
     // 无限滚动
     .carousel {
@@ -499,7 +730,6 @@ onBeforeUnmount(() => {
     @include flexCenter(column, center);
 
     .nav {
-      // width: 100%;
       padding: 2rem 0;
 
       ul {
@@ -585,14 +815,6 @@ onBeforeUnmount(() => {
           }
         }
       }
-
-      h1 {
-        padding-top: 2rem;
-        text-align: center;
-        font-size: 36px;
-        font-weight: 700;
-        font-family: 'gtpy'
-      }
     }
 
     .flex_body {
@@ -653,38 +875,12 @@ onBeforeUnmount(() => {
 
   //vue3-carousel-3d
   .vue3-carousel-3d {
-    @include flexCenter(column, space-around);
-    margin: 0;
-
-    .carousel_title {
-      h1 {
-        font-size: 38px;
-        padding: 1.5rem 0;
-        font-family: 'gtpy';
-        font-weight: 700;
-      }
-
-      .thisLogo {
-        @include flexCenter(row, center);
-
-        span {
-          font-family: "Vampiro One";
-          font-size: 1.6rem;
-          background: -webkit-linear-gradient(0deg, $primary-color, $primary-hover);
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          height: 2.6rem;
-          line-height: 2.6rem;
-        }
-      }
-    }
-
     .carousel_body {
       width: 80vw;
       margin: 0;
 
       .carousel-3d-container {
-        margin: 0;
+        padding: 2rem;
       }
     }
 
@@ -693,121 +889,105 @@ onBeforeUnmount(() => {
     }
   }
 
-  //图片倒影
-  .inverted {
-    $imgCount: 8;
-    @include flexCenter(column, center);
+  .gallery {
+    $index: calc(1vw + 1vh);
+    $transition: cubic-bezier(.1, .7, 0, 1);
 
-    .inverted_title {
-      transform: translateY(-10vh);
-
-      h1 {
-        font-size: 38px;
-        padding: 1.5rem 0;
-        font-family: 'gtpy';
-        font-weight: 700;
-      }
-
+    .items {
+      display: flex;
+      gap: 0.4rem;
+      perspective: calc($index * 35);
+      padding: 2rem;
     }
 
-    .stage {
-      position: relative;
-      width: 1400px;
-      height: 200px;
-      margin: 0 auto;
-      perspective: 2000px;
-      transform-style: preserve-3d;
-      -webkit-box-reflect: below 0 linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+    .item {
+      width: calc($index * 3);
+      height: calc($index * 12);
+      background-color: #222;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      filter: grayscale(1) brightness(.5);
+      transition: transform 1.25s $transition, filter 3s $transition, width 1.25s $transition;
+      will-change: transform, filter, rotateY, width;
 
-      .control {
-        position: relative;
-        width: 100%;
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
         height: 100%;
-        transform-style: preserve-3d;
-        transform: translateZ(-2000px) rotateY(30deg) rotateZ(0deg);
-        animation: rotate 80s linear infinite;
+        width: 20px;
+        right: calc($index * -1);
+      }
 
-        .imgWrap {
-          position: absolute;
-          width: 400px;
-          height: 270px;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -45%);
-          transform-style: preserve-3d;
+      &::after {
+        left: calc($index * -1);
+      }
 
-          .img {
-            position: absolute;
-            width: 500px;
-            height: 270px;
-            line-height: 270px;
-            text-align: center;
-            font-size: 120px;
-            top: 0;
-            left: 0;
-            transform-style: preserve-3d;
-            transform-origin: 50% 50% 100px;
-          }
-
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-          }
-
-          @for $i from 1 through $imgCount {
-            .img#{$i} {
-              // transform: rotateY(35 + ($i * 45deg)) translateZ(482.84px);
-              transform: rotateY(25 + ($i * 45deg)) translateZ(750px);
-            }
-          }
-        }
+      &:hover {
+        filter: inherit;
+        transform: translateZ(calc($index * 10));
       }
     }
 
-    @keyframes rotate {
-      0% {
-        transform: translateZ(-2000px) rotateY(0deg);
-      }
-
-      50% {
-        transform: translateZ(-2000px) rotateY(-360deg);
-      }
-
-      100% {
-        transform: translateZ(-2000px) rotateY(-720deg);
-      }
+    /*Right*/
+    .item:hover+* {
+      filter: inherit;
+      transform: translateZ(calc($index * 8.5)) rotateY(35deg);
+      z-index: -1;
     }
-  }
 
-  .page {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    -webkit-transform: rotateX(0) scale(0);
-    transform: rotateX(90deg) scale(0.3);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-transition: -webkit-transform 1s ease-in-out;
-    transition: transform 1s ease-in-out;
-    will-change: transform;
-  }
+    .item:hover+*+* {
+      filter: inherit;
+      transform: translateZ(calc($index * 5.6)) rotateY(40deg);
+      z-index: -2;
+    }
 
-  //每一个Page的配置
-  @for $i from 1 through $pagesCount {
-    $translateY: -($i - 1) * 100%;
+    .item:hover+*+*+* {
+      filter: inherit;
+      transform: translateZ(calc($index * 2.5)) rotateY(30deg);
+      z-index: -3;
+    }
 
-    &.active-page#{$i} {
-      -webkit-transform: translateY($translateY);
-      -ms-transform: translateY($translateY);
-      transform: translateY($translateY);
+    .item:hover+*+*+*+* {
+      filter: inherit;
+      transform: translateZ(calc($index * .6)) rotateY(15deg);
+      z-index: -4;
+    }
 
-      .page.page#{$i} {
-        -webkit-transform: scale(1);
-        -ms-transform: scale(1);
-        transform: scale(1);
-      }
+
+    /*Left*/
+
+    .item:has(+ :hover) {
+      filter: inherit;
+      transform: translateZ(calc($index * 8.5)) rotateY(-35deg);
+    }
+
+    .item:has(+ * + :hover) {
+      filter: inherit;
+      transform: translateZ(calc($index * 5.6)) rotateY(-40deg);
+    }
+
+    .item:has(+ * + * + :hover) {
+      filter: inherit;
+      transform: translateZ(calc($index * 2.5)) rotateY(-30deg);
+    }
+
+    .item:has(+ * + * + * + :hover) {
+      filter: inherit;
+      transform: translateZ(calc($index * .6)) rotateY(-15deg);
+    }
+
+    .item:active,
+    .item:focus {
+      width: 28vw;
+      filter: inherit;
+      z-index: 100;
+      transform: translateZ(calc($index * 10));
+      margin: 0 .45vw;
+      transition: transform 1.25s $transition,
+        filter 3s $transition,
+        width 0.8s $transition; // 单独设置width的过渡时间
     }
   }
 }
@@ -817,34 +997,29 @@ onBeforeUnmount(() => {
   position: fixed;
   top: 50%;
   right: 2vw;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
   transform: translateY(-50%);
   z-index: 1;
-  -webkit-transition: opacity 0.5s,
-    -webkit-transform 0.5s cubic-bezier(0.57, 1.2, 0.68, 2.6);
-  transition: opacity 0.5s, transform 0.5s cubic-bezier(0.57, 1.2, 0.68, 2.6);
-  will-change: transform, opacity;
-  height: 15vh;
-  background-color: #fff;
   @include flexCenter(column, space-between);
-  box-shadow: 0px 0px 0.75rem 0px rgba(113, 113, 113, 0.2);
-  border-radius: 10px;
   padding: 0.5rem 0.3rem;
 
   //上下箭头
   .up,
-  .down,
-  .middle {
-    transition: all 0.3s ease;
+  .down {
+    width: 2rem;
+    height: 2rem;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(0, 0, 0, .5);
+    border-radius: 10px;
 
     img {
-      width: 1.2rem;
+      width: 1.1rem;
     }
 
     &:hover {
       cursor: pointer;
-      transform: scale(1.1);
     }
   }
 }
