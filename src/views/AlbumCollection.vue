@@ -248,11 +248,11 @@ function onCardClick(idx) {
 
 /** ------------------------ 连续+缩略 ------------------------ */
 const imageList_left = ref([
-  10003, 10004, 10006, 10007, 10009, 10010
+  10003, 10004, 10005, 10006, 10007, 10008, 10009, 10010, 10011,
 ].map(num => utils.getAssetsFile(`img/albumCollection/${num}.jpg`)));
 
 const imageList_right = ref([
-  10013, 10014, 10015, 10016, 10017, 10019, 10020
+  10012, 10013, 10014, 10015, 10016, 10017, 10019, 10020
 ].map(num => utils.getAssetsFile(`img/albumCollection/${num}.jpg`)));
 
 /** ------------------------ 常见布局 ------------------------ */
@@ -431,7 +431,7 @@ onBeforeUnmount(() => {
     border-bottom: 100px solid rgba(255, 182, 193, 0.2);
     top: 30%;
     right: 10%;
-    transform-origin:  center center;
+    transform-origin: center center;
   }
 
   /* 浮动圆点装饰 */

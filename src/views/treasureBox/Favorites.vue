@@ -23,8 +23,7 @@
                 <li v-for="modules in item.content" class="glass-btn" @click.prevent="openLink(modules.href)">
                     <a>
                         <div class="iconImg">
-                            <!-- 设置默认图片 -->
-                            <img onerror="this.src='/logo.png'" :src="modules.imgSrc" alt="icon">
+                            <img v-lazy="modules.imgSrc" alt="icon">
                         </div>
                         <div class="text-content">
                             <h5>{{ modules.subtitle }}</h5>

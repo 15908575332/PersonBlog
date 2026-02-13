@@ -69,8 +69,19 @@ function startScrolling() {
 
 onMounted(() => {
     state.containerWidth = container.value.clientWidth; //主容器可视窗宽度
-    state.itemWidth = container.value.querySelector('.marquee-item').clientWidth; //单个容器宽度
-    startScrolling();
+    // 等待图片加载完成后再获取宽度
+    const firstImg = container.value.querySelector('.marquee-item img'); //图片宽度为准
+    if (firstImg && !firstImg.complete) {
+        firstImg.onload = () => {
+            state.itemWidth = firstImg.clientWidth;
+            startScrolling();
+        };
+    } else if (firstImg) {
+        state.itemWidth = firstImg.clientWidth;
+        startScrolling();
+    } else {
+        startScrolling();
+    }
 });
 onUnmounted(() => {
     cancelAnimationFrame(animationFrameId);
@@ -97,7 +108,7 @@ onUnmounted(() => {
 
 .marquee-item img {
     height: 13rem;
-    width: 25.6rem;
+    /* width: 25.6rem; */
     border-radius: 15px;
     background-color: black;
 }

@@ -313,13 +313,11 @@ $contentWidth: 65rem; // 内容宽度
     box-shadow: 0px 0px 6px 4px rgba(17, 17, 26, 0.1);
   }
 
-  width: 100%;
-  height: 100%;
-
   // 背景图
   .backPhoto {
     width: 100vw;
     height: 50%;
+    min-height: 500px;
     background-size: cover;
     z-index: -2;
     background-position: center;
@@ -391,7 +389,6 @@ $contentWidth: 65rem; // 内容宽度
         width: 100%;
         overflow: hidden;
         height: 5rem;
-        //bottom: -1px;
 
         .wave {
           position: absolute;

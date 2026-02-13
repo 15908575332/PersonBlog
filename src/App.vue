@@ -229,7 +229,7 @@ window.toggleTheme = toggleTheme;
 const noGlobalBgPrefixes = [ // 路由及其所有子路由都会显示全局背景
   '/treasureBox',
   '/recordList',
-  '/InformalEssay'
+  // '/InformalEssay'
 ];
 
 // 计算是否显示全局背景
