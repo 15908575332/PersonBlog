@@ -192,7 +192,7 @@ onMounted(() => {
 
 span {
   color: white;
-  font-family: "gtpy";
+  font-family: var(--app-font-family);
 }
 
 .sb-container div:last-child h5 {

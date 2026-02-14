@@ -232,7 +232,7 @@ onUnmounted(() => {
         max-width: 1200px;
         margin: 0 auto;
         padding: 40px 20px;
-        font-family: 'lmst';
+        font-family: var(--app-font-family);
 
         // .header {
         //     text-align: center;
@@ -475,7 +475,7 @@ onUnmounted(() => {
         overflow: hidden;
         font-size: 0.8rem;
         z-index: 1;
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
         margin: auto;
         background: linear-gradient(45deg, $assistance-1, $assistance-2, $assistance-4);
         animation: hueRotate 10s infinite alternate;

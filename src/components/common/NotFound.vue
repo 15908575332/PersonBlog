@@ -33,7 +33,7 @@ const goHome = () => {
         @include flexCenter(column, center);
         gap: 1rem;
         color: #22af85;
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
 
         .backhome {
             padding: 0.5rem 1rem;

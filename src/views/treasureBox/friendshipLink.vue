@@ -264,7 +264,7 @@ const click_env = () => {
 </script>
 <style lang="scss" scoped>
 #helpLink {
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
     @include flexCenter(column, center);
     $allContentWidth: 60vw;
 
@@ -295,7 +295,7 @@ const click_env = () => {
     //信封
     #envelope {
         width: 26.5rem;
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
 
         #form_wrap {
             overflow: hidden;

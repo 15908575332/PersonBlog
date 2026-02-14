@@ -150,7 +150,7 @@ onMounted(() => {
 </script>
 <style scoped lang="scss">
 #recordColumn {
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
     width: 100%;
     height: 100%;
     //内容盒子宽度

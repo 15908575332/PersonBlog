@@ -363,7 +363,7 @@ onUnmounted(() => {
 #homePage {
   width: 100vw;
   height: 100vh;
-  font-family: "lmst";
+  font-family: var(--app-font-family);
   font-size: 1.5rem;
 
   .blog-container {
@@ -515,7 +515,7 @@ onUnmounted(() => {
             input {
               height: 2rem;
               width: 100%;
-              font-family: 'gtpy';
+              font-family: var(--app-font-family);
               color: $general-black;
               font-size: 0.9rem;
               padding: 0 0.5rem;

@@ -120,7 +120,7 @@ onUnmounted(() => {
 #messageBoard {
     width: 100vw;
     height: 100vh;
-    font-family: 'lmst';
+    font-family: var(--app-font-family);
     font-size: 1.5rem;
 
     .blog-container {
@@ -187,7 +187,7 @@ onUnmounted(() => {
 
         // 输入框
         .message-input {
-            font-family: 'gtpy';
+            font-family: var(--app-font-family);
             display: flex;
             justify-content: center;
             align-items: center;

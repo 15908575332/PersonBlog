@@ -472,7 +472,7 @@ onUnmounted(() => {
             color: white;
             font-weight: 700;
             font-size: 1.5rem;
-            font-family: "lmst";
+            font-family: var(--app-font-family);
           }
         }
 
@@ -529,7 +529,7 @@ onUnmounted(() => {
 
       // 时间相关
       .title__time {
-        font-family: "gtpy";
+        font-family: var(--app-font-family);
         font-weight: 600;
         color: black;
 
@@ -554,7 +554,7 @@ onUnmounted(() => {
           -webkit-background-clip: text;
           animation: jianBian 60s linear infinite;
           color: transparent;
-          font-family: "lmst";
+          font-family: var(--app-font-family);
 
           @keyframes jianBian {
             100% {
@@ -600,7 +600,7 @@ onUnmounted(() => {
         border-radius: 10px;
         background-image: url("@/assets/img/family/love.jpg");
         background-size: 100% 100%;
-        font-family: "gtpy";
+        font-family: var(--app-font-family);
         margin: 3rem 0;
 
         h1 {
@@ -640,7 +640,7 @@ onUnmounted(() => {
       //模块导航
       .module {
         width: 100%;
-        font-family: "gtpy";
+        font-family: var(--app-font-family);
         // background-color: #fff;
         margin: 0.2rem 0;
 
@@ -975,7 +975,7 @@ onUnmounted(() => {
                   border: none;
                   border-left: 3px solid #41838e;
                   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                  font-family: "lmst";
+                  font-family: var(--app-font-family);
                   letter-spacing: 1px;
                   transition: box-shadow 0.8s linear 0.2s;
                   background-color: rgb(255, 255, 255);

@@ -1,8 +1,8 @@
 <template>
     <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
         <div class="modal-content" @click.stop :class="animationClass">
-            <button @click="closeModal"><img src="@/components/common/img/ModalBox/icons8-close-50.png" style="width: 1rem;"
-                    alt="close"></button>
+            <button @click="closeModal"><img src="@/components/common/img/ModalBox/icons8-close-50.png"
+                    style="width: 1rem;" alt="close"></button>
             <slot></slot>
         </div>
     </div>
@@ -65,6 +65,11 @@ watch(() => props.isVisible, (newValue) => {
         user-select: none;
         display: flex;
         @include flexCenter(column, center);
+        max-width: 80%;
+        max-height: 80vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
 
         &.animation-clipRectSpIn {
             animation: clipRectSpIn 1s both;

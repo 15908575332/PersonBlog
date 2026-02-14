@@ -466,7 +466,7 @@ onUnmounted(() => {
 
                 span {
                     width: fit-content;
-                    font-family: 'gtpy';
+                    font-family: var(--app-font-family);
                     font-size: 14px;
                     color: #ffffff;
                     display: inline-block;
@@ -544,7 +544,7 @@ onUnmounted(() => {
             @include flexCenter(row, space-around);
             height: 45vh;
             min-height: 18rem;
-            font-family: 'gtpy';
+            font-family: var(--app-font-family);
             overflow-y: scroll
         }
 
@@ -756,7 +756,7 @@ onUnmounted(() => {
 
                 --d: 700ms;
                 --e: cubic-bezier(0.19, 1, 0.22, 1);
-                font-family: 'gtpy';
+                font-family: var(--app-font-family);
 
                 .subscribe-item {
                     position: relative;

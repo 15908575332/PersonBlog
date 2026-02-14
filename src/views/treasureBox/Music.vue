@@ -597,7 +597,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .player-container {
-  font-family: "lmst";
+  font-family: var(--app-font-family);
   height: calc(100vh - 3rem);
   width: 100vw;
   @include flexCenter(row, space-between);
@@ -671,7 +671,7 @@ onUnmounted(() => {
       @include flexCenter(row, flex-start);
       position: fixed;
       z-index: 1;
-      font-family: 'gtpy';
+      font-family: var(--app-font-family);
       padding-left: 2rem;
       transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); // 使用更平滑的缓动函数
 
@@ -695,13 +695,13 @@ onUnmounted(() => {
         border-radius: 2rem;
         padding: 0.3rem 1rem;
         font-size: 0.9rem;
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
         background-color: $general-white;
         border: 1px solid #e8eaef;
 
         &::placeholder {
           font-size: 0.8rem;
-          font-family: 'gtpy';
+          font-family: var(--app-font-family);
         }
       }
     }
@@ -1034,7 +1034,7 @@ onUnmounted(() => {
     scrollbar-width: none;
     overflow-y: auto;
     @include flexCenter(center, center);
-    font-family: 'lmst';
+    font-family: var(--app-font-family);
 
     .lyrics-wrapper {
       height: 100%;

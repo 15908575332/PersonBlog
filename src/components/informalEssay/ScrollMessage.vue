@@ -131,7 +131,7 @@ function resume() {
 .scroll-container {
     overflow: hidden;
     position: relative;
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
 
 
     //滚动列表

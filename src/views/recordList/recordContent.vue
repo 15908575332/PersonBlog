@@ -429,7 +429,8 @@ onMounted(() => {
 
 <style lang="scss">
 .recordContent {
-  font-family: "gtpy";
+  // font-family: var(--app-font-family);
+  font-family: var(--app-font-family);
   user-select: none;
   min-height: 100vh;
   //内容盒子宽度
@@ -493,7 +494,7 @@ onMounted(() => {
         color: #f3efef;
         font-size: 0.9rem;
         display: flex;
-        font-family: "gtpy";
+        font-family: var(--app-font-family);
         align-items: center;
         background-color: transparent;
 
@@ -913,7 +914,7 @@ onMounted(() => {
         height: 25px;
         width: 35px;
         font-size: 0.9rem;
-        font-family: "gtpy";
+        font-family: var(--app-font-family);
         font-weight: 700;
         margin: 0 0.1rem;
         border-radius: 5px;
@@ -1232,7 +1233,7 @@ onMounted(() => {
           height: 25px;
           width: 35px;
           font-size: 0.9rem;
-          font-family: "gtpy";
+          font-family: var(--app-font-family);
           font-weight: 700;
           margin: 0 0.1rem;
           border-radius: 5px;

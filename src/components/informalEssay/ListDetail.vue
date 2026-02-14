@@ -1,31 +1,62 @@
 <template>
     <div class="body">
         <ModalBox :isVisible="showModal" @close="handClose" class="modal__box">
-            <h1>个人博客版权说明</h1>
-            <h2>
-                欢迎访问我的个人博客（以下简称“本博客”），本博客旨在分享个人见解、技术心得、生活感悟等内容，为访客提供一个交流与学习的平台。在享受本博客提供的内容与服务的同时，请您务必遵守以下版权说明：
+            <div class="fancy-copyright">
+                <div class="copyright-header">
+                    <span class="icon">📋</span>
+                    <h3>版权声明</h3>
+                </div>
 
-            </h2>
-            <p>
-                1、本博客中的所有原创文章、图片、视频、音频及其他形式的作品（以下简称“内容”），其版权均归作者（即本博客管理员）所有。
+                <div class="copyright-item">
+                    <div class="item-icon">📜</div>
+                    <div class="item-content">
+                        <h4>版权归属</h4>
+                        <p>本博客中的所有原创文章、图片、视频、音频及其他形式的作品（以下简称"内容"），其版权均归作者（即本博客管理员）所有。<span
+                                class="copyright-mark">©</span></p>
+                    </div>
+                </div>
 
-            </p>
+                <div class="copyright-item">
+                    <div class="item-icon">🔗</div>
+                    <div class="item-content">
+                        <h4>转载规则</h4>
+                        <p>对于非商业用途，且注明作者及来源（即本博客网址）的情况下，</p>
+                        <p>允许个人网站、论坛、社交媒体等平台以链接形式分享本博客中的文章。</p>
+                    </div>
+                </div>
 
-            <p>
-                2、对于非商业用途，且注明作者及来源（即本博客网址）的情况下，允许个人网站、论坛、社交媒体等平台以链接形式分享本博客中的文章。
+                <div class="copyright-item">
+                    <div class="item-icon">⚠️</div>
+                    <div class="item-content">
+                        <h4>第三方内容</h4>
+                        <p>本博客可能包含来自第三方的链接或内容，对于这些第三方内容，</p>
+                        <p>本博客不承担任何版权审核责任。访客在访问这些链接或内容时，</p>
+                        <p>请自行判断其合法性及版权归属。</p>
+                    </div>
+                </div>
 
-            </p>
-            <p>
-                3、本博客可能包含来自第三方的链接或内容，对于这些第三方内容，本博客不承担任何版权审核责任。访客在访问这些链接或内容时，请自行判断其合法性及版权归属。
+                <div class="copyright-item">
+                    <div class="item-icon">⚖️</div>
+                    <div class="item-content">
+                        <h4>适用法律</h4>
+                        <p>本博客的版权说明及访客行为均适用中华人民共和国相关法律法规。</p>
+                    </div>
+                </div>
 
-            </p>
-            <p>
-                4、本博客的版权说明及访客行为均适用中华人民共和国相关法律法规。
-            </p>
+                <div class="copyright-item">
+                    <div class="item-icon">🔄</div>
+                    <div class="item-content">
+                        <h4>修改权利</h4>
+                        <p>作者保留随时修改本版权声明的权利，任何修改将在本页面即时生效，</p>
+                        <p>无需另行通知。</p>
+                    </div>
+                </div>
 
-            <p>
-                5、作者保留随时修改本版权声明的权利，任何修改将在本页面即时生效，无需另行通知。
-            </p>
+                <div class="copyright-seal">
+                    <div class="seal-icon">🔒</div>
+                    <div class="seal-text">已加密保护</div>
+                </div>
+            </div>
         </ModalBox>
         <div id="recordDetail">
             <!-- 背景设置 -->
@@ -291,7 +322,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                            }}</div>
+                                                }}</div>
                                         </div>
                                     </div>
 
@@ -822,7 +853,7 @@ onMounted(async () => {
 }
 
 #recordDetail {
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
     font-size: 0.75rem;
     min-height: 100vh;
     width: 100%;
@@ -865,7 +896,7 @@ onMounted(async () => {
             @include flexCenter(column, center);
             height: 85%;
             color: white;
-            font-family: 'gtpy';
+            font-family: var(--app-font-family);
             z-index: 1;
             position: relative;
             animation: zoomInDown 0.6s ease-out forwards;
@@ -1119,7 +1150,7 @@ onMounted(async () => {
                     transition: all 0.1s linear;
                     background-color: transparent;
                     border: none;
-                    font-family: 'lmst';
+                    font-family: var(--app-font-family);
                 }
 
                 .input__illustration {
@@ -1200,7 +1231,7 @@ onMounted(async () => {
 
                 //提交按钮
                 .reMessage {
-                    font-family: 'gtpy';
+                    font-family: var(--app-font-family);
                     position: relative;
                     padding: 0.2rem 0.8rem;
                     background: $primary-sub;
@@ -1416,7 +1447,7 @@ onMounted(async () => {
                         transition: all 0.3s ease;
 
                         button {
-                            font-family: 'gtpy';
+                            font-family: var(--app-font-family);
                         }
 
                         &:hover {
@@ -1535,7 +1566,7 @@ onMounted(async () => {
                     height: 25px;
                     width: 35px;
                     font-size: 0.9rem;
-                    font-family: 'gtpy';
+                    font-family: var(--app-font-family);
                     font-weight: 700;
                     margin: 0 0.1rem;
                     border-radius: 5px;
@@ -1614,7 +1645,7 @@ onMounted(async () => {
         .btn:before {
             transition: all 0.35s;
             transition-timing-function: cubic-bezier(0.31, -0.105, 0.43, 1.59);
-            font-family: 'gtpy';
+            font-family: var(--app-font-family);
         }
 
         .btn {
@@ -1857,7 +1888,7 @@ onMounted(async () => {
                 //提交按钮
                 .modalSubmit {
                     $color: $primary-sub;
-                    font-family: 'gtpy';
+                    font-family: var(--app-font-family);
                     position: relative;
                     padding: 0.2rem 0.6rem;
                     background: $color;
@@ -2165,25 +2196,157 @@ onMounted(async () => {
 
 // 版权说明
 .modal__box {
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
 
-    h1 {
-        font-size: 20px;
-        display: flex;
-        justify-content: center;
-        padding-bottom: 1rem;
-        font-weight: 700;
+    .fancy-copyright {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 25px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow-y: auto;
     }
 
-    h2 {
-        font-size: 20px;
-        padding: 1rem 0;
+    .fancy-copyright:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #007bff, #6f42c1, #e83e8c);
+    }
+
+    .copyright-header {
+        @include flexCenter(row, center);
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px dashed #dee2e6;
+    }
+
+    .copyright-header .icon {
+        font-size: 28px;
+        margin-right: 15px;
+    }
+
+    .copyright-header h3 {
+        margin: 0;
+        color: #343a40;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .copyright-item {
+        display: flex;
+        margin-bottom: 20px;
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        border-left: 4px solid #007bff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: transform 0.3s ease;
+    }
+
+    .copyright-item:hover {
+        transform: translateY(5px);
+        border-left-color: #e83e8c;
+    }
+
+    .copyright-item:nth-child(2) {
+        border-left-color: #28a745;
+    }
+
+    .copyright-item:nth-child(3) {
+        border-left-color: #ffc107;
+    }
+
+    .copyright-item:nth-child(4) {
+        border-left-color: #17a2b8;
+    }
+
+    .copyright-item:nth-child(5) {
+        border-left-color: #6f42c1;
+    }
+
+    .item-icon {
+        font-size: 24px;
+        margin-right: 15px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border-radius: 50%;
+    }
+
+    .item-content h4 {
+        margin: 0 0 8px 0;
+        color: #495057;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .item-content h4:after {
+        content: "";
+        flex: 1;
+        margin-left: 10px;
+        height: 1px;
+        background: linear-gradient(90deg, #dee2e6, transparent);
+    }
+
+    .item-content p {
+        margin: 0 0 5px 0;
+        color: #6c757d;
         line-height: 1.5;
     }
 
-    p {
-        text-indent: 2em;
-        line-height: 2.5;
+    .item-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    .copyright-mark {
+        color: #dc3545;
+        font-weight: bold;
+        font-size: 16px;
+        margin-left: 5px;
+    }
+
+    .copyright-seal {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px dashed #dee2e6;
+    }
+
+    .seal-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+        animation: pulse 2s infinite;
+    }
+
+    .seal-text {
+        color: #6c757d;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 0.8;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0.8;
+        }
     }
 }
 

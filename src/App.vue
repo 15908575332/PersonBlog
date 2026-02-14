@@ -4,7 +4,8 @@
       <!-- 渐变背景色增加过渡动画 -->
       <template v-if="finalShouldShowGlobalBg">
         <div class="background-container">
-          <div class="gradient-bg light-bg" :class="{ active: currentTheme === 'light' }"></div>
+          <div class="gradient-bg light-bg" :class="{ active: currentTheme === 'light' }"
+            :style="{ backgroundImage: currentLightBg }"></div>
           <div class="gradient-bg dark-bg" :class="{ active: currentTheme === 'dark' }"></div>
         </div>
       </template>
@@ -45,30 +46,60 @@
     <!-- 控制面板 -->
     <div class="controls" :class="{ 'showFlowersControl': showControlPanel }" ref="controls">
       <div class="flower">
-        <div class="button-group">
-          <button @click="toggleAnimation" class="control-btn">
-            <img :src="playIcon" :class="{ 'active': !isAnimating, 'inactive': isAnimating }" alt="播放">
-            <img :src="pauseIcon" :class="{ 'active': isAnimating, 'inactive': !isAnimating }" alt="暂停">
-          </button>
-          <button @click="resetAnimation" class="control-btn">
-            <img src="@/assets/icon/public/icons8-reset-100.png" alt="reset">
-          </button>
-        </div>
-
         <div class="slider-flex">
-          <div class="slider-group">
-            <label for="sakuraCount">数量</label>
-            <input type="range" id="sakuraCount" min="10" max="100" v-model.number="sakuraCount"
-              @change="changeSakuraCount" class="slider">
-            <!-- <label for="sakuraCount">{{ sakuraCount }}</label> -->
+          <!-- 播放/暂停按钮 - 沙漏计时器 -->
+          <div class="timekeeper-control" @click="toggleAnimation" :title="isAnimating ? '暂停动画' : '播放动画'">
+            <div class="timekeeper-container" :class="{ 'paused': !isAnimating }">
+              <!-- 沙漏上半部分 -->
+              <div class="hourglass-top">
+                <div class="sand-particles">
+                  <div v-for="i in 8" :key="i" class="sand-particle" :style="`--delay: ${i * 0.1}s`"></div>
+                </div>
+              </div>
+              <!-- 沙漏中间连接处 -->
+              <div class="hourglass-neck"></div>
+              <!-- 沙漏下半部分 -->
+              <div class="hourglass-bottom">
+                <div class="sand-accumulation" :style="{ height: isAnimating ? '60%' : '0%' }"></div>
+              </div>
+            </div>
+            <div class="timekeeper-state-indicator">{{ isAnimating ? 'Ⅱ' : '▶' }}</div>
           </div>
-          <div class="slider-group">
-            <label for="speed">速度</label>
-            <input type="range" id="speed" min="1" max="5" v-model.number="speed" class="slider" @change="changeSpeed">
-            <!-- <label for="speed">{{ speed }}</label> -->
+
+          <!-- 重置按钮 - 回旋镖循环 -->
+          <div class="boomerang-control" @click="resetAnimation" title="重置动画设置">
+            <div class="boomerang-container">
+              <div class="boomerang-arc outer"></div>
+              <div class="boomerang-arc middle"></div>
+              <div class="boomerang-arc inner"></div>
+              <div class="boomerang-arrow"></div>
+            </div>
+            <div class="boomerang-state-indicator">↺</div>
+          </div>
+        </div>
+        <div class="slider-flex">
+          <!-- 数量 -->
+          <div class="blossom-control" @click="increaseSignalLevel"
+            :title="`Sakura Amount: ${currentLevel}/${maxLevel}`">
+            <div class="blossom-container">
+              <!-- 堆叠的花瓣层，数量对应 currentLevel -->
+              <div class="blossom-layer" v-for="i in maxLevel" :key="i"
+                :class="{ 'active': i <= currentLevel, 'layer-1': i === 1, 'layer-2': i === 2, 'layer-3': i === 3, 'layer-4': i === 4, 'layer-5': i === 5 }">
+              </div>
+            </div>
+            <div class="blossom-level-indicator">{{ currentLevel }}</div>
+          </div>
+          <!-- 速度 -->
+          <div class="fan-control" @click="increaseSpeedLevel" :title="`Speed: ${currentSpeedLevel}/${maxSpeedLevel}`">
+            <div class="fan-container" :style="{ animationDuration: fanAnimationDuration }">
+              <div class="fan-blade" v-for="n in 3" :key="n" :class="`blade-${n}`"></div>
+              <div class="fan-center"></div>
+            </div>
+            <div class="fan-level-indicator">{{ currentSpeedLevel }}</div>
           </div>
         </div>
       </div>
+
       <!-- 主题 -->
       <div class="theme">
         <button class="toggle" :aria-pressed="isPressd" @click="toggleTheme" title="切换昼夜模式">
@@ -192,10 +223,27 @@
           </span>
         </button>
         <div class="otherControl">
-          <div>1</div>
-          <div>2</div>
+          <!-- 字体切换按钮 - 活字印刷印章 -->
+          <div class="font-control" @click="toggleFontFamily" :title="`字体: ${currentFontName}`">
+            <div class="type-block">
+              <span class="type-char" :style="{ fontFamily: currentFontValue }">A</span>
+            </div>
+            <div class="font-state-indicator">{{ currentIndex + 1 }}/{{ fontConfig.length }}</div>
+          </div>
+
+          <!-- 背景图切换按钮 - 迷你画廊 -->
+          <div class="gallery-control" @click="toggleBackground" :title="`背景: ${currentBgName}`">
+            <div class="gallery-container">
+              <div class="gallery-window" v-for="(bg, index) in backgroundPreviews" :key="index"
+                :class="{ 'active': index === currentBgIndex }">
+                <div class="window-content" :style="{ background: bg.color }"></div>
+              </div>
+            </div>
+            <div class="gallery-state-indicator">{{ currentBgIndex + 1 }}/{{ backgroundPreviews.length }}</div>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -209,8 +257,6 @@ import flowerAnimate from "./components/common/FlowerAnimate.vue"
 import utils from "@/utils/getAssetsFile";
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/store/maincontent'
-import pauseIcon from '@/assets/icon/public/icons8-pause-100.png'
-import playIcon from '@/assets/icon/public/icons8-play-100.png'
 
 /** ------------------------ 主题 ------------------------ */
 import { initTheme, setTheme, watchSystemTheme } from '@/utils/theme';
@@ -255,6 +301,112 @@ const finalShouldShowGlobalBg = computed(() => {
   // 再检查前缀匹配
   return shouldShowGlobalBg.value;
 })
+
+/** ------------------------ 字体切换 ------------------------ */
+// 定义字体配置，与 SCSS 中的 $font-families 映射保持同步
+const fontConfig = [
+  { id: 'default', name: '钢笔体' },
+  { id: 'lmst', name: '浪漫Star' },
+  { id: 'kaiti', name: '楷体' },
+  { id: 'handwriting', name: '手写体' },
+  { id: 'monospace', name: '等宽体' },
+];
+
+// 状态：当前选中的字体 ID
+const currentFontId = ref(localStorage.getItem('app-font-id') || 'default');
+
+// 计算属性：当前字体的完整 CSS 值（用于直接赋值给 style）
+const currentFontValue = computed(() => {
+  const config = fontConfig.find(f => f.id === currentFontId.value);
+  if (!config) return 'sans-serif';
+
+  // 此处的映射逻辑应严格对应 SCSS 中 $font-families 的定义
+  const valueMap = {
+    'default': '"gtpy"',
+    'lmst': '"lmst"',
+    'kaiti': '"楷体", "KaiTi", serif',
+    'handwriting': '"Comic Sans MS", "Segoe Print", cursive',
+    'monospace': 'Monaco, "Courier New", monospace',
+  };
+  return valueMap[config.id] || 'sans-serif';
+});
+
+// 计算属性：当前显示的名称
+const currentFontName = computed(() => {
+  const config = fontConfig.find(f => f.id === currentFontId.value);
+  return config ? config.name : '未知';
+});
+
+const currentIndex = computed(() => {
+  return fontConfig.findIndex(f => f.id === currentFontId.value);
+});
+
+// 字体切换函数
+const toggleFontFamily = () => {
+  const currentIndex = fontConfig.findIndex(f => f.id === currentFontId.value);
+  const nextIndex = (currentIndex + 1) % fontConfig.length;
+  const nextFontId = fontConfig[nextIndex].id;
+
+  // 更新状态
+  currentFontId.value = nextFontId;
+  localStorage.setItem('app-font-id', nextFontId);
+
+  // 将选中的字体族名称赋值给根元素的 CSS 变量
+  document.documentElement.style.setProperty('--app-font-family', currentFontValue.value);
+
+  // （可选）预加载自定义字体文件
+  if (['lmst', 'gtpy'].includes(nextFontId)) {
+    preloadFont(nextFontId);
+  }
+};
+
+// （可选）字体预加载函数
+function preloadFont(fontId) {
+  // 此映射需要与 SCSS 中的 $font-assets 或实际路径保持一致
+  const fontPathMap = {
+    'lmst': new URL('@/assets/fonts/langmanstar.ttf', import.meta.url).href,
+    'gtpy': new URL('@/assets/fonts/getype.ttf', import.meta.url).href,
+  };
+  const path = fontPathMap[fontId];
+  if (path && !document.querySelector(`link[href="${path}"]`)) {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'font';
+    link.href = path;
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+  }
+}
+
+/** ------------------------ 背景切换 ------------------------ */
+const backgroundPreviews = [
+  {
+    name: '薄荷晴空',
+    color: 'radial-gradient(circle,#F3E7E9 0%,#E3EEFF 100%)'
+  },
+  {
+    name: '柔樱初绽',
+    color: 'linear-gradient(120deg,#E0C3FC 0%,#8EC5FC 100%)'
+  },
+  {
+    name: '淡雅晨光',
+    color: 'linear-gradient(90deg,#FFF1EB 0%,#ACE0F9 100%)'
+  },
+  {
+    name: '清新海风',
+    color: 'conic-gradient(from 90deg,#EE82EE 0%,#00D1FF 100%)'
+  }
+];
+
+const currentBgIndex = ref(Number(localStorage.getItem('app-bg-index')) || 0);
+const currentBgName = computed(() => backgroundPreviews[currentBgIndex.value].name);
+const currentLightBg = computed(() => backgroundPreviews[currentBgIndex.value].color); //当前背景色
+
+const toggleBackground = () => {
+  currentBgIndex.value = (currentBgIndex.value + 1) % backgroundPreviews.length;
+  localStorage.setItem('app-bg-index', currentBgIndex.value);
+};
+
 /** ------------------------ 全局花瓣飘落动画 ------------------------ */
 const showControlPanel = ref(false)
 const controls = ref();
@@ -274,19 +426,57 @@ const handlePageClick = (event) => {
 const toggleAnimation = () => { // 花瓣动画暂停/播放
   isAnimating.value = !isAnimating.value;
 };
-const resetAnimation = () => { //重置属性
+// 重置按钮点击动画状态
+const isResetting = ref(false);
+
+// 修改原有的resetAnimation函数
+const resetAnimation = () => {
+  isResetting.value = true;
+
+  // 执行重置逻辑
   localStorage.removeItem('flowerAnimateSakuraCount', 'flowerAnimateSpeed');
   isAnimating.value = true;
   sakuraCount.value = 10;
+  currentLevel.value = 1;
   speed.value = 1;
-}
-const changeSakuraCount = () => { //修改花瓣数量
-  localStorage.setItem('flowerAnimateSakuraCount', sakuraCount.value);
-};
-const changeSpeed = () => {
-  localStorage.setItem('flowerAnimateSpeed', speed.value);
+  currentSpeedLevel.value = 1; // 如果之前添加了速度控制
 
+  // 重置动画完成后恢复状态
+  setTimeout(() => {
+    isResetting.value = false;
+  }, 600);
+};
+
+// 数量调节
+const maxLevel = ref(5);
+const currentLevel = ref(1);
+function increaseSignalLevel() {
+  currentLevel.value++;
+  if (currentLevel.value > maxLevel.value) {
+    currentLevel.value = maxLevel.value;
+    return;
+  }
+  currentLevel.value = currentLevel.value % (maxLevel.value + 1);
+  sakuraCount.value = currentLevel.value * 10;
 }
+
+// 速度调节
+const maxSpeedLevel = ref(5); // 最大速度级别
+const currentSpeedLevel = ref(Number(localStorage.getItem('flowerAnimateSpeed')) || 1); // 当前速度级别，持久化
+
+// 计算属性：将速度级别映射为风扇CSS动画的持续时间（值越小转得越快）
+const fanAnimationDuration = computed(() => {
+  // 级别1最慢（3秒一转），级别5最快（0.3秒一转）
+  const durations = ['3s', '1.5s', '1s', '0.6s', '0.3s'];
+  return durations[currentSpeedLevel.value - 1] || '1s';
+});
+
+// 速度调节函数
+function increaseSpeedLevel() {
+  currentSpeedLevel.value = (currentSpeedLevel.value % maxSpeedLevel.value) + 1;
+  speed.value = currentSpeedLevel.value; // 更新实际的花瓣速度值
+}
+
 watch(() => sakuraCount.value, (newVal) => {
   localStorage.setItem('flowerAnimateSakuraCount', newVal);
 });
@@ -305,6 +495,9 @@ async function fetchData() {
   await mainStore.fetchNavData()
 }
 onMounted(() => {
+  // 初始化默认
+  document.documentElement.style.setProperty('--app-font-family', currentFontValue.value);
+
   fetchData() // 页面加载时获取数据
   // 主题切换
   currentTheme.value = initTheme();
@@ -393,8 +586,6 @@ const showRippleToggle = computed(() => {
       opacity: 0;
     }
   }
-
-
 }
 
 //工具栏
@@ -479,7 +670,7 @@ const showRippleToggle = computed(() => {
   @include flexCenter(row, flex-start);
   gap: 1rem;
   font-size: 0.8rem;
-  font-family: 'gtpy';
+  font-family: var(--app-font-family);
   transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; // 修改过渡属性
   z-index: 998;
 
@@ -487,79 +678,498 @@ const showRippleToggle = computed(() => {
     @include flexCenter(row, space-around);
     background-color: #f8b1c4;
     border: 2px solid #fff;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.8rem;
+    padding: 0.8rem;
     border-radius: 0.2rem;
   }
 
-  .button-group,
-  .slider-group {
-    height: 100%;
-    text-align: center;
-    padding: 0 0.4rem;
-  }
-
-  .button-group {
-    @include flexCenter(column, space-between);
-    padding: 0;
+  .slider-flex {
+    @include flexCenter(column, flex-start);
+    padding: 0.2rem;
     gap: 0.8rem;
 
-    //暂停、开始、重置
-    .control-btn {
-      position: relative; // 设置相对定位
-      display: flex;
-      justify-items: center;
-      align-items: center;
+    // 沙漏计时器 - 播放/暂停控制器
+    .timekeeper-control {
       width: 45px;
       height: 45px;
-      border-radius: 0.4rem;
-      background-position: center;
-      overflow: hidden;
-      transition: background 0.3s ease;
+      position: relative;
+      border-radius: 0.5rem;
       box-shadow: $insideShadow;
+      @include flexCenter(row, center);
+      cursor: pointer;
+      background-color: #fff9f0; // 沙漏的沙色背景
 
       &:hover {
-        cursor: pointer;
-        background-color: #c7ede6;
+        background-color: #fff3e0;
       }
 
-      img {
-        position: absolute;
-        top: 5%;
-        left: 5%;
-        width: 90%;
-        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      .timekeeper-container {
+        width: 60%;
+        height: 70%;
+        position: relative;
 
-        /* 激活状态图标 */
-        &.active {
-          opacity: 1;
-          transform: scale(1) rotate(0deg);
-          z-index: 1; // 确保激活图标在上层
+        // 沙漏上半部分玻璃腔体 - 改为倒梯形
+        .hourglass-top {
+          position: absolute;
+          top: 0;
+          left: 15%; // 左偏移更多，形成上宽下窄
+          width: 70%; // 总宽度增加
+          height: 40%;
+          background: linear-gradient(145deg, rgba(255, 216, 166, 0.9), rgba(255, 194, 133, 0.9)); // 增加透明度模拟玻璃
+          border-radius: 50% 50% 10% 10%; // 顶部圆，底部平
+          overflow: hidden;
+          box-shadow:
+            inset 0 -3px 5px rgba(0, 0, 0, 0.15), // 内部凹陷阴影
+            inset 0 2px 4px rgba(255, 255, 255, 0.7); // 内部高光
+          // 使用clip-path创建更精确的梯形
+          clip-path: polygon(20% 0%, 80% 0%, 60% 100%, 40% 100%);
+          z-index: 2;
+
+          .sand-particles {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            // 沙粒从中心点散开
+            transform-origin: 50% 100%;
+
+            .sand-particle {
+              position: absolute;
+              width: 3px;
+              height: 3px;
+              background: #fff;
+              border-radius: 50%;
+              bottom: 15%; // 从更下方开始
+              left: calc(50% - 1.5px);
+              opacity: 0;
+              animation: sandFall 2s infinite linear var(--delay);
+              // 添加轻微的水平随机偏移
+              transform: translateX(calc((var(--delay) - 0.5) * 4px));
+            }
+          }
         }
 
-        /* 非激活状态图标 */
-        &.inactive {
+        // 沙漏中间细颈 - 变得更细更精致
+        .hourglass-neck {
+          position: absolute;
+          top: 40%;
+          left: 50%;
+          width: 8%; // 变细
+          height: 12%;
+          background: #bcaaa4; // 更深的金属/玻璃色
+          border-radius: 2px;
+          transform: translateX(-50%);
+          z-index: 3;
+          box-shadow:
+            inset 0 1px 2px rgba(255, 255, 255, 0.5),
+            0 0 2px rgba(0, 0, 0, 0.2);
+        }
+
+        // 沙漏下半部分玻璃腔体 - 改为正梯形
+        .hourglass-bottom {
+          position: absolute;
+          bottom: 0;
+          left: 15%;
+          width: 70%;
+          height: 40%;
+          background: linear-gradient(145deg, rgba(255, 216, 166, 0.9), rgba(255, 194, 133, 0.9));
+          border-radius: 10% 10% 50% 50%; // 顶部平，底部圆
+          overflow: hidden;
+          box-shadow:
+            inset 0 3px 5px rgba(0, 0, 0, 0.15),
+            inset 0 -2px 4px rgba(255, 255, 255, 0.7);
+          // 使用clip-path创建更精确的梯形
+          clip-path: polygon(40% 0%, 60% 0%, 80% 100%, 20% 100%);
+          z-index: 2;
+
+          .sand-accumulation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, #fff6a3 0%, #ffcc80 60%, #ffb74d 100%); // 沙堆锥形渐变
+            border-radius: 50% 50% 0 0;
+            transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+            // 使沙堆顶部形成凹陷中心点
+            &::after {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 50%;
+              width: 30%;
+              height: 20%;
+              background: #ffb74d;
+              border-radius: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
+        }
+
+        // 暂停状态：停止沙粒下落，保持沙堆状态
+        &.paused {
+          .sand-particle {
+            animation-play-state: paused;
+            opacity: 0.3; // 暂停时沙粒半透明
+          }
+
+          .sand-accumulation {
+            transition: height 0.3s ease;
+          }
+        }
+      }
+
+      .timekeeper-state-indicator {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        font-size: 0.6rem;
+        font-weight: bold;
+        color: #e65100;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        @include flexCenter(row, center);
+      }
+
+      @keyframes sandFall {
+        0% {
+          transform: translateY(0) scale(0.8);
           opacity: 0;
-          transform: scale(0.5) rotate(-90deg);
-          z-index: 0; // 非激活图标在下层
+        }
+
+        10% {
+          opacity: 0.9;
+          transform: translateY(-5%) scale(1);
+        }
+
+        90% {
+          opacity: 0.9;
+        }
+
+        100% {
+          transform: translateY(250%) scale(0.8); // 落得更远
+          opacity: 0;
         }
       }
     }
-  }
 
-  //数量、速度调节
-  .slider-flex {
-    @include flexCenter(column, flex-start);
-    gap: 0.8rem;
-
-    .slider-group {
-      @include flexCenter(row, center);
+    // 回旋镖循环 - 重置控制器
+    .boomerang-control {
+      width: 45px;
       height: 45px;
+      position: relative;
+      border-radius: 0.5rem;
       box-shadow: $insideShadow;
-      border-radius: 8px;
+      @include flexCenter(row, center);
+      cursor: pointer;
+      background-color: #f0f4ff; // 淡蓝色背景
 
-      input {
-        width: 100px;
+      &:hover {
+        background-color: #e1e8ff;
+      }
+
+      .boomerang-container {
+        width: 70%;
+        height: 70%;
+        position: relative;
+
+        // 三层回旋镖弧线
+        .boomerang-arc {
+          position: absolute;
+          border: 2px solid transparent;
+          border-radius: 50%;
+          border-top-color: #5d7af5;
+          border-right-color: transparent;
+          border-bottom-color: transparent;
+          border-left-color: transparent;
+
+          &.outer {
+            width: 100%;
+            height: 100%;
+            animation: rotateArc 4s linear infinite;
+          }
+
+          &.middle {
+            width: 70%;
+            height: 70%;
+            top: 15%;
+            left: 15%;
+            border-top-color: #8a9eff;
+            animation: rotateArc 3s linear infinite reverse;
+          }
+
+          &.inner {
+            width: 40%;
+            height: 40%;
+            top: 30%;
+            left: 30%;
+            border-top-color: #b3bfff;
+            animation: rotateArc 2s linear infinite;
+          }
+        }
+
+        // 箭头指示器
+        .boomerang-arrow {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 20%;
+          height: 20%;
+          transform: translate(-50%, -50%);
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #5d7af5;
+            clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+          }
+        }
+
+        // 重置时的加强动画
+        .boomerang-resetting {
+          .boomerang-arc {
+            animation-duration: 0.6s !important;
+          }
+        }
+      }
+
+      .boomerang-state-indicator {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        font-size: 0.6rem;
+        font-weight: bold;
+        color: #5d7af5;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        @include flexCenter(row, center);
+      }
+
+      // 点击时的旋转动画
+      &:active {
+        .boomerang-arc {
+          animation-duration: 0.3s !important;
+        }
+      }
+
+      @keyframes rotateArc {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+
+    // 樱花堆叠数量控制器
+    .blossom-control {
+      width: 45px;
+      height: 45px;
+      position: relative;
+      border-radius: 0.5rem;
+      box-shadow: $insideShadow;
+      @include flexCenter(row, center);
+      cursor: pointer;
+      background-color: #fff5f7; // 淡粉色背景，与樱花主题呼应
+
+      &:hover {
+        background-color: #ffeef2;
+      }
+
+      .blossom-container {
+        width: 70%;
+        height: 70%;
+        position: relative;
+        // 容器用于定位堆叠层
+
+        .blossom-layer {
+          position: absolute;
+          border-radius: 50% 50% 40% 40%; // 花瓣状的弧形底部
+          opacity: 0.3;
+          transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); // 弹性过渡
+
+          // 非激活状态的默认样式
+          background-color: #e0e0e0;
+          box-shadow: none;
+
+          // 激活状态：填充樱花色并添加内阴影
+          &.active {
+            opacity: 1;
+            background: linear-gradient(to bottom, #ffb7d5, #ff7eb3); // 樱花粉渐变
+            box-shadow:
+              inset 0 2px 4px rgba(255, 255, 255, 0.8),
+              inset 0 -1px 2px rgba(188, 80, 120, 0.4);
+          }
+
+          // 定义五个堆叠层的位置和大小（从下往上，从小到大）
+          &.layer-1 {
+            bottom: 0%;
+            left: 20%;
+            width: 60%;
+            height: 20%;
+            z-index: 1;
+          }
+
+          &.layer-2 {
+            bottom: 15%;
+            left: 15%;
+            width: 70%;
+            height: 22%;
+            z-index: 2;
+          }
+
+          &.layer-3 {
+            bottom: 30%;
+            left: 10%;
+            width: 80%;
+            height: 24%;
+            z-index: 3;
+          }
+
+          &.layer-4 {
+            bottom: 45%;
+            left: 5%;
+            width: 90%;
+            height: 26%;
+            z-index: 4;
+          }
+
+          &.layer-5 {
+            bottom: 60%;
+            left: 0%;
+            width: 100%;
+            height: 28%;
+            z-index: 5;
+          }
+        }
+      }
+
+      .blossom-level-indicator {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        font-size: 0.6rem;
+        font-weight: bold;
+        color: #d63384; // 深粉色数字
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        @include flexCenter(row, center);
+      }
+    }
+
+    // 速度
+    .fan-control {
+      width: 45px;
+      height: 45px;
+      position: relative;
+      border-radius: 0.5rem;
+      box-shadow: $insideShadow;
+      @include flexCenter(row, center);
+      cursor: pointer;
+      background-color: #e6f7ff; // 淡蓝色背景，暗示“风”
+
+      &:hover {
+        background-color: #d1e9ff;
+      }
+
+      .fan-container {
+        width: 70%; // 调整容器大小，为中央伪元素留出空间
+        height: 70%;
+        position: relative;
+        animation: rotateFan linear infinite;
+        transform-origin: center center;
+
+        // 使用 ::before 创建中心内圆（高光/凹陷感）
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 20%; // 内圆大小
+          height: 20%;
+          background: #2e5984; // 深色中心
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+          z-index: 3; // 确保在叶片上方
+        }
+
+        // 使用 ::after 创建中心外圆（基座）
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 30%; // 外圆大小
+          height: 30%;
+          background: #4a6fa5;
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 2; // 在叶片和内圆之间
+        }
+
+        // 三个风扇叶片
+        .fan-blade {
+          position: absolute;
+          top: 70%; // 改为从中心定位
+          left: 50%;
+          width: 10%;
+          height: 40%;
+          background: linear-gradient(to bottom, #34e4db, #1970ea);
+          border-radius: 20px 20px 4px 4px;
+          transform-origin: center 0; // 绕顶部中心旋转，使叶片从中心“伸出”
+          z-index: 1; // 在中心圆下方
+
+          // 通过旋转定义三个叶片的位置
+          &.blade-1 {
+            transform: translate(-50%, -50%) rotate(0deg);
+          }
+
+          &.blade-2 {
+            transform: translate(-50%, -50%) rotate(120deg);
+          }
+
+          &.blade-3 {
+            transform: translate(-50%, -50%) rotate(240deg);
+          }
+        }
+      }
+
+      .fan-level-indicator {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        font-size: 0.6rem;
+        font-weight: bold;
+        color: #2e5984;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        @include flexCenter(row, center);
+      }
+
+      @keyframes rotateFan {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
       }
     }
   }
@@ -872,13 +1482,174 @@ const showRippleToggle = computed(() => {
     @include flexCenter(row, flex-start);
     gap: 0.8rem;
 
-    div {
+    // 活字印刷印章 - 字体切换控制器
+    .font-control {
       width: 45px;
       height: 45px;
-      border-radius: 10px;
+      position: relative;
+      border-radius: 0.5rem;
       box-shadow: $insideShadow;
-      padding: 0.2rem;
+      @include flexCenter(row, center);
+      cursor: pointer;
+      background-color: #f5f0e6; // 纸张米黄色
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #ede6d6;
+
+        .type-block {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+      }
+
+      .type-block {
+        width: 60%;
+        height: 60%;
+        background: #fff;
+        border: 2px solid #8b4513; // 木纹边框色
+        border-radius: 4px;
+        @include flexCenter(row, center);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+
+        // 木纹纹理效果
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 100%;
+          background: linear-gradient(90deg,
+              transparent 0%,
+              rgba(139, 69, 19, 0.1) 25%,
+              transparent 50%,
+              rgba(139, 69, 19, 0.1) 75%,
+              transparent 100%);
+          pointer-events: none;
+        }
+
+        .type-char {
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: #5d4037;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+          transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+      }
+
+      .font-state-indicator {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        font-size: 0.6rem;
+        font-weight: bold;
+        color: #8b4513;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        @include flexCenter(row, center);
+      }
+
+      // 点击时的"盖章"动画
+      &:active {
+        .type-block {
+          transform: scale(0.95);
+
+          .type-char {
+            transform: scale(1.1);
+            color: #3e2723;
+          }
+        }
+      }
     }
+
+    // 迷你画廊 - 背景切换控制器
+    .gallery-control {
+      width: 45px;
+      height: 45px;
+      position: relative;
+      border-radius: 0.5rem;
+      box-shadow: $insideShadow;
+      @include flexCenter(row, center);
+      cursor: pointer;
+      background-color: #f8f9fa; // 画廊墙面灰色
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #e9ecef;
+
+        .gallery-container::before {
+          opacity: 0.8;
+        }
+      }
+
+      .gallery-container {
+        width: 70%;
+        height: 70%;
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 2px;
+        padding: 3px;
+        background: #fff;
+        border-radius: 3px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        .gallery-window {
+          border-radius: 1px;
+          overflow: hidden;
+          position: relative;
+          transition: all 0.3s ease;
+
+          .window-content {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease;
+          }
+
+          // 当前选中的背景窗口突出显示
+          &.active {
+            transform: scale(1.1);
+            z-index: 1;
+            box-shadow: 0 0 0 2px #5d7af5;
+
+            .window-content {
+              transform: scale(1.2);
+            }
+          }
+        }
+      }
+
+      .gallery-state-indicator {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        font-size: 0.6rem;
+        font-weight: bold;
+        color: #5d7af5;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        @include flexCenter(row, center);
+      }
+
+      // 点击时的画廊切换动画
+      &:active {
+        .gallery-container {
+          transform: scale(0.95);
+
+          .gallery-window.active {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+
   }
 }
 </style>

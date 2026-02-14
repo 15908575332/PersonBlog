@@ -367,7 +367,7 @@ onBeforeUnmount(() => {
 #userLogin {
     width: 100vw;
     height: 100vh;
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
     font-size: 0.75rem;
     position: relative;
     overflow: hidden;
@@ -484,11 +484,11 @@ onBeforeUnmount(() => {
     height: 2.1rem;
     margin: 0.25rem 0;
     padding: 0 1.4rem;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     letter-spacing: 0.01rem;
     border: none;
     outline: none;
-    font-family: "Montserrat", sans-serif;
+    font-family: var(--app-font-family);
     background-color: #ecf0f3;
     transition: 0.25s ease;
     border-radius: 0.5rem;

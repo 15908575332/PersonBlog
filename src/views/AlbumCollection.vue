@@ -567,7 +567,7 @@ onBeforeUnmount(() => {
       padding-left: 10vw;
 
       h1 {
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
         font-size: clamp(2rem, 4vw, 2.5rem);
         font-weight: 700;
         background: -webkit-linear-gradient(0deg, #f76591, #ffc16f);
@@ -583,7 +583,7 @@ onBeforeUnmount(() => {
       p {
         font-size: clamp(0.9rem, 4vw, 1.2rem);
         line-height: 1.6;
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
       }
 
       .btn {
@@ -606,7 +606,7 @@ onBeforeUnmount(() => {
         user-select: none;
         -webkit-user-select: none;
         pointer-events: auto;
-        font-family: 'lmst';
+        font-family: var(--app-font-family);
 
         &:hover {
           box-shadow: 0 4px 10px rgba(247, 101, 145, 0.5);
@@ -741,7 +741,7 @@ onBeforeUnmount(() => {
           /* 7 */
           .btn-7 {
             margin: 0.2rem 0;
-            font-family: "gtpy";
+            font-family: var(--app-font-family);
             background: transparent;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -846,14 +846,14 @@ onBeforeUnmount(() => {
         }
 
         .text__box {
-          font-family: 'gtpy';
+          font-family: var(--app-font-family);
 
           h1 {
             font-size: 0.9rem;
             font-weight: 700;
             padding: 1rem 0.5rem;
             max-width: 14.5rem;
-            font-family: "gtpy";
+            font-family: var(--app-font-family);
             letter-spacing: -1px;
             /* 强制文本在一行内显示 */
             white-space: nowrap;

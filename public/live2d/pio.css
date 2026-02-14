@@ -18,7 +18,7 @@
   position: fixed;
   user-select: none;
   max-width: 500px;
-  font-family: 'gtpy';
+  font-family: var(--app-font-family);
 }
 
 .pio-container .pio-show {
@@ -131,7 +131,9 @@
   position: absolute;
   word-break: break-all;
   border: 1px solid #eee;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
 }
 
 .pio-container .pio-dialog.active {

@@ -347,7 +347,7 @@ $contentWidth: 65rem; // 内容宽度
       left: 50%;
       z-index: 5;
       color: #ffffff;
-      font-family: "gtpy";
+      font-family: var(--app-font-family);
       font-size: 2rem;
       font-weight: 700;
       letter-spacing: 0.2rem;
@@ -441,7 +441,7 @@ $contentWidth: 65rem; // 内容宽度
       background-color: #ffffff;
 
       .content__box {
-        font-family: "gtpy";
+        font-family: var(--app-font-family);
         width: $contentWidth;
         margin-left: auto;
         margin-right: auto;
@@ -507,7 +507,7 @@ $contentWidth: 65rem; // 内容宽度
               background-color: #4dd5cc;
               @include flexCenter(row, center);
               color: white;
-              font-family: "lmst";
+              font-family: var(--app-font-family);
               width: 10rem;
               border-radius: 1rem;
               padding: 0.2rem 0 0.3rem;
@@ -546,7 +546,7 @@ $contentWidth: 65rem; // 内容宽度
                 color: #666;
                 font-size: 0.8rem;
                 display: flex;
-                font-family: "gtpy";
+                font-family: var(--app-font-family);
                 align-items: center;
 
                 &::placeholder {
@@ -836,7 +836,7 @@ $contentWidth: 65rem; // 内容宽度
       overflow: hidden;
       font-size: 0.8rem;
       z-index: 1;
-      font-family: 'gtpy';
+      font-family: var(--app-font-family);
 
       &::before {
         content: "";

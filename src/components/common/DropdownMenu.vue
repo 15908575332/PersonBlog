@@ -73,7 +73,7 @@ const RouterJump = (path) => {
 
       button {
         @include flexCenter(row, flex-start);
-        font-family: "lmst";
+        font-family: var(--app-font-family);
         font-size: 0.9rem;
         font-weight: 500;
         // display: block;

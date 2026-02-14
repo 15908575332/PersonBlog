@@ -241,7 +241,7 @@ onMounted(() => {
 </script>
 <style scoped lang="scss">
 #recordResource {
-  font-family: "gtpy";
+  font-family: var(--app-font-family);
   font-size: 0.75rem;
 
   // 背景设置
@@ -277,7 +277,7 @@ onMounted(() => {
       @include flexCenter(column, center);
       height: 65%;
       color: white;
-      font-family: "gtpy";
+      font-family: var(--app-font-family);
       z-index: 2;
       position: relative;
       top: 0;
@@ -317,7 +317,7 @@ onMounted(() => {
       .btn-7 {
         color: #fff;
         margin: 0.2rem 0;
-        font-family: "gtpy";
+        font-family: var(--app-font-family);
         background: transparent;
         cursor: pointer;
         transition: all 0.3s ease;

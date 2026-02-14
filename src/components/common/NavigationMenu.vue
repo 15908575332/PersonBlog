@@ -259,7 +259,7 @@ onMounted(async () => { });
 .navigate {
   width: 100%;
   padding: 0 2rem;
-  font-family: "lmst";
+  font-family: var(--app-font-family);
   z-index: 1;
   background-color: var(--bg-color);
   transition: all 0.3s linear;
@@ -390,7 +390,7 @@ onMounted(async () => { });
           .info {
             padding: 0.2rem 0;
             @include flexCenter(row, center);
-            font-family: "gtpy";
+            font-family: var(--app-font-family);
             border-bottom: 2px solid #ee9999;
 
             span {

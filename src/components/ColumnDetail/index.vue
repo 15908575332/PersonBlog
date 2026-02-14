@@ -164,7 +164,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 #columnDetail {
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
     display: flex;
 
     // 左侧目录
@@ -278,7 +278,7 @@ onMounted(() => {
                     align-content: center;
                     gap: 2rem;
                     padding: 2rem 0;
-                    font-family: 'gtpy';
+                    font-family: var(--app-font-family);
                     color: var(--color);
 
                     h1 {

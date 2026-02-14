@@ -98,7 +98,7 @@ const uploadImage = () => {
             const reader = new FileReader();
             reader.onload = () => {
                 previewImage.value = reader.result; // 本地预览使用DataURL
-             
+
             };
             reader.onerror = () => {
                 alert('图片读取失败，请重试');
@@ -441,7 +441,7 @@ onMounted(async () => {
     width: 100%;
     height: 100%;
     padding: 0.5rem;
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
     position: relative;
 
     .toolbar {

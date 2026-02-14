@@ -160,7 +160,7 @@ const closeModal = () => { // 关闭购买界面
         gap: 1.5rem;
         padding: 1rem;
         margin: 5rem auto;
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
 
         .pricing-card {
             width: 18rem;
@@ -272,7 +272,7 @@ const closeModal = () => { // 关闭购买界面
         cursor: pointer;
         width: 100%;
         height: 100%;
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
 
         .modal-content {
             background-color: white;

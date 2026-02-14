@@ -167,7 +167,7 @@ onMounted(() => {
     padding: 1rem 0;
     width: 100%;
     font-size: 16px;
-    font-family: 'lmst';
+    font-family: var(--app-font-family);
     gap: 0.5rem;
 }
 
@@ -182,7 +182,7 @@ onMounted(() => {
     gap: 0.4rem;
     flex: 1;
     height: 2rem;
-    font-family: 'lmst';
+    font-family: var(--app-font-family);
 
     input {
         flex: 1;
@@ -213,6 +213,4 @@ onMounted(() => {
     color: #f24056;
     font-size: 0.6rem;
 }
-
-
 </style>

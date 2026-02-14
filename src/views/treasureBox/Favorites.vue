@@ -89,7 +89,7 @@ onUnmounted(() => {
 // 收藏夹
 #favorites {
     margin: 0 auto;
-    font-family: 'gtpy';
+    font-family: var(--app-font-family);
     //内容盒子宽度
     $front_end_width: 75vw;
 
@@ -405,7 +405,7 @@ onUnmounted(() => {
 
     //内容
     .front-end {
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
         padding: 1rem 1.5rem;
         border-radius: 0.5rem;
         width: $front_end_width;

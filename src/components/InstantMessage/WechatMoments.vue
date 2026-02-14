@@ -44,7 +44,7 @@
                             <h3 class="grim__item-title">{{ menuItem.title }}</h3>
                             <span v-if="menuItem.desc" class="grim__item-desc">{{
                                 menuItem.desc
-                                }}</span>
+                            }}</span>
                         </div>
                     </a>
 
@@ -368,7 +368,7 @@ onUnmounted(() => {
         padding: 0.5rem;
         color: #fff;
         font-size: 16px;
-        font-family: 'gtpy';
+        font-family: var(--app-font-family);
         text-align: center;
 
         // 展开按钮
