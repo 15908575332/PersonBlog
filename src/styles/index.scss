@@ -1,7 +1,8 @@
 // 1. 定义字体文件路径映射 (SCSS Map)
 $font-assets: (
     "lmst": "@/assets/fonts/langmanstar.ttf",
-    "gtpy": "@/assets/fonts/getype.ttf"
+    "mmt": "@/assets/fonts/也字工厂喵喵体.ttf",
+    "xxmt": "@/assets/fonts/也字工厂小熊猫.ttf"
 );
 
 // 2. 使用循环自动生成 @font-face 规则
@@ -17,11 +18,10 @@ $font-assets: (
 
 // 3. 定义字体族列表 (SCSS List 或 Map)
 $font-families: (
-    "default": #{'"gtpy"'},
-    "lmst": #{'"lmst"'},
-    "kaiti": #{'"楷体", "KaiTi", serif'},
-    "handwriting": #{'"Comic Sans MS", "Segoe Print", cursive'},
-    "monospace": #{'Monaco, "Courier New", monospace'}
+    "default": #{'"lmst"'},
+    "mmt": #{'"mmt"'},
+    "xxmt": #{'"xxmt"'},
+    "kaiti": #{'"楷体", "KaiTi", serif'}
 );
 
 // 4. 定义当前字体的 CSS 自定义属性（变量）及其默认值

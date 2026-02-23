@@ -850,17 +850,15 @@ onUnmounted(() => {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'gtpy', 'Microsoft YaHei', sans-serif;
+    font-family: var(--app-font-family);
 }
 
 .container {
-    background-image: url('@/assets/img/instantMessage/fH2rlwC8A.png');
-    background-size: cover;
     position: relative;
 
     .moments {
         position: absolute;
-        z-index: 999;
+        z-index: 9;
         top: 0;
         left: 0;
     }
@@ -873,14 +871,13 @@ onUnmounted(() => {
     color: #333;
     box-shadow: $shadow-card;
     border-radius: 0.4rem;
-    background-color: $general-white;
+    background-color: rgb(255, 255, 255);
     @include flexCenter(row, flex-start);
 }
 
 /* 左侧导航栏样式 */
 .sidebar {
     width: 60px;
-    background-color: $general-white;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -970,7 +967,6 @@ onUnmounted(() => {
     width: 320px;
     max-width: 320px;
     overflow: hidden;
-    background-color: white;
     border-right: 1px solid #e8e8e8;
     display: flex;
     flex-direction: column;

@@ -1,4 +1,3 @@
-
 // 切换夜间模式
 function toggleNightMode() {
   window.toggleTheme('dark'); //APP.vue全局暴露的主题切换方法
@@ -22,7 +21,8 @@ const initConfig = {
       { selector: '.kbn-look', type: 'look' },
       { selector: '.kbn-custom', type: 'custom' }
     ],
-    homeLink: 'https://192.168.236.102:8008/', // 首页链接
+    homeLink: '/', // 首页链接
+    link: '/personalCenter',
     homePort: '' // 首页domain端口号
   },
   night: 'toggleNightMode()',

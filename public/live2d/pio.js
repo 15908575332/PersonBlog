@@ -200,7 +200,7 @@ var Paul_Pio = function (prop) {
 
       // 关于我
       elements.info.onclick = function () {
-        window.location.assign(prop.content.link || 'https://192.168.236.102:8008/personalCenter');
+        window.location.assign(prop.content.link || '/');
       };
       elements.info.onmouseover = function () {
         modules.render('想了解更多关于我的信息吗？');

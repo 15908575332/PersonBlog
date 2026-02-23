@@ -275,7 +275,7 @@ window.toggleTheme = toggleTheme;
 const noGlobalBgPrefixes = [ // 路由及其所有子路由都会显示全局背景
   '/treasureBox',
   '/recordList',
-  // '/InformalEssay'
+  '/contactUs',
 ];
 
 // 计算是否显示全局背景
@@ -305,11 +305,10 @@ const finalShouldShowGlobalBg = computed(() => {
 /** ------------------------ 字体切换 ------------------------ */
 // 定义字体配置，与 SCSS 中的 $font-families 映射保持同步
 const fontConfig = [
-  { id: 'default', name: '钢笔体' },
-  { id: 'lmst', name: '浪漫Star' },
+  { id: 'default', name: '星星体' },
+  { id: 'mmt', name: '喵喵体' },
+  { id: 'xxmt', name: '小熊猫体' },
   { id: 'kaiti', name: '楷体' },
-  { id: 'handwriting', name: '手写体' },
-  { id: 'monospace', name: '等宽体' },
 ];
 
 // 状态：当前选中的字体 ID
@@ -322,11 +321,10 @@ const currentFontValue = computed(() => {
 
   // 此处的映射逻辑应严格对应 SCSS 中 $font-families 的定义
   const valueMap = {
-    'default': '"gtpy"',
-    'lmst': '"lmst"',
+    'default': '"lmst"',
+    'mmt': '"mmt"',
+    'xxmt': '"xxmt"',
     'kaiti': '"楷体", "KaiTi", serif',
-    'handwriting': '"Comic Sans MS", "Segoe Print", cursive',
-    'monospace': 'Monaco, "Courier New", monospace',
   };
   return valueMap[config.id] || 'sans-serif';
 });

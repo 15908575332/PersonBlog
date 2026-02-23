@@ -1672,7 +1672,8 @@ onMounted(async () => {
                 transform: rotate(45deg);
                 top: 90%;
                 left: -110%;
-                background-color: $primary-hover;
+                background-color: #ffffff;
+                box-shadow: $shadow-card;
                 z-index: -1;
             }
 
@@ -1690,7 +1691,7 @@ onMounted(async () => {
         }
 
         .heart {
-            background: url(./img/web_heart_animation.png);
+            background: url(./img/ListDetail/web_heart_animation.png);
             background-position: 0;
             background-repeat: no-repeat;
             background-size: cover;
@@ -2246,28 +2247,28 @@ onMounted(async () => {
         padding: 15px;
         border-left: 4px solid #007bff;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        transition: transform 0.3s ease;
+        transition: transform 0.3s, border-left-color 0.3s ease;
     }
 
     .copyright-item:hover {
         transform: translateY(5px);
         border-left-color: #e83e8c;
-    }
 
-    .copyright-item:nth-child(2) {
-        border-left-color: #28a745;
-    }
+        &:nth-child(2) {
+            border-left-color: #28a745;
+        }
 
-    .copyright-item:nth-child(3) {
-        border-left-color: #ffc107;
-    }
+        &:nth-child(3) {
+            border-left-color: #ffc107;
+        }
 
-    .copyright-item:nth-child(4) {
-        border-left-color: #17a2b8;
-    }
+        &:nth-child(4) {
+            border-left-color: #17a2b8;
+        }
 
-    .copyright-item:nth-child(5) {
-        border-left-color: #6f42c1;
+        &:nth-child(5) {
+            border-left-color: #6f42c1;
+        }
     }
 
     .item-icon {
@@ -2288,6 +2289,7 @@ onMounted(async () => {
         font-weight: 600;
         display: flex;
         align-items: center;
+        font-size: 0.9rem;
     }
 
     .item-content h4:after {
@@ -2302,6 +2304,7 @@ onMounted(async () => {
         margin: 0 0 5px 0;
         color: #6c757d;
         line-height: 1.5;
+        font-size: 0.8rem;
     }
 
     .item-content p:last-child {

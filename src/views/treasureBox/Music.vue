@@ -63,8 +63,10 @@
           <input type="text" v-model.lazy="searchValue" placeholder="搜索音乐、MV、歌单">
         </div>
         <!-- 内容视图 -->
-        <router-view :current-song-index="currentSongIndex" :is-playing="isPlaying" @play-song="handlePlaySong">
-        </router-view>
+        <transition name="bounce" mode="out-in">
+          <router-view :current-song-index="currentSongIndex" :is-playing="isPlaying" @play-song="handlePlaySong">
+          </router-view>
+        </transition>
         <!-- 播放器 -->
         <div class="audio-player">
           <div class="player-content">
@@ -584,7 +586,6 @@ onMounted(async () => {
     rightContent.value.addEventListener('scroll', debouncedHandleScroll);
 
   }
-
 });
 
 onUnmounted(() => {
@@ -910,6 +911,7 @@ onUnmounted(() => {
               // 百分比
               .volume-number {
                 font-size: 16px;
+                width: 25px;
               }
 
               .custom-volume {

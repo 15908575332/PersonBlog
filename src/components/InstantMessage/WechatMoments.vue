@@ -44,7 +44,7 @@
                             <h3 class="grim__item-title">{{ menuItem.title }}</h3>
                             <span v-if="menuItem.desc" class="grim__item-desc">{{
                                 menuItem.desc
-                            }}</span>
+                                }}</span>
                         </div>
                     </a>
 
@@ -345,7 +345,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .demo-2 {
-    font-family: "Josefin Sans", sans-serif;
+    font-family: var(--app-font-family);
     --color-text: #000;
     --color-bg: #9c9c9c;
     --color-link: #8958b1;
@@ -488,7 +488,7 @@ onUnmounted(() => {
 
 // 内容标题
 .content__title {
-    font-family: "Playfair Display", serif;
+    font-family: var(--app-font-family);
     font-size: 8vw;
     margin: 0;
     position: relative;
@@ -695,7 +695,7 @@ $grim-bg-colors: (
     font-weight: normal;
     margin: 0;
     font-size: 4vmax;
-    font-family: "Playfair Display", serif;
+    font-family: var(--app-font-family);
     color: #fff;
 }
 

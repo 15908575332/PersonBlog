@@ -900,7 +900,7 @@ onMounted(() => {
       }
     }
 
-    // 分页
+    // 搜索结果分页
     .paginate {
       @include flexCenter(row, center);
       padding-bottom: 1rem;
@@ -1219,24 +1219,27 @@ onMounted(() => {
         }
       }
 
-      // 分页
+      // 内容分页
       .paginate {
         @include flexCenter(row, center);
         padding-bottom: 1rem;
+        position: relative;
+        z-index: 1;
 
         .pagination-container {
           display: flex;
-          column-gap: 10px;
+          column-gap: 0.5rem;
+          align-items: center;
         }
 
         .paginate-buttons {
-          height: 25px;
-          width: 35px;
-          font-size: 0.9rem;
+          height: 1rem;
+          width: 1.4rem;
+          font-size: 0.8rem;
           font-family: var(--app-font-family);
           font-weight: 700;
           margin: 0 0.1rem;
-          border-radius: 5px;
+          border-radius: 0.25rem;
           cursor: pointer;
           background-color: rgb(242, 242, 242);
           color: black;

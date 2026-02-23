@@ -55,7 +55,7 @@
             </div>
 
             <ul class="song-list">
-                <li v-for="(song, index) in songList" :key="song.id" class="song-item kbn-music" :class="{
+                <li v-for="(song, index) in songList" :key="song.id" class="song-item" :class="{
                     active: activeIndex === index,
                     'pulse-animation': activeIndex === index && isPulsing
                 }" @click="handlePlaySong(song, index)">
@@ -64,7 +64,8 @@
                         <div class="song-title-content ">
                             <img src="@/assets/icon/treasureBox/music-play.png" alt="play-icon" class="play-icon"
                                 :class="{ 'playing-animation': activeIndex === index && isPlaying }" />
-                            <span class="song-name" :class="{ 'text-glow': activeIndex === index }">{{ song.name
+                            <span class="song-name kbn-music" :class="{ 'text-glow': activeIndex === index }">{{
+                                song.name
                                 }}</span>
                         </div>
                     </div>

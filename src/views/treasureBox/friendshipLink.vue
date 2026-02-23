@@ -258,7 +258,6 @@ import Navigation from '@/components/common/NavigationMenu.vue';
 
 const click_env = () => {
     const form_wrap = document.getElementById('form_wrap')
-    // const form = form_wrap.querySelector('form')
     form_wrap.classList.toggle('click_envelope')
 }
 </script>
@@ -267,6 +266,8 @@ const click_env = () => {
     font-family: var(--app-font-family);
     @include flexCenter(column, center);
     $allContentWidth: 60vw;
+    position: relative;
+    z-index: 1;
 
     .trends_nav {
         width: $allContentWidth;
