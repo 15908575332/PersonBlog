@@ -132,6 +132,9 @@ const closeModal = () => { // 关闭购买界面
 </script>
 <style lang="scss" scoped>
 #memberCenter {
+    position: relative;
+    z-index: 1;
+
     .backPhoto {
         width: 100vw;
         height: 100vh;
@@ -147,7 +150,7 @@ const closeModal = () => { // 关闭购买界面
         background-color: rgba(50, 50, 50, 0.3);
         z-index: inherit;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         position: absolute;
         left: 0;
         top: 0;
