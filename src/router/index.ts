@@ -170,17 +170,17 @@ const router = createRouter({
         }
     ],
     // 路由切换时始终滚动到最顶部
-    scrollBehavior(to, from, savedPosition) {
+    scrollBehavior(to, _from, savedPosition) {
         if (savedPosition) {
             return savedPosition;
         } else {
-            return { top: 0, to, from };
+            return { top: 0, to, _from };
         }
     },
 });
 
 // 添加全局路由守卫
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
     const authStore = useAuthStore();
     // 路由类型
     const isPublicRoute = to.matched.some(record => record.meta.public);

@@ -322,7 +322,7 @@
                                                     alt="level">
                                             </div>
                                             <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                                }}</div>
+                                            }}</div>
                                         </div>
                                     </div>
 
@@ -505,7 +505,6 @@
                     <div class="download">
                         <span class="download-btn" @click="downloadCard">下载卡片</span>
                         <span class="more" @click="moreShare">更多分享</span>
-
                     </div>
                 </div>
             </div>
@@ -679,6 +678,7 @@ const downloadCard = async () => {
         message.error('生成分享卡片失败:', error);
     }
 };
+
 const downloadImage = (url, filename) => { // 下载方法
     const a = document.createElement('a'); // 创建临时 a 标签
     a.href = url;

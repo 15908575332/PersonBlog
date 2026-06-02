@@ -186,8 +186,11 @@
           <div class="content_aera">
             <div class="specific__content" v-for="item in paginatedItems" :key="item.id">
               <a class="image" @click="listDetail(item.article_id)" data-aos="zoom-in">
-                <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
-                <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
+                <div v-if="item.cover_video_url !== null">
+                  <img src="" alt="" style="background-color: #8fcfc4;">
+                </div>
+                <!-- <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button> -->
                 <div class="item__count">
                   <ul>
                     <li v-if="item.cover_video_url !== null">
