@@ -1,3 +1,14 @@
+---
+AIGC:
+    Label: "1"
+    ContentProducer: 001191440300708461136T1XGW3
+    ProduceID: 709956bc7e78d20f930279d5e2bd24f5_080b9aae5f0d11f18d42525400d9a7a1
+    ReservedCode1: sV+eoVk8F1Tud8PxAmQAG5rQyYin0WSTanDY0hTHYBVmJm+CVsdSGwDbsljHvnXHeSN2WbMw0OZdL+MbS0W7vFPP8WRFQ86HDjH1ZxoCIUjdo7RMDO59biQ1wjmyZvDuTG+co5jHAKAH3r+Sm8dpfVKu+pt9wFsxZX2s5OfK0aM8rRBgU7LZteLRYyw=
+    ContentPropagator: 001191440300708461136T1XGW3
+    PropagateID: 709956bc7e78d20f930279d5e2bd24f5_080b9aae5f0d11f18d42525400d9a7a1
+    ReservedCode2: sV+eoVk8F1Tud8PxAmQAG5rQyYin0WSTanDY0hTHYBVmJm+CVsdSGwDbsljHvnXHeSN2WbMw0OZdL+MbS0W7vFPP8WRFQ86HDjH1ZxoCIUjdo7RMDO59biQ1wjmyZvDuTG+co5jHAKAH3r+Sm8dpfVKu+pt9wFsxZX2s5OfK0aM8rRBgU7LZteLRYyw=
+---
+
 # Person Blog
 
 一个功能丰富的个人博客系统，基于 **Vue 3 + TypeScript + Vite** 构建前端，**Node.js + Express + Sequelize + MySQL** 构建后端。
@@ -126,3 +137,4 @@ npm run dev
 npm run build
 # 产物输出到 dmy_dist/
 ```
+*（内容由AI生成，仅供参考）*
