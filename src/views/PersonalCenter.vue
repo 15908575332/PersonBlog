@@ -38,86 +38,89 @@
                 <!-- 基础信息卡片 -->
                 <div class="personalCard card-all" v-if="userStore.user && menuItems[activeIndex]?.id === 'info'">
                     <div class="avatar-left">
-                        <div class="levelsbox">
-                            <h2>会员等级：</h2>
-                            <img class="level"
-                                :src="utils.getAssetsFile('icon/level/lv' + userStore.user.vipLevel + '.svg')"
+                        <div class="avatar-ring">
+                            <div class="avatar">
+                                <img :src="userStore.user.avatarUrl" alt="头像">
+                            </div>
+                        </div>
+                        <h3 class="display-name">{{ userStore.user.username }}</h3>
+                        <div class="level-badge">
+                            <img :src="utils.getAssetsFile('icon/level/lv' + userStore.user.vipLevel + '.svg')"
                                 alt="level">
+                            <span>Lv.{{ userStore.user.vipLevel }}</span>
                         </div>
-                        <div class="avatar">
-                            <img :src="userStore.user.avatarUrl" alt="头像">
-                        </div>
-                        <div class="personal-introduce">
-                            文章发布数或者其它数据
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-num">0</span>
+                                <span class="stat-label">文章</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-num">0</span>
+                                <span class="stat-label">获赞</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-num">0</span>
+                                <span class="stat-label">收藏</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- detailInfo-right -->
                     <div class="detailInfo-right">
                         <form>
-                            <!-- 批量编辑区域 -->
                             <div v-if="isEditingAll" class="batch-edit-area">
-                                <div class="item">
-                                    <label>U-name：</label>
-                                    <input v-model="formData.username" />
+                                <div class="field">
+                                    <label>用户名</label>
+                                    <input v-model="formData.username" placeholder="输入用户名" />
                                 </div>
-                                <div class="item">
-                                    <label>E-mail：</label>
-                                    <input v-model="formData.email" type="email" />
+                                <div class="field">
+                                    <label>邮箱</label>
+                                    <input v-model="formData.email" type="email" placeholder="输入邮箱" />
                                 </div>
-
-                                <div class="item">
-                                    <label>Gender：</label>
+                                <div class="field">
+                                    <label>性别</label>
                                     <select v-model="formData.sex">
-                                        <option value="男" selected>男</option>
+                                        <option value="男">男</option>
                                         <option value="女">女</option>
                                     </select>
                                 </div>
-                                <div class="item benefits">
-                                    <label>Introduction：</label>
+                                <div class="field field-intro">
+                                    <label>简介</label>
                                     <textarea v-model="formData.introduce" :maxlength="maxlength"
-                                        @input="handleInput"></textarea>
-
-                                    <div class="char-counter"
-                                        :style="{ color: remainingChars <= 10 ? '#ff0000' : '#666' }">
-                                        {{
-                                            remainingChars }} / {{ maxlength }}</div>
+                                        placeholder="写点什么介绍一下自己..." @input="handleInput"></textarea>
+                                    <span class="char-counter" :class="{ warn: remainingChars <= 10 }">{{ remainingChars
+                                        }}</span>
                                 </div>
                             </div>
 
                             <div v-else class="batch-noedit-area">
-                                <!-- 默认展示区域 -->
-                                <div class="item username">
-                                    <!-- <label for="username">名称：</label> -->
-                                    <span>{{ userStore.user.username }}</span>
+                                <div class="info-row">
+                                    <span class="info-label">邮箱</span>
+                                    <span class="info-value">{{ userStore.user.email }}</span>
                                 </div>
-                                <div class="item">
-                                    <label>E-mail：</label>
-                                    <span>{{ userStore.user.email }}</span>
+                                <div class="info-row">
+                                    <span class="info-label">性别</span>
+                                    <span class="info-value">{{ userStore.user.sex }}</span>
                                 </div>
-                                <div class="item">
-                                    <label>Gender：</label>
-                                    <div class="boy">
-                                        <span class="box"></span>
-                                        <span>{{ userStore.user.sex }}</span>
-                                    </div>
+                                <div class="info-row">
+                                    <span class="info-label">注册时间</span>
+                                    <span class="info-value">
+                                        {{ dayjs(userStore.user.registerTime).format('YYYY-MM-DD HH: mm: ss') }}
+                                    </span>
                                 </div>
-                                <div class="item">
-                                    <label>Registration date：</label>
-                                    <span>{{ dayjs(userStore.user.registerTime).format('YYYY-MM-DD HH:mm:ss') }}</span>
-                                </div>
-                                <div class="item">
-                                    <label for="introduce">Introduction：</label>
+                                <div class="info-row intro-row">
+                                    <span class="info-label">简介</span>
                                     <p v-if="userStore.user.introduce">{{ userStore.user.introduce }}</p>
-                                    <p v-else>暂无</p>
+                                    <p v-else class="empty-hint">这个人很懒，什么都没写...</p>
                                 </div>
                             </div>
                         </form>
-                        <!-- 全局编辑控制 -->
-                        <div class="submit-item">
-                            <button v-if="isEditingAll" class="submitBtn" @click="handleUpdate">提交</button>
-                            <button @click="toggleGlobalEdit">
-                                {{ isEditingAll ? '取消编辑' : '修改' }}
+
+                        <div class="action-bar">
+                            <button v-if="isEditingAll" class="btn-save" @click="handleUpdate" :disabled="isSubmitting">
+                                {{ isSubmitting ? '保存中...' : '保存修改' }}
+                            </button>
+                            <button class="btn-edit" @click="toggleGlobalEdit">
+                                {{ isEditingAll ? '取消' : '编辑资料' }}
                             </button>
                         </div>
                     </div>
@@ -177,7 +180,23 @@
                 <!-- 会员卡片 -->
                 <div class="memberCard card-all" v-if="menuItems[activeIndex]?.id === 'member'">
                     <div class="member-content">
-                        <button><a href="/memberCenter" style="color: black;">查看更多</a></button>
+                        <div class="member-header">
+                            <h2>会员中心</h2>
+                            <p>解锁更多专属权益</p>
+                        </div>
+                        <div class="member-tiers">
+                            <div class="tier-card" v-for="tier in memberTiers" :key="tier.level"
+                                :class="{ current: tier.level === (userStore.user?.vipLevel || 0) }">
+                                <div class="tier-icon">{{ tier.icon }}</div>
+                                <h4>{{ tier.name }}</h4>
+                                <ul>
+                                    <li v-for="benefit in tier.benefits" :key="benefit">{{ benefit }}</li>
+                                </ul>
+                                <div class="tier-status" v-if="tier.level === (userStore.user?.vipLevel || 0)">当前等级
+                                </div>
+                                <button v-else class="tier-upgrade"><a href="/memberCenter">升级</a> </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -196,6 +215,13 @@ const userStore = useAuthStore();
 
 import { message } from 'ant-design-vue';
 const maxlength = ref(110);
+
+const memberTiers = ref([
+    { level: 0, name: '普通用户', icon: '👤', benefits: ['基础浏览', '文章评论', '基础搜索'] },
+    { level: 1, name: '青铜会员', icon: '🥉', benefits: ['专属徽章', '去广告', '文章草稿'] },
+    { level: 2, name: '白银会员', icon: '🥈', benefits: ['自定义主题', '优先客服', '文件上传 50MB'] },
+    { level: 3, name: '黄金会员', icon: '🥇', benefits: ['全部主题', '专属客服', '文件上传 200MB', '数据分析面板'] },
+])
 
 message.config({
     duration: 3,
@@ -548,23 +574,33 @@ onUnmounted(() => {
             overflow-y: scroll
         }
 
-        //会员卡片
+        // 个人信息卡片
         .personalCard {
+            gap: 0;
+            padding: 0;
+
             .avatar-left {
-                @include flexCenter(column, space-around);
+                @include flexCenter(column, center);
+                gap: 0.8rem;
                 height: 100%;
-                padding: 1rem 2rem;
-                font-size: 0.8rem;
-                background-color: rgb(255, 163, 244, .7);
+                width: 220px;
+                min-width: 220px;
+                padding: 2rem 1.5rem;
+                background: linear-gradient(160deg, rgba(255, 163, 244, 0.6) 0%, rgba(255, 255, 255, 0.3) 100%);
+                backdrop-filter: blur(20px);
+                border-right: 1px solid rgba(255, 255, 255, 0.4);
 
-                .levelsbox {
-                    @include flexCenter(row, center);
+                .avatar-ring {
+                    padding: 3px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #f37ee6, #a78bfa);
 
-                    .level {
-                        width: 1.2rem;
-                        height: 1.2rem;
-                        gap: 0.5rem;
-
+                    .avatar {
+                        width: 5rem;
+                        height: 5rem;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        border: 3px solid #fff;
 
                         img {
                             width: 100%;
@@ -574,155 +610,331 @@ onUnmounted(() => {
                     }
                 }
 
-                .avatar {
-                    width: 4rem;
-                    height: 4rem;
-                    border-radius: 0.5rem;
-                    overflow: hidden;
+                .display-name {
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    color: #1a1a2e;
+                    margin: 0;
+                }
+
+                .level-badge {
+                    @include flexCenter(row, center);
+                    gap: 0.35rem;
+                    padding: 0.2rem 0.7rem;
+                    background: rgba(255, 255, 255, 0.7);
+                    border-radius: 20px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: #4a4a6a;
 
                     img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
+                        width: 1rem;
+                        height: 1rem;
                     }
                 }
 
-                .personal-introduce {
-                    flex-wrap: wrap;
+                .stats-row {
+                    @include flexCenter(row, space-around);
+                    width: 100%;
+                    margin-top: 0.5rem;
+
+                    .stat-item {
+                        @include flexCenter(column, center);
+                        gap: 0.15rem;
+
+                        .stat-num {
+                            font-size: 1.1rem;
+                            font-weight: 700;
+                            color: #1a1a2e;
+                        }
+
+                        .stat-label {
+                            font-size: 0.7rem;
+                            color: #888;
+                        }
+                    }
                 }
             }
 
             .detailInfo-right {
                 height: 100%;
                 flex: 1;
-                @include flexCenter(column, space-around);
+                @include flexCenter(column, space-between);
+                padding: 2rem;
 
-                // 每行
-                .item {
-                    @include flexCenter(row, flex-start);
+                .batch-edit-area {
+                    flex: 1;
+                    @include flexCenter(column, flex-start);
                     gap: 1rem;
-                    padding: 0.8rem;
-                    position: relative;
+                    width: 100%;
 
-                    span,
-                    p,
-                    input,
-                    select {
-                        font-size: 0.9rem;
-                        color: #7c7873;
+                    .field {
+                        @include flexCenter(row, flex-start);
+                        width: 100%;
+                        gap: 1rem;
+
+                        label {
+                            width: 4rem;
+                            min-width: 4rem;
+                            font-size: 0.85rem;
+                            font-weight: 600;
+                            color: #444;
+                            text-align: right;
+                        }
+
+                        input,
+                        select,
+                        textarea {
+                            flex: 1;
+                            padding: 0.5rem 0.75rem;
+                            font-size: 0.85rem;
+                            font-family: inherit;
+                            border: 1.5px solid #e0e0e0;
+                            border-radius: 8px;
+                            background: rgba(255, 255, 255, 0.8);
+                            transition: all 0.2s;
+                            outline: none;
+
+                            &:focus {
+                                border-color: #a78bfa;
+                                box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+                                background: #fff;
+                            }
+                        }
+
+                        select {
+                            cursor: pointer;
+                        }
+
+                        textarea {
+                            height: 5rem;
+                            min-height: 5rem;
+                            resize: vertical;
+                        }
+                    }
+
+                    .field-intro {
+                        position: relative;
+
+                        .char-counter {
+                            position: absolute;
+                            right: 0.5rem;
+                            bottom: 0.5rem;
+                            font-size: 0.7rem;
+                            color: #999;
+                            transition: color 0.2s;
+
+                            &.warn {
+                                color: #ef4444;
+                                font-weight: 600;
+                            }
+                        }
+                    }
+                }
+
+                .batch-noedit-area {
+                    flex: 1;
+                    @include flexCenter(column, flex-start);
+                    gap: 1.2rem;
+                    width: 100%;
+
+                    .info-row {
+                        @include flexCenter(row, flex-start);
+                        width: 100%;
+                        gap: 1.5rem;
+                        padding: 0.5rem 0;
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+                        .info-label {
+                            width: 4rem;
+                            min-width: 4rem;
+                            font-size: 0.8rem;
+                            font-weight: 600;
+                            color: #888;
+                            text-align: right;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                        }
+
+                        .info-value {
+                            font-size: 0.9rem;
+                            color: #2d2d3f;
+                        }
+
+                        p {
+                            font-size: 0.9rem;
+                            color: #2d2d3f;
+                            line-height: 1.5;
+                            margin: 0;
+                        }
+
+                        .empty-hint {
+                            color: #bbb;
+                            font-style: italic;
+                        }
+                    }
+
+                    .intro-row {
+                        align-items: flex-start;
+                    }
+                }
+
+                .action-bar {
+                    @include flexCenter(row, flex-end);
+                    gap: 0.75rem;
+                    width: 100%;
+                    padding-top: 1rem;
+
+                    button {
+                        padding: 0.5rem 1.5rem;
+                        font-size: 0.85rem;
                         font-family: inherit;
-                        text-shadow: 0px 1px 0px #4e8faf;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                    }
+
+                    .btn-save {
+                        background: linear-gradient(135deg, #a78bfa, #7c3aed);
+                        color: #fff;
+
+                        &:hover:not(:disabled) {
+                            transform: translateY(-1px);
+                            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+                        }
+
+                        &:disabled {
+                            opacity: 0.6;
+                            cursor: not-allowed;
+                        }
+                    }
+
+                    .btn-edit {
+                        background: rgba(255, 255, 255, 0.7);
+                        color: #555;
+                        border: 1px solid #ddd;
+
+                        &:hover {
+                            background: #fff;
+                            border-color: #a78bfa;
+                            color: #7c3aed;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 会员卡片
+        .memberCard {
+            .member-content {
+                width: 100%;
+                padding: 1.5rem 2rem;
+                text-align: center;
+
+                .member-header {
+                    margin-bottom: 1.5rem;
+
+                    h2 {
+                        font-size: 1.4rem;
+                        font-weight: 700;
+                        color: #1a1a2e;
+                        margin: 0 0 0.3rem;
                     }
 
                     p {
-                        font-size: 0.9rem;
-                        line-height: 1.2;
-                    }
-
-                    label {
-                        font-size: 0.9rem;
-                        color: #191918;
-                        font-weight: 700;
-                        // text-shadow: 0px 1px 0px #4e8faf;
-                        display: block;
-                        text-wrap: nowrap;
-                        width: 8rem;
-                        text-align: center;
-                    }
-
-                    input,
-                    textarea,
-                    select {
-                        font-family: inherit;
-                        color: #4e8faf;
-                        background: white;
-                        font-size: 0.9rem;
-                        padding: 0.25rem 0.5rem;
-                        border: none;
-                        border-radius: 0.25rem;
-                        box-shadow: inset 0px 0px 1px #b3a895;
-
-                        &:focus {
-                            border: none;
-                        }
-                    }
-
-                    select {
-                        width: 20%;
-                        text-align: center;
-
-                        option {
-                            text-align: center;
-                            border-radius: inherit;
-                        }
-                    }
-
-                    textarea {
-                        height: 6rem;
-                        min-height: 6rem;
+                        font-size: 0.85rem;
+                        color: #888;
+                        margin: 0;
                     }
                 }
 
-
-                // 可编辑状态
-                .batch-edit-area {
-                    .item {
-                        padding: 0.5rem 0;
-                    }
-                }
-
-                // 不可编辑状态
-                .batch-noedit-area {
-
-                    // 用户名
-                    .username {
-
-                        span {
-                            width: 100%;
-                            text-align: center;
-                            font-size: 1.5rem;
-                            color: $general-black;
-                        }
-                    }
-                }
-
-                .benefits {
-                    position: relative;
-
-                    .char-counter {
-                        position: absolute;
-                        bottom: 0;
-                        right: -3.5rem;
-                        font-size: 14px;
-                        text-align: right;
-                        transition: color 0.3s;
-                    }
-                }
-
-                // 提交按钮
-                .submit-item {
-                    @include flexCenter(row, space-around);
+                .member-tiers {
+                    display: flex;
                     gap: 1rem;
-                    font-size: 0.8rem;
+                    justify-content: center;
+                    flex-wrap: wrap;
 
-                    button {
-                        display: inline-block;
-                        font-family: inherit;
-                        background-color: #837bc7;
-                        color: #fff;
-                        padding: 0.25rem 0.8rem;
-                        border-radius: 0.25rem;
-                        border: none;
-                    }
-
-                    // 修改按钮
-                    .submitBtn {
+                    .tier-card {
+                        width: 180px;
+                        padding: 1.2rem 1rem;
+                        background: rgba(255, 255, 255, 0.7);
+                        backdrop-filter: blur(10px);
+                        border-radius: 12px;
+                        border: 1.5px solid #eee;
+                        transition: all 0.3s;
                         text-align: center;
-                        color: #fff;
-                        font-size: 0.8rem;
-                        border-radius: 0.25rem;
-                        background-color: #7296de; // 修改按钮
-                        cursor: pointer;
+
+                        &:hover {
+                            transform: translateY(-4px);
+                            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+                        }
+
+                        &.current {
+                            border-color: #a78bfa;
+                            background: linear-gradient(160deg, rgba(167, 139, 250, 0.12), rgba(255, 255, 255, 0.7));
+                            box-shadow: 0 4px 16px rgba(167, 139, 250, 0.2);
+                        }
+
+                        .tier-icon {
+                            font-size: 2rem;
+                            margin-bottom: 0.5rem;
+                        }
+
+                        h4 {
+                            font-size: 0.95rem;
+                            font-weight: 700;
+                            color: #1a1a2e;
+                            margin: 0 0 0.8rem;
+                        }
+
+                        a {
+                            color: #1a1a2e;
+                        }
+
+                        ul {
+                            list-style: none;
+                            padding: 0;
+                            margin: 0 0 1rem;
+
+                            li {
+                                font-size: 0.75rem;
+                                color: #666;
+                                padding: 0.25rem 0;
+                                border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+
+                                &:last-child {
+                                    border-bottom: none;
+                                }
+                            }
+                        }
+
+                        .tier-status {
+                            font-size: 0.75rem;
+                            color: #7c3aed;
+                            font-weight: 600;
+                            padding: 0.3rem 0;
+                            background: rgba(167, 139, 250, 0.12);
+                            border-radius: 6px;
+                        }
+
+                        .tier-upgrade {
+                            width: 100%;
+                            padding: 0.4rem;
+                            font-size: 0.8rem;
+                            font-family: inherit;
+                            color: #7c3aed;
+                            background: transparent;
+                            border: 1px solid #7c3aed;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            transition: all 0.2s;
+
+                            &:hover {
+                                background: #7c3aed;
+                                color: #fff;
+                            }
+                        }
                     }
                 }
             }

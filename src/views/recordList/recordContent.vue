@@ -4,7 +4,7 @@
     <Navigation />
 
     <div class="backVideo">
-      <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video>
+      <!-- <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video> -->
     </div>
     <!-- 搜索栏 -->
     <div class="search" :class="{ search__open: isInputOpen }">
