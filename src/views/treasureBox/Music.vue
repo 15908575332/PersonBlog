@@ -374,9 +374,8 @@ const playSong = (song, index) => { // 播放歌曲
 }
 
 const nextSong = () => { // 下一首
-  console.log('nextSong 被调用');
   if (currentPlaylist.value.length === 0) {
-    console.log('播放列表为空');
+
     return;
   }
 
@@ -427,7 +426,6 @@ const togglePlay = () => { // 播放/暂停
       // 暂停播放
       audioElement.value.pause();
       isPlaying.value = false;
-      console.log('已暂停播放');
     } else {
       // 开始播放
       audioElement.value.play().then(() => {
@@ -485,31 +483,20 @@ const parseLRC = (lrcText) => { // LRC解析器
   return lyrics.sort((a, b) => a.time - b.time);
 };
 
-watch( // 自动加载歌词
-  currentSongIndex,
-  async () => {
-    if (!currentSong.value.lrc) {
-      currentLyrics.value = [];
-      return;
-    }
-    try {
-      // 使用 fetch 加载歌词文件
-      const response = await fetch(currentSong.value.lrc);
-      if (!response.ok) {
-        throw new Error("歌词文件加载失败");
-      }
-      const lrcText = await response.text();
-      currentLyrics.value = parseLRC(lrcText); // 解析歌词
-    } catch (error) {
-      console.error("歌词加载失败:", error);
-      currentLyrics.value = []; // 加载失败时清空歌词
-    }
-  },
-  {
-    // 立即执行
-    immediate: true,
+watch(currentSongIndex, async () => {
+  if (!currentSong.value.lrc) {
+    currentLyrics.value = [];
+    return;
   }
-);
+  try {
+    // 直接解析字符串，无需 fetch
+    currentLyrics.value = parseLRC(currentSong.value.lrc);
+  } catch (error) {
+    console.error("歌词解析失败:", error);
+    currentLyrics.value = [];
+  }
+}, { immediate: true });
+
 
 const scrollToLyric = (index) => {// 歌词滚动控制
   nextTick(() => {
@@ -584,7 +571,6 @@ onMounted(async () => {
   // 滚动隐藏搜索栏
   if (rightContent.value) {
     rightContent.value.addEventListener('scroll', debouncedHandleScroll);
-
   }
 });
 

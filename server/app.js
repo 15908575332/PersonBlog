@@ -17,16 +17,31 @@ import authenticateToken from './routes/userRelatedApi.js'
 const { json, urlencoded } = bodyParser
 const app = express()
 
-// 公共中间件配置
-app.use(authenticateToken)
+// 公共中间件配置（CORS 必须放在最前面）
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
-
 }));
 app.use(json())
 app.use(urlencoded({ extended: false }))
+
+// 网易云音乐 API 代理（免认证）
+app.use('/music-api', async (req, res) => {
+    try {
+        const target = `http://localhost:3100${req.originalUrl.replace('/music-api', '')}`;
+        const fetchResp = await fetch(target, {
+            method: req.method,
+            headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await fetchResp.json();
+        res.status(fetchResp.status).json(data);
+    } catch (e) {
+        res.status(502).json({ code: 502, msg: '音乐服务暂不可用' });
+    }
+});
+
+app.use(authenticateToken)
 
 // 后端api路由
 app.use('/user', userRelatedApi); //用户信息 

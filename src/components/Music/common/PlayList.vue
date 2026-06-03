@@ -5,25 +5,26 @@
         <div class="playlist-header">
             <!-- 歌单封面 -->
             <div class="cover-image">
-                <img class="favorite-cover" :src="playlistData.coverImage || songList[0]?.picture" alt="playlist-cover">
+                <img class="favorite-cover" :src="songs[0].picture" alt="playlist-cover">
                 <div class="music-menu-msk"></div>
             </div>
             <!-- 歌单信息 -->
             <div class="playlist-info">
                 <div class="playlist-title">
-                    <h1>{{ playlistData.title }}</h1>
-                    <span class="playlist-tag">{{ playlistData.tag || '歌单' }}</span>
+                    <h1>{{ playlistDetail.title }}</h1>
+                    <span class="playlist-tag">{{ playlistDetail.tag || '歌单' }}</span>
                 </div>
 
                 <div class="creator-info">
-                    <img class="creator-avatar" :src=playlistData.creatorAvatar />
-                    <span class="creator-name">{{ playlistData.creatorName }}</span>
-                    <span class="create-date">{{ playlistData.createDate }}</span>
+                    <img class="creator-avatar" :src=playlistDetail.creatorAvatar />
+                    <span class="creator-name">{{ playlistDetail.creatorName }}</span>
+                    <span class="create-date">{{ playlistDetail.createDate }}</span>
                 </div>
 
                 <div class="stats">
                     <div class="stat-item">{{ songList.length }}首歌</div>
-                    <div class="stat-item">播放：<span class="stat-number">{{ playlistData.playCount || 0 }}</span>次</div>
+                    <div class="stat-item">播放：<span class="stat-number">{{ playlistDetail.playCount || 0 }}</span>次
+                    </div>
                 </div>
 
                 <div class="action-buttons">
@@ -59,14 +60,14 @@
                     active: activeIndex === index,
                     'pulse-animation': activeIndex === index && isPulsing
                 }" @click="handlePlaySong(song, index)">
-                    <div class="song-index">{{ index + 1 }}</div>
+                    <div class="song-index">{{ song.index + 1 }}</div>
                     <div class="song-title">
                         <div class="song-title-content ">
                             <img src="@/assets/icon/treasureBox/music-play.png" alt="play-icon" class="play-icon"
                                 :class="{ 'playing-animation': activeIndex === index && isPlaying }" />
                             <span class="song-name kbn-music" :class="{ 'text-glow': activeIndex === index }">{{
                                 song.name
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
                     <div class="song-duration">{{ formatTime(song.duration) }}</div>
@@ -138,17 +139,20 @@ import { ref, onMounted, reactive, watch, computed } from 'vue'
 
 // 定义组件props
 const props = defineProps({
-    // 播放状态相关
+
+    //当前播放歌曲索引
     currentSongIndex: {
         type: Number,
         default: -1
     },
+    // 播放状态
     isPlaying: {
         type: Boolean,
         default: false
     },
-    // 歌单数据
-    playlistData: {
+
+    // 歌单信息
+    playlistDetail: {
         type: Object,
         default: () => ({
             title: '歌单标题',
@@ -178,6 +182,7 @@ const songList = reactive([...props.songs])
 
 // 点击播放单首歌曲
 const handlePlaySong = (song, index) => {
+    // 歌曲数据冒泡到父组件（MineFavorite），触发播放
     emit('play-song', {
         song,
         playlist: songList,

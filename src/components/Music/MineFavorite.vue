@@ -1,134 +1,124 @@
 <template>
-    <PlayList :current-song-index="currentSongIndex" :is-playing="isPlaying" :playlist-data="playlistData"
-        :songs="songList" @play-song="handlePlaySong" />
+    <div v-if="songs.length" class="mine-favorite">
+        <PlayList :current-song-index="currentSongIndex" :is-playing="isPlaying" :playlist-detail="playlistDetail"
+            :songs="songs" @play-song="handlePlaySong" />
+    </div>
+    <div v-else class="loading-state">
+        <a-spin tip="加载音乐中..." />
+    </div>
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue'
-import { useAuthStore } from "@/store/auth";
+import { onMounted, reactive } from 'vue';
+import { useAuthStore } from '@/store/auth';
+import utils from '@/utils/getAssetsFile';
+import musicApi from '@/utils/musicApi';
+import PlayList from '@/components/Music/common/PlayList.vue';
+
 const userStore = useAuthStore();
-import utils from "@/utils/getAssetsFile";
-import PlayList from '@/components/Music/common/PlayList.vue'
 
-// 接收父组件传递的 props
 const props = defineProps({
-    currentSongIndex: {
-        type: Number,
-        default: -1
-    },
-    isPlaying: {
-        type: Boolean,
-        default: false
-    }
-})
+    currentSongIndex: { type: Number, default: -1 },
+    isPlaying: { type: Boolean, default: false },
+});
 
-function formatTime(timeString) { //时间格式化
-    const date = new Date(timeString)
+const emit = defineEmits(['play-song']);
+
+function formatTime(timeString) {
+    const date = new Date(timeString);
     return date.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    })
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit',
+    });
 }
 
-const emit = defineEmits(['play-song'])
-// 歌单头部数据配置
-const playlistData = {
-    title: "我喜欢的音乐",
-    tag: "歌单",
-    creatorName: userStore.user.username,
-    creatorAvatar: userStore.user.avatarUrl,
-    createDate: formatTime(userStore.user.registerTime),
-    playCount: 1603,
-    coverImage: utils.getAssetsFile("img/treasureBox/0.jpg")
+// 歌单 ID 从环境变量获取，网易云「我喜欢的音乐」歌单
+const PLAYLIST_ID = import.meta.env.VITE_MUSIC_PLAYLIST_ID;
+
+const playlistDetail = reactive({}); //歌单信息
+const songs = reactive([]); //歌曲列表
+
+//从 API 加载歌单详情
+async function loadPlaylistDetail() {
+    const { data } = await musicApi.playlistDetail(PLAYLIST_ID);
+    const info = data.playlist || {};
+    Object.assign(playlistDetail, {
+        title: info.name,
+        tag: info.tags?.[0] || '歌单',
+        creatorName: info.creator?.nickname || '',
+        creatorAvatar: info.creator?.avatarUrl || '',
+        createDate: formatTime(info.createTime) || '',
+        playCount: info.playCount || 0,
+        coverImage: info.coverImgUrl || '',
+    });
 }
 
-// 歌曲数据
-import song1 from "@/assets/music/song1.mp3";
-import song2 from "@/assets/music/song2.mp3";
-import song3 from "@/assets/music/song3.mp3";
-import song4 from "@/assets/music/song4.mp3";
-import song5 from "@/assets/music/song5.mp3";
-import song6 from "@/assets/music/song6.mp3";
-
-const songList = reactive([
-    {
-        id: 1,
-        picture: utils.getAssetsFile("img/treasureBox/0.jpg"),
-        name: "美丽的神话",
-        artist: "成龙、金喜善",
-        url: song1,
-        album: '《神话》',
-        lrc: utils.getAssetsFile("music/song1.lrc"),
-        favorite: true
-    },
-    {
-        id: 2,
-        picture: utils.getAssetsFile("img/treasureBox/1.jpg"),
-        name: "风中芭蕾",
-        artist: "郁可唯",
-        url: song2,
-        lrc: utils.getAssetsFile("music/song2.lrc"),
-    },
-    {
-        id: 3,
-        picture: utils.getAssetsFile("img/treasureBox/2.jpg"),
-        name: "宁夏",
-        artist: "梁静茹",
-        url: song3,
-        lrc: utils.getAssetsFile("music/song3.lrc"),
-    },
-    {
-        id: 4,
-        picture: utils.getAssetsFile("img/treasureBox/3.jpg"),
-        name: "神话情话",
-        artist: "齐豫、周华健",
-        url: song4,
-        lrc: utils.getAssetsFile("music/song4.lrc"),
-    },
-    {
-        id: 5,
-        picture: utils.getAssetsFile("img/treasureBox/default.jpg"),
-        name: "漂泊的情人",
-        artist: "叶微岚",
-        url: song5,
-    },
-    {
-        id: 6,
-        picture: '',
-        name: "我记得你眼里的依恋",
-        artist: "音乐磁场",
-        url: song6,
-    }
-])
-
-// 为每首歌曲添加索引
-songList.forEach((song, index) => {
-    song.index = index;
-})
-
-// 处理播放事件
-const handlePlaySong = (payload) => {
-    emit('play-song', payload)
+// 从 API 加载歌单歌曲
+async function loadFromPlaylist() {
+    const { data } = await musicApi.playlistTrackAll(PLAYLIST_ID);
+    return data.songs || data.playlist?.tracks || [];
+}
+// 批量获取播放 URL
+async function loadSongUrls(trackIds) {
+    const { data } = await musicApi.songUrl(trackIds.join(','));
+    const map = {};
+    (data.data || []).forEach((item) => { map[item.id] = item.url; });
+    return map;
 }
 
-// 音频时长加载
-const loadAudioDuration = async () => {
-    for (const song of songList) {
-        const audio = new Audio(song.url);
-        await new Promise((resolve) => {
-            audio.addEventListener("loadedmetadata", () => {
-                song.duration = audio.duration;
-                resolve();
-            });
-            audio.load();
-        });
-    }
+// 批量获取歌词
+async function loadLyrics(trackIds) {
+    const results = await Promise.allSettled(trackIds.map((id) => musicApi.lyric(id)));
+    const map = {};
+    results.forEach((r, i) => {
+        if (r.status === 'fulfilled' && r.value.data?.lrc?.lyric) {
+            map[trackIds[i]] = r.value.data.lrc.lyric;
+        }
+    });
+    return map;
+}
+
+// 格式化歌曲数据
+function formatSongs(tracks, urlMap, lyricMap) {
+    return tracks.map((t, i) => ({
+        id: t.id,
+        picture: t.al?.picUrl || '',
+        name: t.name,
+        artist: (t.ar || []).map((a) => a.name).join(' / '),
+        url: urlMap[t.id] || '',
+        album: t.al?.name || '',
+        lrc: lyricMap[t.id] || '',
+        duration: (t.dt || 0) / 1000,
+        index: i,
+    }));
 }
 
 onMounted(async () => {
-    await loadAudioDuration();
-})
+    try {
+        await loadPlaylistDetail();
+        const tracks = await loadFromPlaylist();
+        const ids = tracks.map(t => t.id).slice(0, 50);    // 限制 50 首
+        const [urlMap, lyricMap] = await Promise.all([
+            loadSongUrls(ids),
+            loadLyrics(ids),
+        ]);
+        const formatted = formatSongs(tracks.slice(0, 50), urlMap, lyricMap);
+        songs.splice(0, songs.length, ...formatted);
+    } catch (e) {
+        console.error('歌单加载失败:', e);
+    }
+});
+
+
+function handlePlaySong(payload) {
+    emit('play-song', payload); //歌曲信息转发到上层组件（Music）触发播放
+}
 </script>
+<style scoped>
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+</style>
