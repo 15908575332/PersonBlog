@@ -109,7 +109,7 @@
             <div class="hoverBanner" :style="{ opacity: isActive == module.category_id ? 1 : 0 }"></div>
             <a href="#">
               <div class="profile__picture">
-                <img :src="module.category_img_url" alt="icon" />
+                <img v-lazy="module.category_img_url" alt="icon" />
               </div>
               <div>
                 <h1>{{ module.nav_btn_title }}</h1>

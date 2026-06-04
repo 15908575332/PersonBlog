@@ -23,13 +23,12 @@
 import { ref, onMounted, onUnmounted, reactive } from "vue";
 import utils from "@/utils/getAssetsFile";
 
-const thumbnails = ref([
-  utils.getAssetsFile("img/recordList/videoButton-back8.png"),
-  utils.getAssetsFile("img/recordList/videoButton-back9.png"),
-  utils.getAssetsFile("img/recordList/videoButton-back10.png"),
-  utils.getAssetsFile("img/recordList/videoButton-back11.png"),
-]);
-
+// const thumbnails = ref([
+//   `https://picsum.photos/seed/nns${i + 74}/1080/1920`
+// ]);
+const thumbnails = Array.from({ length: 4 }, (_, i) =>
+  `https://picsum.photos/seed/nns${i + 70}/1080/1920`
+);
 const videos = ref([
   utils.getVideoFile("videos/video-back8.mp4"),
   utils.getVideoFile("videos/video-back9.mp4"),

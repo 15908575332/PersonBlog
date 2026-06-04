@@ -77,7 +77,7 @@
         <div class="flex_body">
           <div class="box" v-for="item in travels" :key="item.id">
             <div class="img__box">
-              <img v-lazy="item.src" alt="tests" />
+              <img v-lazy="item" alt="tests" />
             </div>
             <div class="text__box">
               <h1>风住尘香花已尽，日晚倦梳头风住尘香花已尽，日晚倦梳头。</h1>
@@ -224,7 +224,7 @@ function preventWheelScroll(event) {
 
 /** ------------------------ 堆叠切换 ------------------------ */
 const cardImages = Array.from({ length: 7 }, (_, i) =>
-  utils.getAssetsFile(`img/albumCollection/nns${i + 1}.jpg`)
+  `https://picsum.photos/seed/nns${i + 1}/1080/1920`
 );
 
 const cards = ref([...cardImages]);
@@ -295,25 +295,10 @@ const navs = ref([
     name: "编织",
   },
 ]);
-const travels = ref([
-  {
-    id: 2,
-    src: utils.getAssetsFile("img/albumCollection/travel2.jpg"),
-  },
-  {
-    id: 3,
-    src: utils.getAssetsFile("img/albumCollection/travel3.jpg"),
-  },
-  {
-    id: 4,
-    src: utils.getAssetsFile("img/albumCollection/travel4.jpg"),
-  },
-  {
-    id: 5,
-    src: utils.getAssetsFile("img/albumCollection/travel5.jpg"),
-  },
-]);
 
+const travels = Array.from({ length: 4 }, (_, i) =>
+  `https://picsum.photos/seed/nns${i + 74}/1080/1920`
+);
 
 /** ------------------------ vue3-carousel-3d ------------------------ */
 const carousel_images = Array.from({ length: 5 }, (_, i) => //图片地址
