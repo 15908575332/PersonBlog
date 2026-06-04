@@ -57,12 +57,23 @@ const initAudioAnalyser = () => {
     try {
         if (!audioContext) {
             audioContext = new (window.AudioContext)()
+            // 现代浏览器 AudioContext 默认 suspended，必须 resume
+            if (audioContext.state === 'suspended') {
+                audioContext.resume()
+            }
         }
 
         analyser = audioContext.createAnalyser()
         analyser.fftSize = getValidFFTSize(props.config.fftSize)
 
-        source = audioContext.createMediaElementSource(props.audioElement)
+        try {
+            source = audioContext.createMediaElementSource(props.audioElement)
+        } catch {
+            // audio 元素已被其他 AudioContext 绑定，降级处理：直连输出
+            analyser.connect(audioContext.destination)
+            initializeBlockStates()
+            return
+        }
         source.connect(analyser)
         analyser.connect(audioContext.destination)
 

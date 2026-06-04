@@ -58,15 +58,39 @@
       </div>
 
       <div class="right-content" ref="rightContent" @scroll="debouncedHandleScroll">
+
         <!-- 搜索栏 -->
-        <div class="search-bar" :class="isSearchBarVisible ? 'visible' : 'hidden'" @focus="isSearchBarVisible = true">
+        <form class="search-bar" :class="isSearchBarVisible ? 'visible' : 'hidden'" @focus="isSearchBarVisible = true"
+          @submit.prevent="searchMusicInfo">
           <input type="text" v-model.lazy="searchValue" placeholder="搜索音乐、MV、歌单">
-        </div>
+        </form>
+
+        <ModalBox :isVisible="isSearching" @close="handleCloseSearch" animationType="slideUpFromBottom">
+          <div class="search-header">
+            <!-- <span class="back-link" @click="clearSearch">← 返回</span> -->
+            <span class="result-count">搜索 "{{ searchValue }}" 返回结果</span>
+          </div>
+          <div class="search-results">
+            <div v-for="(song, index) in searchResults" :key="song.id" class="search-item"
+              @click="playSearchResult(song, index)">
+              <span class="song-index">{{ index + 1 }}</span>
+              <img v-lazy="song.picture" class="cover" />
+              <div class="info">
+                <p class="name">{{ song.name }}</p>
+                <p class="artist">{{ song.artist }}</p>
+              </div>
+              <span class="duration">{{ formatTime(song.duration) }}</span>
+            </div>
+          </div>
+        </ModalBox>
+
+
         <!-- 内容视图 -->
-        <transition name="bounce" mode="out-in">
+        <transition v-if="!isSearching" name="bounce" mode="out-in">
           <router-view :current-song-index="currentSongIndex" :is-playing="isPlaying" @play-song="handlePlaySong">
           </router-view>
         </transition>
+
         <!-- 播放器 -->
         <div class="audio-player">
           <div class="player-content">
@@ -75,7 +99,6 @@
               <img v-if="currentSong.picture" :src="currentSong.picture" alt="music-pic" />
               <img v-else src="@/assets/img/treasureBox/default.jpg" alt="default">
               <div class="arrows">
-                <!-- <div></div> -->
                 <div></div>
                 <div></div>
               </div>
@@ -175,8 +198,8 @@
 
     <!-- 歌词 -->
     <ModalBox :isVisible="isShowModal" @close="handChangeModal" animationType="slideUpFromBottom">
-      <div class="player-controls">
-        <div class="song-info">
+      <div class="player-controls" :style="{ backgroundImage: `url(${currentSong.picture})` }">
+        <div class=" song-info">
           <!-- 专辑图片 -->
           <transition name="album" mode="out-in">
             <div class="album-pic" :key="currentSong.picture" :class="{ playing: isPlaying, paused: !isPlaying }">
@@ -235,6 +258,7 @@
 import { ref, computed, onMounted, nextTick, watch, onUnmounted } from "vue";
 import Spectrum from "@/components/Music/Spectrum.vue";
 import ModalBox from '@/components/common/ModalBox.vue';
+import musicApi from '@/utils/musicApi';
 
 const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
@@ -243,10 +267,55 @@ const formatTime = (seconds) => {
 };
 
 /** ------------------------ 搜索栏 ------------------------ */
-const searchValue = ref();
+const searchValue = ref();//搜索输入值
+const isSearchBarVisible = ref(true); // 搜索栏显示状态
+const searchResults = ref([]); // 搜索结果
+const isSearching = ref(false); // 搜索状态
+const searchMusicInfo = async () => {
+  if (!searchValue.value?.trim()) return;
+  isSearching.value = true;
+  const { data } = await musicApi.searchMusic(searchValue.value, 50);
+  searchResults.value = (data.result?.songs || []).map(song => ({
+    id: song.id,
+    name: song.name || song.al?.name,
+    artist: song.ar.map((a) => a.name).join("/") || "",
+    picture: song.al?.picUrl || "",
+    duration: song.dt ? song.dt / 1000 : 0, // 转换为秒
+    url: '',
+    lrc: ''
+  }));
+
+};
+// 播放搜索结果中的歌曲
+const playSearchResult = async (song, index) => {
+  // 获取播放 URL 和歌词
+  const [urlRes, lrcRes] = await Promise.all([
+    musicApi.songUrl(song.id),
+    musicApi.lyric(song.id),
+  ]);
+  song.url = urlRes.data.data?.[0]?.url;
+  song.lrc = lrcRes.data?.lrc?.lyric || '';
+
+  // 复用现有的播放机制
+  currentPlaylist.value = searchResults.value;
+  playSong(song, index);
+};
+
+const handleCloseSearch = () => {
+  isSearching.value = false;
+  searchResults.value = [];
+  // 关闭搜索时停止播放并重置状态，避免激活态错位
+  if (audioElement.value) {
+    audioElement.value.pause();
+    audioElement.value.src = '';
+  }
+  isPlaying.value = false;
+  currentSong.value = '';
+  currentSongIndex.value = null;
+  currentPlaylist.value = [];
+};
 const rightContent = ref(); //主内容容器
 //搜索栏滚动隐藏
-const isSearchBarVisible = ref(true); // 搜索栏显示状态
 const lastScrollTop = ref(0); // 上次滚动位置
 
 // 滚动监听函数
@@ -652,6 +721,7 @@ onUnmounted(() => {
     height: 100%;
     overflow-y: auto;
 
+    // 搜索栏
     .search-bar {
       width: 100%;
       height: 3rem;
@@ -689,6 +759,87 @@ onUnmounted(() => {
         &::placeholder {
           font-size: 0.8rem;
           font-family: var(--app-font-family);
+        }
+      }
+    }
+
+    // 搜索头部
+    .search-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e8eaef;
+      flex-shrink: 0;
+
+      .result-count {
+        font-size: 0.85rem;
+        @include text-color('text-sec-color');
+      }
+    }
+
+    // 搜索结果列表
+    .search-results {
+      max-height: 55vh;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+
+      .search-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(255, 131, 69, 0.06);
+        }
+
+        .song-index {
+          width: 1.5rem;
+          text-align: center;
+          font-size: 0.8rem;
+          flex-shrink: 0;
+          @include text-color('text-sec-color');
+        }
+
+        .cover {
+          width: 2.8rem;
+          height: 2.8rem;
+          border-radius: 6px;
+          object-fit: cover;
+          flex-shrink: 0;
+          background-color: #f2f2f2;
+        }
+
+        .info {
+          flex: 1;
+          min-width: 0;
+
+          .name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            @include text-color('text-color');
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.2rem;
+          }
+
+          .artist {
+            font-size: 0.75rem;
+            @include text-color('text-sec-color');
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .duration {
+          font-size: 0.75rem;
+          flex-shrink: 0;
+          @include text-color('text-sec-color');
         }
       }
     }
@@ -954,9 +1105,7 @@ onUnmounted(() => {
 }
 
 .player-controls {
-  padding: 1rem;
   background-size: cover;
-  background-color: #8faaca90;
   border-radius: 0.5rem;
   box-shadow: 0 0 20px rgba(23, 24, 44, 0.72);
   gap: 1rem;
@@ -998,6 +1147,7 @@ onUnmounted(() => {
     gap: 2rem;
     padding: 0.5rem;
     box-shadow: 0 1px 10px rgb(255, 255, 255, .2);
+    background-color: rgb(65, 65, 65, .3);
 
     &>div {
       min-width: 30px;
@@ -1022,11 +1172,13 @@ onUnmounted(() => {
 
     .lyrics-wrapper {
       height: 100%;
-      width: 50%;
+      width: 100%;
       max-height: 16rem;
       text-align: center;
       overflow-y: auto;
       overscroll-behavior: contain;
+      background-color: rgb(65, 65, 65, .3);
+      padding: 0.5rem 0;
 
       /* IE 10+ */
       &::-webkit-scrollbar {
@@ -1036,7 +1188,7 @@ onUnmounted(() => {
 
       .lyric-line {
         font-size: 0.9rem;
-        color: rgba(255, 255, 255);
+        color: #f4f3f3;
         padding: 0.5rem 0.2rem;
         transition: all 0.3s ease;
         line-height: 24px;

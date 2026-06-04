@@ -189,8 +189,8 @@
                 <div v-if="item.cover_video_url !== null">
                   <img src="" alt="" style="background-color: #8fcfc4;">
                 </div>
-                <!-- <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
-                <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button> -->
+                <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
                 <div class="item__count">
                   <ul>
                     <li v-if="item.cover_video_url !== null">

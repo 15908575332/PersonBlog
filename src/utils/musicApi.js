@@ -8,8 +8,8 @@ const BASE = 'http://localhost:3000/music-api';
 
 const api = {
   /** 搜索歌曲 */
-  search(keywords, limit = 30) {
-    return axios.get(`${BASE}/search`, { params: { keywords, limit } });
+  searchMusic(keywords, limit = 50) {
+    return axios.get(`${BASE}/cloudsearch`, { params: { keywords, limit } });
   },
 
   /** 获取歌单详情 */
