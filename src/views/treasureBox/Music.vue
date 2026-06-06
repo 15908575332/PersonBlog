@@ -304,6 +304,7 @@ const playSearchResult = async (song, index) => {
 const handleCloseSearch = () => {
   isSearching.value = false;
   searchResults.value = [];
+  searchValue.value = '';
   // 关闭搜索时停止播放并重置状态，避免激活态错位
   if (audioElement.value) {
     audioElement.value.pause();
@@ -788,7 +789,7 @@ onUnmounted(() => {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        padding: 0.6rem 0;
+        padding: 0.5rem 0.6rem;
         cursor: pointer;
         transition: background-color 0.2s;
 
@@ -805,8 +806,8 @@ onUnmounted(() => {
         }
 
         .cover {
-          width: 2.8rem;
-          height: 2.8rem;
+          width: 2.5rem;
+          height: 2.5rem;
           border-radius: 6px;
           object-fit: cover;
           flex-shrink: 0;

@@ -4,7 +4,7 @@
     <Navigation />
 
     <div class="backVideo">
-      <!-- <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video> -->
+      <video src="@/assets/videos/349107.mp4" autoplay loop></video>
     </div>
     <!-- 搜索栏 -->
     <div class="search" :class="{ search__open: isInputOpen }">
@@ -186,10 +186,10 @@
           <div class="content_aera">
             <div class="specific__content" v-for="item in paginatedItems" :key="item.id">
               <a class="image" @click="listDetail(item.article_id)" data-aos="zoom-in">
-                <div v-if="item.cover_video_url !== null">
-                  <img src="" alt="" style="background-color: #8fcfc4;">
-                </div>
-                <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                <video v-if="item.cover_video_url" class="videos" :src="item.cover_video_url" loop playsinline
+                  preload="metadata">
+                </video>
+                <img v-else v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
                 <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
                 <div class="item__count">
                   <ul>
@@ -1054,7 +1054,7 @@ onMounted(() => {
         padding: 0.2rem;
         padding-top: 2rem;
         position: relative;
-        z-index: 1;
+        // z-index: 1;
 
         .flex__layout {
           @include flexCenter(row, center);
@@ -1078,7 +1078,7 @@ onMounted(() => {
         flex-wrap: wrap;
         padding: 1.5rem 0.5rem;
         position: relative;
-        z-index: 1;
+        // z-index: 1;
 
         .specific__content {
           width: 11rem;
@@ -1101,6 +1101,15 @@ onMounted(() => {
               img {
                 transform: scale(1.1);
               }
+            }
+
+            .videos {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              position: absolute;
+              top: 0;
+              left: 0;
             }
 
             img {

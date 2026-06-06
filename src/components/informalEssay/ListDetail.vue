@@ -61,8 +61,17 @@
         <div id="recordDetail">
             <!-- 背景设置 -->
             <div class=" background__img" :style="backTextStyle">
-                <!-- 背景图 -->
-                <div class=" backPhoto" :style="{ backgroundImage: `url(${recordDetail.cover_image_url})` }"></div>
+                <!-- 背景 -->
+                <div class="backPhoto">
+                    <!-- 视频背景 -->
+                    <video v-if="recordDetail.cover_video_url" class="bg-video" :src="recordDetail.cover_video_url"
+                        autoplay muted loop playsinline>
+                    </video>
+
+                    <!-- 图片背景 -->
+                    <img v-else v-lazy="recordDetail.cover_image_url" class="bg-image" />
+                </div>
+
                 <!-- 遮罩 -->
                 <div class="mask"></div>
                 <div class="back__text">
@@ -104,7 +113,7 @@
                 <div class="image">
                     <video v-if="recordDetail.cover_video_url" :src="recordDetail.cover_video_url" controls
                         ref="videoRef" @play="handlePlay" @pause="handlePause"></video>
-                    <img v-else :src="recordDetail.cover_image_url" alt="backimg">
+                    <img v-else v-lazy="recordDetail.cover_image_url" alt="backimg">
                     <button v-if="recordDetail.cover_video_url && !isPlaying" class="play-button"
                         @click="playVideo"></button>
                 </div>
@@ -878,7 +887,21 @@ onMounted(async () => {
             opacity: 0;
             transform: translateY(-1rem);
             animation: zoomInDown 0.6s ease-out forwards;
+            overflow: hidden;
 
+            .bg-video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .bg-image {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
 
         // 遮罩
@@ -889,7 +912,6 @@ onMounted(async () => {
             background-color: #00000040;
             top: 0;
             animation: zoomInDown 0.6s ease-out forwards;
-            z-index: -1;
         }
 
         .back__text {
