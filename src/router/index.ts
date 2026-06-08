@@ -111,7 +111,7 @@ const router = createRouter({
                 {
                     path: "friendshipLink",
                     name: "friendshipLink",
-                    component: () => import('@/views/treasureBox/FriendshipLink.vue')
+                    component: () => import('@/views/treasureBox/friendshipLink.vue')
                 }
             ]
         },
