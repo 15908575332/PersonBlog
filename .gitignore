@@ -38,7 +38,7 @@ temp/
 .cache/
 
 # Exclude videos and music folders
-src/assets/videos/
+# src/assets/videos/
 src/assets/music/
 src/assets/live2d_moc3/
 #test change
