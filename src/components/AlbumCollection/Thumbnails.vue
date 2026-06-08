@@ -23,17 +23,14 @@
 import { ref, onMounted, onUnmounted, reactive } from "vue";
 import utils from "@/utils/getAssetsFile";
 
-// const thumbnails = ref([
-//   `https://picsum.photos/seed/nns${i + 74}/1080/1920`
-// ]);
 const thumbnails = Array.from({ length: 4 }, (_, i) =>
   `https://picsum.photos/seed/nns${i + 70}/1080/1920`
 );
 const videos = ref([
-  utils.getVideoFile("videos/video-back8.mp4"),
-  utils.getVideoFile("videos/video-back9.mp4"),
-  utils.getVideoFile("videos/video-back10.mp4"),
-  utils.getVideoFile("videos/video-back11.mp4"),
+  utils.getVideoFile("videos/b99b51e6c7945c9d5565861d397451cb_preview.mp4"),
+  utils.getVideoFile("videos/2366564fa6b83158208eb3181752a8d6_preview.mp4"),
+  utils.getVideoFile("videos/445447.mp4"),
+  utils.getVideoFile("videos/381773.mp4"),
   // ... 更多视频链接
 ]);
 const currentVideo = ref(videos.value[0]);

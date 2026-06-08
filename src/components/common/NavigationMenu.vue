@@ -91,14 +91,14 @@
                         <img src="@/components/common/icon/NavigationMenu/personCenter.png" alt="peisonal" />
                         <span>个人中心</span>
                       </div>
-                      <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
+                      <img class="rightArrowIcon" src="@/components/common/icon/NavigationMenu/rightArrow.svg" alt="" />
                     </li>
                     <li class="item" @click="changeRouter('/contactUs')">
                       <div class="item__left">
                         <img src="@/components/common/icon/NavigationMenu/contactUs.png" alt="contactUs" />
                         <span>联系我们</span>
                       </div>
-                      <img class="rightArrowIcon" src="./icon/rightArrow.svg" alt="" />
+                      <img class="rightArrowIcon" src="@/components/common/icon/NavigationMenu/rightArrow.svg" alt="" />
                     </li>
                     <li class="item" @click="quitLogin">
                       <img src="@/components/common/icon/NavigationMenu/quite.svg" alt="" />

@@ -228,13 +228,13 @@
           <div v-else-if="changeModule === 'module2'">
             <div class="gallery">
               <div class="gallery__image">
-                <img src="@/assets/img/albumCollection/travel2.jpg" alt="1" />
+                <img v-lazy="'https://picsum.photos/id/101/1920/1080'" alt="1" />
               </div>
               <div class="gallery__image">
-                <img src="@/assets/img/albumCollection/travel4.jpg" alt="2" />
+                <img v-lazy="'https://picsum.photos/id/102/1920/1080'" alt="2" />
               </div>
               <div class="gallery__image">
-                <img src="@/assets/img/albumCollection/travel5.jpg" alt="3" />
+                <img v-lazy="'https://picsum.photos/id/103/1920/1080'" alt="3" />
               </div>
             </div>
           </div>

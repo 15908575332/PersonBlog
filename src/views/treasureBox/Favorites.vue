@@ -15,7 +15,7 @@
         </div>
         <div class="nav">
             <h1>收藏夹</h1>
-            <video src="@/assets/videos/video-back10.mp4" autoplay loop></video>
+            <video src="@/assets/videos/b99b51e6c7945c9d5565861d397451cb_preview.mp4" autoplay loop></video>
         </div>
         <div class="front-end" v-for="item in favoriteData">
             <h3>{{ item.title }}</h3>

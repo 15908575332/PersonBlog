@@ -7,7 +7,7 @@
 
         <div class="trends_nav">
             <h1>友情链接</h1>
-            <video src="@/assets/videos/recordContentBack.mp4" autoplay loop></video>
+            <video src="@/assets/videos/9b09b3e56cc7abc842f2985bafdc4c74_preview.mp4" autoplay loop></video>
         </div>
         <!-- 信封 -->
         <div id="envelope">
