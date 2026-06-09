@@ -1,1 +1,0 @@
-{"root":["./src/main.ts","./src/vite-env.d.ts","./src/router/index.ts","./src/types/getassetsfile.d.ts","./src/utils/debounce.ts","./src/utils/getassetsfile.ts","./src/utils/swatchbook-native.ts"],"version":"5.9.3"}
