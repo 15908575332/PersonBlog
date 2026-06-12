@@ -39,20 +39,56 @@ $themes: (
         // 文字
         --text-color: #111,
         --text-sec-color: #596164,
-        // 阴影
-        --shadow-card: 2px 4px 8px rgba(0, 0, 0, 0.5),
-        // 卡片背景色
-        --card-background: #ecf8ff
+        --text-muted: #9ca3b2,
+        --text-placeholder: #9ca3b2,
+        // 主题色
+        --primary-color: #5de9e0,
+        --primary-sub: #f24257,
+        --color-accent: #e8845c,
+        --color-accent-hover: #f0986e,
+        --color-accent-soft: rgba(232, 132, 92, 0.12),
+        // 阴影（双层：紧凑+扩散）
+        --shadow-card: #{0 1px 3px rgba(0, 0, 0, 0.08),
+        0 4px 12px rgba(0, 0, 0, 0.06)},
+        --shadow-elevated: #{0 2px 8px rgba(0, 0, 0, 0.12),
+        0 8px 24px rgba(0, 0, 0, 0.1)},
+        // 卡片 / 面板背景
+        --card-background: #ecf8ff,
+        --bg-card-glass: rgba(255, 255, 255, 0.7),
+        --bg-tag: rgba(0, 0, 0, 0.08),
+        --bg-image-fallback: #ffb7b7,
+        --bg-overlay: rgba(0, 0, 0, 0.85),
+        // 边框（微妙 → 可见）
+        --border-subtle: rgba(0, 0, 0, 0.06),
+        --border-default: rgba(0, 0, 0, 0.12)
     ),
 
     dark: (
         // 文字
-        --text-color: #f9f9f9,
-        --text-sec-color: #cfd2d5,
-        // 阴影
-        --shadow-card: 2px 4px 8px rgba(255, 255, 255, 0.5),
-        // 卡片背景色
-        --card-background: #bac6cd
+        --text-color: #f0f1f5,
+        --text-sec-color: #9ca3b2,
+        --text-muted: #6b7280,
+        --text-placeholder: #6b7280,
+        // 主题色
+        --primary-color: #5de9e0,
+        --primary-sub: #f2786e,
+        --color-accent: #e8845c,
+        --color-accent-hover: #f0986e,
+        --color-accent-soft: rgba(232, 132, 92, 0.12),
+        // 阴影（双层：紧凑+扩散）
+        --shadow-card: #{0 1px 3px rgba(0, 0, 0, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.25)},
+        --shadow-elevated: #{0 2px 8px rgba(0, 0, 0, 0.5),
+        0 8px 24px rgba(0, 0, 0, 0.35)},
+        // 卡片 / 面板背景
+        --card-background: #1a1d28,
+        --bg-card-glass: rgba(30, 34, 48, 0.85),
+        --bg-tag: rgba(255, 255, 255, 0.12),
+        --bg-image-fallback: #2a1a2e,
+        --bg-overlay: rgba(0, 0, 0, 0.85),
+        // 边框（微妙 → 可见）
+        --border-subtle: rgba(255, 255, 255, 0.06),
+        --border-default: rgba(255, 255, 255, 0.1)
     )
 );
 

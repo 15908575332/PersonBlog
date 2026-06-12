@@ -68,7 +68,7 @@
             </div>
             <!-- 留言滚动 -->
             <div class="scrollMessage">
-              <scroll-message :containerWidth="300" :messages="messageList"></scroll-message>
+              <scroll-message :containerWidth="295" :messages="messageList"></scroll-message>
             </div>
             <!-- 推荐位 -->
             <div class="recommend box__shadow">
@@ -442,9 +442,11 @@ $contentWidth: 65rem; // 内容宽度
 
       .content__box {
         font-family: var(--app-font-family);
-        width: $contentWidth;
+        width: 100%;
+        max-width: $contentWidth;
         margin-left: auto;
         margin-right: auto;
+        padding: 0 1rem;
         @include flexCenter(row, space-between);
         align-items: flex-start;
 
@@ -575,8 +577,8 @@ $contentWidth: 65rem; // 内容宽度
             border-radius: 10px;
             padding: 1rem;
             margin: 1.5rem 0;
+            @include flexCenter(row, center);
 
-            // height: 6rem;
             h1 {
               color: #ff416c;
               font-weight: 700;
@@ -733,13 +735,12 @@ $contentWidth: 65rem; // 内容宽度
             }
 
             .right__content_aera {
-              @include flexCenter(row, flex-start);
-              flex-wrap: wrap;
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
               gap: 1.2rem;
               padding: 1.5rem 0;
 
               .specific__content {
-                width: 15rem;
                 border-radius: 0.5rem;
                 overflow: hidden;
                 transition: all 0.3s;
@@ -795,6 +796,7 @@ $contentWidth: 65rem; // 内容宽度
 
                     li {
                       margin-right: 0.5rem;
+                      @include flexCenter(row, center);
                     }
                   }
 

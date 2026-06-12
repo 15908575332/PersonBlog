@@ -1,3 +1,5 @@
+@use "@/styles/color.scss" as *;
+
 @mixin flexCenter($direction, $layout) {
     display: flex;
     flex-wrap: nowrap;
@@ -130,6 +132,57 @@ $breakpointers: (
     }
     100% {
         opacity: 1;
+    }
+}
+
+// 统一分页组件样式
+@mixin pagination-styles {
+    @include flexCenter(row, center);
+    padding-bottom: 1rem;
+
+    .pagination-container {
+        display: flex;
+        column-gap: 0.5rem;
+        align-items: center;
+    }
+
+    .paginate-buttons,
+    .back-btn,
+    .next-btn,
+    .first-page-button,
+    .last-page-button {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.875rem;
+        font-family: var(--app-font-family);
+        font-weight: 400;
+        margin: 0;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        background-color: transparent;
+        color: themed('text-color');
+        border: 1px solid themed('border-default');
+        @include theme-transition();
+
+        &:hover {
+            color: var(--primary-color, #e0e0e5);
+            border-color: themed('border-default');
+            background-color: rgba(128, 128, 128, 0.12);
+        }
+    }
+
+    .active-page {
+        background-color: themed('color-accent');
+        border: 1px solid themed('color-accent');
+        color: #fff;
+        font-weight: 500;
+        @include theme-transition();
+
+        &:hover {
+            color: #fff;
+            background-color: themed('color-accent');
+            border-color: themed('color-accent');
+        }
     }
 }
 

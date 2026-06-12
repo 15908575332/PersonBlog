@@ -23,7 +23,7 @@
     </div>
     <!-- 搜索结果 -->
     <div v-if="isSearching" class="search__result">
-      <div class="menu" style="border-color: #8fcfc4;">
+      <div class="menu search-result-menu">
         <div class="flex__layout">
           <img src=" @/assets/icon/recordList/search_result.svg" alt="advocate" style="width: 1.5rem;" />
           <span>“{{ searchTitle }}”</span>
@@ -84,15 +84,11 @@
             back-button-class="back-btn" next-button-class="next-btn" :show-ending-buttons="true"
             :show-breakpoint-buttons="true" @click="onClickHandler">
             <template #prev-button>
-              <span>
-                <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
-              </span>
+              <span>«</span>
             </template>
 
             <template #next-button>
-              <span>
-                <img src="@/assets/icon/recordList/nextPage.svg" height="25" />
-              </span>
+              <span>»</span>
             </template>
           </vue-awesome-paginate>
         </div>
@@ -123,13 +119,13 @@
       <div class="content__container">
         <!-- 推荐位 -->
         <section v-if="advocateItems && advocateItems.length > 0">
-          <div class="menu" style="border-color: #ff623e;">
+          <div class="menu advocate-menu">
             <div class="flex__layout">
               <img src=" @/assets/icon/recordList/advocate.svg" alt="advocate" style="width: 2.9rem;" />
             </div>
             <div class="flex__layout">
               <img src=" @/assets/icon/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
-              <span style="color: #d81e06;">MORE</span>
+              <span class="advocate-more">MORE</span>
             </div>
           </div>
           <div class="content_aera advocate">
@@ -161,10 +157,7 @@
                   <!-- 发布 -->
                   <h1>{{ item.title }}</h1>
                   <div class="release">
-                    <span>
-                      <img :src="utils.getAssetsFile('icon/recordList/auther.svg')" alt="auther_icon">
-                      {{ item.username }}·{{ release_time_format(item.release_time) }}
-                    </span>
+                    <span>{{ item.username }}</span><span>{{ release_time_format(item.release_time) }}</span>
                   </div>
                 </div>
               </div>
@@ -214,10 +207,7 @@
                 <!-- 发布 -->
                 <h1>{{ item.title }}</h1>
                 <div class="release">
-                  <span>
-                    <img :src="utils.getAssetsFile('icon/recordList/auther.svg')" alt="auther_icon">
-                    {{ item.username }}·{{ release_time_format(item.release_time) }}
-                  </span>
+                  <span>{{ item.username }}</span><span>{{ release_time_format(item.release_time) }}</span>
                 </div>
               </div>
             </div>
@@ -227,17 +217,13 @@
         <div class="paginate">
           <vue-awesome-paginate v-if="totalItems > 0" :total-items="totalItems" v-model="currentPage"
             :items-per-page="pageSize" :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
-            :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
+            :show-breakpoint-buttons="true" @click="onClickHandler">
             <template #prev-button>
-              <span>
-                <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
-              </span>
+              <span>«</span>
             </template>
 
             <template #next-button>
-              <span>
-                <img src="@/assets/icon/recordList/nextPage.svg" height="25" />
-              </span>
+              <span>»</span>
             </template>
           </vue-awesome-paginate>
         </div>
@@ -318,31 +304,34 @@ const handleSearch = async () => {
     isSearching.value = false; // 搜索失败，隐藏搜索结果区域
   }
 }
-//搜索结果随机背景色
-const gradientColors = [
-  ['#ff9a9e', '#fecfef'],
-  ['#a1c4fd', '#c2e9fb'],
-  ['#d4fc79', '#96e6a1'],
-  ['#84fab0', '#8fd3f4'],
-  ['#a6c0fe', '#f68084'],
-  ['#fccb90', '#d57eeb'],
-  ['#e0c3fc', '#8ec5fc'],
-  ['#fad0c4', '#ffd1ff'],
-  ['#cd9cf2', '#f6f3ff'],
-  ['#92fe9d', '#00c9ff'],
-  ['#ffecd2', '#fcb69f'],
-  ['#fdbb2d', '#22c1c3'],
-  ['#00BFFF', '#00FA9A'],
-  ['faeff3', 'd1f0ec']
-];
-
+//搜索结果随机背景色（主题感知）
 const generateRandomGradient = (seed) => {
   // 使用文章ID作为种子，确保同一文章每次显示相同的渐变
   const seedNum = seed ? String(seed).split('').reduce((a, b) => a + b.charCodeAt(0), 0) : Math.random();
-  const colorIndex = Math.floor(seedNum % gradientColors.length);
-  const colors = gradientColors[colorIndex];
   const angle = Math.floor(seedNum % 360);
-  return `linear-gradient(${angle}deg, ${colors[0]} 0%, ${colors[1]} 100%)`;
+
+  // 主题感知的渐变方案
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+  if (isDark) {
+    // 暗色主题：深色背景 + 主题色微光
+    const darkGradients = [
+      `linear-gradient(${angle}deg, rgba(93, 233, 224, 0.1) 0%, rgba(42, 51, 64, 0.9) 100%)`,
+      `linear-gradient(${angle}deg, rgba(242, 66, 87, 0.1) 0%, rgba(30, 34, 48, 0.9) 100%)`,
+      `linear-gradient(${angle}deg, rgba(240, 152, 110, 0.1) 0%, rgba(42, 26, 46, 0.9) 100%)`
+    ];
+    const index = Math.floor(seedNum % darkGradients.length);
+    return darkGradients[index];
+  } else {
+    // 亮色主题：柔和渐变
+    const lightGradients = [
+      `linear-gradient(${angle}deg, rgba(93, 233, 224, 0.15) 0%, rgba(236, 248, 255, 0.9) 100%)`,
+      `linear-gradient(${angle}deg, rgba(242, 66, 87, 0.15) 0%, rgba(255, 255, 255, 0.9) 100%)`,
+      `linear-gradient(${angle}deg, rgba(232, 132, 92, 0.15) 0%, rgba(255, 247, 240, 0.9) 100%)`
+    ];
+    const index = Math.floor(seedNum % lightGradients.length);
+    return lightGradients[index];
+  }
 };
 /** ------------------------ 导航数据 ------------------------ */
 const navContent = ref([]);
@@ -432,11 +421,9 @@ onMounted(() => {
 
 <style lang="scss">
 .recordContent {
-  // font-family: var(--app-font-family);
-  font-family: var(--app-font-family);
+  font-family: themed('app-font-family');
   user-select: none;
   min-height: 100vh;
-  //内容盒子宽度
   $main_content_width: 60rem;
 
   .navigate {
@@ -450,7 +437,7 @@ onMounted(() => {
     width: 100%;
     height: 25rem;
     overflow: hidden;
-    background-color: #4dd5cc;
+    @include background('bg-image-fallback');
     animation: zoomInDown 0.6s ease-out;
     border-bottom: none;
     position: relative;
@@ -460,7 +447,7 @@ onMounted(() => {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      background-color: #4dd5cc;
+      @include background('bg-image-fallback');
       display: block;
     }
   }
@@ -476,7 +463,7 @@ onMounted(() => {
       position: absolute;
       top: 10vh;
       right: 30vw;
-      color: #51c492;
+      color: themed('primary-color');
       font-size: 1.5rem;
       cursor: pointer;
       z-index: 2;
@@ -490,20 +477,20 @@ onMounted(() => {
 
       input {
         border-radius: 1rem;
-        border: 2px solid #4dd5cc;
-        padding: 0.2rem 1rem;
+        border: 2px solid themed('primary-color');
+        padding: 0.3rem 1rem;
         padding-right: 2rem;
         width: 20rem;
-        color: #f3efef;
+        color: #202433;
         font-size: 0.9rem;
         display: flex;
-        font-family: var(--app-font-family);
+        font-family: themed('app-font-family');
         align-items: center;
         background-color: transparent;
 
         &::placeholder {
-          color: #f3efef;
-          font-size: 0.8rem;
+          color: $general-white;
+          font-size: 0.9rem;
         }
       }
 
@@ -536,9 +523,9 @@ onMounted(() => {
 
       .suggestion-tag {
         display: inline-block;
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid $primary-color;
-        color: #fff;
+        background: themed('bg-tag');
+        border: 1px solid themed('primary-color');
+        color: $general-white;
         border-radius: 1rem;
         padding: 0.2rem 0.8rem;
         font-size: 0.95rem;
@@ -550,7 +537,7 @@ onMounted(() => {
       }
 
       .suggestion-tag:hover {
-        background: $primary-sub;
+        background: themed('primary-sub');
         color: $general-white;
         transition: all ease 0.4s;
       }
@@ -561,13 +548,12 @@ onMounted(() => {
         transform: translate3d(0, 100px, 0);
         transition: opacity 0.2s, transform 0.5s;
         transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
-        color: #ffffff;
       }
 
       h3 {
-        color: $primary-color;
         padding: 1rem 0;
         font-size: 1.2rem;
+        color: $primary-color;
       }
     }
 
@@ -578,8 +564,8 @@ onMounted(() => {
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none; // 默认不拦截点击
-      background: rgba(0, 0, 0, 0.8);
+      pointer-events: none;
+      background: themed('bg-overlay');
       opacity: 0;
       transition: opacity 0.5s;
       transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
@@ -626,14 +612,16 @@ onMounted(() => {
 
   // 搜索结果区域
   .search__result {
-    width: $main_content_width;
+    width: 100%;
+    max-width: $main_content_width;
     margin: 0 auto;
+    padding: 0 1rem;
     position: relative;
     z-index: 0;
 
     .menu {
       @include flexCenter(row, space-between);
-      border-bottom: 1px dashed #ccc;
+      border-bottom: 1px solid themed('border-subtle');
       padding: 0.2rem;
       padding-top: 2rem;
 
@@ -648,9 +636,13 @@ onMounted(() => {
 
         span {
           font-size: 1rem;
-          color: $primary-sub;
+          color: themed('primary-sub');
         }
       }
+    }
+
+    .search-result-menu {
+      border-color: themed('primary-color');
     }
 
     .noSearchResult {
@@ -665,7 +657,7 @@ onMounted(() => {
 
         p {
           font-size: 1rem;
-          color: #999;
+          @include text-color('text-sec-color');
         }
       }
     }
@@ -684,13 +676,17 @@ onMounted(() => {
         width: 100%;
         height: 8rem;
         padding: 0.2rem;
-        border-radius: 0.2rem;
+        border-radius: 0.75rem;
         z-index: 1;
-        transition: all 0.5s;
-        background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+        border: 1px solid themed('border-subtle');
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.18s ease;
 
         &:hover {
-          box-shadow: 3px 3px 5px #999;
+          transform: translateY(-2px);
+          box-shadow: themed('shadow-elevated');
+          border-color: themed('border-default');
 
           &::before {
             opacity: 1;
@@ -735,6 +731,7 @@ onMounted(() => {
           position: relative;
           border-radius: 0.2rem;
           overflow: hidden;
+          @include background('bg-image-fallback');
 
           img {
             width: 100%;
@@ -769,6 +766,7 @@ onMounted(() => {
           font-weight: 700;
           font-size: 1rem;
           margin-left: 1rem;
+          @include text-color('text-color');
         }
 
         .box-content {
@@ -780,9 +778,8 @@ onMounted(() => {
           z-index: 2;
           transition: all .5s;
 
-
           .title {
-            color: #1e272e;
+            @include text-color('text-color');
             font-size: 23px;
             font-weight: 700;
             text-transform: uppercase;
@@ -794,6 +791,7 @@ onMounted(() => {
             text-transform: capitalize;
             margin: 0 0 10px;
             display: block;
+            color: themed('text-sec-color');
           }
 
           .icon {
@@ -806,8 +804,8 @@ onMounted(() => {
               margin: 0 4px;
 
               a {
-                color: #fff;
-                background-color: #1e272e;
+                @include text-color('text-color');
+                background-color: themed('card-background');
                 font-size: 18px;
                 text-align: center;
                 line-height: 35px;
@@ -818,10 +816,10 @@ onMounted(() => {
                 transition: all 0.3s;
 
                 &:hover {
-                  color: #1e272e;
-                  background-color: #fff;
+                  @include text-color('card-background');
+                  background-color: themed('text-color');
                   border-radius: 10%;
-                  box-shadow: 0 0 5px #1e272e inset;
+                  box-shadow: 0 0 5px themed('text-color') inset;
                 }
               }
             }
@@ -839,129 +837,21 @@ onMounted(() => {
             font-size: 20px;
           }
         }
-
-      }
-
-      // 视频播放按钮
-      .play-button {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 3rem;
-        /* 按钮的宽度 */
-        height: 2rem;
-        /* 按钮的高度 */
-        background: rgba(0, 0, 0, 0.6);
-        /* 半透明背景 */
-        border: none;
-        border-radius: 10px;
-        /* 圆形按钮 */
-        cursor: pointer;
-        /* 鼠标悬停时显示为可点击 */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.3s ease;
-
-        /* 背景过渡效果 */
-        &::before {
-          content: "";
-          width: 0;
-          height: 0;
-          border-left: 20px solid white;
-          /* 三角形左边的颜色和宽度 */
-          border-top: 10px solid transparent;
-          /* 三角形顶部的透明度和宽度 */
-          border-bottom: 10px solid transparent;
-          /* 三角形底部的透明度和宽度 */
-        }
-      }
-
-      // 计数
-      .item__count {
-        position: absolute;
-        bottom: 0.3rem;
-        // left: 0.5rem;
-
-        ul {
-          @include flexCenter(row, flex-start);
-
-          li {
-            @include flexCenter(row, center);
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding-left: 0.5rem;
-
-            img {
-              padding-right: 0.1rem;
-              height: 0.9rem !important;
-              transform: scale(1) !important;
-            }
-          }
-        }
       }
     }
 
     // 搜索结果分页
     .paginate {
-      @include flexCenter(row, center);
-      padding-bottom: 1rem;
-
-      .pagination-container {
-        display: flex;
-        column-gap: 10px;
-      }
-
-      .paginate-buttons {
-        height: 25px;
-        width: 35px;
-        font-size: 0.9rem;
-        font-family: var(--app-font-family);
-        font-weight: 700;
-        margin: 0 0.1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        background-color: rgb(242, 242, 242);
-        color: black;
-      }
-
-      .paginate-buttons:hover {
-        background-color: #ff8345;
-      }
-
-      .active-page {
-        background-color: #ff8345;
-        border: 1px solid #ff8345;
-        color: white;
-      }
-
-      .back-btn,
-      .next-btn {
-        background-color: transparent;
-
-        &:hover {
-          cursor: pointer;
-          background-color: transparent;
-          animation: scale-animation 1.5s infinite linear;
-        }
-      }
-
-      .active-page:hover {
-        background-color: #ff8345;
-      }
-
-      .first-page-button,
-      .last-page-button {
-        width: 50px;
-      }
+      @include pagination-styles;
     }
   }
 
   // 内容区域
   .main__content {
-    width: $main_content_width;
+    width: 100%;
+    max-width: $main_content_width;
     margin: 0 auto;
+    padding: 0 1rem;
     animation: zoomInUp 0.6s ease-out;
     background: transparent;
     margin-top: -1px;
@@ -969,24 +859,35 @@ onMounted(() => {
 
     .nav__card {
       ul {
-        width: 60rem;
+        width: 100%;
+        max-width: $main_content_width;
         @include flexCenter(row, space-around);
+        gap: 0.5rem;
       }
 
       .nav__itemActive {
         transform: translateY(-60%) !important;
+
+        h1 {
+          color: #202433 !important;
+        }
       }
 
       .nav__item {
         height: 100%;
         transform: translateY(-50%);
-        transition: transform 0.4s;
-        border-radius: 0.75rem;
-        background-color: rgb(255, 255, 255, 0.7);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.18s ease;
+        border-radius: 0.875rem;
+        background-color: themed('bg-card-glass');
+        border: 1px solid themed('border-subtle');
         overflow: hidden;
 
         p {
           overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .hoverBanner {
@@ -998,13 +899,14 @@ onMounted(() => {
           background-image: url("@/assets/img/recordList/banner-hover.png");
           background-size: 100% 100%;
           opacity: 0;
-          transition: all 0.8s;
-
+          transition: all 0.3s;
         }
 
         &:hover {
           cursor: pointer;
           transform: translateY(-60%);
+          box-shadow: themed('shadow-elevated');
+          border-color: themed('border-default');
 
           .hoverBanner {
             opacity: 1;
@@ -1015,7 +917,7 @@ onMounted(() => {
           width: 3rem;
           height: 3rem;
           border-radius: 50%;
-          background-color: #4dd5cc;
+          @include background('primary-color');
           overflow: hidden;
           margin-right: 0.5rem;
 
@@ -1032,29 +934,26 @@ onMounted(() => {
 
           h1 {
             font-size: 1.2rem;
-            color: black;
+            @include text-color('text-color');
             padding: 0.5rem 0;
             font-weight: 700;
           }
 
           p {
             font-size: 0.9rem;
-            color: #777;
+            @include text-color('text-sec-color');
           }
         }
       }
     }
 
     .content__container {
-
-      // 推荐位
       .menu {
         @include flexCenter(row, space-between);
-        border-bottom: 1px dashed #ccc;
+        border-bottom: 1px solid themed('border-subtle');
         padding: 0.2rem;
         padding-top: 2rem;
         position: relative;
-        // z-index: 1;
 
         .flex__layout {
           @include flexCenter(row, center);
@@ -1067,41 +966,55 @@ onMounted(() => {
 
           span {
             font-size: 1rem;
-            color: $primary-sub;
+            color: themed('primary-sub');
           }
         }
       }
 
+      .advocate-menu {
+        border-color: themed('primary-sub');
+      }
+
+      .advocate-more {
+        color: themed('primary-sub') !important;
+      }
+
       .content_aera {
-        @include flexCenter(row, flex-start);
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
         gap: 1rem;
-        flex-wrap: wrap;
         padding: 1.5rem 0.5rem;
-        position: relative;
-        // z-index: 1;
 
         .specific__content {
-          width: 11rem;
-          border-radius: 0.5rem;
+          height: 12.5rem;
+          @include flexCenter(column, space-between);
+          border-radius: 0.7rem;
           overflow: hidden;
-          transition: all 0.3s;
+          cursor: pointer;
+          position: relative;
+          border: 1px solid themed('border-subtle');
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            border-color 0.18s ease;
+
+          &:hover {
+            transform: translateY(-3px);
+            box-shadow: themed('shadow-elevated');
+            border-color: themed('border-default');
+
+            .item__count {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
 
           .image {
             width: 100%;
-            height: 8rem;
-            display: inline-block;
-            border-radius: 0.5rem;
+            height: 100%;
+            display: block;
             overflow: hidden;
-            background-color: rgb(255, 183, 183);
-            position: relative;
+            @include background('bg-image-fallback');
 
-            &:hover {
-              cursor: pointer;
-
-              img {
-                transform: scale(1.1);
-              }
-            }
 
             .videos {
               width: 100%;
@@ -1115,44 +1028,44 @@ onMounted(() => {
             img {
               width: 100%;
               height: 100%;
-              transition: all 0.3s;
+              object-fit: cover;
+              transition: transform 0.5s ease;
             }
           }
 
           .text__content {
+            background-color: themed('bg-card-glass');
+            width: 100%;
             padding: 0.5rem;
-            color: #a2a2a2;
+
+            .release {
+              display: flex;
+              align-items: center;
+              font-size: 0.68rem;
+              font-weight: 400;
+              margin-bottom: 0.3rem;
+              color: themed('text-sec-color');
+
+              span:not(:last-child)::after {
+                content: '·';
+                opacity: 0.45;
+                font-weight: 300;
+                margin: 0 0.3rem;
+              }
+            }
 
             img {
               margin-right: 0.25rem;
             }
 
-            // 发布
-            .release {
-              display: flex;
-              align-items: center;
-              font-size: 0.8rem;
-              font-weight: 700;
-              margin: 0.5rem 0;
-              @include text-color('text-sec-color');
-
-              span {
-                img {
-                  width: 0.6rem;
-                  margin: 0;
-                }
-              }
-            }
-
-            // 标题
             h1 {
-              padding: 0rem 0;
-              font-size: 1rem;
-              font-weight: 700;
+              font-size: 0.9rem;
+              font-weight: 600;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
-              @include text-color('text-color');
+              line-height: 1.35;
+              color: themed('text-color');
             }
           }
         }
@@ -1164,128 +1077,79 @@ onMounted(() => {
           left: 50%;
           transform: translate(-50%, -50%);
           width: 3rem;
-          /* 按钮的宽度 */
           height: 2rem;
-          /* 按钮的高度 */
           background: rgba(0, 0, 0, 0.6);
-          /* 半透明背景 */
           border: none;
           border-radius: 10px;
-          /* 圆形按钮 */
           cursor: pointer;
-          /* 鼠标悬停时显示为可点击 */
           display: flex;
           align-items: center;
           justify-content: center;
           transition: background 0.3s ease;
 
-          /* 背景过渡效果 */
           &::before {
             content: "";
             width: 0;
             height: 0;
             border-left: 20px solid white;
-            /* 三角形左边的颜色和宽度 */
             border-top: 10px solid transparent;
-            /* 三角形顶部的透明度和宽度 */
             border-bottom: 10px solid transparent;
-            /* 三角形底部的透明度和宽度 */
           }
         }
 
-        // 计数
+        // 悬浮计数徽章（hover 时才显示，右上角）
         .item__count {
           position: absolute;
-          bottom: 0.3rem;
-          // left: 0.5rem;
+          top: 0.5rem;
+          right: 0.5rem;
+          opacity: 0;
+          transform: translateY(-4px);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
           ul {
             @include flexCenter(row, flex-start);
 
             li {
               @include flexCenter(row, center);
-              font-size: 0.7rem;
-              font-weight: 700;
-              padding-left: 0.5rem;
+              font-size: 0.72rem;
+              font-weight: 500;
+              padding: 3px 8px;
+              margin-right: 0.3rem;
+              background: rgba(0, 0, 0, 0.6);
+              backdrop-filter: blur(8px);
+              color: #fff;
+              border-radius: 12px;
 
               img {
-                padding-right: 0.1rem;
-                height: 0.9rem !important;
+                padding-right: 0.2rem;
+                height: 0.65rem !important;
                 transform: scale(1) !important;
+                filter: brightness(0) invert(1);
               }
             }
           }
         }
       }
 
-      // 推荐位
+      // 推荐位（保留弹性尺寸，不受固定高度限制）
       .advocate {
-        align-items: flex-start;
+        position: relative;
 
         .specific__content:first-child {
-          width: 23rem;
+          grid-column: span 2;
+          height: 16rem;
 
-          .image {
-            height: 16rem;
+          .text__content {
+            position: absolute;
           }
         }
       }
 
       // 内容分页
       .paginate {
-        @include flexCenter(row, center);
-        padding-bottom: 1rem;
         position: relative;
         z-index: 1;
-
-        .pagination-container {
-          display: flex;
-          column-gap: 0.5rem;
-          align-items: center;
-        }
-
-        .paginate-buttons {
-          height: 1rem;
-          width: 1.4rem;
-          font-size: 0.8rem;
-          font-family: var(--app-font-family);
-          font-weight: 700;
-          margin: 0 0.1rem;
-          border-radius: 0.25rem;
-          cursor: pointer;
-          background-color: rgb(242, 242, 242);
-          color: black;
-        }
-
-        .paginate-buttons:hover {
-          background-color: #ff8345;
-        }
-
-        .active-page {
-          background-color: #ff8345;
-          border: 1px solid #ff8345;
-          color: white;
-        }
-
-        .back-btn,
-        .next-btn {
-          background-color: transparent;
-
-          &:hover {
-            cursor: pointer;
-            background-color: transparent;
-            animation: scale-animation 1.5s infinite linear;
-          }
-        }
-
-        .active-page:hover {
-          background-color: #ff8345;
-        }
-
-        .first-page-button,
-        .last-page-button {
-          width: 50px;
-        }
+        @include pagination-styles;
       }
     }
   }
@@ -1294,31 +1158,5 @@ onMounted(() => {
 .recordContent.overflow-hidden {
   overflow: hidden;
   height: 100vh;
-}
-
-@keyframes flipInX {
-  from {
-    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-    animation-timing-function: ease-in;
-    opacity: 0;
-  }
-
-  40% {
-    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
-    animation-timing-function: ease-in;
-  }
-
-  60% {
-    transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
-    opacity: 1;
-  }
-
-  80% {
-    transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
-  }
-
-  to {
-    transform: perspective(400px);
-  }
 }
 </style>

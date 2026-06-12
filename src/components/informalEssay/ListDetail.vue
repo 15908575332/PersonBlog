@@ -11,8 +11,10 @@
                     <div class="item-icon">📜</div>
                     <div class="item-content">
                         <h4>版权归属</h4>
-                        <p>本博客中的所有原创文章、图片、视频、音频及其他形式的作品（以下简称"内容"），其版权均归作者（即本博客管理员）所有。<span
-                                class="copyright-mark">©</span></p>
+                        <p>
+                            本博客中的所有原创文章、图片、视频、音频及其他形式的作品（以下简称"内容"），其版权均归作者（即本博客管理员）所有。<span
+                                class="copyright-mark">©</span>
+                        </p>
                     </div>
                 </div>
 
@@ -21,7 +23,9 @@
                     <div class="item-content">
                         <h4>转载规则</h4>
                         <p>对于非商业用途，且注明作者及来源（即本博客网址）的情况下，</p>
-                        <p>允许个人网站、论坛、社交媒体等平台以链接形式分享本博客中的文章。</p>
+                        <p>
+                            允许个人网站、论坛、社交媒体等平台以链接形式分享本博客中的文章。
+                        </p>
                     </div>
                 </div>
 
@@ -47,7 +51,9 @@
                     <div class="item-icon">🔄</div>
                     <div class="item-content">
                         <h4>修改权利</h4>
-                        <p>作者保留随时修改本版权声明的权利，任何修改将在本页面即时生效，</p>
+                        <p>
+                            作者保留随时修改本版权声明的权利，任何修改将在本页面即时生效，
+                        </p>
                         <p>无需另行通知。</p>
                     </div>
                 </div>
@@ -60,13 +66,12 @@
         </ModalBox>
         <div id="recordDetail">
             <!-- 背景设置 -->
-            <div class=" background__img" :style="backTextStyle">
+            <div class="background__img" :style="backTextStyle">
                 <!-- 背景 -->
                 <div class="backPhoto">
                     <!-- 视频背景 -->
                     <video v-if="recordDetail.cover_video_url" class="bg-video" :src="recordDetail.cover_video_url"
-                        autoplay muted loop playsinline>
-                    </video>
+                        autoplay muted loop playsinline></video>
 
                     <!-- 图片背景 -->
                     <img v-else v-lazy="recordDetail.cover_image_url" class="bg-image" />
@@ -78,28 +83,32 @@
                     <!-- 二级标题 -->
                     <div class="subtitle">
                         <span> {{ recordDetail.sub_tag }}</span>
-                        <div style="display: flex;" class="content">
+                        <div style="display: flex" class="content">
                             <!-- 作者 -->
                             <div class="auther">
-                                <img src='@/assets/icon/recordList/auther.svg' alt="">
-                                <span class="name">{{ recordDetail.username }} ·</span>
+                                <img src="@/assets/icon/recordList/auther.svg" alt="" />
+                                <span class="name">{{ recordDetail.username }}</span>
                             </div>
                             <!-- 发布 -->
                             <div class="release">
-                                <img src="@/assets/icon/recordList/release.svg" alt="">
-                                <span>发布于{{ dayjs(recordDetail.release_time).format('YYYY-MM-DD HH:mm:ss') }} ·</span>
+                                <img src="@/assets/icon/recordList/release.svg" alt="" />
+                                <span>发布于{{
+                                    dayjs(recordDetail.release_time).format(
+                                        "YYYY-MM-DD HH:mm:ss",
+                                    )
+                                }}</span>
                             </div>
                             <ul class="funcition">
                                 <li>
-                                    <img src="@/assets/icon/recordList/heat.svg" alt="heat">
-                                    <span>{{ recordDetail.heat }}热度 ·</span>
+                                    <img src="@/assets/icon/recordList/heat.svg" alt="heat" />
+                                    <span>{{ recordDetail.heat }}热度</span>
                                 </li>
                                 <li>
-                                    <img src="@/assets/icon/recordList/comment.svg" alt="comment">
-                                    <span>{{ totals }}评论 ·</span>
+                                    <img src="@/assets/icon/recordList/comment.svg" alt="comment" />
+                                    <span>{{ totals }}评论</span>
                                 </li>
                                 <li>
-                                    <img src="@/assets/icon/recordList/like.svg" alt="like">
+                                    <img src="@/assets/icon/recordList/like.svg" alt="like" />
                                     <span>{{ recordDetail.like_count }}赞</span>
                                 </li>
                             </ul>
@@ -113,7 +122,7 @@
                 <div class="image">
                     <video v-if="recordDetail.cover_video_url" :src="recordDetail.cover_video_url" controls
                         ref="videoRef" @play="handlePlay" @pause="handlePause"></video>
-                    <img v-else v-lazy="recordDetail.cover_image_url" alt="backimg">
+                    <img v-else v-lazy="recordDetail.cover_image_url" alt="backimg" />
                     <button v-if="recordDetail.cover_video_url && !isPlaying" class="play-button"
                         @click="playVideo"></button>
                 </div>
@@ -123,23 +132,23 @@
                 </div>
                 <!-- 主内容区域 -->
                 <div v-if="!recordDetail.has_comment">
-                    <div class="content" v-if="articleSections.length > 0" v-for="content in articleSections"
-                        :key="content.title">
-                        <div>
-                            <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
-                            <div class="content_model" v-for="text in splitParagraphs(content.content)">
-                                <div>
-                                    {{ text }}
-                                    <ul v-if="content.level === 200">
-                                        <li>123</li>
-                                    </ul>
+                    <div v-if="articleSections.length > 0">
+                        <div class="content" v-for="content in articleSections" :key="content.title">
+                            <div>
+                                <h1 class="content_title"><span>#</span>{{ content.title }}</h1>
+                                <div class="content_model" v-for="text in splitParagraphs(content.content)" :key="text">
+                                    <div>
+                                        {{ text }}
+                                        <ul v-if="content.level === 200">
+                                            <li>123</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div v-else>
-                        <div class="introduce" v-for="pre in splitParagraphs(recordDetail.preface)">
+                        <div class="introduce" v-for="pre in splitParagraphs(recordDetail.preface)" :key="pre">
                             <span>
                                 {{ pre }}
                             </span>
@@ -148,17 +157,21 @@
                 </div>
                 <!-- 评论可见 -->
                 <div class="comment__show" v-else>
-                    <div class=" text">评论可见</div>
+                    <div class="text">评论可见</div>
                     <div class="warring">
-                        <img src="@/components/informalEssay/icon/ListDetail/warring-icon.svg" alt="warring">
+                        <img src="@/components/informalEssay/icon/ListDetail/warring-icon.svg" alt="warring" />
                         <span>此处内容已隐藏</span>
                     </div>
                 </div>
                 <!-- 提示 -->
                 <ul class="abstract">
                     <li>作者：{{ recordDetail.username }}</li>
-                    <li>1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(Blog@blog.cn)进行删除处理。</li>
-                    <li>2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责</li>
+                    <li>
+                        1.本网站部分内容可能来源于网络，仅供大家学习与参考，如有侵权，请联系站长(Blog@blog.cn)进行删除处理。
+                    </li>
+                    <li>
+                        2.本网站一切内容不代表本站立场，并不代表本站赞同其观点和对其真实性负责
+                    </li>
                     <li>3.版权&许可请详阅 <a @click="showModal = true">版权声明</a></li>
                 </ul>
                 <!-- 操作按钮 -->
@@ -166,23 +179,23 @@
                     <div class="card">
                         <div class="collectBtn btn" @click="shareLike">
                             <p>收藏</p>
-                            <img src="@/components/informalEssay/icon/ListDetail/icons8-favorite-48.png" alt="favorite">
+                            <img src="@/components/informalEssay/icon/ListDetail/icons8-favorite-48.png"
+                                alt="favorite" />
                         </div>
                         <button class="likeBtn btn" @click="handleLikeClick(recordDetail.article_id)">
-                            <p style="text-wrap: nowrap;">点赞</p>
-                            <div class="heart" :class="{ 'heartAnimation': Boolean(isLiked) }">
-                            </div>
+                            <p style="text-wrap: nowrap">点赞</p>
+                            <div class="heart" :class="{ heartAnimation: Boolean(isLiked) }"></div>
                         </button>
                         <div class="shareBtn btn" @click="shareLike">
                             <p>分享</p>
-                            <img src="@/components/informalEssay/icon/ListDetail/icons8-share-48.png" alt="share">
+                            <img src="@/components/informalEssay/icon/ListDetail/icons8-share-48.png" alt="share" />
                         </div>
                     </div>
                 </div>
                 <!-- 评论区 -->
                 <div class="comment">
                     <h1 class="title">
-                        <img src="@/components/informalEssay/icon/ListDetail/icons8-write-64.png" alt="edit">
+                        <img src="@/components/informalEssay/icon/ListDetail/icons8-write-64.png" alt="edit" />
                         <span>评论</span>
                     </h1>
                     <!-- 输入框 -->
@@ -192,7 +205,7 @@
                                 v-model="input__message"></textarea>
                             <img class="input__illustration"
                                 src="@/components/informalEssay/img/ListDetail/undraw_welcome_cats_thqn.png"
-                                alt="picture">
+                                alt="picture" />
                         </div>
                     </div>
                     <!-- 表情/提交按钮 -->
@@ -202,13 +215,18 @@
                                 @update:text="onChangeText" theme="auto" />
                         </div>
                         <div @click="emojiIs_show" class="emoji__btn">
-                            <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="">
+                            <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="" />
                         </div>
-                        <button class="reMessage" @click="addMessage(recordDetail.contentId)">提交
+                        <button class="reMessage" @click="addMessage(recordDetail.contentId)">
+                            提交
                             <div class="star-1">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -219,9 +237,13 @@
                                 </svg>
                             </div>
                             <div class="star-2">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -232,9 +254,13 @@
                                 </svg>
                             </div>
                             <div class="star-3">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -245,9 +271,13 @@
                                 </svg>
                             </div>
                             <div class="star-4">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -258,9 +288,13 @@
                                 </svg>
                             </div>
                             <div class="star-5">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -271,9 +305,13 @@
                                 </svg>
                             </div>
                             <div class="star-6">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -290,19 +328,21 @@
                 <div class="comment__module">
                     <div class="sum">Comments | {{ totals }}条评论</div>
                     <ul v-if="messageList.length > 0">
-                        <li class="comment__item" :class="{ 'reply__item': message.length > 0 }"
+                        <li class="comment__item" :class="{ reply__item: message.length > 0 }"
                             v-for="(message, index) in messageList" :key="index">
                             <div>
                                 <div class="louyt">
-                                    <div style="display: flex;">
+                                    <div style="display: flex">
                                         <div class="profile__picture">
-                                            <img :src="message.user.avatarUrl" alt="avatar">
+                                            <img :src="message.user.avatarUrl" alt="avatar" />
                                         </div>
                                         <div class="time__name">
                                             <div class="nickname">
                                                 <span>{{ message.user.username }}</span>
-                                                <img class="level" :src="utils.getAssetsFile('icon/level/lv' + message.user.vip_level
-                                                    + '.svg')" alt="level">
+                                                <img class="level" :src="utils.getAssetsFile(
+                                                    'icon/level/lv' + message.user.vip_level + '.svg',
+                                                )
+                                                    " alt="level" />
                                             </div>
                                             <div class="time">{{ message.createdAt }}</div>
                                         </div>
@@ -317,27 +357,31 @@
                                 </div>
                             </div>
                             <!-- 回复展示 -->
-                            <div class="reply__container" v-for="value in message.replies">
+                            <div class="reply__container" v-for="value in message.replies" :key="value">
                                 <div class="louyt">
-                                    <div style="display: flex;">
+                                    <div style="display: flex">
                                         <div class="profile__picture">
-                                            <img :src="value.user.avatarUrl" alt="avatar">
+                                            <img :src="value.user.avatarUrl" alt="avatar" />
                                         </div>
                                         <div class="time__name">
                                             <div class="nickname">
                                                 <span>{{ value.user.username }}</span>
-                                                <img class="level"
-                                                    :src="utils.getAssetsFile('icon/level/lv' + value.user.vip_level + '.svg')"
-                                                    alt="level">
+                                                <img class="level" :src="utils.getAssetsFile(
+                                                    'icon/level/lv' + value.user.vip_level + '.svg',
+                                                )
+                                                    " alt="level" />
                                             </div>
-                                            <div class="time">{{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                            }}</div>
+                                            <div class="time">
+                                                {{
+                                                    dayjs(message.createdAt).format("YYYY-MM-DD HH:mm:ss")
+                                                }}
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="comment__container">
-                                    <div class="content"><span>@{{ message.user.username }}:</span>{{ value.content }}
+                                    <div class="content">
+                                        <span>@{{ message.user.username }}:</span>{{ value.content }}
                                     </div>
                                 </div>
                             </div>
@@ -352,15 +396,11 @@
                             :max-pages-shown="5" back-button-class="back-btn" next-button-class="next-btn"
                             :show-ending-buttons="true" :show-breakpoint-buttons="true" @click="onClickHandler">
                             <template #prev-button>
-                                <span>
-                                    <img src="@/assets/icon/recordList/previousPage.svg" height="25" />
-                                </span>
+                                <span>«</span>
                             </template>
 
                             <template #next-button>
-                                <span>
-                                    <img src="@/assets/icon/recordList/nextPage.svg" height="25" />
-                                </span>
+                                <span>&gt;</span>
                             </template>
                         </vue-awesome-paginate>
                     </div>
@@ -372,10 +412,11 @@
                 <div class="modal" data-aos="flip-down">
                     <!-- 输入框 -->
                     <div class="modal__input__aera">
-                        <textarea class="input" name="comment" maxlength="500" :placeholder='replyUser'
+                        <textarea class="input" name="comment" maxlength="500" :placeholder="replyUser"
                             v-model="replyContent"></textarea>
                         <img class="input__illustration"
-                            src="@/components/informalEssay/img/ListDetail/undraw_welcome_cats_thqn.png" alt="picture">
+                            src="@/components/informalEssay/img/ListDetail/undraw_welcome_cats_thqn.png"
+                            alt="picture" />
                     </div>
                     <!--评论提交 -->
                     <div class="MessageSubmit">
@@ -384,13 +425,18 @@
                                 @update:text="onChangeText" theme="auto" />
                         </div>
                         <div @click="modalIs_show" class="emoji__btn">
-                            <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="">
+                            <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="" />
                         </div>
-                        <button class="modalSubmit" @click="handleReplyPost()">提交
+                        <button class="modalSubmit" @click="handleReplyPost()">
+                            提交
                             <div class="star-1">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -401,9 +447,13 @@
                                 </svg>
                             </div>
                             <div class="star-2">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -414,9 +464,13 @@
                                 </svg>
                             </div>
                             <div class="star-3">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -427,9 +481,13 @@
                                 </svg>
                             </div>
                             <div class="star-4">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -440,9 +498,13 @@
                                 </svg>
                             </div>
                             <div class="star-5">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -453,9 +515,13 @@
                                 </svg>
                             </div>
                             <div class="star-6">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53"
-                                    style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                    version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 784.11 815.53" style="
+                    shape-rendering: geometricPrecision;
+                    text-rendering: geometricPrecision;
+                    image-rendering: optimizeQuality;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  " version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                     <defs></defs>
                                     <g id="Layer_x0020_1">
                                         <metadata id="CorelCorpID_0Corel-Layer"></metadata>
@@ -478,11 +544,11 @@
                     <div class="modal__content">
                         <!-- 头像 -->
                         <div class="modal__avatar">
-                            <img :src="userStore.user.avatarUrl" alt="头像">
+                            <img :src="userStore.user.avatarUrl" alt="头像" />
                         </div>
                         <!-- 分享时间 -->
                         <p class="dateTime">
-                            {{ dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss') }}
+                            {{ dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss") }}
                         </p>
                         <!-- 分享内容 -->
                         <div class="shareContent">
@@ -492,7 +558,7 @@
                             </p>
                             <!-- 图片展示 -->
                             <div class="content_img">
-                                <img :src="recordDetail.cover_image_url" alt="图片">
+                                <img :src="recordDetail.cover_image_url" alt="图片" />
                             </div>
                             <!-- 作者 -->
                             <p class="content_author">
@@ -508,7 +574,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <!-- 下载图片按钮 -->
                     <div class="download">
@@ -521,19 +586,19 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref, computed, getCurrentInstance, watch } from 'vue';
-import { useAuthStore } from '@/store/auth';
-import utils from '@/utils/getAssetsFile';
-import { message } from 'ant-design-vue';
-import ModalBox from '@/components/common/ModalBox.vue'
-import 'highlight.js/lib/common';
-import 'highlight.js/styles/stackoverflow-light.css'
-import { splitParagraphs } from '@/utils/splitParagraphs'; //引入段落处理函数
-import { useRoute } from 'vue-router';
+import { onMounted, ref, computed, getCurrentInstance, watch } from "vue";
+import { useAuthStore } from "@/store/auth";
+import utils from "@/utils/getAssetsFile";
+import { message } from "ant-design-vue";
+import ModalBox from "@/components/common/ModalBox.vue";
+import "highlight.js/lib/common";
+import "highlight.js/styles/stackoverflow-light.css";
+import { splitParagraphs } from "@/utils/splitParagraphs"; //引入段落处理函数
+import { useRoute } from "vue-router";
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
-import Qrcode from 'vue-qrcode';
-import html2canvas from 'html2canvas';
+import Qrcode from "vue-qrcode";
+import html2canvas from "html2canvas";
 import dayjs from "dayjs";
 const route = useRoute();
 const instance = getCurrentInstance();
@@ -541,19 +606,22 @@ const $http = instance.appContext.config.globalProperties.$http;
 
 /** ------------------------外部参数处理------------------------ */
 const props = defineProps({
-    articleId: { // 文章article_id，由父组件传入
+    articleId: {
+        // 文章article_id，由父组件传入
         type: [String, Number],
-        required: true
+        required: true,
     },
-    backTextHeight: { // 顶部标题高度
+    backTextHeight: {
+        // 顶部标题高度
         type: [Number, String],
-        default: 18
-    }
+        default: 18,
+    },
 });
 const backTextStyle = computed(() => {
-    return { '--back-text-height': `${props.backTextHeight}rem` }
+    return { "--back-text-height": `${props.backTextHeight}rem` };
 });
-const paramsId = computed(() => { //本文实际使用唯一参数值
+const paramsId = computed(() => {
+    //本文实际使用唯一参数值
     if (props.articleId != null) {
         return props.articleId;
     }
@@ -565,13 +633,14 @@ const paramsId = computed(() => { //本文实际使用唯一参数值
 
 /** ------------------------获取数据------------------------ */
 const articleSections = ref([]); //文章段落内容
-const recordDetail = ref(''); //文章详情（基本信息）
-const getColumnDetailData = async () => { // 获取文章详情（基本信息）
+const recordDetail = ref(""); //文章详情（基本信息）
+const getColumnDetailData = async () => {
+    // 获取文章详情（基本信息）
     try {
-        const response = await $http.get('/main/getColumnDetail', {
+        const response = await $http.get("/main/getColumnDetail", {
             params: {
-                article_id: paramsId.value
-            }
+                article_id: paramsId.value,
+            },
         });
         if (!response.articleDetail) throw new Error("无效数据");
         recordDetail.value = response.articleDetail[0] || {};
@@ -580,13 +649,14 @@ const getColumnDetailData = async () => { // 获取文章详情（基本信息�
         error.value = "数据加载失败";
         recordDetail.value = {}; // 确保错误时清空数据
     }
-}
-const getArticleContent = async () => { // 获取文章内容段落
+};
+const getArticleContent = async () => {
+    // 获取文章内容段落
     try {
-        const response = await $http.get('/main/getArticleSections', {
+        const response = await $http.get("/main/getArticleSections", {
             params: {
-                id: paramsId.value
-            }
+                id: paramsId.value,
+            },
         });
         if (!response.sections) throw new Error("无效数据");
         articleSections.value = response.sections;
@@ -595,84 +665,92 @@ const getArticleContent = async () => { // 获取文章内容段落
         error.value = "数据加载失败";
         articleSections.value = []; // 确保错误时清空数据
     }
-}
+};
 watch(() => props.articleId, getColumnDetailData, { immediate: true }); // 在组件挂载时和articleId变化时触发
 
 /** ------------------------文章浏览量计数------------------------ */
 const updateHeat = async (id) => {
     try {
-        const response = await $http.post('/main/updateHeat', { id });
+        const response = await $http.post("/main/updateHeat", { id });
         recordDetail.value.heat = response.heat;
     } catch (error) {
-        console.error('更新失败:', error);
+        console.error("更新失败:", error);
     }
-}
+};
 
 /** ------------------------点赞量计数------------------------ */
 const userStore = useAuthStore(); //当前登录用户信息
 const isLiked = ref(false); // 当前用户是否点赞了该文章
-const checkLikeStatus = async (article_id) => { //检查当前用户点赞状态
+const checkLikeStatus = async (article_id) => {
+    //检查当前用户点赞状态
     try {
-        const response = await $http.get('/main/checkLikeStatus', {
+        const response = await $http.get("/main/checkLikeStatus", {
             params: {
                 user_id: userStore.user.userId,
-                article_id
-            }
+                article_id,
+            },
         });
         isLiked.value = response.hasLiked;
     } catch (error) {
-        console.error('检查点赞状态失败:', error);
+        console.error("检查点赞状态失败:", error);
     }
-}
+};
 
-const updateLike = (async (article_id) => {
+const updateLike = async (article_id) => {
     try {
-        const response = await $http.post('/main/likeArticle', { user_id: userStore.user.userId, article_id });
+        const response = await $http.post("/main/likeArticle", {
+            user_id: userStore.user.userId,
+            article_id,
+        });
         recordDetail.value.like_count = response.likeCount;
-        message.success('点赞成功');
+        message.success("点赞成功");
         isLiked.value = true;
     } catch (error) {
-        console.error('更新失败:', error);
+        console.error("更新失败:", error);
         message.error(error.response.data.message);
     }
-})
-const handleLikeClick = async (article_id) => { // 点赞/取消点赞函数
+};
+const handleLikeClick = async (article_id) => {
+    // 点赞/取消点赞函数
     await updateLike(article_id);
-}
+};
 
 /** ------------------------ 分享模块 ------------------------ */
 const showShareModal = ref(false);
 const shareLike = () => {
     showShareModal.value = true;
-    document.body.style.overflow = 'hidden';
-}
+    document.body.style.overflow = "hidden";
+};
 const handleShareClose = () => {
     showShareModal.value = false;
     if (showShareModal) {
-        document.body.style.overflow = 'auto';
+        document.body.style.overflow = "auto";
     }
-}
+};
 const moreShare = () => {
     // 使用浏览器的分享 API
     if (navigator.share) {
-        navigator.share({
-            title: '分享标题',
-            text: '分享内容',
-            url: window.location.href
-        }).then(() => {
-            // message.success('分享成功');
-        }).catch((error) => {
-            message.error('分享失败:', error);
-        });
+        navigator
+            .share({
+                title: "分享标题",
+                text: "分享内容",
+                url: window.location.href,
+            })
+            .then(() => {
+                // message.success('分享成功');
+            })
+            .catch((error) => {
+                message.error("分享失败:", error);
+            });
     } else {
         // 不支持分享 API 的浏览器可以使用其他分享方式，例如复制链接
         copyToClipboard(window.location.href);
-        message.success('链接已复制到剪贴板');
+        message.success("链接已复制到剪贴板");
     }
-}
+};
 
 /** ------------------------二维码生成/下载按钮------------------------ */
-const currentUrl = window.location.href;// 获取当前url
+const currentUrl = window.location.href; // 获取当前url
 const shareCard = ref(null); //获取元素
 const downloadCard = async () => {
     if (!shareCard.value) return;
@@ -681,81 +759,85 @@ const downloadCard = async () => {
             scale: 2, // 关键：提高分辨率（默认 1，值越大越清晰）
             useCORS: true, // 允许跨域图片
         });
-        const imgUrl = canvas.toDataURL('image/png'); // 生成图片 Data URL（PNG 格式）
-        downloadImage(imgUrl, '分享卡片.png'); // 调用下载方法
+        const imgUrl = canvas.toDataURL("image/png"); // 生成图片 Data URL（PNG 格式）
+        downloadImage(imgUrl, "分享卡片.png"); // 调用下载方法
     } catch (error) {
-        message.error('生成分享卡片失败:', error);
+        message.error("生成分享卡片失败:", error);
     }
 };
 
-const downloadImage = (url, filename) => { // 下载方法
-    const a = document.createElement('a'); // 创建临时 a 标签
+const downloadImage = (url, filename) => {
+    // 下载方法
+    const a = document.createElement("a"); // 创建临时 a 标签
     a.href = url;
     a.download = filename; // 下载文件名
-    a.style.display = 'none';
+    a.style.display = "none";
     document.body.appendChild(a); // 模拟点击下载
     a.click();
     document.body.removeChild(a); // 清理资源
     URL.revokeObjectURL(url); // 释放 Blob URL（如果是 Blob 类型需要）
-}
+};
 
 /** ------------------------评论区------------------------ */
 const _ISshow = ref(false); // 表情选择器状态
 const emojiIs_show = () => {
     _ISshow.value = !_ISshow.value;
-}
+};
 const onVue3Emoje = (val) => {
     input__message.value += val.i; // 表情输入
-}
+};
 const onChangeText = () => {
     return;
-}
+};
 const messageList = ref([]); //评论列表
 const currentPage = ref(1); //当前页
 const totalPages = ref(1); //总页数
 const pageSize = ref(5);
 const totals = ref(0); //总条数
-const input__message = ref(''); //评论内容
-const getMessageList = async () => { // 获取评论列表
+const input__message = ref(""); //评论内容
+const getMessageList = async () => {
+    // 获取评论列表
     try {
-        const res = await $http.get('/message/getblogmessageList', {
+        const res = await $http.get("/message/getblogmessageList", {
             params: {
                 page: currentPage.value,
                 pageSize: pageSize.value,
                 article_id: paramsId.value,
-                parentId: 0
+                parentId: 0,
             },
         });
-        messageList.value = res.data.list.filter(item => !item.parentId);
+        messageList.value = res.data.list.filter((item) => !item.parentId);
         totals.value = res.data.pagination.total;
         totalPages.value = Math.ceil(totals.value / pageSize.value);
     } catch (error) {
         console.error(error.response.data.msg);
     }
-}
-const addMessage = async () => { // 发布评论
+};
+const addMessage = async () => {
+    // 发布评论
     if (!input__message.value.trim()) return;
 
     try {
-        await $http.post('/message/postmessage', {
-            content: input__message.value,
-            article_id: paramsId.value
-        },
+        await $http.post(
+            "/message/postmessage",
+            {
+                content: input__message.value,
+                article_id: paramsId.value,
+            },
             {
                 headers: {
-                    'Authorization': `Bearer ${userStore.token}`
-                }
-            });
+                    Authorization: `Bearer ${userStore.token}`,
+                },
+            },
+        );
 
-        message.success('发布成功');
+        message.success("发布成功");
         getMessageList();
-        input__message.value = '';
-
+        input__message.value = "";
     } catch (error) {
-        message.error(error.response.data.msg)
-
+        message.error(error.response.data.msg);
     }
-}
+};
 /** ------------------------回复功能------------------------ */
 /**
  * @param {Boolean} showReplyModal 回复框状态
@@ -767,56 +849,63 @@ const addMessage = async () => { // 发布评论
  * @param {Function} handleReplyPost 提交回复函数
  */
 const showReplyModal = ref(false);
-const replyUser = ref('');
+const replyUser = ref("");
 const replyUserId = ref(0);
-const replyContent = ref('');
+const replyContent = ref("");
 const activeParentId = ref(0);
 const handleReply = (message) => {
     showReplyModal.value = true;
     activeParentId.value = message.id;
     replyUserId.value = message.userId;
     replyUser.value = `@${message.user.username}`;
-    document.body.classList.add('no-scroll'); // 新增
-}
-const handleReplyPost = async () => { // 提交回复
+    document.body.classList.add("no-scroll"); // 新增
+};
+const handleReplyPost = async () => {
+    // 提交回复
     if (!replyContent.value.trim()) return;
     try {
-        await $http.post('/message/replies', {
-            content: replyContent.value,
-            userId: replyUserId.value,
-            currentFatherId: activeParentId.value
-        },
+        await $http.post(
+            "/message/replies",
+            {
+                content: replyContent.value,
+                userId: replyUserId.value,
+                currentFatherId: activeParentId.value,
+            },
             {
                 headers: {
-                    'Authorization': `Bearer ${userStore.token}`
-                }
-            });
-        message.success('回复成功');
+                    Authorization: `Bearer ${userStore.token}`,
+                },
+            },
+        );
+        message.success("回复成功");
         getMessageList();
-        replyContent.value = '';
+        replyContent.value = "";
         activeParentId.value = 0;
         showReplyModal.value = false;
-        document.body.classList.remove('no-scroll'); // 新增
+        document.body.classList.remove("no-scroll"); // 新增
     } catch (error) {
-        message.warning(error.response.data.msg)
+        message.warning(error.response.data.msg);
     }
-}
-const handleReplyClose = () => { // 关闭回复框
+};
+const handleReplyClose = () => {
+    // 关闭回复框
     showReplyModal.value = false;
-    replyContent.value = '';
-    document.body.classList.remove('no-scroll'); // 新增
-}
-const _ModalShow = ref(false);//回复框表情显示/隐藏控制
-const modalIs_show = () => { //回复框表情显示/隐藏控制方法
+    replyContent.value = "";
+    document.body.classList.remove("no-scroll"); // 新增
+};
+const _ModalShow = ref(false); //回复框表情显示/隐藏控制
+const modalIs_show = () => {
+    //回复框表情显示/隐藏控制方法
     _ModalShow.value = !_ModalShow.value;
-}
-const getVue3Emoje = (val) => { //回复框表情输入
+};
+const getVue3Emoje = (val) => {
+    //回复框表情输入
     replyContent.value += val.i; // 表情输入
-}
+};
 const showModal = ref(false); // 控制子组件回复框显示隐藏
 const handClose = () => {
     showModal.value = false;
-}
+};
 
 /** ------------------------视频播放------------------------ */
 /**
@@ -844,15 +933,14 @@ const handlePause = () => {
 const onClickHandler = (page) => {
     currentPage.value = page;
     getMessageList();
-}
+};
 
 onMounted(async () => {
     await checkLikeStatus(paramsId.value);
     await updateHeat(paramsId.value);
     await getMessageList();
     await getArticleContent();
-
-})
+});
 </script>
 <style lang="scss" scoped>
 @property --rotate {
@@ -866,7 +954,8 @@ onMounted(async () => {
     font-size: 0.75rem;
     min-height: 100vh;
     width: 100%;
-    background-image: linear-gradient(90deg, rgba(147, 157, 163, 0.1) 1px, #fff 0),
+    background-image:
+        linear-gradient(90deg, rgba(147, 157, 163, 0.1) 1px, #fff 0),
         linear-gradient(180deg, rgba(37, 82, 110, 0.1) 1px, #fff 0);
     background-size: 2rem 2rem;
 
@@ -874,7 +963,7 @@ onMounted(async () => {
     .background__img {
         height: var(--back-text-height);
 
-        // 背景图 
+        // 背景图
         .backPhoto {
             width: 100vw;
             height: 19rem;
@@ -936,31 +1025,45 @@ onMounted(async () => {
 
                 .content {
                     font-size: 0.8rem;
-                    align-items: center;
                     padding: 0.5rem 0;
+                    @include flexCenter(row, flex-start);
+                    gap: 0.5rem;
+
+                    &>*:not(:last-child)::after {
+                        content: "·";
+                        margin-left: 0.5rem;
+                        opacity: 0.45;
+                        font-weight: 300;
+                    }
 
                     .auther,
                     .release {
-                        margin-right: 0.5rem;
+                        @include flexCenter(row, flex-start);
                     }
 
                     .funcition {
                         display: flex;
+                        @include flexCenter(row, flex-start);
 
                         li {
-                            margin-right: 0.5rem;
+                            @include flexCenter(row, flex-start);
+
+                            &:not(:last-child)::after {
+                                content: "·";
+                                margin-left: 0.35rem;
+                                opacity: 0.45;
+                                font-weight: 300;
+                            }
                         }
                     }
 
                     img {
                         margin-right: 0.2rem;
-                        height: 0.7rem;
+                        height: 0.8rem;
                     }
                 }
-
             }
         }
-
     }
 
     //内容主体
@@ -982,9 +1085,7 @@ onMounted(async () => {
                 max-height: 25rem;
                 overflow: hidden;
             }
-
         }
-
 
         //标签
         .module__tag {
@@ -1010,7 +1111,6 @@ onMounted(async () => {
                 span {
                     color: #ff6d6d;
                     padding: 0 0.2rem;
-
                 }
             }
 
@@ -1055,7 +1155,6 @@ onMounted(async () => {
                 top: 0;
                 left: 50%;
                 transform: translate(-50%, -50%);
-
             }
 
             .warring {
@@ -1085,7 +1184,6 @@ onMounted(async () => {
 
         //评论区
         .comment {
-
             .title {
                 font-size: 1.2rem;
                 font-weight: 700;
@@ -1096,7 +1194,6 @@ onMounted(async () => {
 
                 &>img {
                     width: 24px;
-
                 }
             }
 
@@ -1135,7 +1232,6 @@ onMounted(async () => {
                 .box-inner {
                     position: relative;
                     border: $innerLineWidth dotted $innerLineColor;
-
 
                     &::after,
                     &::before {
@@ -1263,7 +1359,7 @@ onMounted(async () => {
                     border: 1.5px solid $primary-sub;
                     border-radius: 8px;
                     // box-shadow: 0 0 0 rgba(255, 138, 159, 0.55);
-                    transition: all .3s ease-in-out;
+                    transition: all 0.3s ease-in-out;
                     cursor: pointer;
 
                     .star-1 {
@@ -1307,7 +1403,7 @@ onMounted(async () => {
                         height: auto;
                         filter: drop-shadow(0 0 0 #fffdef);
                         z-index: -5;
-                        transition: all .8s cubic-bezier(0, 0.4, 0, 1.01);
+                        transition: all 0.8s cubic-bezier(0, 0.4, 0, 1.01);
                     }
 
                     .star-5 {
@@ -1318,7 +1414,7 @@ onMounted(async () => {
                         height: auto;
                         filter: drop-shadow(0 0 0 #fffdef);
                         z-index: -5;
-                        transition: all .6s cubic-bezier(0, 0.4, 0, 1.01);
+                        transition: all 0.6s cubic-bezier(0, 0.4, 0, 1.01);
                     }
 
                     .star-6 {
@@ -1329,12 +1425,12 @@ onMounted(async () => {
                         height: auto;
                         filter: drop-shadow(0 0 0 #fffdef);
                         z-index: -5;
-                        transition: all .8s ease;
+                        transition: all 0.8s ease;
                     }
 
                     //星颜色
                     .fil0 {
-                        fill: #f24056
+                        fill: #f24056;
                     }
 
                     &:hover {
@@ -1407,7 +1503,6 @@ onMounted(async () => {
         }
 
         .comment__module {
-
             .sum {
                 color: #696969;
             }
@@ -1443,7 +1538,6 @@ onMounted(async () => {
 
                             span {
                                 margin-right: 0.5rem;
-
                             }
 
                             .level {
@@ -1456,7 +1550,6 @@ onMounted(async () => {
                             font-size: 0.75rem;
                             color: #8d8d8d;
                         }
-
                     }
 
                     //回复
@@ -1478,7 +1571,6 @@ onMounted(async () => {
                             color: white;
                         }
                     }
-
                 }
 
                 .comment__container {
@@ -1494,7 +1586,6 @@ onMounted(async () => {
                         word-break: break-all;
                     }
                 }
-
             }
 
             //回复
@@ -1528,7 +1619,6 @@ onMounted(async () => {
 
                             span {
                                 margin-right: 0.5rem;
-
                             }
 
                             .level {
@@ -1541,7 +1631,6 @@ onMounted(async () => {
                             font-size: 0.75rem;
                             color: #8d8d8d;
                         }
-
                     }
                 }
 
@@ -1562,10 +1651,7 @@ onMounted(async () => {
                         }
                     }
                 }
-
             }
-
-
 
             //没有评论
             .noComment {
@@ -1576,56 +1662,7 @@ onMounted(async () => {
             }
 
             .paginate {
-                @include flexCenter(row, center);
-                padding: 1rem 0;
-
-                .pagination-container {
-                    display: flex;
-                    column-gap: 10px;
-                }
-
-                .paginate-buttons {
-                    height: 25px;
-                    width: 35px;
-                    font-size: 0.9rem;
-                    font-family: var(--app-font-family);
-                    font-weight: 700;
-                    margin: 0 0.1rem;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    background-color: rgb(242, 242, 242);
-                    color: black;
-                }
-
-                .paginate-buttons:hover {
-                    background-color: $primary-sub;
-                }
-
-                .active-page {
-                    background-color: $primary-sub;
-                    border: 1px solid $color-3;
-                    color: white;
-                }
-
-                .back-btn,
-                .next-btn {
-                    background-color: transparent;
-
-                    &:hover {
-                        cursor: pointer;
-                        background-color: transparent;
-                        animation: scale-animation 1.5s infinite linear;
-                    }
-                }
-
-                .active-page:hover {
-                    background-color: $primary-sub;
-                }
-
-                .first-page-button,
-                .last-page-button {
-                    width: 50px;
-                }
+                @include pagination-styles;
             }
         }
 
@@ -1643,7 +1680,7 @@ onMounted(async () => {
         margin: 2rem 0;
 
         &::before {
-            content: '';
+            content: "";
             position: absolute;
             top: -2px;
             left: -2px;
@@ -1749,8 +1786,8 @@ onMounted(async () => {
             display: inline-block;
             -webkit-animation-name: heartBlast;
             animation-name: heartBlast;
-            -webkit-animation-duration: .8s;
-            animation-duration: .8s;
+            -webkit-animation-duration: 0.8s;
+            animation-duration: 0.8s;
             -webkit-animation-iteration-count: 1;
             animation-iteration-count: 1;
             -webkit-animation-timing-function: steps(28);
@@ -1766,7 +1803,6 @@ onMounted(async () => {
             background-color: #ecf8ff;
             padding: 2rem 0;
         }
-
     }
 
     //评论回复框
@@ -1783,7 +1819,6 @@ onMounted(async () => {
         cursor: pointer;
         width: 100%;
         height: 100%;
-
 
         .modal {
             background-color: white;
@@ -1838,7 +1873,6 @@ onMounted(async () => {
                 padding: 1rem;
                 position: relative;
                 @include flexCenter(row, space-between);
-
 
                 .emoji__btn {
                     border-radius: 50%;
@@ -1920,7 +1954,7 @@ onMounted(async () => {
                     color: rgb(255, 255, 255);
                     border: 1.5px solid $color;
                     border-radius: 8px;
-                    transition: all .3s ease-in-out;
+                    transition: all 0.3s ease-in-out;
                     cursor: pointer;
 
                     .star-1 {
@@ -1964,7 +1998,7 @@ onMounted(async () => {
                         height: auto;
                         filter: drop-shadow(0 0 0 #fffdef);
                         z-index: -5;
-                        transition: all .8s cubic-bezier(0, 0.4, 0, 1.01);
+                        transition: all 0.8s cubic-bezier(0, 0.4, 0, 1.01);
                     }
 
                     .star-5 {
@@ -1975,7 +2009,7 @@ onMounted(async () => {
                         height: auto;
                         filter: drop-shadow(0 0 0 #fffdef);
                         z-index: -5;
-                        transition: all .6s cubic-bezier(0, 0.4, 0, 1.01);
+                        transition: all 0.6s cubic-bezier(0, 0.4, 0, 1.01);
                     }
 
                     .star-6 {
@@ -1986,12 +2020,12 @@ onMounted(async () => {
                         height: auto;
                         filter: drop-shadow(0 0 0 #fffdef);
                         z-index: -5;
-                        transition: all .8s ease;
+                        transition: all 0.8s ease;
                     }
 
                     //星颜色
                     .fil0 {
-                        fill: #f24056
+                        fill: #f24056;
                     }
 
                     &:hover {
@@ -2077,7 +2111,6 @@ onMounted(async () => {
         width: 100%;
         height: 100%;
 
-
         .modal {
             width: 27vw;
             min-height: 27rem;
@@ -2097,7 +2130,6 @@ onMounted(async () => {
                 text-align: center;
                 padding-bottom: 1rem;
             }
-
 
             .modal__content {
                 background-color: #ffffff;
@@ -2269,7 +2301,9 @@ onMounted(async () => {
         padding: 15px;
         border-left: 4px solid #007bff;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        transition: transform 0.3s, border-left-color 0.3s ease;
+        transition:
+            transform 0.3s,
+            border-left-color 0.3s ease;
     }
 
     .copyright-item:hover {
@@ -2399,7 +2433,7 @@ onMounted(async () => {
 
     /* 背景过渡效果 */
     &::before {
-        content: '';
+        content: "";
         width: 0;
         height: 0;
         border-left: 30px solid white;
