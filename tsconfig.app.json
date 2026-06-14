@@ -25,6 +25,10 @@
 "include": [
   "src/**/*.ts",
   "src/**/*.tsx",
+  "src/**/*.css",
+  "src/**/*.scss",
+  "src/**/*.vue",
+  "src/**/*.js",
   "src/utils/debounce.ts",
   "src/main.ts",
   "src/utils/aos.js"
