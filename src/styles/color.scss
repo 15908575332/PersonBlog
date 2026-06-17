@@ -41,6 +41,11 @@ $themes: (
         --text-sec-color: #596164,
         --text-muted: #9ca3b2,
         --text-placeholder: #9ca3b2,
+                // 文字阴影
+        --text-shadow: #{0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 4px rgba(255, 255, 255, 0.3)},
+
+        // 边框线
+        --border-color: #fff,
         // 主题色
         --primary-color: #5de9e0,
         --primary-sub: #f24257,
@@ -55,6 +60,7 @@ $themes: (
         // 卡片 / 面板背景
         --card-background: #ecf8ff,
         --bg-card-glass: rgba(255, 255, 255, 0.7),
+        --bg-card-glass-opacity: rgba(255, 255, 255, 0.2),
         --bg-tag: rgba(0, 0, 0, 0.08),
         --bg-image-fallback: #ffb7b7,
         --bg-overlay: rgba(0, 0, 0, 0.85),
@@ -69,6 +75,10 @@ $themes: (
         --text-sec-color: #9ca3b2,
         --text-muted: #6b7280,
         --text-placeholder: #6b7280,
+        // 文字阴影
+        --text-shadow: #{0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3)},
+        // 边框线
+        --border-color: #000,
         // 主题色
         --primary-color: #5de9e0,
         --primary-sub: #f2786e,
@@ -78,11 +88,12 @@ $themes: (
         // 阴影（双层：紧凑+扩散）
         --shadow-card: #{0 1px 3px rgba(0, 0, 0, 0.4),
         0 4px 12px rgba(0, 0, 0, 0.25)},
-        --shadow-elevated: #{0 2px 8px rgba(0, 0, 0, 0.5),
+        --shadow-elevated: #{0 2px 8px rgba(0, 0, 0, 0.2),
         0 8px 24px rgba(0, 0, 0, 0.35)},
         // 卡片 / 面板背景
         --card-background: #1a1d28,
         --bg-card-glass: rgba(30, 34, 48, 0.85),
+        --bg-card-glass-opacity: rgba(30, 34, 48, 0.5),
         --bg-tag: rgba(255, 255, 255, 0.12),
         --bg-image-fallback: #2a1a2e,
         --bg-overlay: rgba(0, 0, 0, 0.85),
@@ -135,9 +146,10 @@ $theme-transition-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 //文字颜色
 @mixin text-color($color-key) {
-    @include theme-foreach {
-        $current-color: themed($color-key);
-        color: $current-color;
+    @each $theme-name, $theme-map in $themes {
+        [data-theme="#{$theme-name}"] & {
+            color: map-get($theme-map, --#{$color-key});
+        }
     }
     @include theme-transition();
 }

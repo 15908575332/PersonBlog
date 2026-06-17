@@ -1,13 +1,14 @@
 <template>
   <!-- 导航 -->
-  <Navigation></Navigation>
+  <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+    <Navigation></Navigation>
+  </div>
   <div id="recordResource">
     <!-- 背景设置 -->
     <div class="background__img">
       <!-- 背景图 -->
       <div class="backPhoto" :style="videoSrc"></div>
       <!-- 遮罩 -->
-      <div class="mask"></div>
       <div class="back__text">
         <!-- 一级标题 -->
         <div class="title">{{ back__text_title }}</div>
@@ -247,6 +248,7 @@ onMounted(() => {
   // 背景设置
   .background__img {
     height: 18rem;
+    position: relative;
 
 
     // 背景图
@@ -254,7 +256,7 @@ onMounted(() => {
       width: 100vw;
       height: 21rem;
       background-size: cover;
-      z-index: -2;
+      z-index: -1;
       background-position: center;
       position: absolute;
       top: 0;
@@ -263,19 +265,15 @@ onMounted(() => {
     }
 
     // 遮罩
-    .mask {
-      width: 100%;
-      height: 21rem;
-      position: absolute;
-      background-color: #00000040;
-      top: 0;
-      z-index: -1;
+    &::after {
+      content: "";
+      @include mask-overlay(#00000020, 21rem, absolute, -1);
       animation: zoomInDown 0.6s ease-out forwards;
     }
 
     .back__text {
       @include flexCenter(column, center);
-      height: 65%;
+      height: 100%;
       color: white;
       font-family: var(--app-font-family);
       z-index: 2;

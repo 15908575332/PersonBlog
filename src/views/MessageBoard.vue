@@ -3,12 +3,10 @@
         <div class="blog-container">
             <!-- 背景图 -->
             <div class="backPhoto" :style=currentPageBackground></div>
-            <!-- 遮罩 -->
-            <div class="mask"></div>
             <!-- 内容 -->
             <div class="content-t">
-                <div class="navidation">
-                    <!-- 导航 -->
+                <!-- 导航 -->
+                <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
                     <Navigation></Navigation>
                 </div>
             </div>
@@ -141,14 +139,10 @@ onUnmounted(() => {
             animation: fadeIn 1s;
         }
 
-        .mask {
-            background-color: rgba(50, 50, 50, 0.3);
-            z-index: inherit;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
+        &::after {
+            content: "";
+            @include mask-overlay(rgba(50, 50, 50, 0.2), 100%, absolute, inherit);
+            pointer-events: none;
         }
 
         //内容

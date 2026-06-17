@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%" v-if="userStore">
-    <div class="navigate" :class="{ hoverStyle: isHover }" :style="colorStyles">
+    <div class="navigate" :class="{ hoverStyle: isHover }">
       <div class="logo">
         <img src="/logo.png" alt="logo" />
       </div>
@@ -129,7 +129,7 @@
 </template>
 <script setup>
 import DropdoenMenu from "@/components/common/DropdownMenu.vue";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import utils from "@/utils/getAssetsFile";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
@@ -145,28 +145,6 @@ const quitLogin = () => {
   userStore.logout();
   route.push("/userInfo");
 };
-// 新增颜色props并设置默认值
-const props = defineProps({
-  bgColor: {
-    type: String,
-    default: 'rgb(25, 29, 15, 0)' // 默认背景色
-  },
-  hoverBgColor: {
-    type: String,
-    default: 'rgb(25, 29, 15, 0.6)' // 默认hover背景色
-  },
-  textColor: {
-    type: String,
-    default: '#fcfcfc' // 默认文字颜色
-  }
-})
-
-// 计算动态样式对象
-const colorStyles = computed(() => ({
-  '--bg-color': props.bgColor,
-  '--hover-bg-color': props.hoverBgColor,
-  '--text-color': props.textColor
-}))
 const isVisible = ref(false);
 const isHover = ref(false);
 const record_options = ref([
@@ -258,10 +236,10 @@ onMounted(async () => { });
 // PC端样式
 .navigate {
   width: 100%;
-  padding: 0 2rem;
+  padding: 0 1rem;
   font-family: var(--app-font-family);
   z-index: 1;
-  background-color: var(--bg-color);
+  // background-color: var(--bg-color);
   transition: all 0.3s linear;
   @include flexCenter(row, space-between);
 
@@ -269,14 +247,10 @@ onMounted(async () => { });
     a {
       span {
         font-size: 1rem;
-        color: var(--text-color);
+        @include text-color('text-color');
+        text-shadow: themed('text-shadow');
       }
     }
-  }
-
-  &:hover {
-    background-color: var(--hover-bg-color);
-    transition: all 0.3s linear;
   }
 
   // logo

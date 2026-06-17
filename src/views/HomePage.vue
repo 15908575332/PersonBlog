@@ -1,16 +1,23 @@
 <template>
   <div id="homePage">
     <div class="blog-container">
+
       <!-- 背景图 -->
       <div class="backPhoto" :style="currentPageBackgrounds"
         :class="[searchInputFocus ? 'img-background-scale' : 'img-background-reduction']">
       </div>
+
       <!-- 遮罩 -->
       <div class="mask" :class="{ 'blur-groud': searchInputFocus }"></div>
+
       <!-- 内容 -->
       <div class="content-t">
+
         <!-- 导航 -->
-        <Navigation></Navigation>
+        <div class="nav-wrapper">
+          <Navigation></Navigation>
+        </div>
+
         <!-- 时钟/搜索 -->
         <transition name="fade">
           <div v-if="!isOpenFavorite" class="clock-search"
@@ -386,12 +393,7 @@ onUnmounted(() => {
     }
 
     .mask {
-      background-color: #00000050;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
+      @include mask-overlay(#00000020);
     }
 
     //内容
@@ -402,7 +404,7 @@ onUnmounted(() => {
       width: 100%;
       height: 100%;
       color: white;
-      @include flexCenter(column, space-between);
+      @include flexCenter(column, center);
 
       //时钟/搜索
       .clock-search {
@@ -552,6 +554,8 @@ onUnmounted(() => {
       .footer-box {
         width: 100%;
         @include flexCenter(column, center);
+        position: fixed;
+        bottom: 20px;
 
         .footer-intrduce {
           display: flex;

@@ -3,8 +3,6 @@
         <!-- 背景图 -->
         <div class="backPhoto" :style=currentPageBackground></div>
         <!-- 遮罩 -->
-        <div class="mask"></div>
-
         <!-- 验证 -->
         <ModalBox :isVisible="isShowModal" @close="handChangeModal" :animationType="selectedAnimation">
             <!-- 注册验证码组件 -->
@@ -372,15 +370,10 @@ onBeforeUnmount(() => {
     position: relative;
     overflow: hidden;
 
-    .mask {
-        background-color: #00000030;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: -1;
-
+    &::after {
+        content: "";
+        @include mask-overlay(#00000030, 100%, absolute, -1);
+        pointer-events: none;
     }
 
     //验证组件样式

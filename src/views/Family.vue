@@ -1,7 +1,8 @@
 <template>
   <div id="family">
-    <div class="navigate">
-      <Navigation hoverBgColor="#91b3d6"></Navigation>
+    <!-- 导航 -->
+    <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+      <Navigation></Navigation>
     </div>
     <div class="satic-area">
       <div class="dynamic-area1"></div>
@@ -380,15 +381,6 @@ onUnmounted(() => {
 #family {
   // 主体内容盒子宽度
   $content_container_width: 65vw;
-
-  // 导航
-  .navigate {
-    position: fixed;
-    top: 0;
-    z-index: 999;
-    width: 100vw;
-    backdrop-filter: blur(10px);
-  }
 
   // 背景
   .satic-area {

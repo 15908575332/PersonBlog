@@ -272,10 +272,10 @@ const toggleTheme = () => {
 
 window.toggleTheme = toggleTheme;
 
-const noGlobalBgPrefixes = [ // 路由及其所有子路由都会显示全局背景
+const noGlobalBgPrefixes = [ // 路由及其所有子路由都会显示背景色
   '/treasureBox',
   '/recordList',
-  '/contactUs',
+  '/contactUs'
 ];
 
 // 计算是否显示全局背景
@@ -554,6 +554,7 @@ const showRippleToggle = computed(() => {
     width: 100%;
     height: 100%;
     transition: opacity $theme-transition-duration $theme-transition-timing;
+    z-index: -1;
   }
 
   .light-bg {

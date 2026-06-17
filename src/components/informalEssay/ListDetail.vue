@@ -78,7 +78,6 @@
                 </div>
 
                 <!-- 遮罩 -->
-                <div class="mask"></div>
                 <div class="back__text">
                     <!-- 二级标题 -->
                     <div class="subtitle">
@@ -962,6 +961,7 @@ onMounted(async () => {
     // 背景设置
     .background__img {
         height: var(--back-text-height);
+        position: relative;
 
         // 背景图
         .backPhoto {
@@ -994,12 +994,9 @@ onMounted(async () => {
         }
 
         // 遮罩
-        .mask {
-            width: 100%;
-            height: 19rem;
-            position: absolute;
-            background-color: #00000040;
-            top: 0;
+        &::after {
+            content: "";
+            @include mask-overlay(#00000040, 19rem);
             animation: zoomInDown 0.6s ease-out forwards;
         }
 

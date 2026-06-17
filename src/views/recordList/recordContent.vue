@@ -1,8 +1,10 @@
 <template>
   <div class="recordContent" :class="{ 'overflow-hidden': isInputOpen }">
 
-    <Navigation />
-
+    <!-- 导航 -->
+    <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+      <Navigation></Navigation>
+    </div>
     <div class="backVideo">
       <video src="@/assets/videos/349107.mp4" autoplay loop></video>
     </div>
@@ -343,6 +345,12 @@ const fetchNavData = async () => {
   }
 }
 
+/** ------------------------ 滚动隐藏导航栏 ------------------------ */
+// 导航栏动画
+import { useScrollHideNav } from '@/utils/useScrollHideNav'
+const { isNavHidden } = useScrollHideNav({ threshold: 200 })
+
+
 /** ------------------------格式化时间------------------------ */
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
@@ -426,12 +434,6 @@ onMounted(() => {
   min-height: 100vh;
   $main_content_width: 60rem;
 
-  .navigate {
-    position: absolute;
-    top: 0;
-    z-index: 2;
-  }
-
   // 背景视频
   .backVideo {
     width: 100%;
@@ -449,6 +451,12 @@ onMounted(() => {
       object-fit: cover;
       @include background('bg-image-fallback');
       display: block;
+    }
+
+    &::after {
+      content: "";
+      @include mask-overlay(rgba(0, 0, 0, 0.2));
+      pointer-events: none;
     }
   }
 

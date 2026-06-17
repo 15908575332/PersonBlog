@@ -1,6 +1,7 @@
 <template>
   <div id="informalEssay">
-    <div class="navigate" :class="[isNavHidden ? 'navHiddenZoomOut' : 'navHiddenZoomIn']">
+    <!-- 导航 -->
+    <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
       <Navigation></Navigation>
     </div>
     <!-- 背景图 -->
@@ -300,13 +301,6 @@ $count: 10;
 $contentWidth: 65rem; // 内容宽度
 
 #informalEssay {
-  .navigate {
-    width: 100vw;
-    position: fixed;
-    top: 0;
-    z-index: 2;
-    background-color: rgb(0, 0, 0, 0.2);
-  }
 
   // 通用阴影
   .box__shadow {
@@ -726,7 +720,7 @@ $contentWidth: 65rem; // 内容宽度
                   width: 1.2rem;
                   margin-right: 0.5rem;
                 }
-                
+
                 span {
                   font-size: 1rem;
                   color: #999;
@@ -744,7 +738,7 @@ $contentWidth: 65rem; // 内容宽度
                 border-radius: 0.5rem;
                 overflow: hidden;
                 transition: all 0.3s;
-                
+
                 .image {
                   position: relative;
                   display: block;

@@ -1,9 +1,17 @@
 <template>
   <div class="dropdown">
     <div class="dropdown-content" @click.self="closeDropdownIfNeeded">
-      <div class="dropdown-item" v-for="option in options" :key="option.value" data-value="option.value"
-        @click="selectOption($event, option)">
-        <button @click="RouterJump('/' + option.router)" :class="[option.engTitle ? 'btn-12' : 'btn1']">
+      <div
+        class="dropdown-item"
+        v-for="option in options"
+        :key="option.value"
+        data-value="option.value"
+        @click="selectOption($event, option)"
+      >
+        <button
+          @click="RouterJump('/' + option.router)"
+          :class="[option.engTitle ? 'btn-12' : 'btn1']"
+        >
           <!-- button icon -->
           <img v-if="option.iconUrl" :src="option.iconUrl" alt="btn_icon" />
           <span v-if="option.engTitle">{{ option.engTitle }}</span>
@@ -30,7 +38,7 @@ const props = defineProps({
 const router = useRouter();
 const selectedOption = ref(null);
 
-const closeDropdownIfNeeded = () => { };
+const closeDropdownIfNeeded = () => {};
 
 const selectOption = (event, option) => {
   event.stopPropagation();
@@ -75,18 +83,16 @@ const RouterJump = (path) => {
         @include flexCenter(row, flex-start);
         font-family: var(--app-font-family);
         font-size: 0.9rem;
-        font-weight: 500;
-        // display: block;
         width: inherit;
         height: 30px;
         position: relative;
         cursor: pointer;
         transition: all 0.3s ease;
-        color: rgb(0, 0, 0);
         border-radius: 5px;
         gap: 0.5rem;
+        font-weight: 700;
+        @include text-color("text-sec-color");
 
-        // padding-left: 0.5rem;
         img {
           width: 1rem;
           z-index: 1;
@@ -95,7 +101,8 @@ const RouterJump = (path) => {
 
       .btn-12 {
         perspective: 220px;
-        box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+        box-shadow:
+          inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
           7px 7px 20px 0px rgba(0, 0, 0, 0.1),
           4px 4px 5px 0px rgba(0, 0, 0, 0.1);
 
@@ -108,7 +115,8 @@ const RouterJump = (path) => {
           width: 120px;
           height: 30px;
           line-height: 30px;
-          box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+          box-shadow:
+            inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
             7px 7px 20px 0px rgba(0, 0, 0, 0.1),
             4px 4px 5px 0px rgba(0, 0, 0, 0.1);
           border-radius: 5px;
@@ -116,8 +124,11 @@ const RouterJump = (path) => {
         }
 
         & span:nth-child(1) {
-          box-shadow: -7px -7px 20px 0px #fff9, -4px -4px 5px 0px #fff9,
-            7px 7px 20px 0px #0002, 4px 4px 5px 0px #0001;
+          box-shadow:
+            -7px -7px 20px 0px #fff9,
+            -4px -4px 5px 0px #fff9,
+            7px 7px 20px 0px #0002,
+            4px 4px 5px 0px #0001;
 
           transform: rotateX(90deg);
           transform-origin: 50% 50% -14px;
@@ -129,14 +140,16 @@ const RouterJump = (path) => {
         }
 
         &:hover span:nth-child(1) {
-          box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+          box-shadow:
+            inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
             7px 7px 20px 0px rgba(0, 0, 0, 0.1),
             4px 4px 5px 0px rgba(0, 0, 0, 0.1);
           transform: rotateX(0deg);
         }
 
         &:hover span:nth-child(2) {
-          box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+          box-shadow:
+            inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
             7px 7px 20px 0px rgba(0, 0, 0, 0.1),
             4px 4px 5px 0px rgba(0, 0, 0, 0.1);
           transform: rotateX(-90deg);
@@ -144,7 +157,8 @@ const RouterJump = (path) => {
       }
 
       .btn1 {
-        box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+        box-shadow:
+          inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
           7px 7px 20px 0px rgba(0, 0, 0, 0.1),
           4px 4px 5px 0px rgba(0, 0, 0, 0.1);
         outline: none;
@@ -170,7 +184,8 @@ const RouterJump = (path) => {
 
         &:hover {
           background: transparent;
-          box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5),
+          box-shadow:
+            4px 4px 6px 0 rgba(255, 255, 255, 0.5),
             -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
             inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5),
             inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
@@ -180,14 +195,15 @@ const RouterJump = (path) => {
         &:hover:after {
           -webkit-transform: scale(2) rotate(180deg);
           transform: scale(2) rotate(180deg);
-          box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5),
+          box-shadow:
+            4px 4px 6px 0 rgba(255, 255, 255, 0.5),
             -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
             inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5),
             inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
         }
       }
     }
-
+    // 三角形
     &::before {
       content: "";
       position: absolute;

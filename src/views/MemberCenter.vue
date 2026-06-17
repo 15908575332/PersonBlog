@@ -3,7 +3,6 @@
         <!-- 背景图 -->
         <div class="backPhoto"></div>
         <!-- 遮罩 -->
-        <div class="mask"></div>
         <!-- 导航 -->
         <Navigation></Navigation>
         <div class="pricing-cards">
@@ -146,15 +145,10 @@ const closeModal = () => { // 关闭购买界面
         background-image: url('@/assets/img/memberCenter/memberCenterBg.jpeg');
     }
 
-    .mask {
-        background-color: rgba(50, 50, 50, 0.3);
-        z-index: inherit;
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: -1;
+    &::after {
+        content: "";
+        @include mask-overlay(rgba(50, 50, 50, 0.3), 100vh, absolute, -1);
+        pointer-events: none;
     }
 
     .pricing-cards {
