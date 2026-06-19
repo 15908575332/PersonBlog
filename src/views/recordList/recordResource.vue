@@ -22,7 +22,7 @@
       <div class="button__navigate">
         <button class="btn-7" v-for="(item, index) in navContent" :key="item.category_id"
           @click="toggleMoudle(item.category_id, index)" :class="{ btn__active: isActiveBtn == index }"
-          :style="buttonStyles(index)">
+          :style="`--btn-color: ${assistanceColorByIndex(index)};`">
           <span>{{ item.nav_btn_title }}</span>
         </button>
       </div>
@@ -66,11 +66,11 @@
                 <p v-else>暂无更多内容</p>
               </div>
               <div class="footer__tags">
-                <p>
+                <p :style="`--btn-color: ${randomAssistanceColor()}`">
                   <img src="@/assets/icon/recordList/blog.svg" alt="blog" />
                   <span>{{ module.master_tag }}</span>
                 </p>
-                <p>
+                <p :style="`--btn-color: ${randomAssistanceColor()}`">
                   <img src="@/assets/icon/recordList/arrange.svg" alt="arrange" />
                   <span>{{ module.sub_tag }}</span>
                 </p>
@@ -188,20 +188,9 @@ const getLayoutClass = (index) => {
   return index % 2 === 0 ? "image-left" : "image-right";
 };
 // 导航按钮按序渲染颜色
-const colors = ref([
-  "#23d5ab",
-  "#ff4934",
-  "#837bc7",
-  "#e73c7e",
-  "#ee7752",
-  "#23a6d5",
-]);
-// 返回实际按钮样式
-const buttonStyles = (index) => {
-  return {
-    backgroundColor: colors.value[index % colors.value.length],
-  };
-};
+import { randomAssistanceColor, assistanceColorByIndex } from '@/styles/colorTokens';
+
+
 //背景加载
 const loadImage = () => {
   if (imageContainerRef.value) {
@@ -328,6 +317,7 @@ onMounted(() => {
         border-radius: 5px;
         padding: 0;
         border: none;
+        background-color: var(--btn-color);
 
         &>span {
           position: relative;
@@ -520,8 +510,8 @@ onMounted(() => {
           @include flexCenter(row, flex-start);
 
           p {
-            background-color: #ffa500;
-            color: white;
+            background-color: var(--btn-color);
+            color: $general-white;
             display: flex;
             justify-content: center;
             padding: 0.25rem 0.5rem;

@@ -6,7 +6,7 @@ $primary-sub: #f24257; //次主色
 // 辅色
 $assistance-1: #f1b9b9;
 $assistance-2: #df9e98;
-$assistance-3: #fcfdff;
+$assistance-3: #f0b43e;
 $assistance-4: #9ed4d4;
 $assistance-5: #ffc0cb;
 $assistance-6: #7296de;
@@ -16,8 +16,9 @@ $assistance-9: #af9b9b;
 $assistance-10: #c57d76;
 
 // 辅色色板列表（与 colorTokens.js 保持同步）
-$assistance-palette: $assistance-1, $assistance-2, $assistance-3, $assistance-4, $assistance-5,
-                     $assistance-6, $assistance-7, $assistance-8, $assistance-9, $assistance-10;
+$assistance-palette:
+    $assistance-1, $assistance-2, $assistance-3, $assistance-4, $assistance-5, $assistance-6, $assistance-7,
+    $assistance-8, $assistance-9, $assistance-10;
 
 //中性色用于文字、背景、边框等
 $color-1: #808080;

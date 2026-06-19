@@ -147,11 +147,11 @@
                         </li>
                       </ul>
                       <div class="footer__tags">
-                        <p>
+                        <p :style="`--btn-color: ${randomAssistanceColor()}`">
                           <img src="@/assets/icon/recordList/blog.svg" alt="blog" />
                           <span>{{ item.master_tag }}</span>
                         </p>
-                        <p>
+                        <p :style="`--btn-color: ${randomAssistanceColor()}`">
                           <img src="@/assets/icon/recordList/arrange.svg" alt="arrange" />
                           <span>{{ item.sub_tag }}</span>
                         </p>
@@ -187,7 +187,7 @@ import axios from "axios";
 import { debounce } from "@/utils/debounce"; // 导入防抖函数
 const mainStore = useMainStore();
 const authStore = useAuthStore();
-
+import { randomAssistanceColor } from '@/styles/colorTokens';
 
 /** ------------------------ 获取分类 ------------------------ */
 const navData = ref([]);
@@ -791,11 +791,17 @@ $contentWidth: 65rem; // 内容宽度
                     @include flexCenter(row, flex-start);
 
                     p {
-                      background-color: #eee;
-                      font-size: 0.8rem;
-                      padding: 0.1rem 0.2rem;
-                      border-radius: 0.2rem;
-                      margin-right: 0.2rem;
+                      background-color: var(--btn-color);
+                      @include text-color('text-color');
+                      display: flex;
+                      justify-content: center;
+                      padding: 0.25rem 0.5rem;
+                      border-radius: 0.15rem;
+                      margin-right: 0.5rem;
+
+                      span {
+                        font-size: 0.7rem;
+                      }
                     }
                   }
                 }
