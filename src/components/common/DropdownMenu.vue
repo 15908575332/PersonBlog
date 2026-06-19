@@ -1,21 +1,11 @@
 <template>
   <div class="dropdown">
-    <div class="dropdown-content" @click.self="closeDropdownIfNeeded">
-      <div
-        class="dropdown-item"
-        v-for="option in options"
-        :key="option.value"
-        data-value="option.value"
-        @click="selectOption($event, option)"
-      >
-        <button
-          @click="RouterJump('/' + option.router)"
-          :class="[option.engTitle ? 'btn-12' : 'btn1']"
-        >
-          <!-- button icon -->
-          <img v-if="option.iconUrl" :src="option.iconUrl" alt="btn_icon" />
-          <span v-if="option.engTitle">{{ option.engTitle }}</span>
+    <div class="dropdown-content" ref="dropdownRef" @click.self="closeDropdownIfNeeded">
+      <div class="dropdown-item" v-for="option in options" :key="option.value" data-value="option.value"
+        @click="selectOption($event, option)">
+        <button @click="RouterJump('/' + option.router)" class="btn-magnet">
           <span>{{ option.text }}</span>
+          <span class="particles"></span>
         </button>
       </div>
     </div>
@@ -23,10 +13,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 
-// 定义 props
 const props = defineProps({
   options: {
     type: Array,
@@ -37,8 +26,9 @@ const props = defineProps({
 
 const router = useRouter();
 const selectedOption = ref(null);
+const dropdownRef = ref(null);
 
-const closeDropdownIfNeeded = () => {};
+const closeDropdownIfNeeded = () => { };
 
 const selectOption = (event, option) => {
   event.stopPropagation();
@@ -48,6 +38,51 @@ const selectOption = (event, option) => {
 const RouterJump = (path) => {
   router.push(path);
 };
+
+const setupMagnetButtons = () => {
+  if (!dropdownRef.value) return;
+  const buttons = dropdownRef.value.querySelectorAll('.btn-magnet');
+  buttons.forEach(btn => {
+    const particlesEl = btn.querySelector('.particles');
+    if (!particlesEl || particlesEl.children.length > 0) return;
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('span');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      particlesEl.appendChild(p);
+    }
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
+      const particles = particlesEl.querySelectorAll('.particle');
+      particles.forEach(p => {
+        const px = parseFloat(p.style.left) / 100 * rect.width;
+        const py = parseFloat(p.style.top) / 100 * rect.height;
+        const dx = cx - px;
+        const dy = cy - py;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const force = Math.max(0, 1 - dist / 80);
+        p.style.transform = `translate(${dx * force}px, ${dy * force}px)`;
+        p.style.width = (2 + force * 4) + 'px';
+        p.style.height = (2 + force * 4) + 'px';
+      });
+    });
+    btn.addEventListener('mouseleave', () => {
+      const particles = particlesEl.querySelectorAll('.particle');
+      particles.forEach(p => {
+        p.style.transform = 'translate(0, 0)';
+        p.style.width = '3px';
+        p.style.height = '3px';
+      });
+    });
+  });
+};
+
+onMounted(() => {
+  nextTick(() => setupMagnetButtons());
+});
 </script>
 
 <style scoped lang="scss">
@@ -56,10 +91,10 @@ const RouterJump = (path) => {
 
   .dropdown-content {
     position: absolute;
-    top: 2.8rem;
+    top: 3.1rem;
     transform: translateX(0.3rem); // 根据需要调整位置
-    background-image: linear-gradient(112deg, #e9defa90, #fbfcdb90 100%);
-    backdrop-filter: blur(1rem);
+    @include background('bg-card-glass');
+
     border-radius: 0.4rem;
     padding: 0 0.5rem;
     z-index: 99;
@@ -79,130 +114,66 @@ const RouterJump = (path) => {
         margin-bottom: 0.5rem;
       }
 
-      button {
-        @include flexCenter(row, flex-start);
+      .btn-magnet {
+        @include flexCenter(row, center);
+        box-sizing: border-box;
         font-family: var(--app-font-family);
         font-size: 0.9rem;
         width: inherit;
         height: 30px;
         position: relative;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: border-color .3s, box-shadow .3s;
         border-radius: 5px;
         gap: 0.5rem;
         font-weight: 700;
-        @include text-color("text-sec-color");
+        border: 1px solid themed("border-default");
+        background: transparent;
+        overflow: hidden;
+        @include text-color("text-color");
 
         img {
-          width: 1rem;
+          position: relative;
           z-index: 1;
+          width: 1rem;
         }
-      }
 
-      .btn-12 {
-        perspective: 220px;
-        box-shadow:
-          inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-          7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-          4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+        &>span {
+          position: relative;
+          z-index: 1;
 
-        & span {
+        }
+
+        // 按钮悬浮效果
+        .particles {
           position: absolute;
-          background-color: #ffffff;
-          // background-image: url('./img/btn_backImage.jpeg');
-          top: 0;
-          left: 0;
-          width: 120px;
-          height: 30px;
-          line-height: 30px;
-          box-shadow:
-            inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-            7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-            4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-          border-radius: 5px;
-          transition: all 0.3s;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
         }
 
-        & span:nth-child(1) {
-          box-shadow:
-            -7px -7px 20px 0px #fff9,
-            -4px -4px 5px 0px #fff9,
-            7px 7px 20px 0px #0002,
-            4px 4px 5px 0px #0001;
-
-          transform: rotateX(90deg);
-          transform-origin: 50% 50% -14px;
-        }
-
-        & span:nth-child(2) {
-          transform: rotateX(0deg);
-          transform-origin: 50% 50% -14px;
-        }
-
-        &:hover span:nth-child(1) {
-          box-shadow:
-            inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-            7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-            4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-          transform: rotateX(0deg);
-        }
-
-        &:hover span:nth-child(2) {
-          box-shadow:
-            inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-            7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-            4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-          transform: rotateX(-90deg);
-        }
-      }
-
-      .btn1 {
-        box-shadow:
-          inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-          7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-          4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-        outline: none;
-
-        & {
-          border: none;
-          transition: all 0.5s ease;
-          overflow: hidden;
-        }
-
-        &:after {
+        :deep(.particle) {
           position: absolute;
-          content: " ";
-          z-index: -1;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: #ffffff;
-          // background-image: linear-gradient(315deg, #1fd1f9 0%, #b621fe 74%);
-          transition: all 0.3s ease;
+          width: 3px;
+          height: 3px;
+          // @include background("primary-color");
+          background-color: $color-5;
+          border-radius: 50%;
+          opacity: 0;
+          transition: transform .35s cubic-bezier(.25, .8, .25, 1.2), width .35s, height .35s, opacity .3s;
         }
 
         &:hover {
-          background: transparent;
-          box-shadow:
-            4px 4px 6px 0 rgba(255, 255, 255, 0.5),
-            -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
-            inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5),
-            inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
-          // color: #fff;
+          border-color: $color-5;
+          box-shadow: 0 0 18px rgba(167, 139, 250, .2);
         }
 
-        &:hover:after {
-          -webkit-transform: scale(2) rotate(180deg);
-          transform: scale(2) rotate(180deg);
-          box-shadow:
-            4px 4px 6px 0 rgba(255, 255, 255, 0.5),
-            -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
-            inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5),
-            inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
+        &:hover :deep(.particle) {
+          opacity: 1;
         }
       }
     }
+
     // 三角形
     &::before {
       content: "";

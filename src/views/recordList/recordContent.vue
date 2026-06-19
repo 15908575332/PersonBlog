@@ -1,8 +1,7 @@
 <template>
   <div class="recordContent" :class="{ 'overflow-hidden': isInputOpen }">
-
     <!-- 导航 -->
-    <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+    <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
       <Navigation></Navigation>
     </div>
     <div class="backVideo">
@@ -344,11 +343,6 @@ const fetchNavData = async () => {
     toggleMoudle(navContent.value[0].category_id);
   }
 }
-
-/** ------------------------ 滚动隐藏导航栏 ------------------------ */
-// 导航栏动画
-import { useScrollHideNav } from '@/utils/useScrollHideNav'
-const { isNavHidden } = useScrollHideNav({ threshold: 200 })
 
 
 /** ------------------------格式化时间------------------------ */

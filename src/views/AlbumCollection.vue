@@ -1,8 +1,8 @@
 <template>
   <div>
-    <!-- 导航栏 -->
-    <div class="navigate">
-      <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
+    <!-- 导航 -->
+    <div class="nav-wrapper">
+      <Navigation></Navigation>
     </div>
 
     <!-- 视差滚动背景 -->
@@ -349,12 +349,6 @@ onBeforeUnmount(() => {
   font-weight: 400;
   src: local("Vampiro One"), local("VampiroOne-Regular"),
     url("@/assets/fonts/Ho2Xld8UbQyBA8XLxF1_NYbN6UDyHWBl620a-IRfuBk.woff") format("woff");
-}
-
-.navigate {
-  width: 100%;
-  position: fixed;
-  z-index: 99;
 }
 
 /* 更新视差背景样式 */

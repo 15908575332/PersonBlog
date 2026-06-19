@@ -15,6 +15,10 @@ $assistance-8: #86bfbf;
 $assistance-9: #af9b9b;
 $assistance-10: #c57d76;
 
+// 辅色色板列表（与 colorTokens.js 保持同步）
+$assistance-palette: $assistance-1, $assistance-2, $assistance-3, $assistance-4, $assistance-5,
+                     $assistance-6, $assistance-7, $assistance-8, $assistance-9, $assistance-10;
+
 //中性色用于文字、背景、边框等
 $color-1: #808080;
 $color-2: #d3d3d3;
@@ -42,11 +46,10 @@ $themes: (
         --text-sec-color: #596164,
         --text-muted: #9ca3b2,
         --text-placeholder: #9ca3b2,
-                // 文字阴影
-        --text-shadow: #{0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 4px rgba(255, 255, 255, 0.3)},
+        // 文字阴影
+        --text-shadow: #{0 1px 0 rgba(255, 255, 255, 0.5),
+        0 2px 4px rgba(255, 255, 255, 0.3)},
 
-        // 边框线
-        --border-color: #fff,
         // 主题色
         --primary-color: #5de9e0,
         --primary-sub: #f24257,
@@ -65,9 +68,10 @@ $themes: (
         --bg-tag: rgba(0, 0, 0, 0.08),
         --bg-image-fallback: #ffb7b7,
         --bg-overlay: rgba(0, 0, 0, 0.85),
-        // 边框（微妙 → 可见）
+        // 边框（微妙 → 可见 → 完全可见）
         --border-subtle: rgba(0, 0, 0, 0.06),
-        --border-default: rgba(0, 0, 0, 0.12)
+        --border-default: rgba(0, 0, 0, 0.12),
+        --border-color: #fff
     ),
 
     dark: (
@@ -77,9 +81,8 @@ $themes: (
         --text-muted: #6b7280,
         --text-placeholder: #6b7280,
         // 文字阴影
-        --text-shadow: #{0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3)},
-        // 边框线
-        --border-color: #000,
+        --text-shadow: #{0 1px 0 rgba(0, 0, 0, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.3)},
         // 主题色
         --primary-color: #5de9e0,
         --primary-sub: #f2786e,
@@ -98,9 +101,10 @@ $themes: (
         --bg-tag: rgba(255, 255, 255, 0.12),
         --bg-image-fallback: #2a1a2e,
         --bg-overlay: rgba(0, 0, 0, 0.85),
-        // 边框（微妙 → 可见）
+        // 边框（微妙 → 可见 → 完全可见）
         --border-subtle: rgba(255, 255, 255, 0.06),
-        --border-default: rgba(255, 255, 255, 0.1)
+        --border-default: rgba(255, 255, 255, 0.1),
+        --border-color: #000
     )
 );
 
@@ -160,4 +164,16 @@ $theme-transition-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
         box-shadow: themed($color-key);
     }
     @include theme-transition();
+}
+
+// 随机辅色背景（从 $assistance-palette 中取）
+@function random-assistance-color($seed: 0) {
+    @if $seed > 0 {
+        @return nth($assistance-palette, ($seed % length($assistance-palette)) + 1);
+    }
+    @return nth($assistance-palette, random(length($assistance-palette)));
+}
+
+@mixin random-assistance-bg($seed: 0) {
+    background-color: random-assistance-color($seed);
 }

@@ -1,8 +1,8 @@
 <template>
     <div id="helpLink">
-        <!-- 导航栏 -->
-        <div class="navigation">
-            <Navigation hoverBgColor="#ecf8ff" textColor="#585858"></Navigation>
+        <!-- 导航 -->
+        <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+            <Navigation></Navigation>
         </div>
 
         <div class="trends_nav">

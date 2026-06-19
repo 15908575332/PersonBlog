@@ -1,6 +1,6 @@
 <template>
   <!-- 导航 -->
-  <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+  <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
     <Navigation></Navigation>
   </div>
   <div id="recordResource">

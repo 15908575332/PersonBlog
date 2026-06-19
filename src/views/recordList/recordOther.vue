@@ -1,6 +1,9 @@
 <template>
     <div class="otherPage">
-        <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
+        <!-- 导航 -->
+        <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+            <Navigation></Navigation>
+        </div>
         <div class="container">
             <!-- <div class="header">
                 <p>悬停查看效果，点击卡片放大查看详细信息</p>
@@ -233,19 +236,6 @@ onUnmounted(() => {
         margin: 0 auto;
         padding: 40px 20px;
         font-family: var(--app-font-family);
-
-        // .header {
-        //     text-align: center;
-        //     margin-bottom: 50px;
-
-        //     p {
-        //         font-size: 18px;
-        //         color: #7e8c9a;
-        //         max-width: 600px;
-        //         margin: 0 auto;
-        //         -webkit-line-clamp: unset;
-        //     }
-        // }
 
         .card-wrapper {
             display: grid;

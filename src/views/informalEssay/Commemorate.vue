@@ -10,7 +10,9 @@
         <div class="deng">
           <div class="xian"></div>
           <div class="deng-a">
-            <div class="deng-b"><div class="deng-t">春</div></div>
+            <div class="deng-b">
+              <div class="deng-t">春</div>
+            </div>
           </div>
           <div class="shui shui-a">
             <div class="shui-c"></div>
@@ -22,7 +24,9 @@
         <div class="deng">
           <div class="xian"></div>
           <div class="deng-a">
-            <div class="deng-b"><div class="deng-t">节</div></div>
+            <div class="deng-b">
+              <div class="deng-t">节</div>
+            </div>
           </div>
           <div class="shui shui-a">
             <div class="shui-c"></div>
@@ -34,7 +38,9 @@
         <div class="deng">
           <div class="xian"></div>
           <div class="deng-a">
-            <div class="deng-b"><div class="deng-t">乐</div></div>
+            <div class="deng-b">
+              <div class="deng-t">乐</div>
+            </div>
           </div>
           <div class="shui shui-a">
             <div class="shui-c"></div>
@@ -46,7 +52,9 @@
         <div class="deng">
           <div class="xian"></div>
           <div class="deng-a">
-            <div class="deng-b"><div class="deng-t">快</div></div>
+            <div class="deng-b">
+              <div class="deng-t">快</div>
+            </div>
           </div>
           <div class="shui shui-a">
             <div class="shui-c"></div>
@@ -83,6 +91,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
 .wedding_animation {
   @include flexCenter(column, center);
   overflow: hidden;
+
   /*flowers*/
   .w-fls {
     width: 820px;
@@ -90,33 +99,40 @@ import FireWorks from "@/components/FireWorks/index.vue";
     position: absolute;
     bottom: 0%;
   }
+
   .w-fls img {
     height: 120px;
     z-index: 400;
     animation: showFlows 0.4s ease 2.3s both;
   }
+
   @keyframes showFlows {
     0% {
       opacity: 0;
       transform: translate(0, 200px);
     }
+
     100% {
       opacity: 1;
       transform: translate(0);
     }
   }
+
   .w-2 {
     margin-top: -130px;
     padding-left: 100px;
   }
+
   .w-2 img {
     animation: showFlows 0.4s ease 2.7s both;
   }
 }
+
 //灯笼
 .denglo {
   position: releative;
   background-color: rebeccapurple;
+
   // @include flexCenter(row, center);
   .deng-box1,
   .deng-box2,
@@ -135,6 +151,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
       background: rgba(216, 0, 15, 0.8);
       border-radius: 50% 50%;
       -webkit-transform-origin: 50% -100px;
+
       .deng-a {
         width: 100px;
         height: 90px;
@@ -143,6 +160,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
         margin: 12px 8px 8px 10px;
         border-radius: 50% 50%;
         border: 2px solid #dc8f03;
+
         .deng-b {
           width: 45px;
           height: 90px;
@@ -151,6 +169,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
           margin: -2px 8px 8px 26px;
           border-radius: inherit;
           border: inherit;
+
           .deng-t {
             font-family: 华文行楷, Arial, Lucida Grande, Tahoma, sans-serif;
             font-size: 2rem;
@@ -201,6 +220,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
           border-radius: 0 0 0 5px;
         }
       }
+
       &:before {
         position: absolute;
         top: -7px;
@@ -213,14 +233,12 @@ import FireWorks from "@/components/FireWorks/index.vue";
         border-radius: 5px 5px 0 0;
         border: solid 1px #dc8f03;
         background: #ffa500;
-        background: linear-gradient(
-          to right,
-          #dc8f03,
-          #ffa500,
-          #dc8f03,
-          #ffa500,
-          #dc8f03
-        );
+        background: linear-gradient(to right,
+            #dc8f03,
+            #ffa500,
+            #dc8f03,
+            #ffa500,
+            #dc8f03);
       }
 
       &:after {
@@ -235,28 +253,30 @@ import FireWorks from "@/components/FireWorks/index.vue";
         border-radius: 0 0 5px 5px;
         border: solid 1px #dc8f03;
         background: #ffa500;
-        background: linear-gradient(
-          to right,
-          #dc8f03,
-          #ffa500,
-          #dc8f03,
-          #ffa500,
-          #dc8f03
-        );
+        background: linear-gradient(to right,
+            #dc8f03,
+            #ffa500,
+            #dc8f03,
+            #ffa500,
+            #dc8f03);
       }
     }
   }
+
   .deng-box1 {
     // top: -30px;
     left: 100px;
+
     .deng {
       -webkit-animation: swing 3s infinite ease-in-out;
       box-shadow: -5px 5px 50px 4px rgba(250, 108, 0, 1);
     }
   }
+
   .deng-box2 {
     // top: -25px;
     left: 150px;
+
     .deng {
       -webkit-animation: swing 4s infinite ease-in-out;
       box-shadow: -5px 5px 30px 4px rgba(252, 144, 61, 1);
@@ -266,6 +286,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
   .deng-box3 {
     // top: -28px;
     right: 100px;
+
     .deng {
       -webkit-animation: swing 5s infinite ease-in-out;
       box-shadow: -5px 5px 50px 4px rgba(250, 108, 0, 1);
@@ -275,6 +296,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
   .deng-box4 {
     // top: -26px;
     right: 150px;
+
     .deng {
       -webkit-animation: swing 4s infinite ease-in-out;
       box-shadow: -5px 5px 30px 4px rgba(252, 144, 61, 1);

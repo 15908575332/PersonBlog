@@ -6,7 +6,7 @@
             <!-- 内容 -->
             <div class="content-t">
                 <!-- 导航 -->
-                <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+                <div class="nav-wrapper">
                     <Navigation></Navigation>
                 </div>
             </div>

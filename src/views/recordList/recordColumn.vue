@@ -1,6 +1,9 @@
 <template>
     <div id="recordColumn">
-        <Navigation hoverBgColor="#f0f4f5" textColor="#585858" />
+        <!-- 导航 -->
+        <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+            <Navigation></Navigation>
+        </div>
         <div class="category__content">
             <!-- carousel -->
             <div class="carousel">
@@ -51,8 +54,7 @@
                                 :alt="tag.randomNumber">
                             {{ tag.randomNumber }}
                             <div class="text">
-                                <h1 class="count"
-                                    :style="`--btn-color: ${btn_colors[Math.floor(Math.random() * btn_colors.length)]};`">
+                                <h1 class="count" :style="`--btn-color: ${assistanceColorByIndex(index)};`">
                                     {{ tag.tag_count }}</h1>
                                 <h2 class="intrduce">{{ tag.master_tag }}</h2>
                             </div>
@@ -75,6 +77,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 import { useAuthStore } from '@/store/auth';
 const authStore = useAuthStore();
+import { assistanceColors, assistanceColorByIndex } from '@/styles/colorTokens';
 
 //标题栏
 const specialColumn = ref([]);
@@ -112,14 +115,6 @@ const getSpecialColumn = async () => {
     });
     specialColumn.value = await Promise.all(promises);
 };
-const btn_colors = ref([
-    '#CC6666',
-    '#CC6633',
-    '#666666',
-    '#3333CC',
-    '#ee7752',
-    '#6699FF'
-])
 //跳转详情页
 import CryptoJS from 'crypto-js';
 const gotoClomunDetail = (tag, category_id) => {
@@ -166,11 +161,6 @@ onMounted(() => {
         height: 100%;
         background-color: #f0f4f5;
         z-index: -1;
-    }
-
-    //导航
-    .navigation {
-        background-color: #fff;
     }
 
     //内容

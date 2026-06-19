@@ -6,6 +6,7 @@
     <div class="navigation">
       <navigation></navigation>
     </div>
+
     <div class="reset-password-card" v-if="!isSuccess">
       <h2>重置密码</h2>
       <div class="steps" :style="`--step: ${step}; --steps: ${steps.length}`">

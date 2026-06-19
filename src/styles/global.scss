@@ -23,21 +23,21 @@
 $breakpointers: (
   "phone": (
     320px,
-    480px,
+    480px
   ),
   "pad": (
     481px,
-    768px,
+    768px
   ),
   "notebook": (
     769px,
-    1024px,
+    1024px
   ),
   "desktop": (
     1025px,
-    1200px,
+    1200px
   ),
-  "tv": 1201px,
+  "tv": 1201px
 );
 @mixin media-to($breakname) {
   $bp: map.get($breakpointers, $breakname);
@@ -77,16 +77,16 @@ $breakpointers: (
   width: calc(100% - 36px);
   z-index: 1000;
   @include flexCenter(center, center);
-  @include background('bg-card-glass-opacity');
+  @include background("bg-card-glass-opacity");
   border: 1px solid var(--bg-card-glass);
   border-radius: 0.5rem;
 
-  &:hover  {
-    @include background('bg-card-glass');
+  &:hover {
+    @include background("bg-card-glass");
   }
 }
 // 导航栏隐藏动画
-.navHiddenOut{
+.navHiddenOut {
   animation: navSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   pointer-events: none;
 }
@@ -120,7 +120,6 @@ $breakpointers: (
     left: 18px;
   }
 }
-
 
 // 随笔、资源页面背景图向下滑动动画
 @keyframes zoomInDown {

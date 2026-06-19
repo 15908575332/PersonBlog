@@ -1,9 +1,11 @@
 <template>
   <div id="family">
+    
     <!-- 导航 -->
-    <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+    <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
       <Navigation></Navigation>
     </div>
+
     <div class="satic-area">
       <div class="dynamic-area1"></div>
       <div class="dynamic-area2"></div>

@@ -1,9 +1,10 @@
 <template>
   <div id="informalEssay">
     <!-- 导航 -->
-    <div class="nav-wrapper" :class="[isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+    <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
       <Navigation></Navigation>
     </div>
+
     <!-- 背景图 -->
     <div class="backPhoto"></div>
     <!-- 遮罩 -->
@@ -259,6 +260,7 @@ const scrollToSection = (sectionId) => {
 
 /** ------------------------ 传入文章id值详情页ListDetail ------------------------ */
 import { useRouter } from "vue-router";
+import NavigationMenu from "../../components/common/NavigationMenu.vue";
 const route = useRouter();
 const listDetail = (id) => {
   route.push({
@@ -269,14 +271,6 @@ const listDetail = (id) => {
   });
 };
 
-/** ------------------------ 滚动隐藏导航栏 ------------------------ */
-const isNavHidden = ref(false); //状态
-const scrollThreshold = 200; // 滚动阈值
-const handleScroll = () => {
-  const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
-  isNavHidden.value = scrollY > scrollThreshold;
-};
-const debouncedHandleScroll = debounce(handleScroll, 100); // 100ms 防抖延迟
 
 /** ------------------------ 图片加载完成后显示播放按钮 ------------------------ */
 const
@@ -288,12 +282,10 @@ const
   };
 
 onMounted(() => {
-  window.addEventListener("scroll", debouncedHandleScroll);
   initializeData();
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("scroll", debouncedHandleScroll);
 });
 </script>
 <style scoped lang="scss">

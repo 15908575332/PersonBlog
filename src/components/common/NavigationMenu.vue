@@ -152,25 +152,21 @@ const record_options = ref([
     value: "option1",
     text: "内容",
     router: "recordList/content",
-    engTitle: "content",
   },
   {
     value: "option2",
     text: "专栏",
     router: "recordList/column",
-    engTitle: "column",
   },
   {
     value: "option3",
     text: "资源合集",
     router: "recordList/resource",
-    engTitle: "resource",
   },
   {
     value: "option4",
     text: "其它",
     router: "recordList/other",
-    engTitle: "other",
   }
 ]);
 //百宝箱二级目录
@@ -179,19 +175,16 @@ const treasureBox_options = ref([
     value: "option1",
     text: "音乐",
     router: "treasureBox/music",
-    iconUrl: utils.getAssetsFile("icon/treasureBox/music_navigate_icon.svg"),
   },
   {
     value: "option2",
     text: "收藏夹",
     router: "treasureBox/favorites",
-    iconUrl: utils.getAssetsFile("icon/treasureBox/favorites_navigate_icon.svg"),
   },
   {
     value: "option3",
     text: "友情链接",
     router: "treasureBox/friendshipLink",
-    iconUrl: utils.getAssetsFile("icon/treasureBox/helpLink_navigate_icon.svg"),
   },
 ]);
 // 随笔二级目录
@@ -200,19 +193,16 @@ const essay_options = ref([
     value: "option0",
     text: "博客",
     router: "InformalEssay/InfoContenet",
-    iconUrl: utils.getAssetsFile("icon/informalEssay/record.svg"),
   },
   {
     value: "option1",
     text: "纪念日",
     router: "InformalEssay/commemorate",
-    iconUrl: utils.getAssetsFile("icon/informalEssay/commemorate.svg"),
   },
   {
     value: "option2",
     text: "生活卡片",
     router: "InformalEssay/lifeCard",
-    iconUrl: utils.getAssetsFile("icon/informalEssay/lifeCard.svg"),
   },
 ]);
 

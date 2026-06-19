@@ -2,7 +2,6 @@
     <div id="memberCenter">
         <!-- 背景图 -->
         <div class="backPhoto"></div>
-        <!-- 遮罩 -->
         <!-- 导航 -->
         <Navigation></Navigation>
         <div class="pricing-cards">

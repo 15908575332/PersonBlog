@@ -1,6 +1,7 @@
 <template>
     <div id="favorites">
-        <div class="navigate" :class="[isNavHidden ? 'navHiddenZoomOut' : 'navHiddenZoomIn']">
+        <!-- 导航 -->
+        <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
             <Navigation></Navigation>
         </div>
         <div class="dynamic__background">
@@ -44,15 +45,6 @@ const $http = instance.appContext.config.globalProperties.$http;
 import { useAuthStore } from '@/store/auth';
 const authStore = useAuthStore();
 
-/** ------------------------ 滚动隐藏导航栏 ------------------------ */
-import { debounce } from "@/utils/debounce"; // 导入防抖函数
-const isNavHidden = ref(false); //状态
-const scrollThreshold = 200; // 滚动阈值
-const handleScroll = () => {
-    const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
-    isNavHidden.value = scrollY > scrollThreshold;
-};
-const debouncedHandleScroll = debounce(handleScroll, 100); // 100ms 防抖延迟
 
 // 获取收藏夹数据
 const favoriteData = ref([]);
@@ -78,11 +70,8 @@ const openLink = ((url) => {
 })
 onMounted(() => {
     getFavorites();
-    window.addEventListener("scroll", debouncedHandleScroll);
-
 });
 onUnmounted(() => {
-    window.removeEventListener("scroll", debouncedHandleScroll);
 });
 </script>
 <style scoped lang="scss">
@@ -92,14 +81,6 @@ onUnmounted(() => {
     font-family: var(--app-font-family);
     //内容盒子宽度
     $front_end_width: 75vw;
-
-    .navigate {
-        width: 100vw;
-        position: fixed;
-        top: 0;
-        z-index: 2;
-        background-color: transparent;
-    }
 
     //背景
     .dynamic__background {
