@@ -1,3 +1,4 @@
+@use "sass:map";
 // 1. 定义字体文件路径映射 (SCSS Map)
 $font-assets: (
     "lmst": "@/assets/fonts/langmanstar.ttf",
@@ -26,7 +27,7 @@ $font-families: (
 
 // 4. 定义当前字体的 CSS 自定义属性（变量）及其默认值
 :root {
-    --app-font-family: map-get($font-families, "default");
+    --app-font-family: map.get($font-families, "default");
 }
 
 /* family页面使用特殊字体 */

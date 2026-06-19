@@ -1,3 +1,4 @@
+@use "sass:map";
 /* 主色调 */
 $primary-color: #5de9e0; // 主蓝色
 $primary-hover: #82dbf4; // 主色悬停状态
@@ -148,7 +149,7 @@ $theme-transition-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 @mixin text-color($color-key) {
     @each $theme-name, $theme-map in $themes {
         [data-theme="#{$theme-name}"] & {
-            color: map-get($theme-map, --#{$color-key});
+            color: map.get($theme-map, --#{$color-key});
         }
     }
     @include theme-transition();

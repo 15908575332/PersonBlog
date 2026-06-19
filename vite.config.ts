@@ -70,7 +70,7 @@ export default defineConfig({
     postcss: {
       plugins: [
         autoprefixer({
-          overrideBrowserslist: ['last 2 versions', 'ie >= 11'], // 浏览器兼容性配置
+          overrideBrowserslist: ['> 1%', 'last 2 versions', 'not dead'], // 浏览器兼容性配置
           grid: true // 是否使用 grid 布局
         }),
       ]
