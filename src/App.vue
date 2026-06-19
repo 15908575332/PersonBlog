@@ -4,8 +4,10 @@
       <!-- 渐变背景色增加过渡动画 -->
       <template v-if="finalShouldShowGlobalBg">
         <div class="background-container">
-          <div class="gradient-bg light-bg" :class="{ active: currentTheme === 'light' }"
-            :style="{ backgroundImage: currentLightBg }"></div>
+          <div class="gradient-bg light-bg"
+            :class="[`bg-type-${currentBgConfig.type}`, { active: currentTheme === 'light' }]"
+            :style="currentBgConfig.type === 'image' ? { backgroundImage: `url(${currentBgConfig.imageUrl})` } : { backgroundImage: currentBgConfig.gradient }">
+          </div>
           <div class="gradient-bg dark-bg" :class="{ active: currentTheme === 'dark' }"></div>
         </div>
       </template>
@@ -236,7 +238,9 @@
             <div class="gallery-container">
               <div class="gallery-window" v-for="(bg, index) in backgroundPreviews" :key="index"
                 :class="{ 'active': index === currentBgIndex }">
-                <div class="window-content" :style="{ background: bg.color }"></div>
+                <div class="window-content" :class="`preview-${bg.type}`"
+                  :style="bg.type === 'image' ? { backgroundImage: `url(${bg.imageUrl})`, backgroundSize: 'cover' } : { backgroundImage: bg.gradient }">
+                </div>
               </div>
             </div>
             <div class="gallery-state-indicator">{{ currentBgIndex + 1 }}/{{ backgroundPreviews.length }}</div>
@@ -379,26 +383,30 @@ function preloadFont(fontId) {
 /** ------------------------ 背景切换 ------------------------ */
 const backgroundPreviews = [
   {
-    name: '薄荷晴空',
-    color: 'radial-gradient(circle,#F3E7E9 0%,#E3EEFF 100%)'
+    name: '极光渐变',
+    type: 'gradient',
+    gradient: 'linear-gradient(160deg, #e8f8f5 0%, #d5f0e8 25%, #c5e8f8 50%, #d8e0f5 80%, #e8d8f0 100%)'
   },
   {
-    name: '柔樱初绽',
-    color: 'linear-gradient(120deg,#E0C3FC 0%,#8EC5FC 100%)'
+    name: '胶片噪点',
+    type: 'noise',
+    gradient: 'linear-gradient(135deg, #fff5f0 0%, #fef0e8 30%, #f5f0e8 60%, #f0f0f5 100%)'
   },
   {
-    name: '淡雅晨光',
-    color: 'linear-gradient(90deg,#FFF1EB 0%,#ACE0F9 100%)'
+    name: '光点矩阵',
+    type: 'dots',
+    gradient: 'linear-gradient(120deg, #f0f8ff 0%, #e8f4e8 25%, #f0f8e8 50%, #f8f4e8 75%, #fff8f0 100%)'
   },
   {
-    name: '清新海风',
-    color: 'conic-gradient(from 90deg,#EE82EE 0%,#00D1FF 100%)'
+    name: '自定义素材',
+    type: 'image',
+    imageUrl: '/bg-custom-placeholder.jpg'
   }
 ];
 
 const currentBgIndex = ref(Number(localStorage.getItem('app-bg-index')) || 0);
 const currentBgName = computed(() => backgroundPreviews[currentBgIndex.value].name);
-const currentLightBg = computed(() => backgroundPreviews[currentBgIndex.value].color); //当前背景色
+const currentBgConfig = computed(() => backgroundPreviews[currentBgIndex.value]);
 
 const toggleBackground = () => {
   currentBgIndex.value = (currentBgIndex.value + 1) % backgroundPreviews.length;
@@ -558,18 +566,42 @@ const showRippleToggle = computed(() => {
   }
 
   .light-bg {
-    background: linear-gradient(80deg,
-        #cef2fa 0%,
-        8.44482%,
-        rgb(209, 240, 236) 16.8896%,
-        38.8796%,
-        rgb(250, 239, 243) 60.8696%,
-        80.4348%,
-        #fbf3ef 100%);
+    background-size: cover;
+    background-position: center;
 
     /* 激活状态 */
     &.active {
       opacity: 1;
+    }
+
+    /* 噪点纹理 */
+    &.bg-type-noise::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.25'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 点阵图案 */
+    &.bg-type-dots::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(150, 160, 180, 0.12) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 图片类型 */
+    &.bg-type-image {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
   }
 
