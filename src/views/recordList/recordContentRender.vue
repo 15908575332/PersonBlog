@@ -1,10 +1,11 @@
 <template>
     <!-- 详情页（入口） -->
     <div>
-        <div class="navigate">
+        <!-- 导航 -->
+        <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
             <Navigation></Navigation>
         </div>
-        <ListDetail :articleId="routerId" :key="routerId"></ListDetail>
+        <ListDetail :articleId="routerId" :key="routerId" :backTextHeight=20></ListDetail>
     </div>
 </template>
 <script setup>
@@ -15,9 +16,3 @@ const route = useRoute();
 const routerId = computed(() => route.params.id);
 import Navigation from "@/components/common/NavigationMenu.vue";
 </script>
-<style>
-.navigate {
-    position: relative;
-    z-index: 2;
-}
-</style>

@@ -385,12 +385,12 @@ const backgroundPreviews = [
   {
     name: '极光渐变',
     type: 'gradient',
-    gradient: 'linear-gradient(160deg, #e8f8f5 0%, #d5f0e8 25%, #c5e8f8 50%, #d8e0f5 80%, #e8d8f0 100%)'
+    gradient: 'linear-gradient(0deg,#F3E7E9 0%,#E3EEFF 100%)'
   },
   {
     name: '胶片噪点',
     type: 'noise',
-    gradient: 'linear-gradient(135deg, #fff5f0 0%, #fef0e8 30%, #f5f0e8 60%, #f0f0f5 100%)'
+    gradient: 'linear-gradient(to right,#bb313e25,#bb313e25,#d7222925,#dd4a1625,#e4761525,#f5c50025,#f0e92725,#b1ce2425,#48a93525,#03944525,#157c4f25,#176a5825,#1b556325,#1d386f25,#1d386f25,#20277825,#52266325,#8a244b25)'
   },
   {
     name: '光点矩阵',
@@ -599,9 +599,9 @@ const showRippleToggle = computed(() => {
 
     /* 图片类型 */
     &.bg-type-image {
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background-size: auto;
+      background-position: top left;
+      background-repeat: repeat;
     }
   }
 

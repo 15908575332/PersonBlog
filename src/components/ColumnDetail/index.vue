@@ -1,8 +1,8 @@
 <template>
     <div>
         <!-- 专栏 -->
-        <div style="position: relative;top: 0; z-index: 1; width: 100%;">
-            <Navigation hoverBgColor="#ecf8ff" textColor="#585858" style="z-index: 1;" />
+        <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+            <Navigation></Navigation>
         </div>
         <div id="columnDetail">
             <!-- 左侧目录 -->

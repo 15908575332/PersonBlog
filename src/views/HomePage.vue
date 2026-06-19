@@ -453,7 +453,7 @@ onUnmounted(() => {
         .search-container {
           @include flexCenter(row, space-between);
           text-align: center;
-          width: 35vw;
+          width: 32vw;
           min-width: 10rem;
           font-size: 0.8rem;
           background-color: rgba(0, 0, 0, 0.3);

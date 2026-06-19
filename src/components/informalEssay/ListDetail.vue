@@ -613,12 +613,14 @@ const props = defineProps({
     backTextHeight: {
         // 顶部标题高度
         type: [Number, String],
-        default: 18,
+        default: 20,
     },
 });
+
 const backTextStyle = computed(() => {
     return { "--back-text-height": `${props.backTextHeight}rem` };
 });
+
 const paramsId = computed(() => {
     //本文实际使用唯一参数值
     if (props.articleId != null) {
@@ -966,7 +968,7 @@ onMounted(async () => {
         // 背景图
         .backPhoto {
             width: 100vw;
-            height: 19rem;
+            height: var(--back-text-height);
             background-size: cover;
             z-index: 0;
             background-position: center;
@@ -996,20 +998,20 @@ onMounted(async () => {
         // 遮罩
         &::after {
             content: "";
-            @include mask-overlay(#00000040, 19rem);
+            @include mask-overlay(#00000040, var(--back-text-height));
             animation: zoomInDown 0.6s ease-out forwards;
         }
 
         .back__text {
             @include flexCenter(column, center);
-            height: 85%;
-            color: white;
+            height: 100%;
+            color: $general-white;
             font-family: var(--app-font-family);
             z-index: 1;
             position: relative;
             animation: zoomInDown 0.6s ease-out forwards;
-            padding: 0 1rem;
             position: relative;
+
 
             .subtitle {
                 position: absolute;
@@ -1070,6 +1072,7 @@ onMounted(async () => {
         margin-right: auto;
         font-size: 0.9rem;
         animation: zoomInUp 0.6s ease-out forwards;
+        padding-top: 2rem;
 
         .image {
             display: flex;

@@ -152,17 +152,6 @@ onMounted(() => {
     $category_content_width: 60rem;
     @include flexCenter(column, center);
 
-    &::after {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #f0f4f5;
-        z-index: -1;
-    }
-
     //内容
     .category__content {
         width: $category_content_width;

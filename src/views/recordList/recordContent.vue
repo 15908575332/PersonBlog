@@ -449,7 +449,7 @@ onMounted(() => {
 
     &::after {
       content: "";
-      @include mask-overlay(rgba(0, 0, 0, 0.2));
+      @include mask-overlay(rgba(0, 0, 0, 0.1));
       pointer-events: none;
     }
   }
