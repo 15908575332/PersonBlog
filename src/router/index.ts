@@ -41,11 +41,11 @@ const router = createRouter({
                     name: "commemorate",
                     component: () => import('@/views/informalEssay/Commemorate.vue')
                 },
-                {
-                    path: "lifeCard",
-                    name: "lifeCard",
-                    component: () => import('@/views/informalEssay/LifeCard.vue')
-                },
+                // {
+                //     path: "lifeCard",
+                //     name: "lifeCard",
+                //     component: () => import('@/views/informalEssay/LifeCard.vue')
+                // },
 
             ]
         },

@@ -26,7 +26,7 @@ onMounted(() => {
 
   // 星空星星数组
   var stars = [];
-  var starCount = Math.floor((canvas.width * canvas.height) / 3500); // 星星数量与屏幕面积相关
+  var starCount = Math.floor((canvas.width * canvas.height) / 5500); // 星星数量与屏幕面积相关
   function initStars() {
     stars = [];
     for (var i = 0; i < starCount; i++) {
@@ -47,7 +47,7 @@ onMounted(() => {
   // 监听窗口变化时重建星星
   window.addEventListener("resize", () => {
     setCanvasSize();
-    starCount = Math.floor((canvas.width * canvas.height) / 3500);
+    starCount = Math.floor((canvas.width * canvas.height) / 5500);
     initStars();
   });
   window.addEventListener("resize", resizeHandler);
@@ -926,38 +926,71 @@ onMounted(() => {
   }
 
   function draw() {
-    // 清空画布，背景色可在此处调整
+    // 深邃夜幕渐变：从冷蓝到深紫
     ctx.globalCompositeOperation = "source-over";
     ctx.globalAlpha = 0.2;
-    ctx.fillStyle = "#000"; // 烟花背景色（白色，自动适配烟花为深色）
+    var bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    bgGradient.addColorStop(0, "#020814");
+    bgGradient.addColorStop(0.5, "#0a1428");
+    bgGradient.addColorStop(1, "#100d1e");
+    ctx.fillStyle = bgGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // 绘制右上角满月
-    const moonRadius = Math.min(canvas.width, canvas.height) * 0.04; //大小
-
-    const moonX = canvas.width - (canvas.width / 3);
+    const moonRadius = Math.min(canvas.width, canvas.height) * 0.04;
+    const moonX = canvas.width - canvas.width / 3;
     const moonY = moonRadius + 100;
+
+    // 光晕层 — 在主体之外独立渲染
     ctx.save();
     ctx.globalAlpha = 0.95;
-    // 满月主体
-    const moonGradient = ctx.createRadialGradient(
-      moonX,
-      moonY,
-      moonRadius * 0.5,
-      moonX,
-      moonY,
-      moonRadius
-    );
-    moonGradient.addColorStop(0, "#fffbe8");
-    moonGradient.addColorStop(0.5, "#fff9d1");
-    moonGradient.addColorStop(1, "#f6e7b7");
     ctx.beginPath();
     ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
     ctx.closePath();
-    ctx.fillStyle = moonGradient;
-    ctx.shadowColor = "#fffbe8";
+    ctx.fillStyle = "#e8dcc0";
+    ctx.shadowColor = "#e8dcc0";
     ctx.shadowBlur = 30;
     ctx.fill();
+    ctx.restore();
+
+    // 月亮主体 — clip 内渐变 + 暗区纹理
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+
+    var moonGradient = ctx.createRadialGradient(
+      moonX, moonY, moonRadius * 0.5,
+      moonX, moonY, moonRadius
+    );
+    moonGradient.addColorStop(0, "#e8dcc0");
+    moonGradient.addColorStop(0.5, "#e0d0b0");
+    moonGradient.addColorStop(1, "#d4c498");
+    ctx.fillStyle = moonGradient;
+    ctx.fillRect(moonX - moonRadius, moonY - moonRadius, moonRadius * 2, moonRadius * 2);
+
+    // 月面暗色区域 — 大面积不规则阴影
+    var darkZones = [
+      [ -0.15, -0.22, 0.52, 0.58, 0.06,  0.3 ],
+      [  0.22,  0.14, 0.48, 0.42, 0.07, -0.2 ],
+      [ -0.02, -0.32, 0.38, 0.20, 0.05,  0.5 ],
+      [ -0.36,  0.04, 0.30, 0.26, 0.04, -0.4 ],
+      [  0.10,  0.30, 0.32, 0.18, 0.05,  0.15 ],
+    ];
+    for (var d = 0; d < darkZones.length; d++) {
+      var dz = darkZones[d];
+      ctx.save();
+      ctx.translate(moonX + dz[0] * moonRadius, moonY + dz[1] * moonRadius);
+      ctx.rotate(dz[5]);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, dz[2] * moonRadius, dz[3] * moonRadius, 0, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(50,42,30," + dz[4] + ")";
+      ctx.fill();
+      ctx.restore();
+    }
+
     ctx.restore();
 
     // 绘制星空星星

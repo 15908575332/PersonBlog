@@ -1,7 +1,10 @@
 <template>
   <!-- 导航 -->
   <div id="commemorate">
-    <Navigation />
+    <!-- 导航 -->
+    <div class="nav-wrapper">
+      <Navigation></Navigation>
+    </div>
     <!-- 烟花 -->
     <FireWorks />
     <!-- 灯笼 -->
@@ -63,23 +66,6 @@
         </div>
       </div>
     </div>
-    <!-- 求婚动画 -->
-    <div class="wedding_animation">
-      <div class="w-fls">
-        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-      </div>
-      <div class="w-fls w-2">
-        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-        <img :src="utils.getAssetsFile('img/family/flowers1.png')" alt="" />
-        <img :src="utils.getAssetsFile('img/family/flowers2.png')" alt="" />
-      </div>
-    </div>
   </div>
 </template>
 <script setup>
@@ -88,50 +74,9 @@ import Navigation from "@/components/common/NavigationMenu.vue";
 import FireWorks from "@/components/FireWorks/index.vue";
 </script>
 <style lang="scss" scoped>
-.wedding_animation {
-  @include flexCenter(column, center);
-  overflow: hidden;
-
-  /*flowers*/
-  .w-fls {
-    width: 820px;
-    margin: 0 auto;
-    position: absolute;
-    bottom: 0%;
-  }
-
-  .w-fls img {
-    height: 120px;
-    z-index: 400;
-    animation: showFlows 0.4s ease 2.3s both;
-  }
-
-  @keyframes showFlows {
-    0% {
-      opacity: 0;
-      transform: translate(0, 200px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translate(0);
-    }
-  }
-
-  .w-2 {
-    margin-top: -130px;
-    padding-left: 100px;
-  }
-
-  .w-2 img {
-    animation: showFlows 0.4s ease 2.7s both;
-  }
-}
-
 //灯笼
 .denglo {
-  position: releative;
-  background-color: rebeccapurple;
+  position: relative;
 
   // @include flexCenter(row, center);
   .deng-box1,
@@ -150,6 +95,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
       background: #d8000f;
       background: rgba(216, 0, 15, 0.8);
       border-radius: 50% 50%;
+      transform-origin: 50% -100px;
       -webkit-transform-origin: 50% -100px;
 
       .deng-a {
@@ -196,6 +142,8 @@ import FireWorks from "@/components/FireWorks/index.vue";
         height: 20px;
         margin: -5px 0 0 59px;
         -webkit-animation: swing 4s infinite ease-in-out;
+        animation: swing 4s infinite ease-in-out;
+        transform-origin: 50% -45px;
         -webkit-transform-origin: 50% -45px;
         background: #ffa500;
         border-radius: 0 0 5px 5px;
@@ -269,6 +217,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
 
     .deng {
       -webkit-animation: swing 3s infinite ease-in-out;
+      animation: swing 3s infinite ease-in-out;
       box-shadow: -5px 5px 50px 4px rgba(250, 108, 0, 1);
     }
   }
@@ -279,6 +228,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
 
     .deng {
       -webkit-animation: swing 4s infinite ease-in-out;
+      animation: swing 4s infinite ease-in-out;
       box-shadow: -5px 5px 30px 4px rgba(252, 144, 61, 1);
     }
   }
@@ -289,6 +239,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
 
     .deng {
       -webkit-animation: swing 5s infinite ease-in-out;
+      animation: swing 5s infinite ease-in-out;
       box-shadow: -5px 5px 50px 4px rgba(250, 108, 0, 1);
     }
   }
@@ -299,6 +250,7 @@ import FireWorks from "@/components/FireWorks/index.vue";
 
     .deng {
       -webkit-animation: swing 4s infinite ease-in-out;
+      animation: swing 4s infinite ease-in-out;
       box-shadow: -5px 5px 30px 4px rgba(252, 144, 61, 1);
     }
   }
@@ -328,6 +280,20 @@ import FireWorks from "@/components/FireWorks/index.vue";
 
     100% {
       -webkit-transform: rotate(-10deg);
+    }
+  }
+
+  @keyframes swing {
+    0% {
+      transform: rotate(-10deg);
+    }
+
+    50% {
+      transform: rotate(10deg);
+    }
+
+    100% {
+      transform: rotate(-10deg);
     }
   }
 }

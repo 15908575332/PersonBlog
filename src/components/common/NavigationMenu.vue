@@ -199,11 +199,11 @@ const essay_options = ref([
     text: "纪念日",
     router: "InformalEssay/commemorate",
   },
-  {
-    value: "option2",
-    text: "生活卡片",
-    router: "InformalEssay/lifeCard",
-  },
+  // {
+  //   value: "option2",
+  //   text: "生活卡片",
+  //   router: "InformalEssay/lifeCard",
+  // },
 ]);
 
 const showModalFun = () => {
