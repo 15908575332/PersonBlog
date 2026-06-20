@@ -1,6 +1,6 @@
 <template>
   <div id="family">
-    
+
     <!-- 导航 -->
     <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
       <Navigation></Navigation>
@@ -149,118 +149,6 @@
             </li>
           </ul>
         </div>
-      </div>
-      <!-- 模块内容 -->
-      <div class="module_content">
-        <!-- 模块一 -->
-        <transition name="bounce" mode="out-in">
-          <section class="main" v-if="changeModule === 'module1'">
-            <ul class="lifeCard">
-              <li class="event">
-                <input type="radio" name="tl-group" checked />
-                <label></label>
-                <div class="thumb user-1"><span>19 岁</span></div>
-                <div class="content-perspective">
-                  <div class="content">
-                    <div class="content-inner">
-                      <h3>
-                        <span>I</span>
-                        <span>find</span>
-                        <span>your</span>
-                        <span>lack</span>
-                        <span>of</span>
-                        <span>faith</span>
-                        <span>disturbing</span>
-                      </h3>
-                      <p>
-                        别为你制造的这场科技恐怖感到骄傲。能让我老师傅的存在感。逃跑不是他的计划。我必须面对他独自
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </li>
-
-              <li class="event">
-                <input type="radio" name="tl-group" />
-                <label></label>
-                <div class="thumb user-2"><span>18 岁</span></div>
-                <div class="content-perspective">
-                  <div class="content">
-                    <div class="content-inner">
-                      <h3>I ain't shooting this thing, I hate guns.</h3>
-                      <p>
-                        哈，伊利安德兰。你也不能叫我'你'。你永远不会称呼我为'你'。你要叫我'殿下'。我真的得回去了。我不该逃跑。我现在明白了，爱是我负担不起的。
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </li>
-
-              <li class="event">
-                <input type="radio" name="tl-group" />
-                <label></label>
-                <div class="thumb user-3"><span>17 岁</span></div>
-                <div class="content-perspective">
-                  <div class="content">
-                    <div class="content-inner">
-                      <h3>My brains are going into my feet!</h3>
-                      <p>We're done with you. Go back to the golf cou</p>
-                    </div>
-                  </div>
-                </div>
-              </li>
-
-              <li class="event">
-                <input type="radio" name="tl-group" />
-                <label></label>
-                <div class="thumb user-4"><span>16 岁</span></div>
-                <div class="content-perspective">
-                  <div class="content">
-                    <div class="content-inner">
-                      <h3>Would you please stop calling me that?</h3>
-                      <p>
-                        有时候你真让我难受。你也有你的时刻。撤离员工的人并不多。
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </section>
-          <!-- 模块二 -->
-          <div v-else-if="changeModule === 'module2'">
-            <div class="gallery">
-              <div class="gallery__image">
-                <img v-lazy="'https://picsum.photos/id/101/1920/1080'" alt="1" />
-              </div>
-              <div class="gallery__image">
-                <img v-lazy="'https://picsum.photos/id/102/1920/1080'" alt="2" />
-              </div>
-              <div class="gallery__image">
-                <img v-lazy="'https://picsum.photos/id/103/1920/1080'" alt="3" />
-              </div>
-            </div>
-          </div>
-          <!-- 模块三 -->
-          <div v-else="changeModule === 'module3'">
-            <div class="g-container">
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-              <div class="g-item" data-aos="fade-up"></div>
-            </div>
-          </div>
-        </transition>
       </div>
     </div>
   </div>
