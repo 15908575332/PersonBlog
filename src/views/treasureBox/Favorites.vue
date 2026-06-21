@@ -24,7 +24,7 @@
                 <li v-for="modules in item.content" class="glass-btn" @click.prevent="openLink(modules.href)">
                     <a>
                         <div class="iconImg">
-                            <img v-lazy="modules.imgSrc" alt="icon">
+                            <LazyImage :src="modules.imgSrc" alt="icon" />
                         </div>
                         <div class="text-content">
                             <h5>{{ modules.subtitle }}</h5>

@@ -49,7 +49,7 @@
             data-aos="zoom-in">
             <!-- 图片和一些数据 -->
             <div class="search_result_image">
-              <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+              <LazyImage :src="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
               <ul class="item_count">
                 <li v-if="item.cover_video_url !== null">
                   <img src="@/assets/icon/recordList/countPlay-icon.svg" alt="play" />
@@ -106,7 +106,7 @@
             <div class="hoverBanner" :style="{ opacity: isActive == module.category_id ? 1 : 0 }"></div>
             <a href="#">
               <div class="profile__picture">
-                <img v-lazy="module.category_img_url" alt="icon" />
+                <LazyImage :src="module.category_img_url" alt="icon" />
               </div>
               <div>
                 <h1>{{ module.nav_btn_title }}</h1>
@@ -133,7 +133,7 @@
             <div class="specific__content" v-for="item in advocateItems" :key="item.id">
               <div v-if="item.has_advocate">
                 <a class="image" @click="listDetail(item.article_id)" data-aos="zoom-in">
-                  <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                  <LazyImage :src="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
                   <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
                   <div class="item__count">
                     <ul>
@@ -183,7 +183,7 @@
                 <video v-if="item.cover_video_url" class="videos" :src="item.cover_video_url" loop playsinline
                   preload="metadata">
                 </video>
-                <img v-else v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                <LazyImage v-else :src="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
                 <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
                 <div class="item__count">
                   <ul>
@@ -974,11 +974,33 @@ onMounted(() => {
       }
 
       .advocate-menu {
-        border-color: themed('primary-sub');
+        border-color: themed('primary-color');
+        padding: 1.2rem 0.2rem 0.5rem;
+
+        .flex__layout:first-child {
+          img {
+            width: 2.5rem;
+          }
+        }
+
+        .flex__layout:last-child {
+          gap: 0.3rem;
+
+          img {
+            opacity: 0.7;
+          }
+
+          span {
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            color: themed('primary-color') !important;
+          }
+        }
       }
 
       .advocate-more {
-        color: themed('primary-sub') !important;
+        color: themed('primary-color') !important;
       }
 
       .content_aera {
@@ -1036,38 +1058,81 @@ onMounted(() => {
           }
 
           .text__content {
-            background-color: themed('bg-card-glass');
+            position: relative;
+            background: linear-gradient(180deg,
+                themed('bg-card-glass') 0%,
+                rgba(themed('bg-card-glass-rgb'), 0.92) 100%);
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.7rem 0.6rem 0.5rem;
+            transition: background 0.3s ease;
+
+            // 顶部装饰色条
+            &::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0.6rem;
+              right: 0.6rem;
+              height: 2px;
+              border-radius: 1px;
+              background: linear-gradient(90deg,
+                  themed('primary-color') 0%,
+                  themed('primary-sub') 50%,
+                  transparent 100%);
+              opacity: 0.55;
+            }
 
             .release {
               display: flex;
               align-items: center;
-              font-size: 0.68rem;
+              gap: 0.4rem;
+              font-size: 0.65rem;
               font-weight: 400;
-              margin-bottom: 0.3rem;
+              margin-bottom: 0.35rem;
               color: themed('text-sec-color');
+
+              // 用户名首字母头像圆
+              span:first-child {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+
+                &::before {
+                  content: '';
+                  display: inline-block;
+                  width: 0.42rem;
+                  height: 0.42rem;
+                  border-radius: 50%;
+                  background: themed('primary-color');
+                  flex-shrink: 0;
+                  opacity: 0.7;
+                }
+              }
 
               span:not(:last-child)::after {
                 content: '·';
-                opacity: 0.45;
+                opacity: 0.35;
                 font-weight: 300;
-                margin: 0 0.3rem;
+                margin-left: 0.1rem;
               }
             }
 
-            img {
-              margin-right: 0.25rem;
-            }
-
             h1 {
-              font-size: 0.9rem;
-              font-weight: 600;
+              font-size: 0.88rem;
+              font-weight: 650;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
-              line-height: 1.35;
+              line-height: 1.4;
+              letter-spacing: 0.01em;
               color: themed('text-color');
+              padding-bottom: 0.15rem;
+              transition: color 0.2s ease;
+            }
+
+            // hover 时标题微变
+            .specific__content:hover & h1 {
+              color: themed('primary-color');
             }
           }
         }
@@ -1126,23 +1191,119 @@ onMounted(() => {
                 padding-right: 0.2rem;
                 height: 0.65rem !important;
                 transform: scale(1) !important;
-                filter: brightness(0) invert(1);
               }
             }
           }
         }
       }
 
-      // 推荐位（保留弹性尺寸，不受固定高度限制）
+      // 推荐位 - 视觉突出设计
       .advocate {
         position: relative;
 
+        // 推荐位卡片
+        .specific__content {
+          border-color: themed('border-default');
+          border-width: 1.5px;
+          border-radius: 0.85rem;
+          box-shadow: themed('shadow-card');
+
+          &:hover {
+            border-color: themed('color-accent');
+            box-shadow:
+              0 4px 20px rgba(232, 132, 92, 0.18),
+              0 0 0 1px rgba(232, 132, 92, 0.12) inset;
+          }
+
+          // 让包裹层div撑满flex容器
+          > div {
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+          }
+
+          // 推荐位文字区
+          .text__content {
+            &::before {
+              height: 2.5px;
+              opacity: 0.7;
+            }
+
+            h1 {
+              font-size: 0.95rem;
+              font-weight: 700;
+            }
+          }
+
+          // hover 标题变 accent 色
+          &:hover .text__content h1 {
+            color: themed('color-accent');
+          }
+        }
+
+        // 首个推荐位 - 特大卡片
         .specific__content:first-child {
           grid-column: span 2;
-          height: 16rem;
+          height: 17rem;
+
+          // 推荐角标
+          &::after {
+            content: '推荐';
+            position: absolute;
+            top: 0.6rem;
+            left: 0.6rem;
+            z-index: 3;
+            padding: 0.18rem 0.6rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #fff;
+            background: linear-gradient(
+              135deg,
+              themed('color-accent'),
+              themed('color-accent-hover')
+            );
+            border-radius: 0.3rem;
+            box-shadow: 0 2px 8px rgba(232, 132, 92, 0.35);
+            pointer-events: none;
+          }
+
+          &:hover {
+            border-color: themed('color-accent');
+            box-shadow:
+              0 6px 28px rgba(232, 132, 92, 0.22),
+              0 0 0 1.5px rgba(232, 132, 92, 0.15) inset,
+              0 0 80px rgba(232, 132, 92, 0.06);
+          }
 
           .text__content {
             position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.8rem 1rem;
+            background: linear-gradient(
+              180deg,
+              transparent 0%,
+              rgba(0, 0, 0, 0.65) 100%
+            );
+
+            &::before {
+              display: none;
+            }
+
+            .release {
+              color: rgba(255, 255, 255, 0.8);
+            }
+
+            h1 {
+              color: #fff;
+              font-size: 1.15rem;
+              font-weight: 750;
+              text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+            }
           }
         }
       }

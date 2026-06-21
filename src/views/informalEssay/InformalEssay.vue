@@ -122,7 +122,7 @@
                   <div class="specific__content box__shadow" v-for="(item, index) in dataContent[module.category_id]"
                     :key="index">
                     <figure class="image c4-izmir c4-image-pan-down" @click="listDetail(item.article_id)">
-                      <img v-lazy="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
+                      <LazyImage :src="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
                       <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
                     </figure>
                     <div class="text__content">

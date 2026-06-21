@@ -5,8 +5,7 @@
       <template v-if="finalShouldShowGlobalBg">
         <div class="background-container">
           <div class="gradient-bg light-bg"
-            :class="[`bg-type-${currentBgConfig.type}`, { active: currentTheme === 'light' }]"
-            :style="currentBgConfig.type === 'image' ? { backgroundImage: `url(${currentBgConfig.imageUrl})` } : { backgroundImage: currentBgConfig.gradient }">
+            :class="[`bg-type-${currentBgConfig.type}`, { active: currentTheme === 'light' }]" :style="bgStyle">
           </div>
           <div class="gradient-bg dark-bg" :class="{ active: currentTheme === 'dark' }"></div>
         </div>
@@ -279,7 +278,8 @@ window.toggleTheme = toggleTheme;
 const noGlobalBgPrefixes = [ // 路由及其所有子路由都会显示背景色
   '/treasureBox',
   '/recordList',
-  '/contactUs'
+  '/contactUs',
+  '/family'
 ];
 
 // 计算是否显示全局背景
@@ -395,7 +395,7 @@ const backgroundPreviews = [
   {
     name: '光点矩阵',
     type: 'dots',
-    gradient: 'linear-gradient(120deg, #f0f8ff 0%, #e8f4e8 25%, #f0f8e8 50%, #f8f4e8 75%, #fff8f0 100%)'
+    gradient: 'radial-gradient(circle, #e4d1b4 0.7px, transparent 0.7px),radial-gradient(circle, transparent 0.7px, #c97b7b 0.7px 1px, transparent 1px)'
   },
   {
     name: '自定义素材',
@@ -407,6 +407,17 @@ const backgroundPreviews = [
 const currentBgIndex = ref(Number(localStorage.getItem('app-bg-index')) || 0);
 const currentBgName = computed(() => backgroundPreviews[currentBgIndex.value].name);
 const currentBgConfig = computed(() => backgroundPreviews[currentBgIndex.value]);
+
+const bgStyle = computed(() => {
+  const cfg = currentBgConfig.value;
+  if (cfg.type === 'image') {
+    return { backgroundImage: `url(${cfg.imageUrl})` };
+  }
+  if (cfg.type === 'dots') {
+    return { backgroundImage: cfg.gradient, backgroundSize: '24px 24px' };
+  }
+  return { backgroundImage: cfg.gradient };
+});
 
 const toggleBackground = () => {
   currentBgIndex.value = (currentBgIndex.value + 1) % backgroundPreviews.length;
@@ -566,8 +577,8 @@ const showRippleToggle = computed(() => {
   }
 
   .light-bg {
-    background-size: cover;
     background-position: center;
+    background-size: auto;
 
     /* 激活状态 */
     &.active {
@@ -586,16 +597,7 @@ const showRippleToggle = computed(() => {
       z-index: 0;
     }
 
-    /* 点阵图案 */
-    &.bg-type-dots::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(circle, rgba(150, 160, 180, 0.12) 1px, transparent 1px);
-      background-size: 24px 24px;
-      pointer-events: none;
-      z-index: 0;
-    }
+    /* 点阵图案 - 由内联 bgStyle 控制 */
 
     /* 图片类型 */
     &.bg-type-image {

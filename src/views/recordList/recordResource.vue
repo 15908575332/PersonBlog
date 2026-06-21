@@ -37,7 +37,7 @@
         <div v-for="(module, index) in mainContent" data-aos="fade-up" :key="index" class="module-container">
           <div :class="['module', getLayoutClass(index)]">
             <a @click="listDetail(module.article_id)" class="image">
-              <img v-if="!module.cover_video_url" v-lazy="module.cover_image_url" alt="Image" />
+              <LazyImage v-if="!module.cover_video_url" :src="module.cover_image_url" alt="Image" />
               <video v-else :src="module.cover_video_url" controls></video>
             </a>
             <div class="text__content">

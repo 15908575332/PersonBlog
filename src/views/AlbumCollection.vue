@@ -77,7 +77,7 @@
         <div class="flex_body">
           <div class="box" v-for="item in travels" :key="item.id">
             <div class="img__box">
-              <img v-lazy="item" alt="tests" />
+              <LazyImage :src="item" alt="tests" />
             </div>
             <div class="text__box">
               <h1>风住尘香花已尽，日晚倦梳头风住尘香花已尽，日晚倦梳头。</h1>

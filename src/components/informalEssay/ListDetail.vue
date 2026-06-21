@@ -74,7 +74,7 @@
                         autoplay muted loop playsinline></video>
 
                     <!-- 图片背景 -->
-                    <img v-else v-lazy="recordDetail.cover_image_url" class="bg-image" />
+                    <LazyImage v-else :src="recordDetail.cover_image_url" class="bg-image" />
                 </div>
 
                 <!-- 遮罩 -->
@@ -121,7 +121,7 @@
                 <div class="image">
                     <video v-if="recordDetail.cover_video_url" :src="recordDetail.cover_video_url" controls
                         ref="videoRef" @play="handlePlay" @pause="handlePause"></video>
-                    <img v-else v-lazy="recordDetail.cover_image_url" alt="backimg" />
+                    <LazyImage v-else :src="recordDetail.cover_image_url" alt="backimg" />
                     <button v-if="recordDetail.cover_video_url && !isPlaying" class="play-button"
                         @click="playVideo"></button>
                 </div>

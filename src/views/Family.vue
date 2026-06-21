@@ -1,1173 +1,1761 @@
 <template>
   <div id="family">
 
+
     <!-- 导航 -->
     <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
       <Navigation></Navigation>
     </div>
 
-    <div class="satic-area">
-      <div class="dynamic-area1"></div>
-      <div class="dynamic-area2"></div>
-    </div>
-    <div class="content__container">
-      <!-- 头像 -->
-      <div class="profile__picture">
-        <ul>
-          <li class="item">
-            <img src="@/assets/img/profile_picture/10025.png" alt="" />
-            <h1>Auther</h1>
-          </li>
-          <li class="item heart"></li>
-          <li class="item">
-            <img src="@/assets/img/profile_picture/10024.png" alt="" />
-            <h1>Abby</h1>
-          </li>
-        </ul>
+    <!-- ===== Section 1: Hero ===== -->
+    <section class="hero">
+      <div class="section-roses" aria-hidden="true">
+        <svg class="section-rose" style="left:8%;top:12%;width:32px;--rot:5deg;--ri:1" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:85%;top:70%;width:28px;--rot:-10deg;--ri:2" viewBox="0 0 28 28"
+          fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:55%;top:45%;width:36px;--rot:15deg;--ri:3" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
       </div>
-      <!-- 导航 -->
-      <div class="nav-module">
-        <!-- 计时器 -->
-        <div class="title__time">
-          <h1>这是我们一起走过的</h1>
-          <div class="formattedDateTime">
-            <label for="">第</label>
-            <span>
-              {{ formattedDateTime.years }}
-            </span>
-            <label for="">年</label>
-            <span>
-              {{ formattedDateTime.months }}
-            </span>
-            <label for="">月</label>
-
-            <span>
-              {{ formattedDateTime.days }}
-            </span>
-            <label for="">日</label>
-            <span>
-              {{ formattedDateTime.hours }}
-            </span>
-            <label for="">时</label>
-
-            <span>
-              {{ formattedDateTime.minutes }}
-            </span>
-            <label for="">分</label>
-
-            <span>
-              {{ formattedDateTime.seconds }}
-            </span>
-            <label for="">秒</label>
+      <div class="hero__overlay"></div>
+      <div class="hero__content">
+        <!-- Floating decorative particles -->
+        <div class="hero__particles">
+          <span class="particle" v-for="n in 5" :key="n" :style="{ '--i': n }"></span>
+        </div>
+        <div class="hero__portraits">
+          <div class="portrait portrait--left">
+            <div class="portrait__tags portrait__tags--left">
+              <span class="tag" v-for="tag in authorTags" :key="tag.label"
+                :style="{ '--delay': tag.delay, '--tag-color': tag.color }">
+                <span class="tag__icon" v-html="getIcon(tag.icon)"></span>
+                {{ tag.label }}
+              </span>
+            </div>
+            <div class="portrait__ring">
+              <img src="@/assets/img/profile_picture/10025.png" alt="Author" />
+            </div>
+            <span class="portrait__name">Author</span>
           </div>
-          <p>
-            春节倒计时： {{ countdown.days }}天{{ countdown.hours }}时{{
-              countdown.minutes
-            }}分{{ countdown.seconds }}秒
-          </p>
+          <div class="hero__heart">
+            <div class="heart-shape"></div>
+          </div>
+          <div class="portrait portrait--right">
+            <div class="portrait__tags portrait__tags--right">
+              <span class="tag" v-for="tag in abbyTags" :key="tag.label"
+                :style="{ '--delay': tag.delay, '--tag-color': tag.color }">
+                <span class="tag__icon" v-html="getIcon(tag.icon)"></span>
+                {{ tag.label }}
+              </span>
+            </div>
+            <div class="portrait__ring">
+              <img src="@/assets/img/profile_picture/10024.png" alt="Abby" />
+            </div>
+            <span class="portrait__name">Abby</span>
+          </div>
         </div>
-        <!-- 探索未知 -->
-        <div class="letter">
-          <h1>探索未知</h1>
-          <!-- 图标 -->
-          <span>
-            <svg data-v-16b23934="" viewBox="0 0 1024 1024" width="40" height="40">
-              <path data-v-16b23934=""
-                d="M399.502 655.103c0 7.902-6.665 14.311-14.88 14.311H72.188c-8.215 0-14.875-6.407-14.875-14.311v-28.634c0-7.913 6.66-14.315 14.875-14.315h312.435c8.217 0 14.88 6.402 14.88 14.315l-0.001 28.634zM968.167 655.103c0 7.902-6.664 14.311-14.882 14.311H640.851c-8.216 0-14.877-6.407-14.877-14.311v-28.634c0-7.913 6.661-14.315 14.877-14.315h312.436c8.218 0 14.882 6.402 14.882 14.315l-0.002 28.634z"
-                fill="#EA0606"></path>
-              <path data-v-16b23934=""
-                d="M968.097 624.008c0 11.563-17.723 20.937-39.583 20.937H97.263c-21.858 0-39.579-9.372-39.579-20.937v-41.876c0-11.562 17.72-20.935 39.579-20.935h831.25c21.86 0 39.583 9.373 39.583 20.935v41.876zM855.003 526.553h-12c0-161.793-151.025-293.421-336.66-293.421-185.633 0-336.656 131.628-336.656 293.421h-12c0-41.334 9.261-81.425 27.527-119.161 17.612-36.384 42.807-69.046 74.886-97.079 65.813-57.509 153.264-89.181 246.243-89.181 92.981 0 180.434 31.672 246.247 89.181 32.079 28.032 57.274 60.693 74.887 97.079 18.264 37.734 27.526 77.826 27.526 119.161z"
-                fill="#EA0606"></path>
-              <path data-v-16b23934=""
-                d="M1001.996 588.091c-121.146 13.91-980.875 0-980.875 0s-30.62-203.887 241.944-144.555c171.281-1.178 273.436 0 489.644 0 193.07-59.332 283.186 108.642 249.287 144.555z"
-                fill="#EA0606"></path>
-              <path data-v-16b23934="" d="M500.343 214.379h12v330.342h-12z" fill="#EA0606"></path>
-              <path data-v-16b23934=""
-                d="M333.217 657.192c0 46.174-38.961 83.602-87.029 83.602-48.056 0-87.021-37.428-87.021-83.602 0-46.172 38.963-83.588 87.021-83.588 48.067 0 87.029 37.417 87.029 83.588z"
-                fill="#FFFFFF"></path>
-              <path data-v-16b23934=""
-                d="M246.188 743.794c-49.638 0-90.021-38.85-90.021-86.602 0-47.745 40.383-86.588 90.021-86.588 49.642 0 90.029 38.843 90.029 86.588 0 47.752-40.387 86.602-90.029 86.602z m0-167.19c-46.329 0-84.021 36.151-84.021 80.588 0 44.444 37.692 80.602 84.021 80.602 46.333 0 84.029-36.157 84.029-80.602 0-44.436-37.696-80.588-84.029-80.588z"
-                fill="#440A0A"></path>
-              <path data-v-16b23934=""
-                d="M309.872 656.757c0 33.159-27.986 60.035-62.491 60.035-34.51 0-62.487-26.876-62.487-60.035 0-33.16 27.977-60.022 62.487-60.022 34.505 0.001 62.491 26.862 62.491 60.022z"
-                fill="#440A0A"></path>
-              <path data-v-16b23934=""
-                d="M271.322 657.558c0 11.747-9.918 21.282-22.151 21.282-12.237 0-22.152-9.535-22.152-21.282 0-11.758 9.916-21.277 22.152-21.277 12.233-0.002 22.151 9.519 22.151 21.277z"
-                fill="#FFFFFF"></path>
-              <path data-v-16b23934=""
-                d="M875.521 642.811c0 46.175-38.963 83.603-87.027 83.603-48.061 0-87.021-37.428-87.021-83.603 0-46.173 38.962-83.587 87.021-83.587 48.066 0 87.027 37.414 87.027 83.587z"
-                fill="#FFFFFF"></path>
-              <path data-v-16b23934=""
-                d="M788.494 729.413c-49.638 0-90.021-38.85-90.021-86.603 0-47.744 40.384-86.587 90.021-86.587 49.642 0 90.027 38.843 90.027 86.587 0 47.753-40.385 86.603-90.027 86.603z m0-167.189c-46.33 0-84.021 36.151-84.021 80.587 0 44.444 37.691 80.603 84.021 80.603 46.333 0 84.027-36.158 84.027-80.603 0-44.436-37.694-80.587-84.027-80.587z"
-                fill="#440A0A"></path>
-              <path data-v-16b23934=""
-                d="M852.174 642.374c0 33.159-27.979 60.037-62.486 60.037-34.512 0-62.487-26.878-62.487-60.037 0-33.161 27.977-60.023 62.487-60.023 34.506-0.001 62.486 26.862 62.486 60.023z"
-                fill="#440A0A"></path>
-              <path data-v-16b23934=""
-                d="M813.628 643.173c0 11.75-9.919 21.278-22.153 21.278-12.233 0-22.151-9.528-22.151-21.278 0-11.759 9.919-21.275 22.151-21.275 12.235-0.002 22.153 9.516 22.153 21.275z"
-                fill="#FFFFFF"></path>
-              <path data-v-16b23934="" d="M518.135 469.838h56.847v12.556h-56.847z" fill="#FFFFFF"></path>
-              <path data-v-16b23934=""
-                d="M522.818 468.694c0 7.902-0.648 14.309-1.445 14.309h-30.37c-0.799 0-1.446-6.406-1.446-14.309V440.06c0-7.912 0.647-14.315 1.446-14.315h30.37c0.797 0 1.445 6.403 1.445 14.315v28.634z"
-                fill="#EA0606"></path>
-            </svg>
-          </span>
+        <div class="hero__ornament">
+          <svg viewBox="0 0 100 20" width="80" height="16">
+            <path d="M5 10 Q15 2 25 10 Q35 18 45 10 Q55 2 65 10 Q75 18 85 10 Q90 6 95 10" fill="none"
+              stroke="currentColor" stroke-width="0.8" opacity="0.4" />
+          </svg>
         </div>
-        <!-- 模块导航 -->
-        <div class="module">
-          <ul>
-            <li v-for="(item, index) in module_data" @click="changeModule = item.id" :key="item.id">
-              <div class="card__left" :style="{ backgroundImage: `url(${item.img})` }">
-                <!-- <img :src="item.img" alt="image" /> -->
-              </div>
-              <div class="card__right">
-                <div class="card__title">{{ item.title }}</div>
-                <div class="card__desc">{{ item.desc }}</div>
-              </div>
-              <!-- 风车 -->
-              <div class="windmill" v-if="item.id === changeModule">
-                <div class="case">
-                  <div class="one">
-                    <div class="leaf"></div>
-                    <div class="square"></div>
-                  </div>
-                  <div class="two">
-                    <div class="leaf"></div>
-                    <div class="square"></div>
-                  </div>
-                  <div class="three">
-                    <div class="leaf"></div>
-                    <div class="square"></div>
-                  </div>
-                  <div class="four">
-                    <div class="leaf"></div>
-                    <div class="square"></div>
-                  </div>
-                  <div class="dot"></div>
-                </div>
-              </div>
-            </li>
-          </ul>
+        <p class="hero__date">二〇二三年十月一日</p>
+        <div class="hero__scroll-indicator">
+          <span></span>
         </div>
       </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true">
+      <span class="section-divider__line"></span>
+      <svg class="section-divider__icon" viewBox="0 0 24 24" width="16" height="16">
+        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="0.8" />
+      </svg>
+      <span class="section-divider__line"></span>
     </div>
+
+    <!-- ===== Section 2: Love Timer ===== -->
+    <section class="timer">
+      <div class="section-roses" aria-hidden="true">
+        <svg class="section-rose" style="left:5%;top:20%;width:28px;--rot:-8deg;--ri:1" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="right:10%;top:65%;width:34px;--rot:12deg;--ri:2" viewBox="0 0 28 28"
+          fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+      </div>
+      <div class="timer__container">
+        <h2 class="timer__heading">我们一起走过的时光</h2>
+        <div class="timer__display">
+          <div class="timer__unit">
+            <span class="timer__number">{{ formattedDateTime.years }}</span>
+            <span class="timer__label">年</span>
+          </div>
+          <span class="timer__sep">·</span>
+          <div class="timer__unit">
+            <span class="timer__number">{{ formattedDateTime.months }}</span>
+            <span class="timer__label">月</span>
+          </div>
+          <span class="timer__sep">·</span>
+          <div class="timer__unit">
+            <span class="timer__number">{{ formattedDateTime.days }}</span>
+            <span class="timer__label">日</span>
+          </div>
+          <span class="timer__sep">·</span>
+          <div class="timer__unit">
+            <span class="timer__number">{{ formattedDateTime.hours }}</span>
+            <span class="timer__label">时</span>
+          </div>
+          <span class="timer__sep">·</span>
+          <div class="timer__unit">
+            <span class="timer__number">{{ formattedDateTime.minutes }}</span>
+            <span class="timer__label">分</span>
+          </div>
+          <span class="timer__sep">·</span>
+          <div class="timer__unit">
+            <span class="timer__number">{{ formattedDateTime.seconds }}</span>
+            <span class="timer__label">秒</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider" aria-hidden="true">
+      <span class="section-divider__line"></span>
+      <svg class="section-divider__icon" viewBox="0 0 24 24" width="16" height="16">
+        <path d="M12 3l2 7h7l-5.5 4 2 7L12 17l-5.5 4 2-7L3 10h7z" fill="none" stroke="currentColor"
+          stroke-width="0.8" />
+      </svg>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- ===== Section 3: Milestones 点点滴滴 ===== -->
+    <div class="miles">
+      <section class="milestones">
+        <div class="section-roses" aria-hidden="true">
+          <svg class="section-rose" style="left:8%;top:15%;width:30px;--rot:-12deg;--ri:1" viewBox="0 0 28 28"
+            fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+            <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+            <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+            <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+            <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+            <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+            <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          </svg>
+          <svg class="section-rose" style="right:12%;top:55%;width:26px;--rot:18deg;--ri:2" viewBox="0 0 28 28"
+            fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+            <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+            <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+            <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+            <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+            <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+            <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          </svg>
+          <svg class="section-rose" style="left:45%;top:75%;width:38px;--rot:6deg;--ri:3" viewBox="0 0 28 28"
+            fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+            <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+            <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+            <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+            <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+            <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+            <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          </svg>
+        </div>
+        <div class="section__header">
+          <span class="section__tag">Moments</span>
+          <h2 class="section__title">点点滴滴</h2>
+          <p class="section__subtitle">每一个瞬间都值得被铭记</p>
+        </div>
+        <div class="milestones__timeline">
+          <div class="milestone" v-for="m in milestones" :key="m.date">
+            <div class="milestone__dot"></div>
+            <div class="milestone__card">
+              <time class="milestone__date">{{ m.date }}</time>
+              <h3 class="milestone__title">{{ m.title }}</h3>
+              <p class="milestone__desc">{{ m.desc }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="section-divider" aria-hidden="true">
+        <span class="section-divider__line"></span>
+        <svg class="section-divider__icon" viewBox="0 0 24 24" width="16" height="16">
+          <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="0.8" />
+        </svg>
+        <span class="section-divider__line"></span>
+      </div>
+    </div>
+
+    <!-- ===== Section 4: Spring Countdown ===== -->
+    <section class="spring">
+      <div class="section-roses" aria-hidden="true">
+        <svg class="section-rose" style="left:12%;top:20%;width:26px;--rot:-6deg;--ri:1" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:82%;top:55%;width:32px;--rot:20deg;--ri:2" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+      </div>
+      <div class="spring__banner">
+        <div class="spring__line spring__line--left"></div>
+        <div class="spring__content">
+          <span class="spring__icon">🧧</span>
+          <p class="spring__text">距离下一个春节还有</p>
+          <div class="spring__countdown">
+            <span class="spring__num">{{ countdown.days }}</span><span class="spring__unit">天</span>
+            <span class="spring__num">{{ countdown.hours }}</span><span class="spring__unit">时</span>
+            <span class="spring__num">{{ countdown.minutes }}</span><span class="spring__unit">分</span>
+            <span class="spring__num">{{ countdown.seconds }}</span><span class="spring__unit">秒</span>
+          </div>
+        </div>
+        <div class="spring__line spring__line--right"></div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true">
+      <span class="section-divider__line"></span>
+      <svg class="section-divider__icon" viewBox="0 0 24 24" width="16" height="16">
+        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="0.8" />
+      </svg>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- ===== Section 5: Gallery 时光相册 ===== -->
+    <section class="gallery">
+      <div class="section-roses" aria-hidden="true">
+        <svg class="section-rose" style="left:6%;top:12%;width:28px;--rot:-10deg;--ri:1" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:88%;top:40%;width:34px;--rot:14deg;--ri:2" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:50%;top:75%;width:40px;--rot:8deg;--ri:3" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+      </div>
+      <div class="section__header">
+        <span class="section__tag">Gallery</span>
+        <h2 class="section__title">时光相册</h2>
+        <p class="section__subtitle">定格我们最美的模样</p>
+      </div>
+      <div class="gallery__grid">
+        <div class="gallery__item" v-for="(img, i) in galleryImages" :key="i"
+          :style="{ '--rotate': img.rotate, '--delay': img.delay }">
+          <img :src="img.src" :alt="'Memory ' + (i + 1)" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true">
+      <span class="section-divider__line"></span>
+      <svg class="section-divider__icon" viewBox="0 0 24 24" width="16" height="16">
+        <path d="M12 3l2 7h7l-5.5 4 2 7L12 17l-5.5 4 2-7L3 10h7z" fill="none" stroke="currentColor"
+          stroke-width="0.8" />
+      </svg>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- ===== Section 6: Blessings 祝福板 ===== -->
+    <section class="blessings">
+      <div class="section-roses" aria-hidden="true">
+        <svg class="section-rose" style="left:10%;top:18%;width:30px;--rot:-12deg;--ri:1" viewBox="0 0 28 28"
+          fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:85%;top:55%;width:26px;--rot:16deg;--ri:2" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:40%;top:70%;width:36px;--rot:5deg;--ri:3" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+      </div>
+      <div class="section__header">
+        <span class="section__tag">Wishes</span>
+        <h2 class="section__title">祝福板</h2>
+        <p class="section__subtitle">写下最真挚的期许</p>
+      </div>
+      <div class="blessings__grid">
+        <div class="blessing-card" v-for="b in blessings" :key="b.id">
+          <div class="blessing-card__inner">
+            <p class="blessing-card__text">{{ b.text }}</p>
+            <span class="blessing-card__author">— {{ b.author }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true">
+      <span class="section-divider__line"></span>
+      <svg class="section-divider__icon" viewBox="0 0 24 24" width="16" height="16">
+        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="0.8" />
+      </svg>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- ===== Section 7: Explore 探索未知 ===== -->
+    <section class="explore">
+      <div class="section-roses" aria-hidden="true">
+        <svg class="section-rose" style="left:15%;top:25%;width:24px;--rot:-8deg;--ri:1" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:78%;top:60%;width:30px;--rot:18deg;--ri:2" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+      </div>
+      <div class="explore__content">
+        <h2 class="explore__heading">探索未知</h2>
+        <p class="explore__text">
+          未来的每一天<br />都是未拆封的礼物
+        </p>
+        <div class="explore__icon">
+          <svg viewBox="0 0 1024 1024" width="48" height="48">
+            <path
+              d="M399.502 655.103c0 7.902-6.665 14.311-14.88 14.311H72.188c-8.215 0-14.875-6.407-14.875-14.311v-28.634c0-7.913 6.66-14.315 14.875-14.315h312.435c8.217 0 14.88 6.402 14.88 14.315l-0.001 28.634zM968.167 655.103c0 7.902-6.664 14.311-14.882 14.311H640.851c-8.216 0-14.877-6.407-14.877-14.311v-28.634c0-7.913 6.661-14.315 14.877-14.315h312.436c8.218 0 14.882 6.402 14.882 14.315l-0.002 28.634z"
+              fill="currentColor"></path>
+            <path
+              d="M968.097 624.008c0 11.563-17.723 20.937-39.583 20.937H97.263c-21.858 0-39.579-9.372-39.579-20.937v-41.876c0-11.562 17.72-20.935 39.579-20.935h831.25c21.86 0 39.583 9.373 39.583 20.935v41.876zM855.003 526.553h-12c0-161.793-151.025-293.421-336.66-293.421-185.633 0-336.656 131.628-336.656 293.421h-12c0-41.334 9.261-81.425 27.527-119.161 17.612-36.384 42.807-69.046 74.886-97.079 65.813-57.509 153.264-89.181 246.243-89.181 92.981 0 180.434 31.672 246.247 89.181 32.079 28.032 57.274 60.693 74.887 97.079 18.264 37.734 27.526 77.826 27.526 119.161z"
+              fill="currentColor"></path>
+            <path
+              d="M1001.996 588.091c-121.146 13.91-980.875 0-980.875 0s-30.62-203.887 241.944-144.555c171.281-1.178 273.436 0 489.644 0 193.07-59.332 283.186 108.642 249.287 144.555z"
+              fill="currentColor"></path>
+            <path d="M500.343 214.379h12v330.342h-12z" fill="currentColor"></path>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="section-roses" aria-hidden="true">
+        <svg class="section-rose" style="left:20%;top:30%;width:24px;--rot:-5deg;--ri:1" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+        <svg class="section-rose" style="left:72%;top:45%;width:28px;--rot:10deg;--ri:2" viewBox="0 0 28 28" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="12" r="6" fill="currentColor" opacity="0.4" />
+          <circle cx="9.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="18.5" cy="16" r="4.5" fill="currentColor" opacity="0.32" />
+          <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
+          <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+        </svg>
+      </div>
+
+      <p>Made with love &hearts;</p>
+    </footer>
   </div>
-
 </template>
-<script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import Navigation from "@/components/common/NavigationMenu.vue";
-import utils from "@/utils/getAssetsFile";
 
-import dayjs from "dayjs";
-dayjs.locale("zh-cn");
-import relativeTime from "dayjs/plugin/relativeTime";
-import duration from "dayjs/plugin/duration";
-dayjs.extend(relativeTime, duration);
-// 开始时间
-const startTime = "2023-10-01 12:00:00"; // 确保时间格式正确
-// 常量定义
-const SECONDS_IN_YEAR = 365 * 24 * 60 * 60; // 假设一年365天
-const SECONDS_IN_MONTH = 30 * 24 * 60 * 60; // 假设一个月30天
-const SECONDS_IN_DAY = 24 * 60 * 60; // 一天24小时
-const SECONDS_IN_HOUR = 60 * 60; // 一小时60分钟
-const SECONDS_IN_MINUTE = 60; // 一分钟60秒
-const formattedDateTime = ref({});
+<script setup>
+import { ref, onMounted, onUnmounted } from "vue"
+import Navigation from "@/components/common/NavigationMenu.vue"
+import utils from "@/utils/getAssetsFile"
+import dayjs from "dayjs"
+dayjs.locale("zh-cn")
+import relativeTime from "dayjs/plugin/relativeTime"
+import duration from "dayjs/plugin/duration"
+dayjs.extend(relativeTime, duration)
+import { assistanceColors } from "@/styles/colorTokens"
+
+// === Tag Icons (unified 14x14 stroke-based SVGs) ===
+const iconSvgs = {
+  code: `<svg viewBox="0 0 16 16" fill="none"><path d="M5 3.5L1.5 8l3.5 4.5M11 3.5L14.5 8 11 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  camera: `<svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3.5" width="14" height="10" rx="1.8" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8.5" r="2.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8.5" r="0.8" fill="currentColor"/></svg>`,
+  compass: `<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5.5l5 2.5-5 2.5 2.5-5z" fill="currentColor" opacity="0.25"/><path d="M5.5 5.5l5 2.5-5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>`,
+  coffee: `<svg viewBox="0 0 16 16" fill="none"><rect x="3" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M11 6h2a1.5 1.5 0 010 3h-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+  palette: `<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><circle cx="5.5" cy="6.5" r="1.1" fill="currentColor" opacity="0.6"/><circle cx="10.5" cy="6" r="0.9" fill="currentColor" opacity="0.5"/><circle cx="4.5" cy="10.5" r="0.8" fill="currentColor" opacity="0.5"/><circle cx="9.5" cy="11" r="1" fill="currentColor" opacity="0.55"/></svg>`,
+  brush: `<svg viewBox="0 0 16 16" fill="none"><path d="M3 13c1 1 2 1.5 3 1 2-1 4-3.5 5.5-5.5-1-1-1.5-2.5-4-1.5C5 8 3 11 3 13z" stroke="currentColor" stroke-width="1.3"/><path d="M9 6L10.5 2 14 5.5 10.5 7" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>`,
+  music: `<svg viewBox="0 0 16 16" fill="none"><circle cx="4.5" cy="11.5" r="1.8" stroke="currentColor" stroke-width="1.3"/><circle cx="11.5" cy="9.5" r="1.8" stroke="currentColor" stroke-width="1.3"/><path d="M6 11.5V5l5.5-1.5v6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>`,
+  sparkle: `<svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5L9 5l3 1-3 1.5L8 11l-1-3.5L4 6l3-1L8 1.5z" fill="currentColor"/></svg>`,
+}
+
+const authorTags = [
+  { label: "工程师", icon: "code", color: "#7296de", delay: "0s" },
+  { label: "摄影控", icon: "camera", color: "#f0b43e", delay: "0.25s" },
+  { label: "旅行家", icon: "compass", color: "#9ed4d4", delay: "0.5s" },
+  { label: "咖啡成瘾", icon: "coffee", color: "#af9b9b", delay: "0.75s" },
+]
+
+const abbyTags = [
+  { label: "设计师", icon: "palette", color: "#c57d76", delay: "0.5s" },
+  { label: "绘画师", icon: "brush", color: "#ffc0cb", delay: "0.75s" },
+  { label: "音乐迷", icon: "music", color: "#7c95b5", delay: "1s" },
+  { label: "生活家", icon: "sparkle", color: "#f1b9b9", delay: "1.25s" },
+]
+
+const getIcon = (name) => iconSvgs[name] || ""
+
+// === Love Timer ===
+const startTime = "2023-10-01 12:00:00"
+const SECONDS_IN_YEAR = 365 * 24 * 60 * 60
+const SECONDS_IN_MONTH = 30 * 24 * 60 * 60
+const SECONDS_IN_DAY = 24 * 60 * 60
+const SECONDS_IN_HOUR = 60 * 60
+const SECONDS_IN_MINUTE = 60
+
+const formattedDateTime = ref({})
 const getTimeDiffrence = () => {
-  // 当前时间
-  const currentTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
-  // 计算时间差
-  const timeDifference = dayjs(currentTime).diff(dayjs(startTime), "seconds");
-  // 计算年月日时分秒
-  let remainingSeconds = timeDifference;
-  // 计算年
-  const years = Math.floor(remainingSeconds / SECONDS_IN_YEAR);
-  remainingSeconds %= SECONDS_IN_YEAR;
-  // 计算月
-  const months = Math.floor(remainingSeconds / SECONDS_IN_MONTH);
-  remainingSeconds %= SECONDS_IN_MONTH;
-  // 计算日
-  const days = Math.floor(remainingSeconds / SECONDS_IN_DAY);
-  remainingSeconds %= SECONDS_IN_DAY;
-  // 计算小时
-  const hours = Math.floor(remainingSeconds / SECONDS_IN_HOUR);
-  remainingSeconds %= SECONDS_IN_HOUR;
-  // 计算分钟
-  const minutes = Math.floor(remainingSeconds / SECONDS_IN_MINUTE);
-  remainingSeconds %= SECONDS_IN_MINUTE;
-  // 剩余的秒数
-  const seconds = remainingSeconds;
-  // 格式化输出
-  return (formattedDateTime.value = {
+  const currentTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+  const timeDifference = dayjs(currentTime).diff(dayjs(startTime), "seconds")
+  let remainingSeconds = timeDifference
+  const years = Math.floor(remainingSeconds / SECONDS_IN_YEAR)
+  remainingSeconds %= SECONDS_IN_YEAR
+  const months = Math.floor(remainingSeconds / SECONDS_IN_MONTH)
+  remainingSeconds %= SECONDS_IN_MONTH
+  const days = Math.floor(remainingSeconds / SECONDS_IN_DAY)
+  remainingSeconds %= SECONDS_IN_DAY
+  const hours = Math.floor(remainingSeconds / SECONDS_IN_HOUR)
+  remainingSeconds %= SECONDS_IN_HOUR
+  const minutes = Math.floor(remainingSeconds / SECONDS_IN_MINUTE)
+  remainingSeconds %= SECONDS_IN_MINUTE
+  const seconds = remainingSeconds
+  formattedDateTime.value = {
     years,
     months,
     days,
     hours: hours.toString(),
     minutes: minutes.toString(),
     seconds: seconds.toString(),
-  });
-};
+  }
+}
 
-// 春节倒计时
-const springFestivalDate = new Date(2027, 1, 17); // 注意：月份从0开始，1代表2月
-const countdown = ref({
-  days: 0,
-  hours: 0,
-  minutes: 0,
-  seconds: 0,
-});
+// === Spring Festival Countdown ===
+const springFestivalDate = new Date(2027, 1, 17)
+const countdown = ref({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 const updateCountdown = () => {
-  const now = new Date();
-  const timeDifference = springFestivalDate - now;
+  const now = new Date()
+  const timeDifference = springFestivalDate - now
   if (timeDifference < 0) {
-    // 如果时间已经过了春节，停止倒计时
-    clearInterval(interval);
-    return;
+    clearInterval(intervalSpring)
+    return
   }
-  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
-    (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  );
-  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-  countdown.value = { days, hours, minutes, seconds };
-};
-// 模块切换
-const module_data = [
-  {
-    id: "module1",
-    title: "点点滴滴",
-    desc: "☀️今朝有酒今朝醉",
-    img: utils.getAssetsFile("img/family/loveWeiYan.jpg"),
-  },
-  {
-    id: "module2",
-    title: "时光相册",
-    desc: "📸记录美好瞬间",
-    img: utils.getAssetsFile("img/family/lovePhoto.jpg"),
-  },
-  {
-    id: "module3",
-    title: "祝福板",
-    desc: "📋写下你们的祝福",
-    img: utils.getAssetsFile("img/family/loveMessage.jpg"),
-  },
-];
-const changeModule = ref("module1");
-let interval;
-let intervalId;
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000)
+  countdown.value = { days, hours, minutes, seconds }
+}
+
+let intervalTimer, intervalSpring
 onMounted(() => {
-  updateCountdown();
-  interval = setInterval(updateCountdown, 1000);
-  getTimeDiffrence();
-  intervalId = setInterval(getTimeDiffrence, 1000);
-});
+  updateCountdown()
+  intervalSpring = setInterval(updateCountdown, 1000)
+  getTimeDiffrence()
+  intervalTimer = setInterval(getTimeDiffrence, 1000)
+})
 onUnmounted(() => {
-  clearInterval(intervalId);
-  clearInterval(interval);
-});
+  clearInterval(intervalTimer)
+  clearInterval(intervalSpring)
+})
+
+// === Milestones ===
+const milestones = [
+  { date: "2023.10.01", title: "我们在一起了", desc: "命运让我们相遇，从此世界多了一抹亮色" },
+  { date: "2023.12.25", title: "第一个圣诞节", desc: "雪花飘落的夜晚，掌心传来的温度" },
+  { date: "2024.02.14", title: "第一个情人节", desc: "玫瑰与巧克力，都不及你的笑容甜蜜" },
+  { date: "2024.06.01", title: "海边之旅", desc: "海浪拍打沙滩，我们踩下一串串脚印" },
+  { date: "2024.10.01", title: "一周年纪念", desc: "365天，每一天都庆幸有你" },
+]
+
+// === Gallery Images ===
+const galleryImages = [
+  { src: utils.getAssetsFile("img/family/loveWeiYan.jpg"), rotate: "-3deg", delay: "0s" },
+  { src: utils.getAssetsFile("img/family/lovePhoto.jpg"), rotate: "2deg", delay: "0.1s" },
+  { src: utils.getAssetsFile("img/family/loveMessage.jpg"), rotate: "-1deg", delay: "0.2s" },
+  { src: utils.getAssetsFile("img/profile_picture/10055.png"), rotate: "2.5deg", delay: "0.15s" },
+  { src: utils.getAssetsFile("img/profile_picture/10008.png"), rotate: "-2deg", delay: "0.25s" },
+  { src: utils.getAssetsFile("img/profile_picture/10009.png"), rotate: "1deg", delay: "0.05s" },
+]
+
+// === Blessings ===
+const blessings = [
+  { id: 1, text: "愿你们如初见时那般，眼里有光，心中有爱。岁岁年年，永不褪色。", author: "挚友" },
+  { id: 2, text: "最好的爱情不是完美无瑕，而是在柴米油盐中依然紧握彼此的手。", author: "知己" },
+  { id: 3, text: "春风十里不如你，愿你们的每一天都如春天般温暖明媚。", author: "闺蜜" },
+  { id: 4, text: "从青丝到白发，愿你们的故事像一本永远翻不完的好书。", author: "兄弟" },
+]
 </script>
+
 <style scoped lang="scss">
+/* ============================================
+   Design: "纸间情书" — Editorial Love Album
+   Palette: warm cream, muted rose, antique gold
+   ============================================ */
+
 #family {
-  // 主体内容盒子宽度
-  $content_container_width: 65vw;
+  /* 平滑过渡 */
+  transition:
+    background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  // background-color: #fef9f3;
+  // background-image: radial-gradient(circle, #e4d1b4 1px, transparent 1px);
+  // background-size: 24px 24px;
+  color: #3d2a2a;
+  font-family: var(--app-font-family);
+  line-height: 1.6;
 
-  // 背景
-  .satic-area {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background: url(@/assets/img/family/poster-about.jpg) no-repeat center;
-    background-size: cover;
+  /* === 各区块内玫瑰装饰 === */
+  .section-roses {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
 
-    .dynamic-area1 {
+    .section-rose {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background: url(@/assets/img/family/poster-drop-animate2.png) repeat-x 0px 0px;
-      background-size: cover;
-      animation: posterDrop1 6000s linear infinite;
-    }
-
-    @keyframes posterDrop1 {
-      from {
-        background-position: 0 0;
-      }
-
-      to {
-        background-position: 4000% 0;
-      }
-    }
-
-    .dynamic-area2 {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background: url(@/assets/img/family/poster-drop-animate1.png) repeat-x 0px 0px;
-      background-size: cover;
-      animation: posterDrop2 8000s linear infinite;
-    }
-
-    @keyframes posterDrop2 {
-      from {
-        background-position: 0 0;
-      }
-
-      to {
-        background-position: 30000% 0;
-      }
+      color: #ff0000;
+      opacity: 0;
+      height: auto;
+      filter: drop-shadow(0 1px 4px rgba(123, 58, 58, 0.2));
+      animation: roseBloom 12s ease-in-out infinite;
+      animation-delay: calc(var(--ri) * 1.6s);
+      animation-fill-mode: both;
     }
   }
 
-  // 内容
-  .content__container {
+  @keyframes roseBloom {
+
+    0%,
+    100% {
+      opacity: 0;
+      transform: rotate(var(--rot, 0deg)) scale(0.6);
+    }
+
+    8%,
+    40% {
+      opacity: 0.45;
+      transform: rotate(var(--rot, 0deg)) scale(1);
+    }
+
+    52% {
+      opacity: 0;
+      transform: rotate(var(--rot, 0deg)) scale(0.6);
+    }
+  }
+
+
+
+
+
+  /* === Shared Section Header === */
+  .section__header {
+    text-align: center;
+    padding: clamp(2rem, 5vw, 4rem) 1.5rem 2rem;
+
+    .section__tag {
+      display: inline-block;
+      font-family: var(--app-font-family);
+      font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #b8956a;
+      margin-bottom: 0.75rem;
+    }
+
+    .section__title {
+      font-family: var(--app-font-family);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 400;
+      color: #7b3a3a;
+      margin: 0 0 0.5rem;
+      letter-spacing: 0.08em;
+    }
+
+    .section__subtitle {
+      font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+      color: #8c7870;
+      margin: 0;
+      font-weight: 300;
+    }
+  }
+
+
+  /* ============================================
+     SECTION 1: HERO
+     ============================================ */
+  .hero {
     position: relative;
-    z-index: 1;
-    @include flexCenter(column, flex-start);
-    padding-top: 20vh;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 
-    // 头像
-    .profile__picture {
-      background-color: rgb(255, 255, 255, 0.1);
-      backdrop-filter: blur(0.25rem);
-      border-radius: 1.5rem;
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(201, 123, 123, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(184, 149, 106, 0.1) 0%, transparent 60%),
+        #fef9f3;
+      z-index: 1;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        url("@/assets/img/family/poster-about.jpg") center / cover no-repeat;
+      opacity: 0.08;
+      filter: blur(2px) saturate(0.6);
+      z-index: 0;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 2rem;
-
-      ul {
-        @include flexCenter(row, space-between);
-
-        .item {
-          width: 10rem;
-          height: 10rem; // height: 8.5rem;
-          @include flexCenter(column, center);
-
-          img {
-            height: 100%;
-            border-radius: 50%;
-            overflow: hidden;
-          }
-
-          h1 {
-            padding: 1rem 0;
-            color: white;
-            font-weight: 700;
-            font-size: 1.5rem;
-            font-family: var(--app-font-family);
-          }
-        }
-
-        .heart {
-          width: 60px;
-          height: 60px;
-          background-color: #f00;
-          margin: 4rem;
-          transform: rotate(135deg) scale(0.9);
-          animation: love 2s infinite;
-          box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7);
-
-          &:before,
-          &:after {
-            content: "";
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #f00;
-            box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7);
-          }
-
-          &:after {
-            left: -36px;
-          }
-
-          &:before {
-            top: 36px;
-          }
-        }
-
-        @keyframes love {
-          0% {
-            transform: rotate(135deg) scale(0.85);
-          }
-
-          50% {
-            transform: rotate(135deg) scale(1);
-          }
-
-          100% {
-            transform: rotate(135deg) scale(0.85);
-          }
-        }
-      }
     }
 
-    // nav-module 
-    .nav-module {
-      width: $content_container_width;
-      @include flexCenter(column, center);
-      padding: 2rem 0;
-
-      // 时间相关
-      .title__time {
-        font-family: var(--app-font-family);
-        font-weight: 600;
-        color: black;
-
-        h1 {
-          font-size: 2rem;
-          font-weight: 600;
-          letter-spacing: 0.2rem;
-          line-height: 3rem;
-          text-align: center;
-          background-image: linear-gradient(270deg,
-              #ff4500,
-              orange,
-              gold,
-              #90ee90,
-              #0ff,
-              #1e90ff,
-              #9370db,
-              #ff69b4,
-              #ff4500);
-          background-clip: text;
-          /* Chrome 需要前缀 */
-          -webkit-background-clip: text;
-          animation: jianBian 60s linear infinite;
-          color: transparent;
-          font-family: var(--app-font-family);
-
-          @keyframes jianBian {
-            100% {
-              background-position: 2000rem;
-            }
-          }
-        }
-
-        // 累加
-        .formattedDateTime {
-          text-align: center;
-          font-size: 2rem;
-          font-weight: 600;
-          line-height: 4rem;
-
-          label {
-            display: inline-block;
-          }
-
-          span {
-            display: inline-block;
-            font-size: 3.5rem;
-            width: 90px;
-          }
-        }
-
-        // 倒计时
-        p {
-          text-align: center;
-          font-size: 1.3rem;
-          line-height: 3rem;
-          font-weight: 600;
-        }
-      }
-
-      //探索未知
-      .letter {
-        background-color: #fff;
-        position: relative;
-        box-shadow: 1px 1px 3px rgb(0, 0, 0, 0.5);
-        width: 16.5rem;
-        height: 6.5rem;
-        border-radius: 10px;
-        background-image: url("@/assets/img/family/love.jpg");
-        background-size: 100% 100%;
-        font-family: var(--app-font-family);
-        margin: 3rem 0;
-
-        h1 {
-          position: absolute;
-          top: 50%;
-          font-size: 1.5rem;
-          font-weight: 600;
-          padding: 0 1rem;
-          color: white;
-        }
-
-        span {
-          position: absolute;
-          margin-left: 200px;
-          margin-top: 40px;
-          animation: passing 4s linear infinite;
-        }
-
-        @keyframes passing {
-          0% {
-            transform: translateX(-130%);
-            opacity: 0;
-          }
-
-          50% {
-            transform: translateX(0);
-            opacity: 1;
-          }
-
-          100% {
-            transform: translateX(130%);
-            opacity: 0;
-          }
-        }
-      }
-
-      //模块导航
-      .module {
-        width: 100%;
-        font-family: var(--app-font-family);
-        // background-color: #fff;
-        margin: 0.2rem 0;
-
-        ul {
-          @include flexCenter(row, space-between);
-
-          li {
-            @include flexCenter(row, center);
-            position: relative;
-            border-radius: 0.6rem;
-            padding: 1rem;
-            min-width: 18vw;
-            box-shadow: 1px 1px 3px rgb(0, 0, 0, 0.5);
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-            background: linear-gradient(50deg, #d0e0f7 10%, #eef5f9 100%);
-
-            &:hover {
-              cursor: pointer;
-              transform: scale(0.95);
-            }
-
-            .card__left {
-              width: 5rem;
-              height: 5rem;
-              border-radius: 50%;
-              overflow: hidden;
-              background-position: center center;
-              background-size: cover;
-            }
-
-            .card__right {
-              .card__title {
-                font-size: 1.3rem;
-                font-weight: 600;
-              }
-
-              .card__desc {
-                font-size: 0.9rem;
-                color: #34353a;
-                padding-top: 1rem;
-              }
-
-              padding-left: 1rem;
-            }
-
-            // 风车
-            .windmill {
-              --color1: #fa8073;
-              --color2: #34cb32;
-              --color3: #e0c27c;
-              --color4: #36b6f7;
-              position: absolute;
-              top: 0.9rem;
-              right: 2.1rem;
-
-              .case {
-                width: 45px;
-                height: 45px;
-                display: flex;
-                flex-wrap: wrap;
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                margin: auto;
-                animation: rotateC 1.8s linear 0s infinite reverse forwards;
-              }
-
-              .dot {
-                width: calc(100% / 10);
-                height: calc(100% / 10);
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                margin: auto;
-                background: white;
-                border-radius: 50%;
-                z-index: 1;
-              }
-
-              .one,
-              .two,
-              .three,
-              .four {
-                width: 50%;
-                height: 50%;
-              }
-
-              .one {
-                position: absolute;
-                left: 0;
-                top: 0;
-
-                .leaf {
-                  width: calc(50% - 2px);
-                  height: calc(100% - 2px);
-                  border: 1px solid black;
-                  border-top-left-radius: 120px;
-                  border-bottom-left-radius: 120px;
-                  background: var(--color1);
-                  position: absolute;
-                  right: 0;
-                  top: 0;
-                  z-index: 1;
-                }
-
-                .square {
-                  width: calc(50% - 2px);
-                  height: 50%;
-                  border: 1px solid black;
-                  border-bottom-color: transparent;
-                  background: var(--color1);
-                  position: absolute;
-                  right: 0;
-                  bottom: 0;
-                  z-index: 0;
-                }
-              }
-
-              .two {
-                position: absolute;
-                right: 0;
-                top: 0;
-
-                .leaf {
-                  width: calc(100% - 2px);
-                  height: calc(50% - 2px);
-                  border: 1px solid black;
-                  border-top-left-radius: 120px;
-                  border-top-right-radius: 120px;
-                  background: var(--color2);
-                  position: absolute;
-                  left: 0;
-                  bottom: 0;
-                  z-index: 1;
-                }
-
-                .square {
-                  width: 50%;
-                  height: calc(50% - 2px);
-                  border: 1px solid black;
-                  border-left-color: transparent;
-                  background: var(--color2);
-                  position: absolute;
-                  left: 0;
-                  bottom: 0;
-                  z-index: 0;
-                }
-              }
-
-              .three {
-                position: absolute;
-                left: 0;
-                bottom: 0;
-
-                .leaf {
-                  width: calc(100% - 2px);
-                  height: calc(50% - 2px);
-                  border: 1px solid black;
-                  border-bottom-left-radius: 120px;
-                  border-bottom-right-radius: 120px;
-                  background: var(--color3);
-                  position: absolute;
-                  right: 0;
-                  top: 0;
-                  z-index: 1;
-                }
-
-                .square {
-                  width: 50%;
-                  height: calc(50% - 2px);
-                  border: 1px solid black;
-                  border-right-color: transparent;
-                  background: var(--color3);
-                  position: absolute;
-                  right: 0;
-                  top: 0;
-                  z-index: 0;
-                }
-              }
-
-              .four {
-                position: absolute;
-                right: 0;
-                bottom: 0;
-
-                .leaf {
-                  width: calc(50% - 2px);
-                  height: calc(100% - 2px);
-                  border: 1px solid black;
-                  border-top-right-radius: 120px;
-                  border-bottom-right-radius: 120px;
-                  background: var(--color4);
-                  position: absolute;
-                  left: 0;
-                  top: 0;
-                  z-index: 1;
-                }
-
-                .square {
-                  width: calc(50% - 2px);
-                  height: 50%;
-                  border: 1px solid black;
-                  border-top-color: transparent;
-                  background: var(--color4);
-                  position: absolute;
-                  left: 0;
-                  top: 0;
-                  z-index: 0;
-                }
-              }
-
-              @keyframes rotateC {
-                0% {
-                  transform: rotateZ(0deg);
-                }
-
-                100% {
-                  transform: rotateZ(360deg);
-                }
-              }
-            }
-          }
-        }
-      }
+    .hero__portraits {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.5rem, 3vw, 3rem);
     }
 
-    // 模块内容
-    .module_content {
-      backdrop-filter: blur(0.25rem);
-      overflow: hidden;
-      background-color: rgb(255, 255, 255, .8);
-      width: 100%;
-      height: 100%;
-      border-radius: 0.5rem;
-      @include flexCenter(column, center);
+    .portrait {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: portraitFloat 6s ease-in-out infinite;
 
-      // 模块一
-      .main {
-        width: 100%;
-        margin: 0 auto;
-        @include flexCenter(column, center);
-        padding: 4rem 0;
+      &--left {
+        animation-delay: 0s;
+      }
 
-        .lifeCard {
-          position: relative;
-          list-style-type: none;
-          font-family: "Gorditas", Arial, sans-serif;
+      &--right {
+        animation-delay: -3s;
+      }
 
-          &:before {
-            content: "";
-            position: absolute;
-            width: 3px;
-            height: 95%;
-            top: 0;
-            left: 165px;
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJUlEQVQIW2NkQAP/gYARWQwkAOLDBeECjEAAkkEWAKtEFwAJAgAZEBP+oM1IkwAAAABJRU5ErkJggg==);
-            background-color: #f26328;
-          }
+      .portrait__ring {
+        width: clamp(7rem, 12vw, 11rem);
+        height: clamp(7rem, 12vw, 11rem);
+        border-radius: 50%;
+        padding: 4px;
+        background: linear-gradient(135deg, #b8956a 0%, #c97b7b 50%, #e4d1b4 100%);
+        box-shadow: 0 0 40px rgba(201, 123, 123, 0.25);
+        animation: ringGlow 4s ease-in-out infinite;
 
-          .event {
-            position: relative;
-            margin-bottom: 3rem;
-            padding-right: 40px;
-
-            .thumb {
-              position: absolute;
-              width: 4rem;
-              height: 4rem;
-              box-shadow: 0 0 0 4px rgb(253, 255, 255),
-                0 1px 1px rgba(255, 255, 255, 0.5);
-              background-repeat: no-repeat;
-              border-radius: 50%;
-              transform: scale(0.8) translateX(50px);
-              transition: all 0.6s ease-in-out 0.2s;
-
-              span {
-                color: #41838e;
-                width: 100%;
-                text-align: center;
-                font-weight: 700;
-                font-size: 15px;
-                text-transform: uppercase;
-                position: absolute;
-                bottom: -30px;
-                transition: all 0.6s ease-in-out 0.2s;
-              }
-
-              &:before {
-                content: "";
-                position: absolute;
-                height: 0.4rem;
-                z-index: -1;
-                background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPElEQVQYV2NkQAP/gYARCNDFUQRgirAphitEl0TngxXisg5ZnBGXIpgbYfIYjkb3BNxGbBLYxIgyEaQRAA8KKAWYsZtjAAAAAElFTkSuQmCC);
-                width: 3rem;
-                top: 2.1rem;
-                left: 4rem;
-              }
-            }
-
-            .content-perspective {
-              margin-left: 215px;
-              position: relative;
-              perspective: 600px;
-              width: 30vw;
-
-              &:before {
-                content: "";
-                width: 37px;
-                left: -37px;
-                top: 45px;
-                position: absolute;
-                height: 1px;
-                z-index: -1;
-                background: #fff;
-              }
-
-              .content {
-                transform: rotateY(12deg);
-                transform-origin: 0 0;
-                transform-style: preserve-3d;
-                transition: transform 0.8s cubic-bezier(0.59, 1.45, 0.69, 0.98) 0.2s;
-
-                .content-inner {
-                  position: relative;
-                  padding: 1rem;
-                  width: 40vw;
-                  border: none;
-                  border-left: 3px solid #41838e;
-                  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                  font-family: var(--app-font-family);
-                  letter-spacing: 1px;
-                  transition: box-shadow 0.8s linear 0.2s;
-                  background-color: rgb(255, 255, 255);
-
-                  h3 {
-                    padding: 5px 0 5px 0;
-                    color: black;
-                    transition: all 0.6s ease-in-out 0.2s;
-                    overflow: hidden;
-
-                    span {
-                      transition: all 0.6s ease-in-out 0.2s;
-                      padding: 0 0.1rem;
-                    }
-                  }
-
-                  p {
-                    font-size: 18px;
-                    max-height: 0px;
-                    overflow: hidden;
-                    color: transparent;
-                    color: rgba(0, 0, 0, 0);
-                    text-align: left;
-                    transition: max-height 0.5s linear, color 0.3s linear;
-                  }
-
-                  &:before {
-                    font-family: "fontawesome-selected";
-                    content: "\25c2";
-                    font-weight: normal;
-                    font-size: 54px;
-                    line-height: 54px;
-                    position: absolute;
-                    width: 30px;
-                    height: 30px;
-                    color: #41838e;
-                    left: -25px;
-                    top: 19px;
-                    z-index: -1;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        .user-1 {
-          background-image: url(@/assets/img/profile_picture/10055.png);
-          background-size: 100% 100%;
-        }
-
-        .user-2 {
-          background-image: url(@/assets/img/profile_picture/10008.png);
-          background-size: 100% 100%;
-        }
-
-        .user-3 {
-          background-image: url(@/assets/img/profile_picture/10009.png);
-          background-size: 100% 100%;
-        }
-
-        .user-4 {
-          background-image: url(@/assets/img/profile_picture/10010.png);
-          background-size: 100% 100%;
-        }
-
-        /*透明复选框/无线电破解：将复选框保留在顶部，用不透明0隐藏它*/
-
-        .event label,
-        .event input[type="radio"] {
-          width: 24px;
-          height: 24px;
-          left: 158px;
-          top: 36px;
-          position: absolute;
-          display: block;
-          z-index: 2;
-        }
-
-        .event input[type="radio"] {
-          opacity: 0;
-          z-index: 10;
-          cursor: pointer;
-        }
-
-        .event label:after {
-          font-family: "fontawesome-selected";
-          content: "✔";
-          background: #fff;
-          border-radius: 50%;
-          color: #41838e;
-          font-size: 26px;
-          height: 100%;
+        img {
           width: 100%;
-          left: -2px;
-          top: -3px;
-          line-height: 24px;
-          position: absolute;
-          text-align: center;
-        }
-
-        /* Checked */
-
-        .event input[type="radio"]:checked+label:after {
-          content: "\2714";
-          color: #f26328;
-          box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8);
-        }
-
-        .event input[type="radio"]:checked~.content-perspective:before {
-          background: #f26328;
-        }
-
-        .event input[type="radio"]:checked~.content-perspective .content-inner h3 {
-          color: #f26328;
-
-          span {
-            font-family: "Cabin Sketch", cursive;
-            // text-transform: uppercase;
-            color: #0535f5;
-
-            &:nth-child(1),
-            &:nth-child(4),
-            &:nth-child(7),
-            &:nth-child(10) {
-              color: #4cd137;
-            }
-
-            &:nth-child(2),
-            &:nth-child(5),
-            &:nth-child(8) {
-              color: #ff0000;
-            }
-          }
-        }
-
-        .event input[type="radio"]:checked~.content-perspective .content {
-          -webkit-transform: rotateY(-5deg);
-          -moz-transform: rotateY(-5deg);
-          -o-transform: rotateY(-5deg);
-          -ms-transform: rotateY(-5deg);
-          transform: rotateY(-5deg);
-        }
-
-        .event input[type="radio"]:checked~.content-perspective .content-inner {
-          border-color: #f26328;
-          box-shadow: 10px 0px 10px -6px rgba(0, 0, 0, 0.1);
-        }
-
-        .event input[type="radio"]:checked~.content-perspective .content-inner p {
-          max-height: 13rem;
-          /* Add media queries */
-          color: rgba(0, 0, 0, 0.8);
-          -webkit-transition-delay: 0s, 0.6s;
-          -moz-transition-delay: 0s, 0.6s;
-          -o-transition-delay: 0s, 0.6s;
-          -ms-transition-delay: 0s, 0.6s;
-          transition-delay: 0s, 0.6s;
-        }
-
-        .event input[type="radio"]:checked~.content-perspective .content-inner:before {
-          color: #f26328;
-        }
-
-        .event input[type="radio"]:checked~.thumb {
-          transform: scale(0.9);
-          transform: translateX(10px);
-          box-shadow: 0 0 0 2px rgba(242, 99, 40, 1),
-            0 1px 1px rgba(255, 255, 255, 0.5);
-        }
-
-        .event input[type="radio"]:checked~.thumb span {
-          color: #f26328;
-        }
-
-        .event input[type="radio"]:checked~.thumb:before {
-          background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAPUlEQVQYV2NkQAOfUjX+882+wYgujiIAU4RNMVwhuiQ6H6wQl3XI4oy4FMHcCJPHcDS6J2A2EqUQpJhohQBbNyaHFmzEqgAAAABJRU5ErkJggg==);
+          height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+          display: block;
         }
       }
 
-      // 模块二
-      .gallery {
+      .portrait__name {
+        margin-top: 1rem;
+        font-family: var(--app-font-family);
+        font-size: clamp(1rem, 1.6vw, 1.3rem);
+        color: #7b3a3a;
+        letter-spacing: 0.1em;
+        font-weight: 400;
+      }
+
+      .portrait__tags {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
         display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        margin: 6rem 0;
+        flex-direction: column;
+        gap: 0.55rem;
+        z-index: 3;
+        pointer-events: none;
 
-        .gallery__image {
-          padding: 0.5rem 0.5rem 1.5rem;
-          // background: rgb(255, 0, 0);
-          position: relative;
-          box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-          box-shadow: 3px 3px 6px 0px #ccdbe8 inset, -3px -3px 6px 1px #fff inset;
-          transform-origin: center -5rem;
-          border-radius: 0.25rem;
-          // overflow: hidden;
-
-          // 竖线
-          &::before {
-            content: "";
-            display: block;
-            height: 10rem;
-            width: 2px;
-            background: saddlebrown;
-            position: absolute;
-            bottom: 80%;
-            left: 50%;
-            z-index: -1;
-          }
-
-          &:nth-child(1) {
-            animation: 5s infinite bounce;
-            animation-name: image1;
-            transform: rotate(-10deg);
-
-            img {
-              width: 360px;
-              height: auto;
-              transform: translateY(5%);
-            }
-          }
-
-          &:nth-child(2) {
-            animation: 4.5s infinite bounce;
-            animation-name: image2;
-            transform: rotate(8deg);
-
-            img {
-              height: 280px;
-              transform: translateY(10%);
-            }
-          }
-
-          &:nth-child(3) {
-            animation: 4s infinite bounce;
-            animation-name: image3;
-            transform: rotate(-4deg);
-
-            img {
-              width: 320px;
-              height: 300px;
-            }
-          }
+        &--left {
+          right: calc(100% + 1.2rem);
+          align-items: flex-end;
         }
 
-        @keyframes image1 {
-          50% {
-            transform: rotate(10deg);
-          }
-        }
-
-        @keyframes image2 {
-          50% {
-            transform: rotate(-5deg);
-          }
-        }
-
-        @keyframes image3 {
-          50% {
-            transform: rotate(6deg);
-          }
+        &--right {
+          left: calc(100% + 1.2rem);
+          align-items: flex-start;
         }
       }
 
-      // 模块三
-      .g-container {
-        $count: 14;
-        margin: 0 auto;
-        width: 100%;
-        column-count: 4;
-        column-gap: 0.5vw;
-        padding: 4rem 0;
+      .tag {
+        --delay: 0s;
+        --tag-color: #7b3a3a;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0rem 0.85rem;
+        font-family: var(--app-font-family);
+        font-size: clamp(0.65rem, 1vw, 0.78rem);
+        background-color: var(--tag-color);
+        @include text-color('text-color');
+        border: 1px solid color-mix(in srgb, var(--tag-color) 35%, transparent);
+        border-radius: 2px 6px 6px 2px;
+        white-space: nowrap;
+        letter-spacing: 0.04em;
+        backdrop-filter: blur(4px);
+        animation: tagDrift 5s ease-in-out infinite var(--delay);
 
-        @function randomNum($max, $min: 0, $u: 1) {
-          @return ($min + math.random($max)) * $u;
-        }
+        .tag__icon {
+          display: flex;
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
 
-        @function randomColor() {
-          @return rgb(randomNum(255), randomNum(255), randomNum(255));
-        }
-
-        .g-item {
-          position: relative;
-          width: 17vw;
-          margin-bottom: 1vw;
-          break-inside: avoid;
-
-          img {
+          :deep(svg) {
             width: 100%;
             height: 100%;
+            display: block;
           }
         }
+      }
 
-        @for $i from 1 through ($count + 1) {
-          .g-item:nth-child(#{$i}) {
-            height: #{randomNum(300, 50)}px;
-            background: randomColor();
+      &--left .tag {
+        clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 0 100%);
+      }
 
-            &::after {
-              content: "#{$i}";
-              color: white;
-            }
-          }
+      &--right .tag {
+        clip-path: polygon(7px 0, 100% 0, 100% 100%, 7px 100%, 0 50%);
+      }
+    }
+
+    @keyframes tagDrift {
+
+      0%,
+      100% {
+        opacity: 0.55;
+        transform: translateY(0);
+      }
+
+      25% {
+        opacity: 0.9;
+        transform: translateY(-7px);
+      }
+
+      75% {
+        opacity: 0.7;
+        transform: translateY(3px);
+      }
+    }
+
+    @keyframes portraitFloat {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .hero__heart {
+      width: clamp(2.5rem, 4.5vw, 3.5rem);
+      height: clamp(2.5rem, 4.5vw, 3.5rem);
+      flex-shrink: 0;
+
+      .heart-shape {
+        width: 100%;
+        height: 100%;
+        background: #c97b7b;
+        transform: rotate(135deg) scale(0.85);
+        animation: heartbeat 2s ease-in-out infinite;
+        position: relative;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: #c97b7b;
         }
+
+        &::after {
+          left: -57%;
+        }
+
+        &::before {
+          top: 57%;
+        }
+      }
+    }
+
+    @keyframes heartbeat {
+      0% {
+        transform: rotate(135deg) scale(0.85);
+      }
+
+      14% {
+        transform: rotate(135deg) scale(0.9);
+      }
+
+      28% {
+        transform: rotate(135deg) scale(0.85);
+      }
+
+      42% {
+        transform: rotate(135deg) scale(0.95);
+      }
+
+      56% {
+        transform: rotate(135deg) scale(0.85);
+      }
+
+      70% {
+        transform: rotate(135deg) scale(0.92);
+      }
+
+      84% {
+        transform: rotate(135deg) scale(0.85);
+      }
+
+      100% {
+        transform: rotate(135deg) scale(0.85);
+      }
+    }
+
+    .hero__date {
+      margin-top: clamp(1.5rem, 3vw, 2.5rem);
+      font-family: var(--app-font-family);
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: #8c7870;
+      letter-spacing: 0.15em;
+      font-style: italic;
+      animation: fadeInUp 1s 0.6s both;
+    }
+
+    .hero__scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+
+      span {
+        display: block;
+        width: 1px;
+        height: 3rem;
+        background: #b8956a;
+        position: relative;
+        opacity: 0.5;
+        animation: scrollPulse 2s ease-in-out infinite;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #b8956a;
+        }
+      }
+    }
+
+    @keyframes scrollPulse {
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    .hero__ornament {
+      margin-top: clamp(1rem, 2.5vw, 2rem);
+      color: #b8956a;
+      opacity: 0.35;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero__particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      --i: 1;
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #b8956a;
+      opacity: 0;
+
+      &:nth-child(1) {
+        left: 15%;
+        top: 20%;
+        animation: particleFloat 8s ease-in-out infinite;
+      }
+
+      &:nth-child(2) {
+        left: 80%;
+        top: 15%;
+        animation: particleFloat 10s ease-in-out 2s infinite;
+      }
+
+      &:nth-child(3) {
+        left: 10%;
+        top: 70%;
+        animation: particleFloat 9s ease-in-out 4s infinite;
+      }
+
+      &:nth-child(4) {
+        left: 85%;
+        top: 75%;
+        animation: particleFloat 11s ease-in-out 1s infinite;
+      }
+
+      &:nth-child(5) {
+        left: 50%;
+        top: 85%;
+        animation: particleFloat 7s ease-in-out 3s infinite;
+      }
+    }
+
+    @keyframes particleFloat {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+      }
+
+      20% {
+        opacity: 0.25;
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: translateY(-30px) scale(1);
+      }
+
+      80% {
+        opacity: 0.15;
       }
     }
   }
 
+  /* ============================================
+     SECTION DIVIDER
+     ============================================ */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 1.5rem;
+    max-width: 32rem;
+    margin: 0 auto;
+    color: #b8956a;
+    opacity: 0.25;
+    user-select: none;
 
+    .section-divider__line {
+      flex: 1;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .section-divider__icon {
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+  }
+
+  /* ============================================
+     SECTION 2: LOVE TIMER
+     ============================================ */
+  .timer {
+    position: relative;
+    padding: clamp(3rem, 8vw, 6rem) 1.5rem;
+    background:
+      linear-gradient(180deg, #fef9f3 0%, #f5e6d8 100%);
+
+    .timer__container {
+      max-width: 54rem;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .timer__heading {
+      font-family: var(--app-font-family);
+      font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+      font-weight: 400;
+      color: #7b3a3a;
+      margin: 0 0 clamp(2rem, 4vw, 3rem);
+      letter-spacing: 0.12em;
+      animation: fadeInUp 0.7s both;
+    }
+
+    .timer__display {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: clamp(0.3rem, 1vw, 0.8rem);
+    }
+
+    .timer__unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: clamp(3.5rem, 7vw, 5.5rem);
+      animation: fadeInUp 0.8s var(--unit-delay, 0s) both;
+
+      &:nth-child(1) {
+        --unit-delay: 0.1s;
+      }
+
+      &:nth-child(2) {
+        --unit-delay: 0.2s;
+      }
+
+      &:nth-child(4) {
+        --unit-delay: 0.3s;
+      }
+
+      &:nth-child(5) {
+        --unit-delay: 0.4s;
+      }
+
+      &:nth-child(7) {
+        --unit-delay: 0.5s;
+      }
+
+      &:nth-child(8) {
+        --unit-delay: 0.6s;
+      }
+
+      &:nth-child(10) {
+        --unit-delay: 0.7s;
+      }
+    }
+
+    .timer__number {
+      font-family: var(--app-font-family);
+      font-size: clamp(2rem, 4.5vw, 3.8rem);
+      font-weight: 400;
+      color: #7b3a3a;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer__label {
+      font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+      color: #8c7870;
+      margin-top: 0.3rem;
+      letter-spacing: 0.05em;
+    }
+
+    .timer__sep {
+      font-family: var(--app-font-family);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      color: #b8956a;
+      opacity: 0.5;
+      align-self: center;
+      user-select: none;
+    }
+  }
+
+  /* ============================================
+     SECTION 3: MILESTONES
+     ============================================ */
+  .miles {
+    background:
+      linear-gradient(180deg, #f5e6d8 0%, #fef9f3 100%);
+
+    .milestones {
+      position: relative;
+      padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
+      max-width: 48rem;
+      margin: 0 auto;
+
+      .milestones__timeline {
+        position: relative;
+        padding-top: 2rem;
+
+        &::before {
+          content: "";
+          position: absolute;
+          left: 1.3rem;
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          background: linear-gradient(180deg,
+              #b8956a 0%,
+              #c97b7b 50%,
+              transparent 100%);
+        }
+      }
+
+      .milestone {
+        position: relative;
+        padding-left: 3.5rem;
+        margin-bottom: clamp(2rem, 4vw, 3rem);
+        animation: slideInRight 0.7s var(--card-delay, 0s) both;
+
+        &:nth-child(1) {
+          --card-delay: 0.15s;
+        }
+
+        &:nth-child(2) {
+          --card-delay: 0.3s;
+        }
+
+        &:nth-child(3) {
+          --card-delay: 0.45s;
+        }
+
+        &:nth-child(4) {
+          --card-delay: 0.6s;
+        }
+
+        &:nth-child(5) {
+          --card-delay: 0.75s;
+        }
+
+        &:nth-child(6) {
+          --card-delay: 0.9s;
+        }
+
+        &:nth-child(7) {
+          --card-delay: 1.05s;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .milestone__dot {
+          position: absolute;
+          left: 1.05rem;
+          top: 0.5rem;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: #c97b7b;
+          border: 2px solid #fef9f3;
+          box-shadow: 0 0 0 3px #e4d1b4;
+        }
+
+        .milestone__card {
+          background: #fdf0e8;
+          border: 1px solid rgba(184, 149, 106, 0.15);
+          border-radius: 2px;
+          padding: 1.5rem 1.75rem;
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+          &:hover {
+            border-color: #e4d1b4;
+            box-shadow: 0 4px 24px rgba(201, 123, 123, 0.08);
+          }
+
+          &::after {
+            content: "";
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 1px solid #b8956a;
+            border-radius: 50%;
+            opacity: 0.12;
+            pointer-events: none;
+          }
+        }
+
+        .milestone__date {
+          font-family: var(--app-font-family);
+          font-size: 0.8rem;
+          color: #b8956a;
+          letter-spacing: 0.12em;
+        }
+
+        .milestone__title {
+          font-family: var(--app-font-family);
+          font-size: 1.25rem;
+          font-weight: 400;
+          color: #7b3a3a;
+          margin: 0.35rem 0 0.4rem;
+        }
+
+        .milestone__desc {
+          font-size: 0.9rem;
+          color: #8c7870;
+          margin: 0;
+          line-height: 1.7;
+        }
+      }
+    }
+
+  }
+
+  /* ============================================
+     SECTION 4: SPRING COUNTDOWN
+     ============================================ */
+  .spring {
+    position: relative;
+    padding: clamp(2rem, 4vw, 3.5rem) 1.5rem;
+    background: linear-gradient(135deg,
+        rgba(201, 123, 123, 0.06) 0%,
+        rgba(184, 149, 106, 0.08) 50%,
+        rgba(201, 123, 123, 0.04) 100%);
+
+    .spring__banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      max-width: 44rem;
+      margin: 0 auto;
+    }
+
+    .spring__line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e4d1b4, transparent);
+      opacity: 0.6;
+      min-width: 2rem;
+    }
+
+    .spring__content {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .spring__icon {
+      font-size: 1.8rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .spring__text {
+      font-family: var(--app-font-family);
+      font-size: clamp(0.85rem, 1.3vw, 1rem);
+      color: #8c7870;
+      margin: 0 0 0.6rem;
+    }
+
+    .spring__countdown {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.15rem;
+    }
+
+    .spring__num {
+      font-family: var(--app-font-family);
+      font-size: clamp(1.3rem, 2.5vw, 2rem);
+      color: #7b3a3a;
+      font-variant-numeric: tabular-nums;
+      min-width: 2.2rem;
+      text-align: center;
+      animation: numberPulse 4s ease-in-out infinite;
+
+      &:nth-child(1) {
+        animation-delay: 0.2s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      &:nth-child(5) {
+        animation-delay: 0.6s;
+      }
+
+      &:nth-child(7) {
+        animation-delay: 0.8s;
+      }
+    }
+
+    .spring__unit {
+      font-size: 0.8rem;
+      color: #8c7870;
+      margin: 0 0.4rem 0 0.1rem;
+    }
+  }
+
+  /* ============================================
+     SECTION 5: GALLERY
+     ============================================ */
+  .gallery {
+    position: relative;
+    padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
+    background:
+      linear-gradient(180deg, #fef9f3 0%, #f5e6d8 100%);
+
+    .gallery__grid {
+      max-width: 60rem;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(clamp(10rem, 18vw, 16rem), 1fr));
+      gap: clamp(1rem, 2vw, 2rem);
+      padding: 2rem 0 0;
+    }
+
+    .gallery__item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 2px;
+      background-color: #fdf0e8;
+      aspect-ratio: 4 / 3;
+      transform: rotate(var(--rotate, 0deg));
+      transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1),
+        box-shadow 0.4s ease;
+      box-shadow: 0 2px 12px rgba(61, 42, 42, 0.08);
+      animation: galleryFadeIn 0.6s ease-out var(--delay) both;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0.5;
+      }
+
+      &::before {
+        top: 6px;
+        left: 6px;
+        border-top: 1px solid rgba(254, 249, 243, 0.8);
+        border-left: 1px solid rgba(254, 249, 243, 0.8);
+      }
+
+      &::after {
+        bottom: 6px;
+        right: 6px;
+        border-bottom: 1px solid rgba(254, 249, 243, 0.8);
+        border-right: 1px solid rgba(254, 249, 243, 0.8);
+      }
+
+      &:hover {
+        transform: rotate(0deg) scale(1.03);
+        box-shadow: 0 8px 32px rgba(201, 123, 123, 0.15);
+        z-index: 1;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+      }
+
+      &:hover img {
+        transform: scale(1.06);
+      }
+    }
+
+    @keyframes galleryFadeIn {
+      from {
+        opacity: 0;
+        transform: rotate(var(--rotate, 0deg)) translateY(1rem);
+      }
+
+      to {
+        opacity: 1;
+        transform: rotate(var(--rotate, 0deg)) translateY(0);
+      }
+    }
+  }
+
+  /* ============================================
+     SECTION 6: BLESSINGS
+     ============================================ */
+  .blessings {
+    position: relative;
+    padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
+    background:
+      linear-gradient(180deg, #f5e6d8 0%, #fdf0e8 100%);
+
+    .blessings__grid {
+      max-width: 56rem;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(clamp(14rem, 22vw, 18rem), 1fr));
+      gap: clamp(1rem, 2vw, 1.75rem);
+      padding: 2rem 0 0;
+    }
+
+    .blessing-card {
+      position: relative;
+      background: #fdf0e8;
+      border: 1px solid rgba(184, 149, 106, 0.12);
+      border-radius: 2px;
+      padding: 1.75rem;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+      animation: fadeInUp 0.7s var(--bless-delay, 0s) both;
+
+      &:nth-child(1) {
+        --bless-delay: 0.1s;
+      }
+
+      &:nth-child(2) {
+        --bless-delay: 0.2s;
+      }
+
+      &:nth-child(3) {
+        --bless-delay: 0.3s;
+      }
+
+      &:nth-child(4) {
+        --bless-delay: 0.4s;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 14px;
+        height: 14px;
+        border-top: 1px solid #c97b7b;
+        border-right: 1px solid #c97b7b;
+        opacity: 0.15;
+        pointer-events: none;
+      }
+
+      &:hover {
+        border-color: #e4d1b4;
+        transform: translateY(-2px);
+      }
+
+      .blessing-card__text {
+        font-size: 0.9rem;
+        color: #3d2a2a;
+        line-height: 1.8;
+        margin: 0 0 1rem;
+        letter-spacing: 0.02em;
+      }
+
+      .blessing-card__author {
+        font-family: var(--app-font-family);
+        font-size: 0.8rem;
+        color: #b8956a;
+        font-style: italic;
+      }
+    }
+  }
+
+  /* ============================================
+     SECTION 7: EXPLORE
+     ============================================ */
+  .explore {
+    position: relative;
+    padding: clamp(3rem, 7vw, 6rem) 1.5rem;
+    display: flex;
+    justify-content: center;
+    background:
+      linear-gradient(180deg, #fdf0e8 0%, #fef9f3 100%);
+
+    .explore__content {
+      position: relative;
+      text-align: center;
+      max-width: 32rem;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: -2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: clamp(10rem, 30vw, 18rem);
+        height: clamp(10rem, 30vw, 18rem);
+        border: 1px solid #b8956a;
+        border-radius: 50%;
+        opacity: 0.08;
+        pointer-events: none;
+        animation: exploreRingSpin 24s linear infinite;
+      }
+    }
+
+    .explore__heading {
+      font-family: var(--app-font-family);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 400;
+      color: #7b3a3a;
+      margin: 0 0 1rem;
+      letter-spacing: 0.15em;
+    }
+
+    .explore__text {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      color: #8c7870;
+      margin: 0 0 2rem;
+      line-height: 2;
+      font-weight: 300;
+    }
+
+    .explore__icon {
+      color: #c97b7b;
+      opacity: 0.6;
+      animation: iconPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+
+      0%,
+      100% {
+        opacity: 0.4;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes ringGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 30px rgba(201, 123, 123, 0.2);
+        filter: brightness(1);
+      }
+
+      50% {
+        box-shadow: 0 0 60px rgba(201, 123, 123, 0.45), 0 0 100px rgba(184, 149, 106, 0.2);
+        filter: brightness(1.08);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes numberPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      10% {
+        transform: scale(1.06);
+      }
+
+      20% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes exploreRingSpin {
+      from {
+        transform: translateX(-50%) rotate(0deg);
+      }
+
+      to {
+        transform: translateX(-50%) rotate(360deg);
+      }
+    }
+  }
+
+  /* ============================================
+     FOOTER
+     ============================================ */
+  .footer {
+    position: relative;
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 1px solid rgba(184, 149, 106, 0.15);
+    background-color: #fef9f3;
+    animation: fadeInUp 0.7s both;
+
+    p {
+      font-family: var(--app-font-family);
+      font-size: 0.8rem;
+      color: #8c7870;
+      margin: 0;
+    }
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  #family {
+    .timer__display {
+      gap: 0.2rem;
+    }
+
+    .timer__sep {
+      font-size: 1.2rem;
+    }
+
+    .milestone {
+      padding-left: 2.8rem;
+    }
+
+    .milestones__timeline::before {
+      left: 1.1rem;
+    }
+
+    .milestone .milestone__dot {
+      left: 0.65rem;
+    }
+
+    .spring__banner {
+      gap: 0.8rem;
+    }
+  }
 }
 </style>

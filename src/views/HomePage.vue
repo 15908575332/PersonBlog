@@ -113,10 +113,15 @@
               收藏夹
             </h3>
             <ul>
+              <!-- 骨架屏占位 -->
+              <li v-if="favoritesLoading" v-for="n in 6" :key="'sk-' + n" class="favorite-skeleton">
+                <SkeletonScreen :blocks="1" block-width="4rem" block-height="3rem" :lines="2"
+                  line-height="1rem" line-gap="0.5rem" width="100%" :last-line-width="0.5" />
+              </li>
               <li v-for="(module, index) in displayedData" :key="index">
                 <a :href="module.href" style="display: flex; align-items: center">
                   <div class="iconImg">
-                    <img onerror="this.src='/logo.png'" v-lazy="module.imgSrc" alt="icon" />
+                    <LazyImage :src="module.imgSrc" alt="icon" />
                   </div>
                   <div class="text-content">
                     <h5>{{ module.subtitle }}</h5>
@@ -152,6 +157,7 @@ import {
 import { useRoute } from "vue-router";
 import WeatherCard from "@/components/common/WeatherCard.vue";
 import Navigation from "@/components/common/NavigationMenu.vue";
+import SkeletonScreen from "@/components/common/SkeletonScreen.vue";
 import utils from "@/utils/getAssetsFile";
 import { message, notification } from "ant-design-vue";
 import { SmileOutlined } from '@ant-design/icons-vue';
@@ -294,8 +300,10 @@ const searchEngine = (() => {
 /** ------------------------ 收藏夹 ------------------------ */
 const isOpenFavorite = ref(false); //收藏夹状态
 const favoriteElement = ref(true); //收藏夹Element
+const favoritesLoading = ref(false); //收藏夹数据加载状态
 const favoriteData = ref([]); //数据源
 const getFavorites = (async () => {
+  favoritesLoading.value = true;
   try {
     const response = await $http.get('/treasureBox/favorite-data', {
 
@@ -309,6 +317,8 @@ const getFavorites = (async () => {
     );
   } catch (error) {
     console.error('请求失败:', error);
+  } finally {
+    favoritesLoading.value = false;
   }
 });
 const isShowAll = computed(() => {
@@ -635,6 +645,12 @@ onUnmounted(() => {
             min-height: 3.8rem;
             border-radius: 0.5rem;
             background-color: rgb(185, 181, 181, 0.5);
+
+            &.favorite-skeleton {
+              display: flex;
+              align-items: center;
+              padding: 0.5rem 0.75rem;
+            }
 
             &:hover {
               .iconImg {

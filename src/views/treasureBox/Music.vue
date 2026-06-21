@@ -74,7 +74,7 @@
             <div v-for="(song, index) in searchResults" :key="song.id" class="search-item"
               @click="playSearchResult(song, index)">
               <span class="song-index">{{ index + 1 }}</span>
-              <img v-lazy="song.picture" class="cover" />
+              <LazyImage :src="song.picture" class="cover" />
               <div class="info">
                 <p class="name">{{ song.name }}</p>
                 <p class="artist">{{ song.artist }}</p>

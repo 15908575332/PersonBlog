@@ -21,7 +21,7 @@ AOS.init({
 // 创建 Pinia 实例
 const pinia = createPinia();
 //懒加载
-import VueLazyload from "vue-lazyload";
+import LazyImage from "@/components/common/LazyImage.vue";
 //图片预览
 import vPreviewImage from "v-preview-image";
 import Carousel3d from "vue3-carousel-3d";
@@ -36,7 +36,6 @@ import hljs from "highlight.js/lib/core";
 import javascript from "highlight.js/lib/languages/javascript";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 hljs.registerLanguage("javascript", javascript);
-import utils from "@/utils/getAssetsFile";
 //@ts-ignore
 import request from "@/utils/request";
 function setRemUnit() {
@@ -63,15 +62,9 @@ const app = createApp(App)
   .use(Carousel3d)
   .use(VueAwesomePaginate)
   .use(hljsVuePlugin)
-  .use(VueLazyload, {
-    preLoad: 1.3,
-    error: utils.getAssetsFile("img/public/loadding_error.jpg"),
-    loading: utils.getAssetsFile("img/public/lazyLoading.gif"),
-    attempt: 1,
-    throttleWait: 500,
-    silent: true, // 取消控制台的错误提示
-  })
   .use(vPreviewImage);
+
+app.component('LazyImage', LazyImage);
 
 // 滚动隐藏导航栏 - 全局注入
 const isNavHidden = ref(false);
