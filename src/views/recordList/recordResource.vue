@@ -296,8 +296,9 @@ onMounted(() => {
       @include flexCenter(row, space-around);
       flex-wrap: wrap;
       transition: all 0.2s linear;
-      box-shadow: $shadow-card;
-      background-color: #fff;
+      // box-shadow: $shadow-card;
+      box-shadow: themed('shadow-card');
+      @include background('card-background');
       font-size: 0.9rem;
 
       /* 7 */
@@ -336,11 +337,7 @@ onMounted(() => {
           content: "";
           right: 0;
           bottom: 0;
-          background: rgba(251, 75, 2, 1);
-          box-shadow: -7px -7px 20px 0px rgba(255, 255, 255, 0.9),
-            -4px -4px 5px 0px rgba(255, 255, 255, 0.9),
-            7px 7px 20px 0px rgba(0, 0, 0, 0.2),
-            4px 4px 5px 0px rgba(0, 0, 0, 0.3);
+          background: $primary-color;
           transition: all 0.3s ease;
         }
 
@@ -379,7 +376,7 @@ onMounted(() => {
       }
 
       &:hover {
-        box-shadow: 0 9px 13px 8px #e5e5e5;
+        box-shadow: themed('shadow-elevated');
       }
     }
 
@@ -406,38 +403,27 @@ onMounted(() => {
 
       // 内容
       .module-container {
-        height: 15rem;
-        max-height: 15rem;
         width: 40rem;
         max-width: 40rem;
-        width: 100%;
-        margin-top: 2rem;
-        overflow: hidden;
-        box-shadow: 0 0 8px 5px #e5e5e5;
-        border-radius: 8px;
-        border: 1px solid rgb(0, 0, 0, 0);
       }
 
       .module {
         display: flex;
         align-items: center;
-        box-shadow: $shadow-card;
-        background-color: #fff;
+        box-shadow: themed('shadow-card');
+        margin-top: 2rem;
+        @include background('card-background');
+        border-radius: 0.2rem;
 
         .image {
-          max-width: 50%;
-          min-width: 50%;
-          overflow: hidden;
+          width: 50%;
+          align-self: stretch;
           display: flex;
           justify-content: center;
 
           img,
           video {
             width: 100%;
-          }
-
-          img {
-            height: 15rem;
           }
         }
 
@@ -472,7 +458,7 @@ onMounted(() => {
           margin: 0.75rem 0;
           font-size: 1rem;
           font-weight: 700;
-          color: black;
+          @include text-color('text-color');
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -499,7 +485,7 @@ onMounted(() => {
             -webkit-line-clamp: 4;
             line-height: 1.5rem;
             overflow: hidden;
-            color: black;
+            @include text-color('text-color');
             font-size: 0.8rem;
             text-indent: 2em;
           }
@@ -526,8 +512,8 @@ onMounted(() => {
 
 // 导航按钮激活时样式
 .btn__active {
-  color: rgba(251, 75, 2, 1) !important;
-  background: transparent !important;
+  color: themed('primary-sub') !important;
+  background: themed('card-background') !important;
 
   &::before,
   &>span::before {

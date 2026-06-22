@@ -1,6 +1,6 @@
 @use "sass:map";
 /* 主色调 */
-$primary-color: #5de9e0; // 主蓝色
+$primary-color: #25bbe4; // 主蓝色
 $primary-hover: #82dbf4; // 主色悬停状态
 $primary-sub: #f24257; //次主色
 // 辅色
@@ -52,7 +52,7 @@ $themes: (
         0 2px 4px rgba(255, 255, 255, 0.3)},
 
         // 主题色
-        --primary-color: #5de9e0,
+        --primary-color: #25bbe4,
         --primary-sub: #f24257,
         --color-accent: #e8845c,
         --color-accent-hover: #f0986e,
@@ -63,7 +63,7 @@ $themes: (
         --shadow-elevated: #{0 2px 8px rgba(0, 0, 0, 0.12),
         0 8px 24px rgba(0, 0, 0, 0.1)},
         // 卡片 / 面板背景
-        --card-background: #ecf8ff,
+        --card-background: #f6fafc,
         --bg-card-glass: rgba(255, 255, 255, 0.7),
         --bg-card-glass-opacity: rgba(255, 255, 255, 0.2),
         --bg-tag: rgba(0, 0, 0, 0.08),

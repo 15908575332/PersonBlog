@@ -19,6 +19,11 @@
         }
     }
 }
+#homePage {
+    .ant-typography {
+        @include text-color("text-color");
+    }
+}
 // 全局提示组件ant-message样式重写
 .ant-message {
     top: 3rem;

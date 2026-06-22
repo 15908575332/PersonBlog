@@ -133,7 +133,7 @@
                             <div class="text-box">
                                 <h2 class="title">山景</h2>
                                 <p class="copy">看看这些令人惊叹的山地旅行，正如你所猜想的，它们都有美丽的山景</p>
-                                <button class="btn">查看</button>
+                                <button class="btn">查看➙</button>
                             </div>
                         </div>
                         <div class="subscribe-item">

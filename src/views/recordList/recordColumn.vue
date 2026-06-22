@@ -13,7 +13,7 @@
                         <slide v-for="(item, index) in spliceData" :key="index" :index="index">
                             <a class="image">
                                 <a-badge-ribbon color="#fe3459" text="推荐"></a-badge-ribbon>
-                                <img :src="item.cover_image_url" alt="Image" />
+                                <LazyImage :src="item.cover_image_url" alt="Image" />
                                 <div class="item__count">
                                     <h1>{{ item.title }}</h1>
                                     <ul>
@@ -117,6 +117,7 @@ const getSpecialColumn = async () => {
 };
 //跳转详情页
 import CryptoJS from 'crypto-js';
+import LazyImage from '../../components/common/LazyImage.vue';
 const gotoClomunDetail = (tag, category_id) => {
     getCategoryArticles(category_id); // 获取分类下的所有文章
     router.push({

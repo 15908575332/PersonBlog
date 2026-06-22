@@ -1085,35 +1085,29 @@ onMounted(() => {
             .release {
               display: flex;
               align-items: center;
-              gap: 0.4rem;
               font-size: 0.65rem;
               font-weight: 400;
               margin-bottom: 0.35rem;
               color: themed('text-sec-color');
+              border-radius: 0.2rem;
+              width: fit-content;
+              overflow: hidden;
 
-              // 用户名首字母头像圆
-              span:first-child {
-                display: flex;
-                align-items: center;
-                gap: 0.3rem;
-
-                &::before {
-                  content: '';
-                  display: inline-block;
-                  width: 0.42rem;
-                  height: 0.42rem;
-                  border-radius: 50%;
-                  background: themed('primary-color');
-                  flex-shrink: 0;
-                  opacity: 0.7;
-                }
+              span {
+                color: $general-white;
+                padding: 0.1rem 0.2rem;
+                @include flexCenter(center, center);
+                font-size: 0.65rem;
               }
 
-              span:not(:last-child)::after {
-                content: '·';
-                opacity: 0.35;
-                font-weight: 300;
-                margin-left: 0.1rem;
+              span:nth-child(1) {
+                // background-color: $pr;
+                @include background('color-accent');
+              }
+
+              span:nth-child(2) {
+                background-color: $primary-color;
+
               }
             }
 
@@ -1216,7 +1210,7 @@ onMounted(() => {
           }
 
           // 让包裹层div撑满flex容器
-          > div {
+          >div {
             flex: 1;
             min-height: 0;
             width: 100%;
@@ -1239,7 +1233,7 @@ onMounted(() => {
 
           // hover 标题变 accent 色
           &:hover .text__content h1 {
-            color: themed('color-accent');
+            color: $primary-color;
           }
         }
 
@@ -1260,13 +1254,9 @@ onMounted(() => {
             font-weight: 700;
             letter-spacing: 0.04em;
             color: #fff;
-            background: linear-gradient(
-              135deg,
-              themed('color-accent'),
-              themed('color-accent-hover')
-            );
             border-radius: 0.3rem;
             box-shadow: 0 2px 8px rgba(232, 132, 92, 0.35);
+            background: themed('primary-sub');
             pointer-events: none;
           }
 
@@ -1284,11 +1274,9 @@ onMounted(() => {
             left: 0;
             right: 0;
             padding: 0.8rem 1rem;
-            background: linear-gradient(
-              180deg,
-              transparent 0%,
-              rgba(0, 0, 0, 0.65) 100%
-            );
+            background: linear-gradient(180deg,
+                transparent 0%,
+                rgba(0, 0, 0, 0.65) 100%);
 
             &::before {
               display: none;

@@ -998,7 +998,7 @@ onMounted(async () => {
         // 遮罩
         &::after {
             content: "";
-            @include mask-overlay(#00000040, var(--back-text-height));
+            @include mask-overlay(#00000020, var(--back-text-height));
             animation: zoomInDown 0.6s ease-out forwards;
         }
 
@@ -1364,7 +1364,7 @@ onMounted(async () => {
 
                     .star-1 {
                         position: absolute;
-                        top: 20%;
+                        top: 7%;
                         left: 20%;
                         width: 25px;
                         height: auto;

@@ -115,8 +115,8 @@
             <ul>
               <!-- 骨架屏占位 -->
               <li v-if="favoritesLoading" v-for="n in 6" :key="'sk-' + n" class="favorite-skeleton">
-                <SkeletonScreen :blocks="1" block-width="4rem" block-height="3rem" :lines="2"
-                  line-height="1rem" line-gap="0.5rem" width="100%" :last-line-width="0.5" />
+                <SkeletonScreen :blocks="1" block-width="4rem" block-height="3rem" :lines="2" line-height="1rem"
+                  line-gap="0.5rem" width="100%" :last-line-width="0.5" />
               </li>
               <li v-for="(module, index) in displayedData" :key="index">
                 <a :href="module.href" style="display: flex; align-items: center">
@@ -625,102 +625,173 @@ onUnmounted(() => {
       @include flexCenter(column, center);
 
       .front-end {
-        padding: 1rem 1.5rem;
-        width: 80vw;
-        color: white;
-        background-color: rgba(81, 79, 79, 0.3);
-        backdrop-filter: blur(0.1rem);
-        border-radius: 0.5rem;
+        padding: 1.5rem 2rem;
+        width: 85vw;
+        max-width: 1200px;
+        color: $general-white;
+        background-color: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(24px) saturate(1.2);
+        -webkit-backdrop-filter: blur(24px) saturate(1.2);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: $shadow-card;
         overflow-y: auto;
 
         ul {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-          gap: 1rem;
+          grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+          gap: 1.25rem;
 
           li {
             width: auto;
             font-weight: 700;
-            padding: 0.25rem;
-            min-height: 3.8rem;
-            border-radius: 0.5rem;
-            background-color: rgb(185, 181, 181, 0.5);
+            padding: 0.75rem;
+            min-height: 4.5rem;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22), 0 1px 3px rgba(0, 0, 0, 0.12);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.35s ease,
+              border-color 0.35s ease;
+            animation: favoriteItemIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
+            @for $i from 1 through 12 {
+              &:nth-child(#{$i}) {
+                animation-delay: #{$i * 0.06}s;
+              }
+            }
+
+            &:hover {
+              transform: translateY(-6px);
+              box-shadow: 0 10px 32px rgba(0, 0, 0, 0.32), 0 2px 6px rgba(0, 0, 0, 0.18);
+              background: linear-gradient(135deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.12));
+              border-color: rgba(93, 233, 224, 0.5);
+
+              .iconImg {
+                transform: scale(1.06) rotate(2deg);
+                border-color: rgba(93, 233, 224, 0.5);
+                box-shadow: 0 4px 14px rgba(93, 233, 224, 0.25);
+              }
+
+              h5 {
+                color: #8bf5ee;
+                transform: translateY(-1px);
+              }
+            }
 
             &.favorite-skeleton {
               display: flex;
               align-items: center;
               padding: 0.5rem 0.75rem;
-            }
+              animation: none;
 
-            &:hover {
-              .iconImg {
-                animation: imgNone 0.5s forwards;
-              }
-            }
+              &:hover {
+                transform: none;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22), 0 1px 3px rgba(0, 0, 0, 0.12);
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+                border-color: rgba(255, 255, 255, 0.18);
 
-            @keyframes imgNone {
-              0% {
-                width: 4rem;
-                height: 3rem;
-              }
+                .iconImg {
+                  transform: none;
+                  border-color: rgba(255, 255, 255, 0.15);
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+                }
 
-              100% {
-                width: 0;
-                height: 0;
+                h5 {
+                  color: $primary-color;
+                  transform: none;
+                }
               }
             }
 
             .iconImg {
-              // width: 4rem;
-              height: 3rem;
+              min-width: 3.2rem;
+              height: 3.2rem;
               background-size: cover;
               overflow: hidden;
-              border-radius: 0.25rem;
-              margin-right: 0.5rem;
+              border-radius: 0.75rem;
+              margin-right: 0.75rem;
+              border: 2px solid rgba(255, 255, 255, 0.15);
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+              transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
 
               img {
                 width: 100%;
                 height: 100%;
+                object-fit: cover;
               }
             }
 
             .text-content {
               width: 100%;
+              min-width: 0;
+
             }
 
             h5 {
-              font-size: 1.1rem;
-              padding-left: 0.15rem;
+              font-size: 1.15rem;
+              font-weight: 700;
+              padding-left: 0;
+              margin-bottom: 0.25rem;
+              line-height: 1.3;
+              color: $primary-color;
+              transition: color 0.35s ease,
+                transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
             p {
-              font-size: 0.8rem;
+              font-size: 0.78rem;
+              line-height: 1.4;
+              opacity: 0.85;
             }
           }
         }
 
         //更多按钮
         .moreBtn {
-          // background-color: red;
-          padding-top: 1rem;
+          padding-top: 1.5rem;
           width: 100%;
           text-align: center;
 
           a {
-            // background-color: #94ea31;
-            padding: 0.5rem;
-            transition: all 0.3s linear;
-            font-size: 1rem;
-            background-color: #ffa500;
-            border-radius: 0.5rem;
+            display: inline-block;
+            padding: 0.6rem 2rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, $color-5, #ff8c00);
+            color: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 14px rgba(255, 165, 0, 0.4);
 
             &:hover {
-              background-color: transparent;
+              background: linear-gradient(135deg, #ffb733, #ff8c00);
+              transform: translateY(-2px) scale(1.04);
+              box-shadow: 0 6px 20px rgba(255, 165, 0, 0.55);
             }
           }
         }
       }
 
+    }
+
+    // 收藏夹入场动画
+    @keyframes favoriteItemIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
   }
 }
