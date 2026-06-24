@@ -279,7 +279,8 @@ const noGlobalBgPrefixes = [ // 路由及其所有子路由都会显示背景色
   '/treasureBox',
   '/recordList',
   '/contactUs',
-  '/family'
+  // '/family',
+  '/resetPassword'
 ];
 
 // 计算是否显示全局背景

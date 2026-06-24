@@ -405,6 +405,11 @@ onMounted(() => {
       .module-container {
         width: 40rem;
         max-width: 40rem;
+
+        &:hover {
+          transform: translateY(-8px);
+        }
+
       }
 
       .module {
@@ -414,12 +419,18 @@ onMounted(() => {
         margin-top: 2rem;
         @include background('card-background');
         border-radius: 0.2rem;
+        overflow: hidden;
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
 
         .image {
           width: 50%;
           align-self: stretch;
           display: flex;
           justify-content: center;
+          transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+          overflow: hidden;
 
           img,
           video {
@@ -459,6 +470,7 @@ onMounted(() => {
           font-size: 1rem;
           font-weight: 700;
           @include text-color('text-color');
+          transition: color 0.35s;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;

@@ -85,9 +85,6 @@
           </svg>
         </div>
         <p class="hero__date">二〇二三年十月一日</p>
-        <div class="hero__scroll-indicator">
-          <span></span>
-        </div>
       </div>
     </section>
 
@@ -254,7 +251,14 @@
       <div class="spring__banner">
         <div class="spring__line spring__line--left"></div>
         <div class="spring__content">
-          <span class="spring__icon">🧧</span>
+          <span class="spring__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C12 2 8 6 8 10C8 13.3 10.7 16 14 16C17.3 16 20 13.3 20 10C20 6 16 2 12 2Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+              <path d="M12 16V22" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M9 19H15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="12" cy="7" r="1.5" fill="currentColor" opacity="0.5"/>
+            </svg>
+          </span>
           <p class="spring__text">距离下一个春节还有</p>
           <div class="spring__countdown">
             <span class="spring__num">{{ countdown.days }}</span><span class="spring__unit">天</span>
@@ -596,64 +600,92 @@ const blessings = [
 
 <style scoped lang="scss">
 /* ============================================
-   Design: "纸间情书" — Editorial Love Album
-   Palette: warm cream, muted rose, antique gold
+   Design: "墨间朱砂" — Ink & Vermillion Love Album
+   Palette: deep ink-blue + paper white + cinnabar
+   Taste-Skill: Forest+Bone / Ink+Paper fusion
    ============================================ */
 
 #family {
-  /* 平滑过渡 */
-  transition:
-    background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  // background-color: #fef9f3;
-  // background-image: radial-gradient(circle, #e4d1b4 1px, transparent 1px);
-  // background-size: 24px 24px;
-  color: #3d2a2a;
+  background-color: #1c2433;
+  color: #c8d0d8;
   font-family: var(--app-font-family);
   line-height: 1.6;
 
+  /* === 全局动画控制 === */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes numberPulse {
+      0%, 100% { transform: scale(1); }
+      10%      { transform: scale(1.06); }
+      20%      { transform: scale(1); }
+    }
+    @keyframes roseBloom {
+      0%, 100% { opacity: 0;   transform: rotate(var(--rot, 0deg)) scale(0.6); }
+      8%, 40%  { opacity: 0.45; transform: rotate(var(--rot, 0deg)) scale(1); }
+      52%      { opacity: 0;   transform: rotate(var(--rot, 0deg)) scale(0.6); }
+    }
+
+    /* === 新增动画 === */
+
+    /* 里程碑奇数项：从左侧滑入 */
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    /* 里程碑偶数项：从右侧滑入 */
+    @keyframes slideInRightAlt {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* 计时器数字呼吸感脉冲（每3秒一次，持续2s） */
+    @keyframes timerBreathingPulse {
+      0%, 91%, 100% { transform: scale(1); }
+      94%           { transform: scale(1.03); }
+      97%           { transform: scale(1); }
+    }
+
+    /* Hero 逐层渐入 + 微缩放 */
+    @keyframes heroFadeScale {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* 粒子缓慢上下浮动（不同周期创造深度感） */
+    @keyframes particleDrift {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-18px); }
+    }
+  }
+
   /* === 各区块内玫瑰装饰 === */
   .section-roses {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    overflow: hidden;
+    position: absolute; inset: 0; z-index: 1;
+    pointer-events: none; overflow: hidden;
 
     .section-rose {
       position: absolute;
-      color: #ff0000;
+      color: #c44d4d;
       opacity: 0;
       height: auto;
-      filter: drop-shadow(0 1px 4px rgba(123, 58, 58, 0.2));
-      animation: roseBloom 12s ease-in-out infinite;
-      animation-delay: calc(var(--ri) * 1.6s);
-      animation-fill-mode: both;
+      filter: drop-shadow(0 1px 4px rgba(196, 77, 77, 0.25));
+
+      line { stroke: #c44d4d; }
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: roseBloom 12s ease-in-out infinite;
+        animation-delay: calc(var(--ri) * 1.6s);
+        animation-fill-mode: both;
+      }
     }
   }
-
-  @keyframes roseBloom {
-
-    0%,
-    100% {
-      opacity: 0;
-      transform: rotate(var(--rot, 0deg)) scale(0.6);
-    }
-
-    8%,
-    40% {
-      opacity: 0.45;
-      transform: rotate(var(--rot, 0deg)) scale(1);
-    }
-
-    52% {
-      opacity: 0;
-      transform: rotate(var(--rot, 0deg)) scale(0.6);
-    }
-  }
-
-
-
 
 
   /* === Shared Section Header === */
@@ -667,24 +699,36 @@ const blessings = [
       font-size: clamp(0.7rem, 1.2vw, 0.85rem);
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: #b8956a;
+      color: #c44d4d;
       margin-bottom: 0.75rem;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+      }
     }
 
     .section__title {
       font-family: var(--app-font-family);
       font-size: clamp(2rem, 4vw, 3.2rem);
       font-weight: 400;
-      color: #7b3a3a;
+      color: #faf8f5;
       margin: 0 0 0.5rem;
       letter-spacing: 0.08em;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+      }
     }
 
     .section__subtitle {
       font-size: clamp(0.9rem, 1.3vw, 1.05rem);
-      color: #8c7870;
+      color: #8899aa;
       margin: 0;
       font-weight: 300;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+      }
     }
   }
 
@@ -701,71 +745,91 @@ const blessings = [
     overflow: hidden;
 
     .hero__overlay {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0; z-index: 1;
       background:
-        radial-gradient(ellipse at 30% 50%, rgba(201, 123, 123, 0.12) 0%, transparent 60%),
-        radial-gradient(ellipse at 70% 50%, rgba(184, 149, 106, 0.1) 0%, transparent 60%),
-        #fef9f3;
-      z-index: 1;
+        radial-gradient(ellipse at 30% 40%, rgba(196, 77, 77, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 72% 55%, rgba(196, 77, 77, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(30, 40, 56, 0.6) 0%, transparent 70%),
+        linear-gradient(180deg, #1c2433 0%, #1e2838 40%, #1a2230 100%);
     }
 
     &::before {
       content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        url("@/assets/img/family/poster-about.jpg") center / cover no-repeat;
-      opacity: 0.08;
-      filter: blur(2px) saturate(0.6);
-      z-index: 0;
+      position: absolute; inset: 0; z-index: 0;
+      background: url("@/assets/img/family/poster-about.jpg") center / cover no-repeat;
+      opacity: 0.05;
+      filter: blur(3px) saturate(0.3) brightness(0.5);
     }
 
     .hero__content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center;
       padding: 2rem;
     }
 
     .hero__portraits {
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       gap: clamp(1.5rem, 3vw, 3rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes tagDrift {
+        0%, 100% { opacity: 0.55; transform: translateY(0); }
+        25%      { opacity: 0.9;  transform: translateY(-7px); }
+        75%      { opacity: 0.7;  transform: translateY(3px); }
+      }
+      @keyframes portraitFloat {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-8px); }
+      }
+      @keyframes heartbeat {
+        0%   { transform: rotate(135deg) scale(0.85); }
+        14%  { transform: rotate(135deg) scale(0.9); }
+        28%  { transform: rotate(135deg) scale(0.85); }
+        42%  { transform: rotate(135deg) scale(0.95); }
+        56%  { transform: rotate(135deg) scale(0.85); }
+        70%  { transform: rotate(135deg) scale(0.92); }
+        84%  { transform: rotate(135deg) scale(0.85); }
+        100% { transform: rotate(135deg) scale(0.85); }
+      }
+      @keyframes particleFloat {
+        0%, 100% { opacity: 0;    transform: translateY(0) scale(0.5); }
+        20%      { opacity: 0.25; }
+        50%      { opacity: 0.4;   transform: translateY(-30px) scale(1); }
+        80%      { opacity: 0.15; }
+      }
+      @keyframes ringGlow {
+        0%, 100% { box-shadow: 0 0 30px rgba(196, 77, 77, 0.25); filter: brightness(1); }
+        50%      { box-shadow: 0 0 60px rgba(196, 77, 77, 0.45), 0 0 100px rgba(196, 77, 77, 0.15); filter: brightness(1.08); }
+      }
     }
 
     .portrait {
       position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      animation: portraitFloat 6s ease-in-out infinite;
+      display: flex; flex-direction: column; align-items: center;
 
-      &--left {
-        animation-delay: 0s;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: heroFadeScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) both,
+                   portraitFloat 6s ease-in-out infinite;
       }
-
-      &--right {
-        animation-delay: -3s;
-      }
+      &--left  { animation-delay: 0.3s, 0s; }
+      &--right { animation-delay: 0.45s, -3s; }
 
       .portrait__ring {
         width: clamp(7rem, 12vw, 11rem);
         height: clamp(7rem, 12vw, 11rem);
         border-radius: 50%;
         padding: 4px;
-        background: linear-gradient(135deg, #b8956a 0%, #c97b7b 50%, #e4d1b4 100%);
-        box-shadow: 0 0 40px rgba(201, 123, 123, 0.25);
-        animation: ringGlow 4s ease-in-out infinite;
+        background: linear-gradient(135deg, #c44d4d 0%, #8b5a5a 50%, #3d3535 100%);
+
+        @media (prefers-reduced-motion: no-preference) {
+          animation: ringGlow 4s ease-in-out infinite;
+        }
 
         img {
-          width: 100%;
-          height: 100%;
+          width: 100%; height: 100%;
           border-radius: 50%;
-          object-fit: cover;
-          display: block;
+          object-fit: cover; display: block;
         }
       }
 
@@ -773,38 +837,28 @@ const blessings = [
         margin-top: 1rem;
         font-family: var(--app-font-family);
         font-size: clamp(1rem, 1.6vw, 1.3rem);
-        color: #7b3a3a;
+        color: #faf8f5;
         letter-spacing: 0.1em;
         font-weight: 400;
       }
 
       .portrait__tags {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        display: flex;
-        flex-direction: column;
-        gap: 0.55rem;
-        z-index: 3;
-        pointer-events: none;
+        position: absolute; top: 50%; transform: translateY(-50%);
+        display: flex; flex-direction: column; gap: 0.55rem;
+        z-index: 3; pointer-events: none;
 
-        &--left {
-          right: calc(100% + 1.2rem);
-          align-items: flex-end;
+        @media (prefers-reduced-motion: no-preference) {
+          animation: heroFadeScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
         }
 
-        &--right {
-          left: calc(100% + 1.2rem);
-          align-items: flex-start;
-        }
+        &--left  { right: calc(100% + 1.2rem); align-items: flex-end; }
+        &--right { left: calc(100% + 1.2rem);  align-items: flex-start; }
       }
 
       .tag {
         --delay: 0s;
         --tag-color: #7b3a3a;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
+        display: inline-flex; align-items: center; gap: 0.35rem;
         padding: 0rem 0.85rem;
         font-family: var(--app-font-family);
         font-size: clamp(0.65rem, 1vw, 0.78rem);
@@ -812,63 +866,34 @@ const blessings = [
         @include text-color('text-color');
         border: 1px solid color-mix(in srgb, var(--tag-color) 35%, transparent);
         border-radius: 2px 6px 6px 2px;
-        white-space: nowrap;
-        letter-spacing: 0.04em;
+        white-space: nowrap; letter-spacing: 0.04em;
         backdrop-filter: blur(4px);
-        animation: tagDrift 5s ease-in-out infinite var(--delay);
+        transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                    color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+        @media (prefers-reduced-motion: no-preference) {
+          animation: tagDrift 5s ease-in-out infinite var(--delay);
+        }
 
         .tag__icon {
-          display: flex;
-          width: 14px;
-          height: 14px;
-          flex-shrink: 0;
+          display: flex; width: 14px; height: 14px; flex-shrink: 0;
+          :deep(svg) { width: 100%; height: 100%; display: block; }
+        }
 
-          :deep(svg) {
-            width: 100%;
-            height: 100%;
-            display: block;
-          }
+        &:hover {
+          background-color: #c44d4d;
+          color: #faf8f5;
+          border-color: #c44d4d;
+        }
+        &:focus-visible {
+          outline: 2px solid #c44d4d;
+          outline-offset: 2px;
         }
       }
 
-      &--left .tag {
-        clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 0 100%);
-      }
-
-      &--right .tag {
-        clip-path: polygon(7px 0, 100% 0, 100% 100%, 7px 100%, 0 50%);
-      }
-    }
-
-    @keyframes tagDrift {
-
-      0%,
-      100% {
-        opacity: 0.55;
-        transform: translateY(0);
-      }
-
-      25% {
-        opacity: 0.9;
-        transform: translateY(-7px);
-      }
-
-      75% {
-        opacity: 0.7;
-        transform: translateY(3px);
-      }
-    }
-
-    @keyframes portraitFloat {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-8px);
-      }
+      &--left .tag  { clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 0 100%); }
+      &--right .tag { clip-path: polygon(7px 0, 100% 0, 100% 100%, 7px 100%, 0 50%); }
     }
 
     .hero__heart {
@@ -877,64 +902,23 @@ const blessings = [
       flex-shrink: 0;
 
       .heart-shape {
-        width: 100%;
-        height: 100%;
-        background: #c97b7b;
+        width: 100%; height: 100%;
+        background: #c44d4d;
         transform: rotate(135deg) scale(0.85);
-        animation: heartbeat 2s ease-in-out infinite;
         position: relative;
 
-        &::before,
-        &::after {
-          content: "";
-          position: absolute;
-          width: 100%;
-          height: 100%;
+        @media (prefers-reduced-motion: no-preference) {
+          animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        &::before, &::after {
+          content: ""; position: absolute;
+          width: 100%; height: 100%;
           border-radius: 50%;
-          background: #c97b7b;
+          background: #c44d4d;
         }
-
-        &::after {
-          left: -57%;
-        }
-
-        &::before {
-          top: 57%;
-        }
-      }
-    }
-
-    @keyframes heartbeat {
-      0% {
-        transform: rotate(135deg) scale(0.85);
-      }
-
-      14% {
-        transform: rotate(135deg) scale(0.9);
-      }
-
-      28% {
-        transform: rotate(135deg) scale(0.85);
-      }
-
-      42% {
-        transform: rotate(135deg) scale(0.95);
-      }
-
-      56% {
-        transform: rotate(135deg) scale(0.85);
-      }
-
-      70% {
-        transform: rotate(135deg) scale(0.92);
-      }
-
-      84% {
-        transform: rotate(135deg) scale(0.85);
-      }
-
-      100% {
-        transform: rotate(135deg) scale(0.85);
+        &::after  { left: -57%; }
+        &::before { top: 57%; }
       }
     }
 
@@ -942,157 +926,73 @@ const blessings = [
       margin-top: clamp(1.5rem, 3vw, 2.5rem);
       font-family: var(--app-font-family);
       font-size: clamp(1.1rem, 2vw, 1.5rem);
-      color: #8c7870;
+      color: #8899aa;
       letter-spacing: 0.15em;
       font-style: italic;
-      animation: fadeInUp 1s 0.6s both;
-    }
-
-    .hero__scroll-indicator {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-
-      span {
-        display: block;
-        width: 1px;
-        height: 3rem;
-        background: #b8956a;
-        position: relative;
-        opacity: 0.5;
-        animation: scrollPulse 2s ease-in-out infinite;
-
-        &::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #b8956a;
-        }
-      }
-    }
-
-    @keyframes scrollPulse {
-
-      0%,
-      100% {
-        opacity: 0.3;
-      }
-
-      50% {
-        opacity: 0.8;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 1s 0.6s both;
       }
     }
 
     .hero__ornament {
       margin-top: clamp(1rem, 2.5vw, 2rem);
-      color: #b8956a;
-      opacity: 0.35;
-      display: flex;
-      justify-content: center;
+      color: #c44d4d;
+      opacity: 0.3;
+      display: flex; justify-content: center;
     }
 
     .hero__particles {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 1;
     }
 
     .particle {
       --i: 1;
       position: absolute;
-      width: 4px;
-      height: 4px;
+      width: 4px; height: 4px;
       border-radius: 50%;
-      background: #b8956a;
-      opacity: 0;
+      background: #c44d4d;
+      opacity: 0.4;
 
-      &:nth-child(1) {
-        left: 15%;
-        top: 20%;
-        animation: particleFloat 8s ease-in-out infinite;
-      }
+      &:nth-child(1) { left: 15%; top: 20%; }
+      &:nth-child(2) { left: 80%; top: 15%; }
+      &:nth-child(3) { left: 10%; top: 70%; }
+      &:nth-child(4) { left: 85%; top: 75%; }
+      &:nth-child(5) { left: 50%; top: 85%; }
 
-      &:nth-child(2) {
-        left: 80%;
-        top: 15%;
-        animation: particleFloat 10s ease-in-out 2s infinite;
-      }
-
-      &:nth-child(3) {
-        left: 10%;
-        top: 70%;
-        animation: particleFloat 9s ease-in-out 4s infinite;
-      }
-
-      &:nth-child(4) {
-        left: 85%;
-        top: 75%;
-        animation: particleFloat 11s ease-in-out 1s infinite;
-      }
-
-      &:nth-child(5) {
-        left: 50%;
-        top: 85%;
-        animation: particleFloat 7s ease-in-out 3s infinite;
-      }
-    }
-
-    @keyframes particleFloat {
-
-      0%,
-      100% {
-        opacity: 0;
-        transform: translateY(0) scale(0.5);
-      }
-
-      20% {
-        opacity: 0.25;
-      }
-
-      50% {
-        opacity: 0.4;
-        transform: translateY(-30px) scale(1);
-      }
-
-      80% {
-        opacity: 0.15;
+      @media (prefers-reduced-motion: no-preference) {
+        &:nth-child(1) { animation: particleDrift 6s  ease-in-out infinite alternate; }
+        &:nth-child(2) { animation: particleDrift 8s  ease-in-out 1s infinite alternate; }
+        &:nth-child(3) { animation: particleDrift 10s ease-in-out 2s infinite alternate; }
+        &:nth-child(4) { animation: particleDrift 7s  ease-in-out 0.5s infinite alternate; }
+        &:nth-child(5) { animation: particleDrift 9s  ease-in-out 3s infinite alternate; }
       }
     }
   }
 
+
   /* ============================================
-     SECTION DIVIDER
+     SECTION DIVIDER (max 3 visible)
      ============================================ */
   .section-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 0 1.5rem;
-    max-width: 32rem;
-    margin: 0 auto;
-    color: #b8956a;
-    opacity: 0.25;
+    display: flex; align-items: center; justify-content: center;
+    gap: 1rem; padding: 0 1.5rem;
+    max-width: 32rem; margin: 0 auto;
+    color: rgba(196, 77, 77, 0.25);
     user-select: none;
 
     .section-divider__line {
-      flex: 1;
-      height: 1px;
-      background: currentColor;
+      flex: 1; height: 1px; background: currentColor;
     }
-
     .section-divider__icon {
-      flex-shrink: 0;
-      opacity: 0.6;
+      flex-shrink: 0; opacity: 0.6;
     }
   }
+  // Hide 3 of 6 dividers (keep: after hero, after milestones, after blessings)
+  .timer    + .section-divider,
+  .spring   + .section-divider,
+  .gallery  + .section-divider { display: none; }
+
 
   /* ============================================
      SECTION 2: LOVE TIMER
@@ -1100,228 +1000,164 @@ const blessings = [
   .timer {
     position: relative;
     padding: clamp(3rem, 8vw, 6rem) 1.5rem;
-    background:
-      linear-gradient(180deg, #fef9f3 0%, #f5e6d8 100%);
+    background: #1e2838;
 
-    .timer__container {
-      max-width: 54rem;
-      margin: 0 auto;
-      text-align: center;
-    }
+    .timer__container { max-width: 54rem; margin: 0 auto; text-align: center; }
 
     .timer__heading {
       font-family: var(--app-font-family);
       font-size: clamp(1.5rem, 2.8vw, 2.2rem);
-      font-weight: 400;
-      color: #7b3a3a;
+      font-weight: 400; color: #faf8f5;
       margin: 0 0 clamp(2rem, 4vw, 3rem);
       letter-spacing: 0.12em;
-      animation: fadeInUp 0.7s both;
+      @media (prefers-reduced-motion: no-preference) { animation: fadeInUp 0.7s both; }
     }
 
     .timer__display {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: clamp(0.3rem, 1vw, 0.8rem);
+      display: flex; align-items: baseline; justify-content: center;
+      flex-wrap: wrap; gap: clamp(0.3rem, 1vw, 0.8rem);
     }
 
     .timer__unit {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: flex; flex-direction: column; align-items: center;
       min-width: clamp(3.5rem, 7vw, 5.5rem);
-      animation: fadeInUp 0.8s var(--unit-delay, 0s) both;
+      @media (prefers-reduced-motion: no-preference) { animation: fadeInUp 0.8s var(--unit-delay, 0s) both; }
 
-      &:nth-child(1) {
-        --unit-delay: 0.1s;
-      }
-
-      &:nth-child(2) {
-        --unit-delay: 0.2s;
-      }
-
-      &:nth-child(4) {
-        --unit-delay: 0.3s;
-      }
-
-      &:nth-child(5) {
-        --unit-delay: 0.4s;
-      }
-
-      &:nth-child(7) {
-        --unit-delay: 0.5s;
-      }
-
-      &:nth-child(8) {
-        --unit-delay: 0.6s;
-      }
-
-      &:nth-child(10) {
-        --unit-delay: 0.7s;
-      }
+      &:nth-child(1)  { --unit-delay: 0.1s; }
+      &:nth-child(2)  { --unit-delay: 0.2s; }
+      &:nth-child(4)  { --unit-delay: 0.3s; }
+      &:nth-child(5)  { --unit-delay: 0.4s; }
+      &:nth-child(7)  { --unit-delay: 0.5s; }
+      &:nth-child(8)  { --unit-delay: 0.6s; }
+      &:nth-child(10) { --unit-delay: 0.7s; }
     }
 
     .timer__number {
       font-family: var(--app-font-family);
       font-size: clamp(2rem, 4.5vw, 3.8rem);
-      font-weight: 400;
-      color: #7b3a3a;
-      line-height: 1.1;
-      font-variant-numeric: tabular-nums;
+      font-weight: 400; color: #faf8f5;
+      line-height: 1.1; font-variant-numeric: tabular-nums;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: timerBreathingPulse 6s ease-in-out infinite;
+        &:nth-child(1)  { animation-delay: 0s; }
+        &:nth-child(2)  { animation-delay: 0.2s; }
+        &:nth-child(4)  { animation-delay: 0.4s; }
+        &:nth-child(5)  { animation-delay: 0.6s; }
+        &:nth-child(7)  { animation-delay: 0.8s; }
+        &:nth-child(8)  { animation-delay: 1.0s; }
+        &:nth-child(10) { animation-delay: 1.2s; }
+      }
     }
 
     .timer__label {
       font-size: clamp(0.7rem, 1.1vw, 0.9rem);
-      color: #8c7870;
-      margin-top: 0.3rem;
-      letter-spacing: 0.05em;
+      color: #8899aa; margin-top: 0.3rem; letter-spacing: 0.05em;
     }
 
     .timer__sep {
       font-family: var(--app-font-family);
       font-size: clamp(1.5rem, 3vw, 2.5rem);
-      color: #b8956a;
-      opacity: 0.5;
-      align-self: center;
-      user-select: none;
+      color: #c44d4d; opacity: 0.4;
+      align-self: center; user-select: none;
     }
   }
+
 
   /* ============================================
      SECTION 3: MILESTONES
      ============================================ */
   .miles {
-    background:
-      linear-gradient(180deg, #f5e6d8 0%, #fef9f3 100%);
+    background: #1c2433;
 
     .milestones {
       position: relative;
       padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
-      max-width: 48rem;
-      margin: 0 auto;
+      max-width: 48rem; margin: 0 auto;
 
       .milestones__timeline {
-        position: relative;
-        padding-top: 2rem;
+        position: relative; padding-top: 2rem;
 
         &::before {
-          content: "";
-          position: absolute;
-          left: 1.3rem;
-          top: 0;
-          bottom: 0;
-          width: 1px;
-          background: linear-gradient(180deg,
-              #b8956a 0%,
-              #c97b7b 50%,
-              transparent 100%);
+          content: ""; position: absolute;
+          left: 1.3rem; top: 0; bottom: 0; width: 1px;
+          background: linear-gradient(180deg, #c44d4d 0%, rgba(196, 77, 77, 0.6) 50%, transparent 100%);
         }
       }
 
       .milestone {
-        position: relative;
-        padding-left: 3.5rem;
+        position: relative; padding-left: 3.5rem;
         margin-bottom: clamp(2rem, 4vw, 3rem);
-        animation: slideInRight 0.7s var(--card-delay, 0s) both;
 
-        &:nth-child(1) {
-          --card-delay: 0.15s;
+        &:nth-child(odd) {
+          @media (prefers-reduced-motion: no-preference) {
+            animation: slideInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--card-delay, 0s) both;
+          }
+        }
+        &:nth-child(even) {
+          @media (prefers-reduced-motion: no-preference) {
+            animation: slideInRightAlt 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--card-delay, 0s) both;
+          }
         }
 
-        &:nth-child(2) {
-          --card-delay: 0.3s;
-        }
-
-        &:nth-child(3) {
-          --card-delay: 0.45s;
-        }
-
-        &:nth-child(4) {
-          --card-delay: 0.6s;
-        }
-
-        &:nth-child(5) {
-          --card-delay: 0.75s;
-        }
-
-        &:nth-child(6) {
-          --card-delay: 0.9s;
-        }
-
-        &:nth-child(7) {
-          --card-delay: 1.05s;
-        }
-
-        &:last-child {
-          margin-bottom: 0;
-        }
+        &:nth-child(1) { --card-delay: 0.15s; }
+        &:nth-child(2) { --card-delay: 0.3s; }
+        &:nth-child(3) { --card-delay: 0.45s; }
+        &:nth-child(4) { --card-delay: 0.6s; }
+        &:nth-child(5) { --card-delay: 0.75s; }
+        &:nth-child(6) { --card-delay: 0.9s; }
+        &:nth-child(7) { --card-delay: 1.05s; }
+        &:last-child    { margin-bottom: 0; }
 
         .milestone__dot {
-          position: absolute;
-          left: 1.05rem;
-          top: 0.5rem;
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          background: #c97b7b;
-          border: 2px solid #fef9f3;
-          box-shadow: 0 0 0 3px #e4d1b4;
+          position: absolute; left: 1.05rem; top: 0.5rem;
+          width: 10px; height: 10px; border-radius: 50%;
+          background: #c44d4d;
+          border: 2px solid #1c2433;
+          box-shadow: 0 0 0 3px rgba(196, 77, 77, 0.25);
         }
 
         .milestone__card {
-          background: #fdf0e8;
-          border: 1px solid rgba(184, 149, 106, 0.15);
+          background: #222c3d;
+          border: 1px solid rgba(196, 77, 77, 0.1);
           border-radius: 2px;
           padding: 1.5rem 1.75rem;
           transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
           &:hover {
-            border-color: #e4d1b4;
-            box-shadow: 0 4px 24px rgba(201, 123, 123, 0.08);
+            border-color: rgba(196, 77, 77, 0.3);
+            box-shadow: 0 4px 24px rgba(196, 77, 77, 0.08);
+          }
+          &:focus-visible {
+            outline: 2px solid #c44d4d;
+            outline-offset: 2px;
           }
 
           &::after {
-            content: "";
-            position: absolute;
-            right: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            border: 1px solid #b8956a;
-            border-radius: 50%;
-            opacity: 0.12;
-            pointer-events: none;
+            content: ""; position: absolute;
+            right: 1.25rem; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px;
+            border: 1px solid rgba(196, 77, 77, 0.2);
+            border-radius: 50%; opacity: 0.12; pointer-events: none;
           }
         }
 
         .milestone__date {
           font-family: var(--app-font-family);
-          font-size: 0.8rem;
-          color: #b8956a;
-          letter-spacing: 0.12em;
+          font-size: 0.8rem; color: #c44d4d; letter-spacing: 0.12em;
         }
-
         .milestone__title {
           font-family: var(--app-font-family);
-          font-size: 1.25rem;
-          font-weight: 400;
-          color: #7b3a3a;
-          margin: 0.35rem 0 0.4rem;
+          font-size: 1.25rem; font-weight: 400;
+          color: #faf8f5; margin: 0.35rem 0 0.4rem;
         }
-
         .milestone__desc {
-          font-size: 0.9rem;
-          color: #8c7870;
-          margin: 0;
-          line-height: 1.7;
+          font-size: 0.9rem; color: #8899aa; margin: 0; line-height: 1.7;
         }
       }
     }
-
   }
+
 
   /* ============================================
      SECTION 4: SPRING COUNTDOWN
@@ -1329,172 +1165,140 @@ const blessings = [
   .spring {
     position: relative;
     padding: clamp(2rem, 4vw, 3.5rem) 1.5rem;
-    background: linear-gradient(135deg,
-        rgba(201, 123, 123, 0.06) 0%,
-        rgba(184, 149, 106, 0.08) 50%,
-        rgba(201, 123, 123, 0.04) 100%);
+    background: #222c3d;
 
     .spring__banner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      max-width: 44rem;
-      margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.5rem; max-width: 44rem; margin: 0 auto;
     }
 
     .spring__line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #e4d1b4, transparent);
-      opacity: 0.6;
-      min-width: 2rem;
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(196, 77, 77, 0.3), transparent);
+      opacity: 0.5; min-width: 2rem;
     }
 
-    .spring__content {
-      text-align: center;
-      flex-shrink: 0;
-    }
+    .spring__content { text-align: center; flex-shrink: 0; }
 
     .spring__icon {
-      font-size: 1.8rem;
-      display: block;
-      margin-bottom: 0.5rem;
+      display: block; margin-bottom: 0.5rem;
+      color: #c44d4d; opacity: 0.7;
+
+      svg {
+        display: block; margin: 0 auto;
+      }
     }
 
     .spring__text {
       font-family: var(--app-font-family);
       font-size: clamp(0.85rem, 1.3vw, 1rem);
-      color: #8c7870;
-      margin: 0 0 0.6rem;
+      color: #8899aa; margin: 0 0 0.6rem;
     }
 
     .spring__countdown {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 0.15rem;
+      display: flex; align-items: baseline; justify-content: center; gap: 0.15rem;
     }
 
     .spring__num {
       font-family: var(--app-font-family);
       font-size: clamp(1.3rem, 2.5vw, 2rem);
-      color: #7b3a3a;
+      color: #faf8f5;
       font-variant-numeric: tabular-nums;
-      min-width: 2.2rem;
-      text-align: center;
-      animation: numberPulse 4s ease-in-out infinite;
+      min-width: 2.2rem; text-align: center;
 
-      &:nth-child(1) {
-        animation-delay: 0.2s;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: numberPulse 4s ease-in-out infinite;
       }
-
-      &:nth-child(3) {
-        animation-delay: 0.4s;
-      }
-
-      &:nth-child(5) {
-        animation-delay: 0.6s;
-      }
-
-      &:nth-child(7) {
-        animation-delay: 0.8s;
-      }
+      &:nth-child(1) { animation-delay: 0.2s; }
+      &:nth-child(3) { animation-delay: 0.4s; }
+      &:nth-child(5) { animation-delay: 0.6s; }
+      &:nth-child(7) { animation-delay: 0.8s; }
     }
 
     .spring__unit {
-      font-size: 0.8rem;
-      color: #8c7870;
-      margin: 0 0.4rem 0 0.1rem;
+      font-size: 0.8rem; color: #8899aa; margin: 0 0.4rem 0 0.1rem;
     }
   }
+
 
   /* ============================================
      SECTION 5: GALLERY
      ============================================ */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes galleryFadeIn {
+      from { opacity: 0; transform: rotate(var(--rotate, 0deg)) translateY(1rem); }
+      to   { opacity: 1; transform: rotate(var(--rotate, 0deg)) translateY(0); }
+    }
+  }
+
   .gallery {
     position: relative;
     padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
-    background:
-      linear-gradient(180deg, #fef9f3 0%, #f5e6d8 100%);
+    background: #1c2433;
 
     .gallery__grid {
-      max-width: 60rem;
-      margin: 0 auto;
+      max-width: 60rem; margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(clamp(10rem, 18vw, 16rem), 1fr));
-      gap: clamp(1rem, 2vw, 2rem);
-      padding: 2rem 0 0;
+      gap: clamp(1rem, 2vw, 2rem); padding: 2rem 0 0;
     }
 
     .gallery__item {
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
       border-radius: 2px;
-      background-color: #fdf0e8;
+      background-color: #222c3d;
       aspect-ratio: 4 / 3;
       transform: rotate(var(--rotate, 0deg));
-      transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1),
-        box-shadow 0.4s ease;
-      box-shadow: 0 2px 12px rgba(61, 42, 42, 0.08);
-      animation: galleryFadeIn 0.6s ease-out var(--delay) both;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 12px rgba(28, 36, 51, 0.4);
 
-      &::before,
-      &::after {
-        content: "";
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        z-index: 2;
-        pointer-events: none;
-        opacity: 0.5;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: galleryFadeIn 0.6s ease-out var(--delay) both;
       }
 
+      /* 左上角装饰 */
       &::before {
-        top: 6px;
-        left: 6px;
-        border-top: 1px solid rgba(254, 249, 243, 0.8);
-        border-left: 1px solid rgba(254, 249, 243, 0.8);
+        content: ""; position: absolute;
+        top: 6px; left: 6px; z-index: 2; pointer-events: none;
+        width: 10px; height: 10px;
+        border-top: 1px solid rgba(250, 248, 245, 0.15);
+        border-left: 1px solid rgba(250, 248, 245, 0.15);
+        opacity: 0.35;
       }
 
+      /* 覆盖层：hover 时从底部滑入 */
       &::after {
-        bottom: 6px;
-        right: 6px;
-        border-bottom: 1px solid rgba(254, 249, 243, 0.8);
-        border-right: 1px solid rgba(254, 249, 243, 0.8);
+        content: ""; position: absolute;
+        inset: 0; z-index: 1; pointer-events: none;
+        background: linear-gradient(to top, rgba(28, 36, 51, 0.82) 0%, rgba(28, 36, 51, 0.3) 40%, transparent 70%);
+        transform: translateY(100%);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       &:hover {
         transform: rotate(0deg) scale(1.03);
-        box-shadow: 0 8px 32px rgba(201, 123, 123, 0.15);
+        box-shadow: 0 8px 30px rgba(196, 77, 77, 0.25);
         z-index: 1;
+
+        &::after {
+          transform: translateY(0);
+        }
+      }
+      &:focus-visible {
+        outline: 2px solid #c44d4d;
+        outline-offset: 2px;
       }
 
       img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+        width: 100%; height: 100%;
+        object-fit: cover; display: block;
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
-
-      &:hover img {
-        transform: scale(1.06);
-      }
-    }
-
-    @keyframes galleryFadeIn {
-      from {
-        opacity: 0;
-        transform: rotate(var(--rotate, 0deg)) translateY(1rem);
-      }
-
-      to {
-        opacity: 1;
-        transform: rotate(var(--rotate, 0deg)) translateY(0);
-      }
+      &:hover img { transform: scale(1.05); }
     }
   }
+
 
   /* ============================================
      SECTION 6: BLESSINGS
@@ -1502,77 +1306,68 @@ const blessings = [
   .blessings {
     position: relative;
     padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
-    background:
-      linear-gradient(180deg, #f5e6d8 0%, #fdf0e8 100%);
+    background: #1e2838;
 
     .blessings__grid {
-      max-width: 56rem;
-      margin: 0 auto;
+      max-width: 56rem; margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(clamp(14rem, 22vw, 18rem), 1fr));
-      gap: clamp(1rem, 2vw, 1.75rem);
-      padding: 2rem 0 0;
+      gap: clamp(1rem, 2vw, 1.75rem); padding: 2rem 0 0;
     }
 
     .blessing-card {
       position: relative;
-      background: #fdf0e8;
-      border: 1px solid rgba(184, 149, 106, 0.12);
+      background: #222c3d;
+      border: 1px solid rgba(196, 77, 77, 0.08);
       border-radius: 2px;
       padding: 1.75rem;
-      transition: border-color 0.3s ease, transform 0.3s ease;
-      animation: fadeInUp 0.7s var(--bless-delay, 0s) both;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.3s ease;
 
-      &:nth-child(1) {
-        --bless-delay: 0.1s;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 0.7s var(--bless-delay, 0s) both;
       }
-
-      &:nth-child(2) {
-        --bless-delay: 0.2s;
-      }
-
-      &:nth-child(3) {
-        --bless-delay: 0.3s;
-      }
-
-      &:nth-child(4) {
-        --bless-delay: 0.4s;
-      }
+      &:nth-child(1) { --bless-delay: 0.1s; }
+      &:nth-child(2) { --bless-delay: 0.2s; }
+      &:nth-child(3) { --bless-delay: 0.3s; }
+      &:nth-child(4) { --bless-delay: 0.4s; }
 
       &::before {
-        content: "";
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 14px;
-        height: 14px;
-        border-top: 1px solid #c97b7b;
-        border-right: 1px solid #c97b7b;
-        opacity: 0.15;
-        pointer-events: none;
+        content: ""; position: absolute;
+        top: 8px; right: 8px;
+        width: 14px; height: 14px;
+        border-top: 1px solid #c44d4d;
+        border-right: 1px solid #c44d4d;
+        opacity: 0.12; pointer-events: none;
+        transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       &:hover {
-        border-color: #e4d1b4;
-        transform: translateY(-2px);
+        border-color: rgba(196, 77, 77, 0.25);
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px rgba(28, 36, 51, 0.5);
+
+        &::before {
+          opacity: 0.35;
+        }
+      }
+      &:focus-visible {
+        outline: 2px solid #c44d4d;
+        outline-offset: 2px;
       }
 
       .blessing-card__text {
-        font-size: 0.9rem;
-        color: #3d2a2a;
-        line-height: 1.8;
-        margin: 0 0 1rem;
-        letter-spacing: 0.02em;
+        font-size: 0.9rem; color: #c8d0d8;
+        line-height: 1.8; margin: 0 0 1rem; letter-spacing: 0.02em;
       }
-
       .blessing-card__author {
         font-family: var(--app-font-family);
-        font-size: 0.8rem;
-        color: #b8956a;
-        font-style: italic;
+        font-size: 0.8rem; color: #c44d4d; font-style: italic;
       }
     }
   }
+
 
   /* ============================================
      SECTION 7: EXPLORE
@@ -1580,182 +1375,98 @@ const blessings = [
   .explore {
     position: relative;
     padding: clamp(3rem, 7vw, 6rem) 1.5rem;
-    display: flex;
-    justify-content: center;
-    background:
-      linear-gradient(180deg, #fdf0e8 0%, #fef9f3 100%);
+    display: flex; justify-content: center;
+    background: #1c2433;
+
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes iconPulse {
+        0%, 100% { opacity: 0.4; transform: scale(1); }
+        50%      { opacity: 0.7; transform: scale(1.05); }
+      }
+      @keyframes exploreRingSpin {
+        from { transform: translateX(-50%) rotate(0deg); }
+        to   { transform: translateX(-50%) rotate(360deg); }
+      }
+    }
 
     .explore__content {
-      position: relative;
-      text-align: center;
-      max-width: 32rem;
+      position: relative; text-align: center; max-width: 32rem;
 
       &::before {
-        content: "";
-        position: absolute;
-        top: -2rem;
-        left: 50%;
-        transform: translateX(-50%);
+        content: ""; position: absolute;
+        top: -2rem; left: 50%; transform: translateX(-50%);
         width: clamp(10rem, 30vw, 18rem);
         height: clamp(10rem, 30vw, 18rem);
-        border: 1px solid #b8956a;
-        border-radius: 50%;
-        opacity: 0.08;
-        pointer-events: none;
-        animation: exploreRingSpin 24s linear infinite;
+        border: 1px solid rgba(196, 77, 77, 0.15);
+        border-radius: 50%; opacity: 0.08; pointer-events: none;
+
+        @media (prefers-reduced-motion: no-preference) {
+          animation: exploreRingSpin 24s linear infinite;
+        }
       }
     }
 
     .explore__heading {
       font-family: var(--app-font-family);
       font-size: clamp(2rem, 3.5vw, 2.8rem);
-      font-weight: 400;
-      color: #7b3a3a;
-      margin: 0 0 1rem;
-      letter-spacing: 0.15em;
-    }
+      font-weight: 400; color: #faf8f5;
+      margin: 0 0 1rem; letter-spacing: 0.15em;
 
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+      }
+    }
     .explore__text {
       font-size: clamp(1rem, 1.5vw, 1.2rem);
-      color: #8c7870;
-      margin: 0 0 2rem;
-      line-height: 2;
-      font-weight: 300;
-    }
+      color: #8899aa; margin: 0 0 2rem;
+      line-height: 2; font-weight: 300;
 
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+      }
+    }
     .explore__icon {
-      color: #c97b7b;
-      opacity: 0.6;
-      animation: iconPulse 3s ease-in-out infinite;
-    }
+      color: #c44d4d; opacity: 0.5;
 
-    @keyframes iconPulse {
-
-      0%,
-      100% {
-        opacity: 0.4;
-        transform: scale(1);
-      }
-
-      50% {
-        opacity: 0.8;
-        transform: scale(1.05);
-      }
-    }
-
-    @keyframes ringGlow {
-
-      0%,
-      100% {
-        box-shadow: 0 0 30px rgba(201, 123, 123, 0.2);
-        filter: brightness(1);
-      }
-
-      50% {
-        box-shadow: 0 0 60px rgba(201, 123, 123, 0.45), 0 0 100px rgba(184, 149, 106, 0.2);
-        filter: brightness(1.08);
-      }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(24px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideInRight {
-      from {
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes numberPulse {
-
-      0%,
-      100% {
-        transform: scale(1);
-      }
-
-      10% {
-        transform: scale(1.06);
-      }
-
-      20% {
-        transform: scale(1);
-      }
-    }
-
-    @keyframes exploreRingSpin {
-      from {
-        transform: translateX(-50%) rotate(0deg);
-      }
-
-      to {
-        transform: translateX(-50%) rotate(360deg);
+      @media (prefers-reduced-motion: no-preference) {
+        animation: iconPulse 3s ease-in-out infinite;
       }
     }
   }
+
 
   /* ============================================
      FOOTER
      ============================================ */
   .footer {
-    position: relative;
-    text-align: center;
+    position: relative; text-align: center;
     padding: 1.5rem;
-    border-top: 1px solid rgba(184, 149, 106, 0.15);
-    background-color: #fef9f3;
-    animation: fadeInUp 0.7s both;
+    border-top: 1px solid rgba(196, 77, 77, 0.1);
+    background-color: #18202e;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: fadeInUp 0.7s both;
+    }
 
     p {
       font-family: var(--app-font-family);
-      font-size: 0.8rem;
-      color: #8c7870;
-      margin: 0;
+      font-size: 0.8rem; color: #8899aa; margin: 0;
     }
   }
 }
+
 
 /* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 640px) {
   #family {
-    .timer__display {
-      gap: 0.2rem;
-    }
-
-    .timer__sep {
-      font-size: 1.2rem;
-    }
-
-    .milestone {
-      padding-left: 2.8rem;
-    }
-
-    .milestones__timeline::before {
-      left: 1.1rem;
-    }
-
-    .milestone .milestone__dot {
-      left: 0.65rem;
-    }
-
-    .spring__banner {
-      gap: 0.8rem;
-    }
+    .timer__display { gap: 0.2rem; }
+    .timer__sep     { font-size: 1.2rem; }
+    .milestone      { padding-left: 2.8rem; }
+    .milestones__timeline::before { left: 1.1rem; }
+    .milestone .milestone__dot    { left: 0.65rem; }
+    .spring__banner { gap: 0.8rem; }
   }
 }
 </style>
