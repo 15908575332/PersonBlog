@@ -458,6 +458,7 @@ $page-accent: #714cab;
   left: 0;
   width: 100%;
   height: 100%;
+  font-family: themed('app-font-family');
 
   &.on-start {
     .form__cover::before {
@@ -640,8 +641,8 @@ $page-accent: #714cab;
     }
 
     .step-dot {
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.06);
       border: 2px solid rgba(255, 255, 255, 0.1);
@@ -788,14 +789,15 @@ $page-accent: #714cab;
     .styled-input__input {
       width: 100%;
       -webkit-appearance: none;
-      font-size: 14px;
+      font-size: 0.8rem;
       outline: none;
       background: none;
       padding: 11px 15px;
       color: #ceafff;
       border: none;
       font-weight: 600;
-      letter-spacing: 0.035em;
+      letter-spacing: 0.1rem;
+      font-family: themed('app-font-family');
     }
 
     .styled-input__placeholder {
@@ -814,7 +816,7 @@ $page-accent: #714cab;
     .styled-input__placeholder-text {
       perspective: 500px;
       display: inline-block;
-      font-size: 0.7rem;
+      font-size: 0.8rem;
 
       .letter {
         display: inline-block;
@@ -857,12 +859,13 @@ $page-accent: #714cab;
     border-radius: 3px;
     border: 1px solid rgba(255, 255, 255, 0.35);
     background: transparent;
-    color: $page-accent;
-    font-size: 13px;
+    @include text-color('text-muted');
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
     @include theme-transition();
+    font-family: themed('app-font-family');
 
     &:hover:not(:disabled) {
       background: rgba(255, 255, 255, 0.08);
@@ -889,8 +892,8 @@ $page-accent: #714cab;
     border-radius: 3px;
     border: 1px solid rgba($page-accent, 0.3);
     background: linear-gradient(160deg, #2d1c4e 0%, $page-surface 40%, #5a3b8a 100%);
-    color: $page-accent;
-    font-size: 0.9rem;
+    @include text-color('text-muted');
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 6px;
     cursor: pointer;
@@ -923,6 +926,8 @@ $page-accent: #714cab;
       flex: 1;
       width: auto;
       margin-bottom: 0;
+      font-family: themed('app-font-family');
+      font-size: 0.8rem;
     }
   }
 
@@ -1251,6 +1256,7 @@ $page-accent: #714cab;
 .step-form.anim-ready .letter {
   animation: letterAnimOut 0.25s ease forwards;
 }
+
 .step-form.anim-ready .letter.active {
   animation: letterAnimIn 0.25s ease forwards;
 }
