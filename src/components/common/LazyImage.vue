@@ -2,7 +2,7 @@
   <div ref="wrapperRef" class="lazy-image-wrapper" :style="{ backgroundColor: placeholderColor }">
     <!-- 加载动画层 -->
     <div v-if="status === 'loading'" class="lazy-image-spinner">
-      <div class="lazy-image-spinner-inner" :style="{ width: spinnerSize, height: spinnerSize }" />
+      <div class="lazy-image-spinner-inner" style="z-index: 9;" :style="{ width: spinnerSize, height: spinnerSize }" />
     </div>
 
     <!-- 真实图片 -->
@@ -33,7 +33,7 @@ const props = withDefaults(
   {
     alt: '',
     placeholderColor: '#f0f0f2',
-    spinnerSize: '32px',
+    spinnerSize: '46px',
   },
 )
 
@@ -118,10 +118,10 @@ watch(
 )
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .lazy-image-wrapper {
   position: relative;
-  overflow: hidden;
+  // overflow: hidden;
   width: 100%;
   height: 100%;
 }
@@ -148,10 +148,24 @@ watch(
 }
 
 .lazy-image-spinner-inner {
+  position: relative;
+  border: 3px solid $general-white;
   border-radius: 50%;
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top-color: rgba(0, 0, 0, 0.35);
-  animation: lazy-image-spin 0.8s linear infinite;
+  -webkit-animation: rotation 1s linear infinite;
+  animation: lazy-image-spin 1s linear infinite;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 3px solid;
+    border-color: $primary-sub transparent;
+  }
 }
 
 .lazy-image-error {
