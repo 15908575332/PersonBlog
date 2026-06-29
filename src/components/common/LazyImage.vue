@@ -16,6 +16,7 @@
         <circle cx="8.5" cy="8.5" r="1.5" />
         <path d="M21 15l-5-5L5 21" />
       </svg>
+      <h2>加载失败</h2>
     </div>
   </div>
 </template>
@@ -176,6 +177,12 @@ watch(
   justify-content: center;
   color: rgba(0, 0, 0, 0.25);
   z-index: 1;
+  @include flexCenter(column, center);
+  gap: 0.5rem;
+
+  h2 {
+    font-size: 0.8rem;
+  }
 }
 
 @keyframes lazy-image-fade-in {
