@@ -85,6 +85,9 @@
               <button class="play-button"></button>
             </div>
 
+            <!-- 标签云 -->
+            <TagCard :tags="allTags" />
+
             <!-- 锚点导航 -->
             <div class="anchorPointNav">
               <ul class="anchorPointList">
@@ -122,8 +125,9 @@
                   <div class="specific__content box__shadow" v-for="(item, index) in dataContent[module.category_id]"
                     :key="index">
                     <figure class="image c4-izmir c4-image-pan-down" @click="listDetail(item.article_id)">
-                      <LazyImage :src="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
-                      <button v-if="item.cover_video_url !== null && playButtonReview" class="play-button"></button>
+                      <LazyImage :src="item.cover_image_url" alt="Image">
+                        <button v-if="item.cover_video_url !== null" class="play-button"></button>
+                      </LazyImage>
                     </figure>
                     <div class="text__content">
                       <!-- 发布 -->
@@ -177,9 +181,10 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import Navigation from "@/components/common/NavigationMenu.vue";
 import scrollMessage from "@/components/informalEssay/scrollMessage.vue";
+import TagCard from "@/components/informalEssay/TagCard.vue";
 import { useAuthStore } from "@/store/auth";
 import { useMainStore } from "@/store/maincontent";
 import dayjs from "dayjs";
@@ -191,8 +196,8 @@ import { randomAssistanceColor } from '@/styles/colorTokens';
 
 /** ------------------------ 获取分类 ------------------------ */
 const navData = ref([]);
-const getNavData = () => {
-  mainStore.fetchNavData();
+const getNavData = async () => {
+  await mainStore.fetchNavData();
   navData.value = mainStore.navData;
 }
 
@@ -205,11 +210,10 @@ const initializeData = async () => {
     loading.value = true;
 
     // 1. 先获取导航数据
-    getNavData();
+    await getNavData();
 
-    console.log(navData.value)
     // 2. 等待导航数据加载完成后，再获取内容数据
-    if (navData.value && navData.value.length > 0) {
+    if (navData.value && navData.value?.length > 0) {
       await getContentData();
     }
 
@@ -224,7 +228,7 @@ const initializeData = async () => {
 };
 
 /** ------------------------ 获取所有内容，根据分类id分别存储 ------------------------ */
-const dataContent = ref([]);
+const dataContent = ref({});
 const getContentData = async () => {
   await Promise.all(navData.value.map(async (category) => {
     const categoryId = category.category_id;
@@ -233,9 +237,21 @@ const getContentData = async () => {
   }));
 }
 
+/** ------------------------ 从文章数据中提取所有不重复标签 ------------------------ */
+const allTags = computed(() => {
+  const tagSet = new Set();
+  Object.values(dataContent.value).forEach((items) => {
+    (items || []).forEach((item) => {
+      if (item.master_tag) tagSet.add(item.master_tag);
+      if (item.sub_tag) tagSet.add(item.sub_tag);
+    });
+  });
+  return Array.from(tagSet).map((name) => ({ name }));
+});
+
 /** ------------------------ 获取留言（左侧滚动留言） ------------------------ */
 const messageList = ref([]);
-const getScrollMessageData = (async () => {
+const getScrollMessageData = async () => {
   try {
     const response = await axios.get('http://localhost:3000/getMessageList');
     messageList.value = response.data.data.map(item => ({
@@ -247,11 +263,10 @@ const getScrollMessageData = (async () => {
     console.error('获取留言失败', error);
     message.error('留言加载失败');
   }
-});
+};
 
 /** ------------------------ 锚点导航------------------------ */
 const scrollToSection = (sectionId) => {
-  console.log(sectionId);
   const element = document.getElementById(sectionId);
   if (element) {
     element.scrollIntoView({ behavior: "smooth" });
@@ -270,16 +285,6 @@ const listDetail = (id) => {
     },
   });
 };
-
-
-/** ------------------------ 图片加载完成后显示播放按钮 ------------------------ */
-const
-  playButtonReview = ref(false), // 用于控制图片加载状态
-  onLoad = () => {
-    if (!mainStore.loading) { // 图片加载完成后再显示播放按钮
-      playButtonReview.value = true;
-    }
-  };
 
 onMounted(() => {
   initializeData();

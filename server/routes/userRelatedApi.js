@@ -2,9 +2,11 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import validateRegister from '../middleware/validateRegisterNotnull.js';
 import validateLoginNotnull from '../middleware/validateLoginNotnull.js';
 import validateUpdateInfo from '../middleware/validateUpdateInfo.js';
+import { sendResetCodeEmail } from '../utils/email.js';
 const router = express.Router();
 const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -180,6 +182,105 @@ router.post('/refresh', async (req, res) => {
     } catch (error) {
         console.error('刷新令牌失败:', error);
         res.status(401).json({ message: '无效或过期令牌' });
+    }
+});
+
+// 发送重置密码验证码
+router.post('/send-reset-code', async (req, res) => {
+    const { account } = req.body;
+
+    if (!account) {
+        return res.status(400).json({ message: '请输入邮箱地址' });
+    }
+
+    // 简易邮箱格式校验
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmail = emailRegex.test(account);
+    if (!isEmail) {
+        return res.status(400).json({ message: '请输入有效的邮箱地址' });
+    }
+
+    try {
+        // 查询用户是否存在
+        const [user] = await sqlQuery(
+            'SELECT user_id FROM users WHERE email = ?',
+            [account]
+        );
+        if (!user) {
+            return res.status(404).json({ message: '该账号未注册' });
+        }
+
+        // 使旧验证码失效
+        await sqlQuery(
+            'UPDATE reset_codes SET used = 1 WHERE account = ? AND used = 0',
+            [account]
+        );
+
+        // 生成6位验证码
+        const code = crypto.randomInt(100000, 999999).toString();
+        const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5分钟有效
+
+        // 存储验证码
+        await sqlQuery(
+            'INSERT INTO reset_codes (account, code, expires_at) VALUES (?, ?, ?)',
+            [account, code, expiresAt]
+        );
+
+        // 发送邮件
+        await sendResetCodeEmail(account, code);
+
+        res.status(200).json({ message: '验证码已发送' });
+
+    } catch (error) {
+        console.error('发送验证码失败:', error);
+        res.status(500).json({ message: '发送验证码失败，请稍后重试' });
+    }
+});
+
+// 重置密码
+router.post('/reset-password', async (req, res) => {
+    const { account, code, newPassword } = req.body;
+
+    if (!account || !code || !newPassword) {
+        return res.status(400).json({ message: '请填写完整信息' });
+    }
+
+    if (!/^\d{6}$/.test(code)) {
+        return res.status(400).json({ message: '验证码格式错误' });
+    }
+
+    if (newPassword.length < 6) {
+        return res.status(400).json({ message: '新密码至少6位' });
+    }
+
+    try {
+        // 验证验证码
+        const [record] = await sqlQuery(
+            'SELECT * FROM reset_codes WHERE account = ? AND code = ? AND used = 0 AND expires_at > NOW()',
+            [account, code]
+        );
+        if (!record) {
+            return res.status(400).json({ message: '验证码错误或已过期' });
+        }
+
+        // 标记验证码已使用
+        await sqlQuery(
+            'UPDATE reset_codes SET used = 1 WHERE id = ?',
+            [record.id]
+        );
+
+        // 更新密码
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+        await sqlQuery(
+            'UPDATE users SET password_hash = ?, updated_at = NOW() WHERE email = ?',
+            [hashedPassword, account]
+        );
+
+        res.status(200).json({ message: '密码重置成功' });
+
+    } catch (error) {
+        console.error('重置密码失败:', error);
+        res.status(500).json({ message: '重置密码失败，请稍后重试' });
     }
 });
 

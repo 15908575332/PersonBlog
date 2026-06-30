@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const authenticateToken = async (req, res, next) => {
     // 白名单处理
-    const whiteList = ['/userInfo', ''];
+    const whiteList = ['/userInfo', '', '/send-reset-code', '/reset-password'];
     if (whiteList.includes(req.path)) return next();
 
     // Token格式校验

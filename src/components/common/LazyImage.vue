@@ -9,12 +9,27 @@
     <img v-show="status === 'loaded'" :src="resolvedSrc" :alt="alt" class="lazy-image-real"
       :class="{ 'lazy-image-fade-in': status === 'loaded' }" @load="onLoad" @error="onError" />
 
+    <!-- 图片加载完成后渲染的插槽内容 -->
+    <slot v-if="status === 'loaded'" />
+
     <!-- 错误降级 -->
     <div v-if="status === 'error'" class="lazy-image-error">
-      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <path d="M21 15l-5-5L5 21" />
+      <svg viewBox="0 0 80 80" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 头部轮廓 -->
+        <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="2.5"/>
+        <!-- 腮红 -->
+        <ellipse cx="22" cy="44" rx="7" ry="4" fill="currentColor" opacity="0.12"/>
+        <ellipse cx="58" cy="44" rx="7" ry="4" fill="currentColor" opacity="0.12"/>
+        <!-- 左眼 × -->
+        <line x1="27" y1="32" x2="35" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="35" y1="32" x2="27" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 右眼 × -->
+        <line x1="45" y1="32" x2="53" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="53" y1="32" x2="45" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 汗滴 -->
+        <path d="M60 24 Q62 30 58 34 Q54 30 60 24Z" fill="currentColor" opacity="0.25"/>
+        <!-- 嘴 -->
+        <path d="M33 50 Q40 46 47 50" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <h2>加载失败</h2>
     </div>
@@ -30,17 +45,20 @@ const props = withDefaults(
     alt?: string
     placeholderColor?: string
     spinnerSize?: string
+    loadTimeout?: number
   }>(),
   {
     alt: '',
     placeholderColor: '#f0f0f2',
     spinnerSize: '46px',
+    loadTimeout: Number(import.meta.env.VITE_LAZY_IMAGE_LOAD_TIMEOUT) || 15000,
   },
 )
 
 const emit = defineEmits<{
   load: [event: Event]
   error: [event: Event]
+  timeout: []
 }>()
 
 type Status = 'idle' | 'loading' | 'loaded' | 'error'
@@ -48,13 +66,23 @@ const status = ref<Status>('idle')
 const resolvedSrc = ref('')
 const wrapperRef = ref<HTMLDivElement | null>(null)
 let observer: IntersectionObserver | null = null
+let loadTimer: ReturnType<typeof setTimeout> | null = null
+
+function clearLoadTimer() {
+  if (loadTimer !== null) {
+    clearTimeout(loadTimer)
+    loadTimer = null
+  }
+}
 
 function onLoad(e: Event) {
+  clearLoadTimer()
   status.value = 'loaded'
   emit('load', e)
 }
 
 function onError(e: Event) {
+  clearLoadTimer()
   status.value = 'error'
   emit('error', e)
 }
@@ -62,6 +90,11 @@ function onError(e: Event) {
 function startLoad() {
   status.value = 'loading'
   resolvedSrc.value = props.src
+  clearLoadTimer()
+  loadTimer = setTimeout(() => {
+    status.value = 'error'
+    emit('timeout')
+  }, props.loadTimeout)
 }
 
 onMounted(() => {
@@ -89,12 +122,14 @@ onMounted(() => {
 
 onUnmounted(() => {
   observer?.disconnect()
+  clearLoadTimer()
 })
 
 watch(
   () => props.src,
   (newSrc) => {
     if (newSrc && newSrc !== resolvedSrc.value) {
+      clearLoadTimer()
       status.value = 'idle'
       resolvedSrc.value = ''
       if (wrapperRef.value) {
@@ -179,9 +214,13 @@ watch(
   z-index: 1;
   @include flexCenter(column, center);
   gap: 0.5rem;
+  /* 漫画网点纸风格背景 */
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-size: 12px 12px;
 
   h2 {
     font-size: 0.8rem;
+    @include text-color('text-sec-color');
   }
 }
 

@@ -15,6 +15,9 @@ export const assistanceColors = [
   "#86bfbf", // $assistance-8
   "#af9b9b", // $assistance-9
   "#c57d76", // $assistance-10
+  "#25bbe4", //$primary-color
+  "#82dbf4", //$primary-hover
+  "#f24257"  //$primary-sub
 ];
 
 /** 从色板中随机取一个颜色 */

@@ -48,16 +48,23 @@
 
           <!-- 步骤指示器 -->
           <div class="step-indicator">
-            <div class="step-item" :class="{ active: step === 1, done: step > 1 }">
-              <span class="step-dot"></span>
-              <span class="step-label">验证</span>
+            <div class="step-segment step-segment--left">
+              <div class="step-line"></div>
+              <div class="step-progress" :style="{ width: leftProgress }"></div>
             </div>
-            <div class="step-line">
-              <span class="step-line__fill" :class="{ filled: step > 1 }"></span>
+            <div class="step-item" :class="{ active: step === 1, done: step > 1 }">
+              <span class="step-label">验证身份</span>
+            </div>
+            <div class="step-segment step-segment--middle">
+              <div class="step-line"></div>
+              <div class="step-progress" :style="{ width: middleProgress }"></div>
             </div>
             <div class="step-item" :class="{ active: step === 2 }">
-              <span class="step-dot"></span>
-              <span class="step-label">设置</span>
+              <span class="step-label">设置密码</span>
+            </div>
+            <div class="step-segment step-segment--right">
+              <div class="step-line"></div>
+              <div class="step-progress" :style="{ width: rightProgress }"></div>
             </div>
           </div>
 
@@ -87,28 +94,14 @@
                 </div>
                 <div class="styled-input__circle"></div>
               </div>
-              <button type="button" class="code-btn" :disabled="countdown > 0 || !isAccountValid" @click="sendCode">
+              <button type="button" class="code-btn" :disabled="countdown > 0 || !isAccountValid || loading"
+                @click="sendCode">
                 {{ countdown > 0 ? `${countdown}s` : '获取验证码' }}
               </button>
             </div>
 
-            <div class="form-row">
-              <div class="styled-input form-row__input" :class="{ filled: captchaFilled }">
-                <input type="text" class="styled-input__input captcha-input" v-model="captchaInput" maxlength="4"
-                  ref="captchaInputRef" @focus="onCaptchaFocus" @blur="onCaptchaBlur">
-                <div class="styled-input__placeholder">
-                  <span class="styled-input__placeholder-text">
-                    <span v-for="(char, i) in captchaLetters" :key="i" class="letter"
-                      :class="{ active: captchaActiveMap[i] }">{{ char }}</span>
-                  </span>
-                </div>
-                <div class="styled-input__circle"></div>
-              </div>
-              <span class="captcha-display" @click="generateCaptcha" title="点击刷新">{{ captcha }}</span>
-            </div>
-
             <div class="btn-row">
-              <button type="button" class="styled-button styled-button--secondary" @click="goLogin">
+              <button type="button" class="styled-button styled-button--outline" @click="goLogin">
                 <span class="styled-button__real-text-holder">
                   <span class="styled-button__real-text">返回登录</span>
                   <span class="styled-button__moving-block face">
@@ -142,7 +135,7 @@
           </div>
 
           <!-- Step 2 -->
-          <div v-else class="step-form">
+          <div v-else class="step-form" :class="{ 'anim-ready': animReady }">
             <div class="styled-input form-row" :class="{ filled: newPasswordFilled }">
               <input type="password" class="styled-input__input" v-model="newPassword" ref="newPasswordInputRef"
                 @focus="onNewPasswordFocus" @blur="onNewPasswordBlur">
@@ -168,7 +161,7 @@
             </div>
 
             <div class="btn-row">
-              <button type="button" class="styled-button styled-button--secondary" @click="goStepOne">
+              <button type="button" class="styled-button styled-button--outline" @click="goStepOne">
                 <span class="styled-button__real-text-holder">
                   <span class="styled-button__real-text">上一步</span>
                   <span class="styled-button__moving-block face">
@@ -209,7 +202,8 @@
 <script setup>
 import { ref, reactive, onMounted, computed, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
-import { message, notification } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
+import request from '@/utils/request';
 
 const router = useRouter();
 
@@ -221,44 +215,40 @@ const isOnloaded = ref(false);
 const step = ref(1);
 const isSuccess = ref(false);
 
+/* ===== 加载状态 ===== */
+const loading = ref(false);
+
 /* ===== Step1 数据 ===== */
 const account = ref('');
 const code = ref('');
-const codeSent = ref('');
 const countdown = ref(0);
 let timer = null;
-const captcha = ref('');
-const captchaInput = ref('');
 
 /* ===== Step2 数据 ===== */
 const newPassword = ref('');
 const confirmPassword = ref('');
 
 /* ===== 输入框 letter 数组 ===== */
-const accountLetters = [...'邮箱或手机号'];
+const accountLetters = [...'邮箱地址'];
 const codeLetters = [...'请输入验证码'];
-const captchaLetters = [...'图形验证码'];
 const newPasswordLetters = [...'请输入新密码（不少于6位）'];
 const confirmPasswordLetters = [...'请再次输入新密码'];
 
 /* ===== activeMap（逐字母动画） ===== */
 const accountActiveMap = reactive({});
 const codeActiveMap = reactive({});
-const captchaActiveMap = reactive({});
 const newPasswordActiveMap = reactive({});
 const confirmPasswordActiveMap = reactive({});
 
 /* ===== filled 状态 ===== */
 const accountFilled = ref(false);
 const codeFilled = ref(false);
-const captchaFilled = ref(false);
 const newPasswordFilled = ref(false);
 const confirmPasswordFilled = ref(false);
 
 /* ===== inputRef ===== */
 const accountInputRef = ref(null);
 const codeInputRef = ref(null);
-const captchaInputRef = ref(null);
 const newPasswordInputRef = ref(null);
 const confirmPasswordInputRef = ref(null);
 
@@ -267,8 +257,21 @@ const animReady = ref(true);
 
 /* ===== 计算属性 ===== */
 const isAccountValid = computed(() => {
-  const val = account.value;
-  return /^(1[3-9]\d{9})$/.test(val) || /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(val);
+  return /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(account.value);
+});
+
+const leftProgress = computed(() => {
+  return step.value >= 1 ? '100%' : '0%';
+});
+
+const middleProgress = computed(() => {
+  if (step.value >= 2) return '100%';
+  if (step.value === 1) return '50%';
+  return '0%';
+});
+
+const rightProgress = computed(() => {
+  return step.value >= 2 ? '50%' : '0%';
 });
 
 /* ===== 通用 staggerActive（声明式动画） ===== */
@@ -285,10 +288,10 @@ function staggerActive(activeMap, letters, action) {
 
 /* ===== 步骤切换时清空 + 恢复动画状态 ===== */
 function clearAllAnimStates() {
-  [accountFilled, codeFilled, captchaFilled, newPasswordFilled, confirmPasswordFilled]
+  [accountFilled, codeFilled, newPasswordFilled, confirmPasswordFilled]
     .forEach(r => r.value = false);
-  [accountActiveMap, codeActiveMap, captchaActiveMap, newPasswordActiveMap, confirmPasswordActiveMap]
-    .forEach(m => Object.keys(m).forEach(k => delete m[k]));
+  [accountActiveMap, codeActiveMap, newPasswordActiveMap, confirmPasswordActiveMap]
+    .forEach(m => Object.keys(m).forEach(k => { m[k] = false; }));
 }
 
 function restoreAnimForStep(target) {
@@ -296,7 +299,6 @@ function restoreAnimForStep(target) {
     1: [
       [account, accountFilled, accountActiveMap, accountLetters],
       [code, codeFilled, codeActiveMap, codeLetters],
-      [captchaInput, captchaFilled, captchaActiveMap, captchaLetters],
     ],
     2: [
       [newPassword, newPasswordFilled, newPasswordActiveMap, newPasswordLetters],
@@ -332,16 +334,6 @@ function onCodeBlur() {
   staggerActive(codeActiveMap, codeLetters, false);
 }
 
-function onCaptchaFocus() {
-  captchaFilled.value = true;
-  staggerActive(captchaActiveMap, captchaLetters, true);
-}
-function onCaptchaBlur() {
-  if (captchaInputRef.value.value.length) return;
-  captchaFilled.value = false;
-  staggerActive(captchaActiveMap, captchaLetters, false);
-}
-
 function onNewPasswordFocus() {
   newPasswordFilled.value = true;
   staggerActive(newPasswordActiveMap, newPasswordLetters, true);
@@ -362,39 +354,36 @@ function onConfirmPasswordBlur() {
   staggerActive(confirmPasswordActiveMap, confirmPasswordLetters, false);
 }
 
-/* ===== 图形验证码 ===== */
-function generateCaptcha() {
-  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-  let str = '';
-  for (let i = 0; i < 4; i++) str += chars.charAt(Math.floor(Math.random() * chars.length));
-  captcha.value = str;
-}
-
 /* ===== 发送验证码 ===== */
-function sendCode() {
+async function sendCode() {
   if (countdown.value > 0) return;
-  codeSent.value = String(Math.floor(100000 + Math.random() * 900000));
-  notification.success({
-    message: '验证码已发送',
-    description: codeSent.value,
-    duration: 6,
-    style: { color: '#ffffff', fontFamily: 'gtpy' },
-  });
-  countdown.value = 30;
-  timer = setInterval(() => {
-    countdown.value--;
-    if (countdown.value <= 0) { clearInterval(timer); timer = null; }
-  }, 1000);
+  if (!account.value || !isAccountValid.value) {
+    message.warning('请输入正确的邮箱地址');
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const res = await request.post('/user/send-reset-code', { account: account.value });
+    message.success(res.message || '验证码已发送');
+    countdown.value = 30;
+    timer = setInterval(() => {
+      countdown.value--;
+      if (countdown.value <= 0) { clearInterval(timer); timer = null; }
+    }, 1000);
+  } catch (error) {
+    const msg = error.response?.data?.message || '发送失败，请稍后重试';
+    message.error(msg);
+  } finally {
+    loading.value = false;
+  }
 }
 
 /* ===== 校验 ===== */
 function validateStepOne() {
-  if (!account.value) { message.warning('请输入邮箱或手机号'); return false; }
-  if (!isAccountValid.value) { message.warning('请输入正确的邮箱或手机号'); return false; }
+  if (!account.value) { message.warning('请输入邮箱地址'); return false; }
+  if (!isAccountValid.value) { message.warning('请输入正确的邮箱地址'); return false; }
   if (!code.value) { message.warning('请输入验证码'); return false; }
-  if (code.value !== codeSent.value) { message.error('手机验证码错误'); return false; }
-  if (!captchaInput.value.trim()) { message.warning('请输入图形验证码'); return false; }
-  if (captchaInput.value.toUpperCase() !== captcha.value) { message.error('图形验证码错误'); return false; }
   return true;
 }
 
@@ -419,13 +408,26 @@ function goStepOne() {
   });
 }
 
-function onStepTwoSubmit() {
+async function onStepTwoSubmit() {
   if (!newPassword.value || !confirmPassword.value) { message.warning('请填写所有字段'); return; }
   if (newPassword.value.length < 6) { message.warning('新密码长度不能少于6位'); return; }
   if (newPassword.value !== confirmPassword.value) { message.warning('两次输入的新密码不一致'); return; }
-  message.success('密码修改成功');
-  isSuccess.value = true;
-  goStepOne();
+
+  loading.value = true;
+  try {
+    const res = await request.post('/user/reset-password', {
+      account: account.value,
+      code: code.value,
+      newPassword: newPassword.value,
+    });
+    message.success(res.message || '密码重置成功');
+    isSuccess.value = true;
+  } catch (error) {
+    const msg = error.response?.data?.message || '重置失败，请稍后重试';
+    message.error(msg);
+  } finally {
+    loading.value = false;
+  }
 }
 
 function goLogin() {
@@ -436,20 +438,12 @@ function goLogin() {
 onMounted(() => {
   setTimeout(() => { isOnstart.value = true; }, 100);
   setTimeout(() => { isOnloaded.value = true; }, 1800);
-  generateCaptcha();
 });
 </script>
 
 <style scoped lang="scss">
-@use "@/styles/color.scss" as *;
-
-// ── 页面专属变量（基于参考项目 html5-css3-focus-shining-form 原始色值） ──
-$page-bg: #3f2766;
-$page-surface: #4d317a;
-$page-accent: #714cab;
-
 // ═══════════════════════════════════════════════════════════
-// .main — 参考项目 main 完整移植（body.on-start → .main.on-start）
+// .main — 全屏居中布局
 // ═══════════════════════════════════════════════════════════
 .main {
   @include flexCenter(row, center);
@@ -459,6 +453,7 @@ $page-accent: #714cab;
   width: 100%;
   height: 100%;
   font-family: themed('app-font-family');
+  @include theme-transition();
 
   &.on-start {
     .form__cover::before {
@@ -479,7 +474,7 @@ $page-accent: #714cab;
     }
 
     .form__cover {
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      @include boxshadow('shadow-card');
 
       &::after {
         transform: scale(2);
@@ -494,17 +489,15 @@ $page-accent: #714cab;
   }
 }
 
-// ═══════════════════════════════════════
-// .form + .form__cover — 参考项目完整移植
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
+// .form + .form__cover
+// ═══════════════════════════════════
 .form {
-  @include flexCenter(row, center);
   position: relative;
-  width: 500px;
-  height: 500px;
-  min-height: 400px;
+  width: 380px;
+  height: 380px;
+  min-height: 380px;
   flex-shrink: 0;
-  padding: 0 20px;
   border-radius: 5px;
 }
 
@@ -520,20 +513,6 @@ $page-accent: #714cab;
   transition: all 0.3s ease 0.8s;
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    background: $page-surface;
-    z-index: -4;
-    border-radius: 50%;
-    transition: all 1.5s ease 0.3s;
-    transform: scale(0);
-  }
-
   &::before {
     content: '';
     position: absolute;
@@ -541,7 +520,7 @@ $page-accent: #714cab;
     top: 0;
     height: 100%;
     width: 100%;
-    background: white;
+    background: themed('border-color'); // #fff (light) / #000 (dark)
     z-index: -5;
     border-radius: 50%;
     transition: all 0.5s ease;
@@ -550,7 +529,7 @@ $page-accent: #714cab;
 }
 
 // ═══════════════════════════════════
-// .form__loader — 参考项目完整移植
+// .form__loader
 // ═══════════════════════════════════
 .form__loader {
   @include flexCenter(row, center);
@@ -564,11 +543,10 @@ $page-accent: #714cab;
 }
 
 // ═══════════════════════════════════
-// .spinner — 参考项目完整移植
+// .spinner
 // ═══════════════════════════════════
 .spinner {
   position: relative;
-  margin: auto;
   width: 50px;
   height: 50px;
   transition: all 0.2s ease 0s;
@@ -582,7 +560,6 @@ $page-accent: #714cab;
     height: 100%;
     top: 0;
     left: 0;
-    margin: auto;
   }
 
   .spinner__path {
@@ -591,169 +568,141 @@ $page-accent: #714cab;
     animation: dash 1.3s ease forwards 0.5s;
     opacity: 0;
     stroke-linecap: round;
-    stroke: #7b23ff;
+    stroke: themed('primary-color');
+    @include theme-transition();
     animation-play-state: running;
   }
 }
 
 // ═══════════════════════════════════
-// .form__content — 参考项目完整移植
+// .form__content
 // ═══════════════════════════════════
 .form__content {
+  width: 100%;
+  height: 100%;
   text-align: center;
-  @include flexCenter(column, flex-start);
   position: relative;
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.5s ease 0.7s;
-  width: 100%;
+  padding: 1rem;
 
-  // ═══ h1 — 参考项目完整移植 ═══
   h1 {
-    font-size: 30px;
+    font-size: 1.5rem;
     letter-spacing: 0.05em;
-    color: $page-accent;
+    @include text-color('text-color');
     font-weight: 700;
+    padding: 0.5rem 0;
 
     &.title--small {
-      font-size: 28px;
+      font-size: 1.4rem;
     }
   }
 
   // ═══════════════════════════════════
-  // 步骤指示器（ResetPassword 专属，深紫调色板风格）
+  // 步骤指示器（贯穿线分布在文字两侧）
   // ═══════════════════════════════════
   .step-indicator {
     display: flex;
     align-items: center;
+    width: 100%;
+    padding: 1rem 0 3rem;
+  }
+
+  .step-segment {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    min-width: 0;
+
+    .step-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 100%;
+      background: themed('border-subtle');
+      @include theme-transition();
+    }
+
+    .step-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: $primary-color;
+      transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+  }
+
+  .step-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    // margin-bottom: 28px;
-    padding: 1.5rem 0;
-    gap: 0;
-
-    .step-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .step-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      user-select: none;
-    }
-
-    .step-item.active .step-dot {
-      background: $page-accent;
-      border-color: $page-accent;
-      color: #fff;
-      box-shadow: 0 0 16px rgba($page-accent, 0.45), 0 0 32px rgba($page-accent, 0.15);
-      animation: dotPulse 2s ease-in-out infinite;
-    }
-
-    .step-item.done .step-dot {
-      background: $page-accent;
-      border-color: $page-accent;
-      color: #fff;
-      box-shadow: 0 0 8px rgba($page-accent, 0.25);
-    }
+    padding: 0 6px;
 
     .step-label {
-      font-size: 0.6rem;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.25);
-      letter-spacing: 0.03em;
-      transition: color 0.4s ease;
+      font-size: 14px;
+      font-weight: 600;
+      @include text-color('text-sec-color');
+      transition: color 0.3s ease;
       white-space: nowrap;
     }
 
-    .step-item.active .step-label {
-      color: rgba(255, 255, 255, 0.85);
+    &.active .step-label {
+      color: $primary-color;
+      animation: dotPulse 2s ease infinite;
+      text-shadow: 0 0 8px rgba($primary-color, 0.4);
     }
 
-    .step-item.done .step-label {
-      color: rgba(255, 255, 255, 0.45);
-    }
-
-    .step-line {
-      position: relative;
-      width: 80px;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.06);
-      margin: 0 6px;
-      margin-bottom: 6px;
-      overflow: hidden;
-      border-radius: 1px;
-
-      .step-line__fill {
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 0%;
-        background: $page-accent;
-        border-radius: 1px;
-        transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 0 0 8px rgba($page-accent, 0.5);
-
-        &.filled {
-          width: 100%;
-        }
-      }
+    &.done .step-label {
+      color: $primary-color;
     }
   }
 
   // ═══════════════════════════════════
-  // 步骤表单（ResetPassword 专属）
+  // 步骤表单
   // ═══════════════════════════════════
   .step-form {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    gap: 0;
-    padding-bottom: 8px;
+    justify-content: flex-start;
+    gap: 1.5rem;
     width: 100%;
-    position: relative;
+    height: 80%;
   }
 
   // ═══════════════════════════════════
-  // 表单行（ResetPassword 专属）
+  // 表单行
   // ═══════════════════════════════════
   .form-row {
     display: flex;
-    gap: 10px;
     align-items: flex-start;
-    margin: 15px 0;
+    gap: 8px;
 
     .form-row__input {
       flex: 1;
-      margin-bottom: 0;
     }
   }
 
   // ═══════════════════════════════════
-  // .styled-input — 参考项目完整移植
+  // .styled-input
   // ═══════════════════════════════════
   .styled-input {
     width: 100%;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid themed('border-subtle');
     border-radius: 3px;
-    transition: all 0.3s ease;
+    // @include background('card-background');
+    @include theme-transition();
 
     &:hover {
-      border-color: rgba(255, 255, 255, 0.4);
+      border-color: themed('border-default');
     }
 
     &.filled {
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: themed('border-subtle');
 
       .styled-input__circle::after {
         transform: scale(90);
@@ -774,14 +723,14 @@ $page-accent: #714cab;
       &::after {
         content: '';
         position: absolute;
-        left: 16.5px;
-        top: 18px;
+        left: 16px;
+        top: 16px;
         height: 10px;
         width: 10px;
         z-index: -2;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0);
+        background: rgba($primary-color, 0.3);
+        box-shadow: 0 0 10px rgba($primary-color, 0);
         transition: transform 0.6s ease, opacity 1s ease;
       }
     }
@@ -793,24 +742,26 @@ $page-accent: #714cab;
       outline: none;
       background: none;
       padding: 11px 15px;
-      color: #ceafff;
+      @include text-color('text-color');
       border: none;
       font-weight: 600;
       letter-spacing: 0.1rem;
       font-family: themed('app-font-family');
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     .styled-input__placeholder {
       position: absolute;
       left: 0;
-      top: 0;
+      top: -2px;
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       z-index: -1;
-      padding-left: 45px;
-      color: white;
+      padding-left: 40px;
+      @include text-color('text-sec-color');
     }
 
     .styled-input__placeholder-text {
@@ -822,7 +773,7 @@ $page-accent: #714cab;
         display: inline-block;
         vertical-align: middle;
         position: relative;
-        text-shadow: 0 0 5px;
+        text-shadow: 0 0 1px;
 
         .anim-ready & {
           animation: letterAnimOut 0.25s ease forwards;
@@ -836,30 +787,30 @@ $page-accent: #714cab;
       }
     }
 
-    // captcha-input 变体（ResetPassword 专属）
     .captcha-input {
       letter-spacing: 2px;
       font-weight: 700;
       font-size: 14px;
-      caret-color: $page-accent;
+      caret-color: $primary-color;
+      @include theme-transition();
 
       &::selection {
-        background: rgba($page-accent, 0.35);
-        color: #fff;
+        background: rgba($primary-color, 0.18);
+        @include text-color('text-color');
       }
     }
   }
 
   // ═══════════════════════════════════
-  // 验证码按钮（ResetPassword 专属，深紫调色板风格）
+  // 验证码按钮
   // ═══════════════════════════════════
   .code-btn {
     flex-shrink: 0;
     padding: 11px 14px;
     border-radius: 3px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid themed('border-subtle');
     background: transparent;
-    @include text-color('text-muted');
+    @include text-color('text-color');
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
@@ -868,9 +819,9 @@ $page-accent: #714cab;
     font-family: themed('app-font-family');
 
     &:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.6);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+      @include background('bg-tag');
+      border-color: rgba($primary-color, 0.35);
+      color: $primary-color;
     }
 
     &:disabled {
@@ -880,76 +831,64 @@ $page-accent: #714cab;
   }
 
   // ═══════════════════════════════════
-  // 图形验证码（ResetPassword 专属，深紫调色板风格）
+  // 图形验证码
   // ═══════════════════════════════════
   .captcha-display {
     flex-shrink: 0;
-    padding: 14px 12px;
+    padding: 11px 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 64px;
     border-radius: 3px;
-    border: 1px solid rgba($page-accent, 0.3);
-    background: linear-gradient(160deg, #2d1c4e 0%, $page-surface 40%, #5a3b8a 100%);
-    @include text-color('text-muted');
+    border: 1px solid rgba($primary-color, 0.18);
+    @include text-color('text-color');
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 6px;
     cursor: pointer;
     user-select: none;
-    text-shadow: 0 0 6px rgba($page-accent, 0.35);
     @include theme-transition();
 
     &:hover {
-      border-color: rgba($page-accent, 0.6);
-      color: #fff;
-      text-shadow: 0 0 10px rgba($page-accent, 0.6), 0 0 20px rgba($page-accent, 0.25);
-      box-shadow: 0 0 14px rgba($page-accent, 0.25);
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      transform: translateY(0) scale(0.97);
+      border-color: rgba($primary-color, 0.45);
+      @include text-color('text-color');
     }
   }
 
   // ═══════════════════════════════════
-  // 按钮行（ResetPassword 专属）
+  // 按钮行
   // ═══════════════════════════════════
   .btn-row {
     display: flex;
     gap: 12px;
-    margin-top: 1.5rem;
+    @include flexCenter (row, space-around);
 
     .styled-button {
       flex: 1;
       width: auto;
-      margin-bottom: 0;
       font-family: themed('app-font-family');
-      font-size: 0.8rem;
+      max-width: 40%;
     }
   }
 
   // ═══════════════════════════════════
-  // .styled-button — 参考项目完整移植
+  // .styled-button
   // ═══════════════════════════════════
   .styled-button {
     cursor: pointer;
-    font-size: 14px;
     width: 100%;
-    padding: 11px 20px;
+    padding: 0.5rem;
     outline: none;
     background: none;
     position: relative;
-    color: #492e72;
+    @include text-color('text-color');
     border-radius: 3px;
-    margin-bottom: 25px;
     border: none;
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 0.1em;
-    background: #714cac;
+    background: $primary-color;
     transition: all 0.3s ease;
     overflow: hidden;
 
@@ -981,12 +920,8 @@ $page-accent: #714cab;
       width: 100%;
       overflow: hidden;
 
-      &.face {
-        color: #492e72;
-      }
-
       &.back {
-        color: white;
+        color: #fff;
         transform: translateX(-100%);
 
         .styled-button__text-holder {
@@ -997,12 +932,13 @@ $page-accent: #714cab;
 
     .styled-button__text {
       display: inline-block;
+      font-size: 0.8rem;
     }
 
     &:hover,
     &:active {
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      background: #7a51bb;
+      background: $primary-hover;
 
       .face {
         transform: translateX(100%);
@@ -1025,60 +961,46 @@ $page-accent: #714cab;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
 
-    // ── 次级按钮（ResetPassword 专属，深紫调色板风格） ──
-    &.styled-button--secondary {
+    // Outline 变体
+    &.styled-button--outline {
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
+      color: $primary-color;
+      box-shadow: $shadow-card;
+      max-height: 2rem;
+      @include flexCenter(center, center);
 
-      .styled-button__moving-block {
-        &.face {
-          color: rgba(255, 255, 255, 0.6);
-        }
-
-        &.back {
-          color: $page-accent;
-        }
+      .back {
+        color: #fff;
       }
 
       &:hover,
       &:active {
-        background: rgba($page-accent, 0.08);
-        border-color: rgba($page-accent, 0.4);
-        box-shadow: 0 0 10px rgba($page-accent, 0.1);
-        color: $page-accent;
-
-        .styled-button__moving-block {
-          &.face {
-            color: rgba(255, 255, 255, 0.6);
-          }
-        }
+        background: transparent;
       }
     }
+
+
   }
 
   // ═══════════════════════════════════
-  // 成功状态（ResetPassword 专属，深紫调色板风格）
+  // 成功状态
   // ═══════════════════════════════════
   .success-state {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 0 10px;
+    gap: 16px;
     width: 100%;
 
     .styled-button {
       flex: none;
       width: 100%;
-      margin-bottom: 0;
     }
   }
 
   .success-icon {
     width: 64px;
     height: 64px;
-    margin-bottom: 20px;
 
     &__checkmark {
       width: 100%;
@@ -1086,7 +1008,8 @@ $page-accent: #714cab;
       border-radius: 50%;
       display: block;
       stroke-width: 3;
-      stroke: #7b23ff;
+      stroke: $primary-color;
+      @include theme-transition();
       stroke-miterlimit: 10;
       animation: successFill 0.4s ease forwards 0.2s;
     }
@@ -1107,21 +1030,31 @@ $page-accent: #714cab;
   .success-title {
     font-size: 20px;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.85);
-    margin: 0 0 6px 0;
+    @include text-color('text-color');
     letter-spacing: 0.03em;
   }
 
   .success-sub {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.4);
-    margin: 0 0 28px 0;
+    @include text-color('text-sec-color');
   }
 }
 
 // ═══════════════════════════════════════════
-// @keyframes — 参考项目完整移植
+// @keyframes
 // ═══════════════════════════════════════════
+
+@keyframes dotPulse {
+
+  0%,
+  100% {
+    text-shadow: 0 0 4px rgba($primary-color, 0.2);
+  }
+
+  50% {
+    text-shadow: 0 0 12px rgba($primary-color, 0.6), 0 0 24px rgba($primary-color, 0.15);
+  }
+}
 
 @keyframes rotate {
   100% {
@@ -1154,13 +1087,13 @@ $page-accent: #714cab;
 
   25% {
     transform: translate(0, 10px);
-    color: red;
+    color: $primary-hover;
   }
 
   45% {
     transform: translate(0, 10px);
     opacity: 0;
-    color: red;
+    color: $primary-hover;
   }
 
   55% {
@@ -1171,11 +1104,11 @@ $page-accent: #714cab;
   56% {
     transform: translate(-30px, -27px);
     opacity: 0;
-    color: #00ff6b;
+    color: $primary-color;
   }
 
   76% {
-    color: #00ff6b;
+    color: $primary-color;
     opacity: 1;
     transform: translate(-30px, -27px);
   }
@@ -1205,12 +1138,12 @@ $page-accent: #714cab;
   55% {
     transform: translate(0, 10px);
     opacity: 0;
-    color: red;
+    color: $primary-hover;
   }
 
   56% {
     transform: translate(0, 10px);
-    color: red;
+    color: $primary-hover;
   }
 
   100% {
@@ -1218,21 +1151,7 @@ $page-accent: #714cab;
   }
 }
 
-// ═══════════════════════════════════════════
-// @keyframes — ResetPassword 专属
-// ═══════════════════════════════════════════
 
-@keyframes dotPulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 16px rgba($page-accent, 0.45), 0 0 32px rgba($page-accent, 0.15);
-  }
-
-  50% {
-    box-shadow: 0 0 24px rgba($page-accent, 0.6), 0 0 48px rgba($page-accent, 0.25);
-  }
-}
 
 @keyframes successStrokeCircle {
   100% {
@@ -1248,7 +1167,7 @@ $page-accent: #714cab;
 
 @keyframes successFill {
   100% {
-    box-shadow: inset 0 0 0 100px rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 0 100px rgba($primary-color, 0.05);
   }
 }
 

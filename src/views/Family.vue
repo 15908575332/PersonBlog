@@ -45,7 +45,7 @@
       <div class="hero__content">
         <!-- Floating decorative particles -->
         <div class="hero__particles">
-          <span class="particle" v-for="n in 5" :key="n" :style="{ '--i': n }"></span>
+          <span class="particle" v-for="n in 12" :key="n" :style="{ '--i': n }"></span>
         </div>
         <div class="hero__portraits">
           <div class="portrait portrait--left">
@@ -253,10 +253,11 @@
         <div class="spring__content">
           <span class="spring__icon">
             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C12 2 8 6 8 10C8 13.3 10.7 16 14 16C17.3 16 20 13.3 20 10C20 6 16 2 12 2Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
-              <path d="M12 16V22" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-              <path d="M9 19H15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="12" cy="7" r="1.5" fill="currentColor" opacity="0.5"/>
+              <path d="M12 2C12 2 8 6 8 10C8 13.3 10.7 16 14 16C17.3 16 20 13.3 20 10C20 6 16 2 12 2Z"
+                stroke="currentColor" stroke-width="1.2" fill="none" />
+              <path d="M12 16V22" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              <path d="M9 19H15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              <circle cx="12" cy="7" r="1.5" fill="currentColor" opacity="0.5" />
             </svg>
           </span>
           <p class="spring__text">距离下一个春节还有</p>
@@ -600,95 +601,309 @@ const blessings = [
 
 <style scoped lang="scss">
 /* ============================================
-   Design: "墨间朱砂" — Ink & Vermillion Love Album
-   Palette: deep ink-blue + paper white + cinnabar
-   Taste-Skill: Forest+Bone / Ink+Paper fusion
+   Design: "春日花信" — Spring Blossom Letters
+   Palette: color.scss assistance palette — warm,
+   bright, section-differentiated, full of life
    ============================================ */
 
+// ── Import project color system ──
+@use "@/styles/color.scss" as c;
+
 #family {
-  background-color: #1c2433;
-  color: #c8d0d8;
   font-family: var(--app-font-family);
   line-height: 1.6;
 
-  /* === 全局动画控制 === */
+  /* ═══════════════════════════════════════════
+     GLOBAL ANIMATIONS
+     ═══════════════════════════════════════════ */
   @media (prefers-reduced-motion: no-preference) {
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(-20px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes numberPulse {
-      0%, 100% { transform: scale(1); }
-      10%      { transform: scale(1.06); }
-      20%      { transform: scale(1); }
-    }
-    @keyframes roseBloom {
-      0%, 100% { opacity: 0;   transform: rotate(var(--rot, 0deg)) scale(0.6); }
-      8%, 40%  { opacity: 0.45; transform: rotate(var(--rot, 0deg)) scale(1); }
-      52%      { opacity: 0;   transform: rotate(var(--rot, 0deg)) scale(0.6); }
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* === 新增动画 === */
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.92);
+      }
 
-    /* 里程碑奇数项：从左侧滑入 */
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes softFloat {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes gentleSway {
+
+      0%,
+      100% {
+        transform: rotate(0deg);
+      }
+
+      25% {
+        transform: rotate(1.5deg);
+      }
+
+      75% {
+        transform: rotate(-1.5deg);
+      }
+    }
+
+    @keyframes whisperBloom {
+      0% {
+        opacity: 0;
+        transform: rotate(var(--rot, 0deg)) scale(0.4);
+      }
+
+      12% {
+        opacity: 0.55;
+        transform: rotate(var(--rot, 0deg)) scale(1.05);
+      }
+
+      24% {
+        opacity: 0.4;
+        transform: rotate(var(--rot, 0deg)) scale(0.95);
+      }
+
+      36% {
+        opacity: 0.2;
+        transform: rotate(var(--rot, 0deg)) scale(0.5);
+      }
+
+      100% {
+        opacity: 0;
+        transform: rotate(var(--rot, 0deg)) scale(0.4);
+      }
+    }
+
+    @keyframes heartbeat {
+      0% {
+        transform: rotate(135deg) scale(0.82);
+      }
+
+      14% {
+        transform: rotate(135deg) scale(0.9);
+      }
+
+      28% {
+        transform: rotate(135deg) scale(0.82);
+      }
+
+      42% {
+        transform: rotate(135deg) scale(0.96);
+      }
+
+      56% {
+        transform: rotate(135deg) scale(0.82);
+      }
+
+      70% {
+        transform: rotate(135deg) scale(0.9);
+      }
+
+      84% {
+        transform: rotate(135deg) scale(0.82);
+      }
+
+      100% {
+        transform: rotate(135deg) scale(0.82);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% center;
+      }
+
+      100% {
+        background-position: 200% center;
+      }
+    }
+
     @keyframes slideInLeft {
-      from { opacity: 0; transform: translateX(-40px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    /* 里程碑偶数项：从右侧滑入 */
-    @keyframes slideInRightAlt {
-      from { opacity: 0; transform: translateX(40px); }
-      to   { opacity: 1; transform: translateX(0); }
+      from {
+        opacity: 0;
+        transform: translateX(-32px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    /* 计时器数字呼吸感脉冲（每3秒一次，持续2s） */
-    @keyframes timerBreathingPulse {
-      0%, 91%, 100% { transform: scale(1); }
-      94%           { transform: scale(1.03); }
-      97%           { transform: scale(1); }
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(32px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    /* Hero 逐层渐入 + 微缩放 */
-    @keyframes heroFadeScale {
-      from { opacity: 0; transform: scale(0.95); }
-      to   { opacity: 1; transform: scale(1); }
+    @keyframes pulseGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(242, 66, 87, 0.35);
+      }
+
+      50% {
+        box-shadow: 0 0 0 12px rgba(242, 66, 87, 0);
+      }
     }
 
-    /* 粒子缓慢上下浮动（不同周期创造深度感） */
-    @keyframes particleDrift {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-18px); }
+    @keyframes countPop {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      5% {
+        transform: scale(1.08);
+      }
+
+      10% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes floatParticle {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.6;
+      }
+
+      80% {
+        opacity: 0.2;
+      }
+
+      100% {
+        transform: translateY(-60px) scale(0.3);
+        opacity: 0;
+      }
+    }
+
+    @keyframes rotateRing {
+      from {
+        transform: translateX(-50%) rotate(0deg);
+      }
+
+      to {
+        transform: translateX(-50%) rotate(360deg);
+      }
+    }
+
+    @keyframes borderPulse {
+
+      0%,
+      100% {
+        border-color: rgba(242, 66, 87, 0.15);
+      }
+
+      50% {
+        border-color: rgba(242, 66, 87, 0.4);
+      }
+    }
+
+    // ── Time digit animations ──
+    // 光泽从左扫到右，模拟金属反光划过数字
+    @keyframes shimmerSweep {
+      0% {
+        background-position: -200% center;
+      }
+      100% {
+        background-position: 200% center;
+      }
+    }
+
+    // 数字容器的底部光晕呼吸
+    @keyframes timeBreathe {
+      0%,
+      100% {
+        box-shadow:
+          0 2px 12px rgba(242, 66, 87, 0.08),
+          0 0 40px rgba(242, 66, 87, 0.04);
+      }
+      50% {
+        box-shadow:
+          0 4px 24px rgba(242, 66, 87, 0.16),
+          0 0 60px rgba(242, 66, 87, 0.08);
+      }
+    }
+
+    // 秒位快速脉冲 — 每秒跳一次
+    @keyframes secondTick {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.12);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
   }
 
-  /* === 各区块内玫瑰装饰 === */
+  /* ═══════════════════════════════════════════
+     SECTION ROSES (decorative)
+     ═══════════════════════════════════════════ */
   .section-roses {
-    position: absolute; inset: 0; z-index: 1;
-    pointer-events: none; overflow: hidden;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
 
     .section-rose {
       position: absolute;
-      color: #c44d4d;
+      color: c.$assistance-1;
       opacity: 0;
       height: auto;
-      filter: drop-shadow(0 1px 4px rgba(196, 77, 77, 0.25));
-
-      line { stroke: #c44d4d; }
+      filter: drop-shadow(0 1px 4px rgba(c.$assistance-1, 0.3));
 
       @media (prefers-reduced-motion: no-preference) {
-        animation: roseBloom 12s ease-in-out infinite;
-        animation-delay: calc(var(--ri) * 1.6s);
+        animation: whisperBloom 10s ease-in-out infinite;
+        animation-delay: calc(var(--ri) * 1.8s);
         animation-fill-mode: both;
       }
     }
   }
 
-
-  /* === Shared Section Header === */
+  /* ═══════════════════════════════════════════
+     SHARED SECTION HEADER
+     ═══════════════════════════════════════════ */
   .section__header {
     text-align: center;
     padding: clamp(2rem, 5vw, 4rem) 1.5rem 2rem;
@@ -699,8 +914,12 @@ const blessings = [
       font-size: clamp(0.7rem, 1.2vw, 0.85rem);
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: #c44d4d;
+      color: c.$primary-sub;
       margin-bottom: 0.75rem;
+      padding: 0.25em 0.75em;
+      border-radius: 2px;
+      background: rgba(c.$primary-sub, 0.06);
+      border: 1px solid rgba(c.$primary-sub, 0.15);
 
       @media (prefers-reduced-motion: no-preference) {
         animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
@@ -711,7 +930,7 @@ const blessings = [
       font-family: var(--app-font-family);
       font-size: clamp(2rem, 4vw, 3.2rem);
       font-weight: 400;
-      color: #faf8f5;
+      color: #2c2c3a;
       margin: 0 0 0.5rem;
       letter-spacing: 0.08em;
 
@@ -722,7 +941,7 @@ const blessings = [
 
     .section__subtitle {
       font-size: clamp(0.9rem, 1.3vw, 1.05rem);
-      color: #8899aa;
+      color: #7a7a8e;
       margin: 0;
       font-weight: 300;
 
@@ -732,10 +951,42 @@ const blessings = [
     }
   }
 
+  /* ═══════════════════════════════════════════
+     SECTION DIVIDER
+     ═══════════════════════════════════════════ */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem 1.5rem;
+    max-width: 32rem;
+    margin: 0 auto;
+    color: rgba(c.$primary-sub, 0.2);
+    user-select: none;
 
-  /* ============================================
+    .section-divider__line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, currentColor, transparent);
+    }
+
+    .section-divider__icon {
+      flex-shrink: 0;
+      opacity: 0.5;
+    }
+  }
+
+  .timer+.section-divider,
+  .spring+.section-divider,
+  .gallery+.section-divider {
+    display: none;
+  }
+
+  /* ═══════════════════════════════════════════
      SECTION 1: HERO
-     ============================================ */
+     Base: warm cream + soft pink glow
+     ═══════════════════════════════════════════ */
   .hero {
     position: relative;
     min-height: 100vh;
@@ -744,92 +995,111 @@ const blessings = [
     justify-content: center;
     overflow: hidden;
 
+    /* layered warm gradient */
+    background:
+      radial-gradient(ellipse at 25% 30%, rgba(c.$assistance-5, 0.25) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 60%, rgba(c.$assistance-1, 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 85%, rgba(c.$assistance-3, 0.12) 0%, transparent 60%),
+      linear-gradient(175deg, #fefaf6 0%, #fdf3ee 30%, #faf0ea 60%, #fef8f5 100%);
+
     .hero__overlay {
-      position: absolute; inset: 0; z-index: 1;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
       background:
-        radial-gradient(ellipse at 30% 40%, rgba(196, 77, 77, 0.18) 0%, transparent 55%),
-        radial-gradient(ellipse at 72% 55%, rgba(196, 77, 77, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(30, 40, 56, 0.6) 0%, transparent 70%),
-        linear-gradient(180deg, #1c2433 0%, #1e2838 40%, #1a2230 100%);
+        radial-gradient(ellipse at 50% 40%, rgba(c.$assistance-5, 0.08) 0%, transparent 60%);
+      pointer-events: none;
     }
 
     &::before {
       content: "";
-      position: absolute; inset: 0; z-index: 0;
+      position: absolute;
+      inset: 0;
+      z-index: 0;
       background: url("@/assets/img/family/poster-about.jpg") center / cover no-repeat;
-      opacity: 0.05;
-      filter: blur(3px) saturate(0.3) brightness(0.5);
+      opacity: 0.04;
+      filter: blur(4px) saturate(0.5) brightness(1.2);
     }
 
     .hero__content {
-      position: relative; z-index: 2;
-      display: flex; flex-direction: column; align-items: center;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 2rem;
     }
 
     .hero__portraits {
-      display: flex; align-items: center;
+      display: flex;
+      align-items: center;
       gap: clamp(1.5rem, 3vw, 3rem);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      @keyframes tagDrift {
-        0%, 100% { opacity: 0.55; transform: translateY(0); }
-        25%      { opacity: 0.9;  transform: translateY(-7px); }
-        75%      { opacity: 0.7;  transform: translateY(3px); }
+      @keyframes tagFloat {
+
+        0%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.7;
+        }
+
+        50% {
+          transform: translateY(-6px);
+          opacity: 1;
+        }
       }
-      @keyframes portraitFloat {
-        0%, 100% { transform: translateY(0); }
-        50%      { transform: translateY(-8px); }
-      }
-      @keyframes heartbeat {
-        0%   { transform: rotate(135deg) scale(0.85); }
-        14%  { transform: rotate(135deg) scale(0.9); }
-        28%  { transform: rotate(135deg) scale(0.85); }
-        42%  { transform: rotate(135deg) scale(0.95); }
-        56%  { transform: rotate(135deg) scale(0.85); }
-        70%  { transform: rotate(135deg) scale(0.92); }
-        84%  { transform: rotate(135deg) scale(0.85); }
-        100% { transform: rotate(135deg) scale(0.85); }
-      }
-      @keyframes particleFloat {
-        0%, 100% { opacity: 0;    transform: translateY(0) scale(0.5); }
-        20%      { opacity: 0.25; }
-        50%      { opacity: 0.4;   transform: translateY(-30px) scale(1); }
-        80%      { opacity: 0.15; }
-      }
-      @keyframes ringGlow {
-        0%, 100% { box-shadow: 0 0 30px rgba(196, 77, 77, 0.25); filter: brightness(1); }
-        50%      { box-shadow: 0 0 60px rgba(196, 77, 77, 0.45), 0 0 100px rgba(196, 77, 77, 0.15); filter: brightness(1.08); }
+
+      @keyframes ringPulse {
+
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(c.$primary-sub, 0.15), 0 0 0 0 rgba(c.$primary-sub, 0.2);
+        }
+
+        50% {
+          box-shadow: 0 0 40px rgba(c.$primary-sub, 0.3), 0 0 0 8px rgba(c.$primary-sub, 0);
+        }
       }
     }
 
     .portrait {
       position: relative;
-      display: flex; flex-direction: column; align-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
       @media (prefers-reduced-motion: no-preference) {
-        animation: heroFadeScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) both,
-                   portraitFloat 6s ease-in-out infinite;
+        animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) both,
+          softFloat 6s ease-in-out infinite;
       }
-      &--left  { animation-delay: 0.3s, 0s; }
-      &--right { animation-delay: 0.45s, -3s; }
+
+      &--left {
+        animation-delay: 0.3s, 0s;
+      }
+
+      &--right {
+        animation-delay: 0.45s, -3s;
+      }
 
       .portrait__ring {
         width: clamp(7rem, 12vw, 11rem);
         height: clamp(7rem, 12vw, 11rem);
         border-radius: 50%;
         padding: 4px;
-        background: linear-gradient(135deg, #c44d4d 0%, #8b5a5a 50%, #3d3535 100%);
+        background: linear-gradient(135deg, c.$primary-sub 0%, c.$assistance-10 50%, c.$assistance-2 100%);
 
         @media (prefers-reduced-motion: no-preference) {
-          animation: ringGlow 4s ease-in-out infinite;
+          animation: ringPulse 4s ease-in-out infinite;
         }
 
         img {
-          width: 100%; height: 100%;
+          width: 100%;
+          height: 100%;
           border-radius: 50%;
-          object-fit: cover; display: block;
+          object-fit: cover;
+          display: block;
         }
       }
 
@@ -837,63 +1107,95 @@ const blessings = [
         margin-top: 1rem;
         font-family: var(--app-font-family);
         font-size: clamp(1rem, 1.6vw, 1.3rem);
-        color: #faf8f5;
+        color: #3c3c4e;
         letter-spacing: 0.1em;
         font-weight: 400;
       }
 
       .portrait__tags {
-        position: absolute; top: 50%; transform: translateY(-50%);
-        display: flex; flex-direction: column; gap: 0.55rem;
-        z-index: 3; pointer-events: none;
+        position: absolute;
+        top: 10%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        z-index: 3;
+        pointer-events: none;
 
         @media (prefers-reduced-motion: no-preference) {
-          animation: heroFadeScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
+          animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
         }
 
-        &--left  { right: calc(100% + 1.2rem); align-items: flex-end; }
-        &--right { left: calc(100% + 1.2rem);  align-items: flex-start; }
+        &--left {
+          right: calc(100% + 1.2rem);
+          align-items: flex-end;
+        }
+
+        &--right {
+          left: calc(100% + 1.2rem);
+          align-items: flex-start;
+        }
       }
 
       .tag {
         --delay: 0s;
-        --tag-color: #7b3a3a;
-        display: inline-flex; align-items: center; gap: 0.35rem;
-        padding: 0rem 0.85rem;
+        --tag-color: #7296de;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.85rem;
         font-family: var(--app-font-family);
         font-size: clamp(0.65rem, 1vw, 0.78rem);
-        background-color: var(--tag-color);
-        @include text-color('text-color');
-        border: 1px solid color-mix(in srgb, var(--tag-color) 35%, transparent);
+        background: rgba(255, 255, 255, 0.75);
+        color: #3c3c4e;
+        border: 1px solid rgba(0, 0, 0, 0.08);
         border-radius: 2px 6px 6px 2px;
-        white-space: nowrap; letter-spacing: 0.04em;
-        backdrop-filter: blur(4px);
-        transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                    color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        white-space: nowrap;
+        letter-spacing: 0.04em;
+        backdrop-filter: blur(8px);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+        transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+          color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
         @media (prefers-reduced-motion: no-preference) {
-          animation: tagDrift 5s ease-in-out infinite var(--delay);
+          animation: tagFloat 5s ease-in-out infinite var(--delay);
         }
 
         .tag__icon {
-          display: flex; width: 14px; height: 14px; flex-shrink: 0;
-          :deep(svg) { width: 100%; height: 100%; display: block; }
+          display: flex;
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
+          color: var(--tag-color);
+
+          :deep(svg) {
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
         }
 
         &:hover {
-          background-color: #c44d4d;
-          color: #faf8f5;
-          border-color: #c44d4d;
+          background: var(--tag-color);
+          color: #fff;
+          border-color: var(--tag-color);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         &:focus-visible {
-          outline: 2px solid #c44d4d;
+          outline: 2px solid c.$primary-sub;
           outline-offset: 2px;
         }
       }
 
-      &--left .tag  { clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 0 100%); }
-      &--right .tag { clip-path: polygon(7px 0, 100% 0, 100% 100%, 7px 100%, 0 50%); }
+      &--left .tag {
+        clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 0 100%);
+      }
+
+      &--right .tag {
+        clip-path: polygon(7px 0, 100% 0, 100% 100%, 7px 100%, 0 50%);
+      }
     }
 
     .hero__heart {
@@ -902,23 +1204,33 @@ const blessings = [
       flex-shrink: 0;
 
       .heart-shape {
-        width: 100%; height: 100%;
-        background: #c44d4d;
-        transform: rotate(135deg) scale(0.85);
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, c.$primary-sub);
+        transform: rotate(135deg) scale(0.82);
         position: relative;
 
         @media (prefers-reduced-motion: no-preference) {
           animation: heartbeat 2s ease-in-out infinite;
         }
 
-        &::before, &::after {
-          content: ""; position: absolute;
-          width: 100%; height: 100%;
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
           border-radius: 50%;
-          background: #c44d4d;
+          background: linear-gradient(135deg, c.$primary-sub);
         }
-        &::after  { left: -57%; }
-        &::before { top: 57%; }
+
+        &::after {
+          left: -57%;
+        }
+
+        &::before {
+          top: 57%;
+        }
       }
     }
 
@@ -926,9 +1238,10 @@ const blessings = [
       margin-top: clamp(1.5rem, 3vw, 2.5rem);
       font-family: var(--app-font-family);
       font-size: clamp(1.1rem, 2vw, 1.5rem);
-      color: #8899aa;
+      color: #8a8280;
       letter-spacing: 0.15em;
       font-style: italic;
+
       @media (prefers-reduced-motion: no-preference) {
         animation: fadeInUp 1s 0.6s both;
       }
@@ -936,472 +1249,709 @@ const blessings = [
 
     .hero__ornament {
       margin-top: clamp(1rem, 2.5vw, 2rem);
-      color: #c44d4d;
-      opacity: 0.3;
-      display: flex; justify-content: center;
+      color: c.$assistance-10;
+      opacity: 0.25;
+      display: flex;
+      justify-content: center;
     }
 
     .hero__particles {
-      position: absolute; inset: 0;
-      pointer-events: none; z-index: 1;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
     }
 
     .particle {
       --i: 1;
       position: absolute;
-      width: 4px; height: 4px;
       border-radius: 50%;
-      background: #c44d4d;
-      opacity: 0.4;
+      background: c.$assistance-5;
+      opacity: 0;
 
-      &:nth-child(1) { left: 15%; top: 20%; }
-      &:nth-child(2) { left: 80%; top: 15%; }
-      &:nth-child(3) { left: 10%; top: 70%; }
-      &:nth-child(4) { left: 85%; top: 75%; }
-      &:nth-child(5) { left: 50%; top: 85%; }
+      &:nth-child(1) {
+        left: 12%;
+        top: 18%;
+        width: 5px;
+        height: 5px;
+      }
+
+      &:nth-child(2) {
+        left: 78%;
+        top: 12%;
+        width: 3px;
+        height: 3px;
+      }
+
+      &:nth-child(3) {
+        left: 8%;
+        top: 68%;
+        width: 4px;
+        height: 4px;
+      }
+
+      &:nth-child(4) {
+        left: 88%;
+        top: 72%;
+        width: 6px;
+        height: 6px;
+      }
+
+      &:nth-child(5) {
+        left: 48%;
+        top: 82%;
+        width: 3px;
+        height: 3px;
+      }
+
+      &:nth-child(6) {
+        left: 22%;
+        top: 48%;
+        width: 4px;
+        height: 4px;
+      }
+
+      &:nth-child(7) {
+        left: 68%;
+        top: 38%;
+        width: 5px;
+        height: 5px;
+      }
+
+      &:nth-child(8) {
+        left: 38%;
+        top: 12%;
+        width: 3px;
+        height: 3px;
+      }
+
+      &:nth-child(9) {
+        left: 58%;
+        top: 72%;
+        width: 4px;
+        height: 4px;
+      }
+
+      &:nth-child(10) {
+        left: 92%;
+        top: 32%;
+        width: 3px;
+        height: 3px;
+      }
+
+      &:nth-child(11) {
+        left: 5%;
+        top: 38%;
+        width: 5px;
+        height: 5px;
+      }
+
+      &:nth-child(12) {
+        left: 72%;
+        top: 88%;
+        width: 4px;
+        height: 4px;
+      }
 
       @media (prefers-reduced-motion: no-preference) {
-        &:nth-child(1) { animation: particleDrift 6s  ease-in-out infinite alternate; }
-        &:nth-child(2) { animation: particleDrift 8s  ease-in-out 1s infinite alternate; }
-        &:nth-child(3) { animation: particleDrift 10s ease-in-out 2s infinite alternate; }
-        &:nth-child(4) { animation: particleDrift 7s  ease-in-out 0.5s infinite alternate; }
-        &:nth-child(5) { animation: particleDrift 9s  ease-in-out 3s infinite alternate; }
+        animation: floatParticle 8s ease-in-out infinite;
+
+        @for $i from 1 through 12 {
+          &:nth-child(#{$i}) {
+            animation-duration: #{6 + random(6)}s;
+            animation-delay: #{$i * 0.6}s;
+          }
+        }
       }
     }
   }
 
-
-  /* ============================================
-     SECTION DIVIDER (max 3 visible)
-     ============================================ */
-  .section-divider {
-    display: flex; align-items: center; justify-content: center;
-    gap: 1rem; padding: 0 1.5rem;
-    max-width: 32rem; margin: 0 auto;
-    color: rgba(196, 77, 77, 0.25);
-    user-select: none;
-
-    .section-divider__line {
-      flex: 1; height: 1px; background: currentColor;
-    }
-    .section-divider__icon {
-      flex-shrink: 0; opacity: 0.6;
-    }
-  }
-  // Hide 3 of 6 dividers (keep: after hero, after milestones, after blessings)
-  .timer    + .section-divider,
-  .spring   + .section-divider,
-  .gallery  + .section-divider { display: none; }
-
-
-  /* ============================================
+  /* ═══════════════════════════════════════════
      SECTION 2: LOVE TIMER
-     ============================================ */
+     Base: soft peach + warm gold
+     ═══════════════════════════════════════════ */
   .timer {
     position: relative;
     padding: clamp(3rem, 8vw, 6rem) 1.5rem;
-    background: #1e2838;
+    background:
+      radial-gradient(ellipse at 30% 30%, rgba(c.$assistance-3, 0.2) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 70%, rgba(c.$assistance-1, 0.25) 0%, transparent 50%),
+      linear-gradient(180deg, #fefcf8 0%, #fdf6ed 50%, #fefaf4 100%);
 
-    .timer__container { max-width: 54rem; margin: 0 auto; text-align: center; }
+    .timer__container {
+      max-width: 54rem;
+      margin: 0 auto;
+      text-align: center;
+    }
 
     .timer__heading {
       font-family: var(--app-font-family);
       font-size: clamp(1.5rem, 2.8vw, 2.2rem);
-      font-weight: 400; color: #faf8f5;
+      font-weight: 400;
+      color: #3c3c4e;
       margin: 0 0 clamp(2rem, 4vw, 3rem);
       letter-spacing: 0.12em;
-      @media (prefers-reduced-motion: no-preference) { animation: fadeInUp 0.7s both; }
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 0.7s both;
+      }
     }
 
     .timer__display {
-      display: flex; align-items: baseline; justify-content: center;
-      flex-wrap: wrap; gap: clamp(0.3rem, 1vw, 0.8rem);
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: clamp(0.3rem, 1vw, 0.8rem);
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: timeBreathe 3s ease-in-out infinite;
+      }
     }
 
     .timer__unit {
-      display: flex; flex-direction: column; align-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       min-width: clamp(3.5rem, 7vw, 5.5rem);
-      @media (prefers-reduced-motion: no-preference) { animation: fadeInUp 0.8s var(--unit-delay, 0s) both; }
 
-      &:nth-child(1)  { --unit-delay: 0.1s; }
-      &:nth-child(2)  { --unit-delay: 0.2s; }
-      &:nth-child(4)  { --unit-delay: 0.3s; }
-      &:nth-child(5)  { --unit-delay: 0.4s; }
-      &:nth-child(7)  { --unit-delay: 0.5s; }
-      &:nth-child(8)  { --unit-delay: 0.6s; }
-      &:nth-child(10) { --unit-delay: 0.7s; }
+      @media (prefers-reduced-motion: no-preference) {
+        animation: fadeInUp 0.8s var(--unit-delay, 0s) both;
+      }
+
+      &:nth-child(1) {
+        --unit-delay: 0.1s;
+      }
+
+      &:nth-child(3) {
+        --unit-delay: 0.2s;
+      }
+
+      &:nth-child(5) {
+        --unit-delay: 0.3s;
+      }
+
+      &:nth-child(7) {
+        --unit-delay: 0.4s;
+      }
+
+      &:nth-child(9) {
+        --unit-delay: 0.5s;
+      }
+
+      &:nth-child(11) {
+        --unit-delay: 0.6s;
+      }
+
+      &:nth-child(13) {
+        --unit-delay: 0.7s;
+      }
     }
 
     .timer__number {
       font-family: var(--app-font-family);
       font-size: clamp(2rem, 4.5vw, 3.8rem);
-      font-weight: 400; color: #faf8f5;
-      line-height: 1.1; font-variant-numeric: tabular-nums;
+      font-weight: 400;
+      color: transparent;
+      background: linear-gradient(
+        110deg,
+        c.$primary-sub 20%,
+        c.$assistance-10 45%,
+        rgba(255, 255, 255, 0.5) 50%,
+        c.$assistance-10 55%,
+        c.$assistance-3 80%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 20px rgba(242, 66, 87, 0.15), 0 2px 4px rgba(197, 125, 118, 0.12);
 
       @media (prefers-reduced-motion: no-preference) {
-        animation: timerBreathingPulse 6s ease-in-out infinite;
-        &:nth-child(1)  { animation-delay: 0s; }
-        &:nth-child(2)  { animation-delay: 0.2s; }
-        &:nth-child(4)  { animation-delay: 0.4s; }
-        &:nth-child(5)  { animation-delay: 0.6s; }
-        &:nth-child(7)  { animation-delay: 0.8s; }
-        &:nth-child(8)  { animation-delay: 1.0s; }
-        &:nth-child(10) { animation-delay: 1.2s; }
+        animation:
+          countPop 4s ease-in-out infinite,
+          shimmerSweep 3s ease-in-out infinite;
+      }
+    }
+
+    // 秒位：变化最频繁，额外加速脉冲
+    .timer__unit:last-of-type .timer__number {
+      @media (prefers-reduced-motion: no-preference) {
+        animation:
+          countPop 4s ease-in-out infinite,
+          shimmerSweep 3s ease-in-out infinite,
+          secondTick 1s ease-in-out infinite;
       }
     }
 
     .timer__label {
       font-size: clamp(0.7rem, 1.1vw, 0.9rem);
-      color: #8899aa; margin-top: 0.3rem; letter-spacing: 0.05em;
+      color: #8a8280;
+      margin-top: 0.3rem;
+      letter-spacing: 0.05em;
     }
 
     .timer__sep {
       font-family: var(--app-font-family);
       font-size: clamp(1.5rem, 3vw, 2.5rem);
-      color: #c44d4d; opacity: 0.4;
-      align-self: center; user-select: none;
+      color: c.$assistance-10;
+      opacity: 0.35;
+      align-self: center;
+      user-select: none;
     }
   }
 
-
-  /* ============================================
+  /* ═══════════════════════════════════════════
      SECTION 3: MILESTONES
-     ============================================ */
+     Base: soft teal mist
+     ═══════════════════════════════════════════ */
   .miles {
-    background: #1c2433;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(c.$assistance-4, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(c.$assistance-8, 0.2) 0%, transparent 50%),
+      linear-gradient(180deg, #f8fcfa 0%, #f2f8f5 100%);
 
     .milestones {
       position: relative;
       padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
-      max-width: 48rem; margin: 0 auto;
+      max-width: 48rem;
+      margin: 0 auto;
 
       .milestones__timeline {
-        position: relative; padding-top: 2rem;
+        position: relative;
+        padding-top: 2rem;
 
         &::before {
-          content: ""; position: absolute;
-          left: 1.3rem; top: 0; bottom: 0; width: 1px;
-          background: linear-gradient(180deg, #c44d4d 0%, rgba(196, 77, 77, 0.6) 50%, transparent 100%);
+          content: "";
+          position: absolute;
+          left: 1.3rem;
+          top: 0;
+          bottom: 0;
+          width: 2px;
+          background: linear-gradient(180deg, c.$assistance-4 0%, rgba(c.$assistance-4, 0.4) 60%, transparent 100%);
+          border-radius: 1px;
         }
       }
 
       .milestone {
-        position: relative; padding-left: 3.5rem;
+        position: relative;
+        padding-left: 3.5rem;
         margin-bottom: clamp(2rem, 4vw, 3rem);
 
-        &:nth-child(odd) {
-          @media (prefers-reduced-motion: no-preference) {
+        @media (prefers-reduced-motion: no-preference) {
+          &:nth-child(odd) {
             animation: slideInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--card-delay, 0s) both;
           }
-        }
-        &:nth-child(even) {
-          @media (prefers-reduced-motion: no-preference) {
-            animation: slideInRightAlt 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--card-delay, 0s) both;
+
+          &:nth-child(even) {
+            animation: slideInRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--card-delay, 0s) both;
           }
         }
 
-        &:nth-child(1) { --card-delay: 0.15s; }
-        &:nth-child(2) { --card-delay: 0.3s; }
-        &:nth-child(3) { --card-delay: 0.45s; }
-        &:nth-child(4) { --card-delay: 0.6s; }
-        &:nth-child(5) { --card-delay: 0.75s; }
-        &:nth-child(6) { --card-delay: 0.9s; }
-        &:nth-child(7) { --card-delay: 1.05s; }
-        &:last-child    { margin-bottom: 0; }
+        &:nth-child(1) {
+          --card-delay: 0.15s;
+        }
+
+        &:nth-child(2) {
+          --card-delay: 0.3s;
+        }
+
+        &:nth-child(3) {
+          --card-delay: 0.45s;
+        }
+
+        &:nth-child(4) {
+          --card-delay: 0.6s;
+        }
+
+        &:nth-child(5) {
+          --card-delay: 0.75s;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
 
         .milestone__dot {
-          position: absolute; left: 1.05rem; top: 0.5rem;
-          width: 10px; height: 10px; border-radius: 50%;
-          background: #c44d4d;
-          border: 2px solid #1c2433;
-          box-shadow: 0 0 0 3px rgba(196, 77, 77, 0.25);
+          position: absolute;
+          left: 1rem;
+          top: 0.5rem;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: c.$assistance-4;
+          border: 3px solid #f8fcfa;
+          box-shadow: 0 0 0 4px rgba(c.$assistance-4, 0.2);
+          z-index: 1;
+
+          @media (prefers-reduced-motion: no-preference) {
+            animation: pulseGlow 3s ease-in-out infinite;
+          }
         }
 
         .milestone__card {
-          background: #222c3d;
-          border: 1px solid rgba(196, 77, 77, 0.1);
+          background: rgba(255, 255, 255, 0.8);
+          border: 1px solid rgba(c.$assistance-4, 0.2);
           border-radius: 2px;
           padding: 1.5rem 1.75rem;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+          backdrop-filter: blur(8px);
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+            box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+            border-color 0.3s ease;
 
           &:hover {
-            border-color: rgba(196, 77, 77, 0.3);
-            box-shadow: 0 4px 24px rgba(196, 77, 77, 0.08);
-          }
-          &:focus-visible {
-            outline: 2px solid #c44d4d;
-            outline-offset: 2px;
+            transform: translateY(-3px);
+            border-color: rgba(c.$assistance-4, 0.5);
+            box-shadow: 0 8px 32px rgba(c.$assistance-4, 0.12);
           }
 
-          &::after {
-            content: ""; position: absolute;
-            right: 1.25rem; top: 50%; transform: translateY(-50%);
-            width: 20px; height: 20px;
-            border: 1px solid rgba(196, 77, 77, 0.2);
-            border-radius: 50%; opacity: 0.12; pointer-events: none;
+          &:focus-visible {
+            outline: 2px solid c.$assistance-4;
+            outline-offset: 2px;
           }
         }
 
         .milestone__date {
           font-family: var(--app-font-family);
-          font-size: 0.8rem; color: #c44d4d; letter-spacing: 0.12em;
+          font-size: 0.8rem;
+          color: c.$assistance-4;
+          letter-spacing: 0.12em;
         }
+
         .milestone__title {
           font-family: var(--app-font-family);
-          font-size: 1.25rem; font-weight: 400;
-          color: #faf8f5; margin: 0.35rem 0 0.4rem;
+          font-size: 1.25rem;
+          font-weight: 400;
+          color: #2c3a35;
+          margin: 0.35rem 0 0.4rem;
         }
+
         .milestone__desc {
-          font-size: 0.9rem; color: #8899aa; margin: 0; line-height: 1.7;
+          font-size: 0.9rem;
+          color: #5a6b61;
+          margin: 0;
+          line-height: 1.7;
         }
       }
     }
   }
 
-
-  /* ============================================
+  /* ═══════════════════════════════════════════
      SECTION 4: SPRING COUNTDOWN
-     ============================================ */
+     Base: blossom pink
+     ═══════════════════════════════════════════ */
   .spring {
     position: relative;
     padding: clamp(2rem, 4vw, 3.5rem) 1.5rem;
-    background: #222c3d;
+    background:
+      radial-gradient(ellipse at 40% 50%, rgba(c.$assistance-5, 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(c.$assistance-1, 0.2) 0%, transparent 50%),
+      linear-gradient(180deg, #fffafc 0%, #fdf2f5 100%);
 
     .spring__banner {
-      display: flex; align-items: center; justify-content: center;
-      gap: 1.5rem; max-width: 44rem; margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      max-width: 44rem;
+      margin: 0 auto;
     }
 
     .spring__line {
-      flex: 1; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(196, 77, 77, 0.3), transparent);
-      opacity: 0.5; min-width: 2rem;
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(c.$primary-sub, 0.3), transparent);
+      opacity: 0.5;
+      min-width: 2rem;
     }
 
-    .spring__content { text-align: center; flex-shrink: 0; }
+    .spring__content {
+      text-align: center;
+      flex-shrink: 0;
+    }
 
     .spring__icon {
-      display: block; margin-bottom: 0.5rem;
-      color: #c44d4d; opacity: 0.7;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: c.$primary-sub;
+      opacity: 0.6;
 
       svg {
-        display: block; margin: 0 auto;
+        display: block;
+        margin: 0 auto;
       }
     }
 
     .spring__text {
       font-family: var(--app-font-family);
       font-size: clamp(0.85rem, 1.3vw, 1rem);
-      color: #8899aa; margin: 0 0 0.6rem;
+      color: #8a7a80;
+      margin: 0 0 0.6rem;
     }
 
     .spring__countdown {
-      display: flex; align-items: baseline; justify-content: center; gap: 0.15rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.15rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 4px;
+      padding: 0.5rem 1.2rem;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(c.$primary-sub, 0.1);
     }
 
     .spring__num {
       font-family: var(--app-font-family);
       font-size: clamp(1.3rem, 2.5vw, 2rem);
-      color: #faf8f5;
+      color: c.$primary-sub;
       font-variant-numeric: tabular-nums;
-      min-width: 2.2rem; text-align: center;
+      min-width: 2.2rem;
+      text-align: center;
 
       @media (prefers-reduced-motion: no-preference) {
-        animation: numberPulse 4s ease-in-out infinite;
+        animation: countPop 4s ease-in-out infinite;
       }
-      &:nth-child(1) { animation-delay: 0.2s; }
-      &:nth-child(3) { animation-delay: 0.4s; }
-      &:nth-child(5) { animation-delay: 0.6s; }
-      &:nth-child(7) { animation-delay: 0.8s; }
     }
 
     .spring__unit {
-      font-size: 0.8rem; color: #8899aa; margin: 0 0.4rem 0 0.1rem;
+      font-size: 0.8rem;
+      color: #8a7a80;
+      margin: 0 0.4rem 0 0.1rem;
     }
   }
 
-
-  /* ============================================
+  /* ═══════════════════════════════════════════
      SECTION 5: GALLERY
-     ============================================ */
-  @media (prefers-reduced-motion: no-preference) {
-    @keyframes galleryFadeIn {
-      from { opacity: 0; transform: rotate(var(--rotate, 0deg)) translateY(1rem); }
-      to   { opacity: 1; transform: rotate(var(--rotate, 0deg)) translateY(0); }
-    }
-  }
-
+     Base: sky blue
+     ═══════════════════════════════════════════ */
   .gallery {
     position: relative;
     padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
-    background: #1c2433;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(c.$assistance-6, 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(c.$primary-color, 0.1) 0%, transparent 50%),
+      linear-gradient(180deg, #f8fafd 0%, #f2f6fc 100%);
 
     .gallery__grid {
-      max-width: 60rem; margin: 0 auto;
+      max-width: 60rem;
+      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(clamp(10rem, 18vw, 16rem), 1fr));
-      gap: clamp(1rem, 2vw, 2rem); padding: 2rem 0 0;
+      gap: clamp(1rem, 2vw, 2rem);
+      padding: 2rem 0 0;
     }
 
     .gallery__item {
-      position: relative; overflow: hidden;
-      border-radius: 2px;
-      background-color: #222c3d;
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #fff;
       aspect-ratio: 4 / 3;
       transform: rotate(var(--rotate, 0deg));
       transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                  box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 2px 12px rgba(28, 36, 51, 0.4);
+        box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
 
       @media (prefers-reduced-motion: no-preference) {
-        animation: galleryFadeIn 0.6s ease-out var(--delay) both;
+        animation: fadeInScale 0.7s ease-out var(--delay) both;
       }
 
-      /* 左上角装饰 */
       &::before {
-        content: ""; position: absolute;
-        top: 6px; left: 6px; z-index: 2; pointer-events: none;
-        width: 10px; height: 10px;
-        border-top: 1px solid rgba(250, 248, 245, 0.15);
-        border-left: 1px solid rgba(250, 248, 245, 0.15);
-        opacity: 0.35;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        pointer-events: none;
+        background: linear-gradient(135deg,
+            rgba(c.$assistance-6, 0.12) 0%, transparent 50%,
+            rgba(c.$primary-color, 0.06) 100%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
       }
 
-      /* 覆盖层：hover 时从底部滑入 */
       &::after {
-        content: ""; position: absolute;
-        inset: 0; z-index: 1; pointer-events: none;
-        background: linear-gradient(to top, rgba(28, 36, 51, 0.82) 0%, rgba(28, 36, 51, 0.3) 40%, transparent 70%);
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.2) 40%, transparent 70%);
         transform: translateY(100%);
         transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       &:hover {
-        transform: rotate(0deg) scale(1.03);
-        box-shadow: 0 8px 30px rgba(196, 77, 77, 0.25);
+        transform: rotate(0deg) scale(1.04);
+        box-shadow: 0 12px 40px rgba(c.$assistance-6, 0.2);
         z-index: 1;
+
+        &::before {
+          opacity: 1;
+        }
 
         &::after {
           transform: translateY(0);
         }
       }
+
       &:focus-visible {
-        outline: 2px solid #c44d4d;
+        outline: 2px solid c.$assistance-6;
         outline-offset: 2px;
       }
 
       img {
-        width: 100%; height: 100%;
-        object-fit: cover; display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
         transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      &:hover img { transform: scale(1.05); }
+
+      &:hover img {
+        transform: scale(1.06);
+      }
     }
   }
 
-
-  /* ============================================
+  /* ═══════════════════════════════════════════
      SECTION 6: BLESSINGS
-     ============================================ */
+     Base: lavender gray
+     ═══════════════════════════════════════════ */
   .blessings {
     position: relative;
     padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
-    background: #1e2838;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(c.$assistance-7, 0.15) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 70%, rgba(c.$assistance-6, 0.1) 0%, transparent 50%),
+      linear-gradient(180deg, #f5f5fa 0%, #f0f0f6 100%);
 
     .blessings__grid {
-      max-width: 56rem; margin: 0 auto;
+      max-width: 56rem;
+      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(clamp(14rem, 22vw, 18rem), 1fr));
-      gap: clamp(1rem, 2vw, 1.75rem); padding: 2rem 0 0;
+      gap: clamp(1rem, 2vw, 1.75rem);
+      padding: 2rem 0 0;
     }
 
     .blessing-card {
       position: relative;
-      background: #222c3d;
-      border: 1px solid rgba(196, 77, 77, 0.08);
-      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(c.$assistance-7, 0.15);
+      border-radius: 4px;
       padding: 1.75rem;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                  box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-color 0.3s ease;
+      backdrop-filter: blur(8px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.4s ease;
 
       @media (prefers-reduced-motion: no-preference) {
         animation: fadeInUp 0.7s var(--bless-delay, 0s) both;
       }
-      &:nth-child(1) { --bless-delay: 0.1s; }
-      &:nth-child(2) { --bless-delay: 0.2s; }
-      &:nth-child(3) { --bless-delay: 0.3s; }
-      &:nth-child(4) { --bless-delay: 0.4s; }
+
+      &:nth-child(1) {
+        --bless-delay: 0.1s;
+      }
+
+      &:nth-child(2) {
+        --bless-delay: 0.2s;
+      }
+
+      &:nth-child(3) {
+        --bless-delay: 0.3s;
+      }
+
+      &:nth-child(4) {
+        --bless-delay: 0.4s;
+      }
 
       &::before {
-        content: ""; position: absolute;
-        top: 8px; right: 8px;
-        width: 14px; height: 14px;
-        border-top: 1px solid #c44d4d;
-        border-right: 1px solid #c44d4d;
-        opacity: 0.12; pointer-events: none;
-        transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, c.$assistance-7, c.$assistance-6, c.$primary-color);
+        border-radius: 4px 4px 0 0;
+        opacity: 0;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 0.3s ease;
       }
 
       &:hover {
-        border-color: rgba(196, 77, 77, 0.25);
         transform: translateY(-4px);
-        box-shadow: 0 6px 20px rgba(28, 36, 51, 0.5);
+        border-color: rgba(c.$assistance-7, 0.35);
+        box-shadow: 0 8px 30px rgba(c.$assistance-7, 0.12);
 
         &::before {
-          opacity: 0.35;
+          opacity: 1;
+          transform: scaleX(1);
         }
       }
+
       &:focus-visible {
-        outline: 2px solid #c44d4d;
+        outline: 2px solid c.$assistance-7;
         outline-offset: 2px;
       }
 
       .blessing-card__text {
-        font-size: 0.9rem; color: #c8d0d8;
-        line-height: 1.8; margin: 0 0 1rem; letter-spacing: 0.02em;
+        font-size: 0.9rem;
+        color: #3c3c4e;
+        line-height: 1.8;
+        margin: 0 0 1rem;
+        letter-spacing: 0.02em;
       }
+
       .blessing-card__author {
         font-family: var(--app-font-family);
-        font-size: 0.8rem; color: #c44d4d; font-style: italic;
+        font-size: 0.8rem;
+        color: c.$assistance-6;
+        font-style: italic;
       }
     }
   }
 
-
-  /* ============================================
+  /* ═══════════════════════════════════════════
      SECTION 7: EXPLORE
-     ============================================ */
+     Base: soft cream + warm glow
+     ═══════════════════════════════════════════ */
   .explore {
     position: relative;
     padding: clamp(3rem, 7vw, 6rem) 1.5rem;
-    display: flex; justify-content: center;
-    background: #1c2433;
-
-    @media (prefers-reduced-motion: no-preference) {
-      @keyframes iconPulse {
-        0%, 100% { opacity: 0.4; transform: scale(1); }
-        50%      { opacity: 0.7; transform: scale(1.05); }
-      }
-      @keyframes exploreRingSpin {
-        from { transform: translateX(-50%) rotate(0deg); }
-        to   { transform: translateX(-50%) rotate(360deg); }
-      }
-    }
+    display: flex;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(c.$assistance-3, 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 80%, rgba(c.$assistance-1, 0.2) 0%, transparent 50%),
+      linear-gradient(180deg, #fefcf8 0%, #fdf6ed 100%);
 
     .explore__content {
-      position: relative; text-align: center; max-width: 32rem;
+      position: relative;
+      text-align: center;
+      max-width: 32rem;
 
       &::before {
-        content: ""; position: absolute;
-        top: -2rem; left: 50%; transform: translateX(-50%);
+        content: "";
+        position: absolute;
+        top: -2rem;
+        left: 50%;
+        transform: translateX(-50%);
         width: clamp(10rem, 30vw, 18rem);
         height: clamp(10rem, 30vw, 18rem);
-        border: 1px solid rgba(196, 77, 77, 0.15);
-        border-radius: 50%; opacity: 0.08; pointer-events: none;
+        border: 1.5px dashed rgba(c.$primary-sub, 0.1);
+        border-radius: 50%;
+        pointer-events: none;
 
         @media (prefers-reduced-motion: no-preference) {
-          animation: exploreRingSpin 24s linear infinite;
+          animation: rotateRing 30s linear infinite;
         }
       }
     }
@@ -1409,40 +1959,56 @@ const blessings = [
     .explore__heading {
       font-family: var(--app-font-family);
       font-size: clamp(2rem, 3.5vw, 2.8rem);
-      font-weight: 400; color: #faf8f5;
-      margin: 0 0 1rem; letter-spacing: 0.15em;
+      font-weight: 400;
+      color: transparent;
+      background: linear-gradient(135deg, c.$primary-sub, c.$assistance-3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      margin: 0 0 1rem;
+      letter-spacing: 0.15em;
 
       @media (prefers-reduced-motion: no-preference) {
         animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
       }
     }
+
     .explore__text {
       font-size: clamp(1rem, 1.5vw, 1.2rem);
-      color: #8899aa; margin: 0 0 2rem;
-      line-height: 2; font-weight: 300;
+      color: #8a8280;
+      margin: 0 0 2rem;
+      line-height: 2;
+      font-weight: 300;
 
       @media (prefers-reduced-motion: no-preference) {
         animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
       }
     }
+
     .explore__icon {
-      color: #c44d4d; opacity: 0.5;
+      color: c.$primary-sub;
+      opacity: 0.45;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+
+      &:hover {
+        transform: scale(1.15);
+        opacity: 0.75;
+      }
 
       @media (prefers-reduced-motion: no-preference) {
-        animation: iconPulse 3s ease-in-out infinite;
+        animation: softFloat 4s ease-in-out infinite;
       }
     }
   }
 
-
-  /* ============================================
+  /* ═══════════════════════════════════════════
      FOOTER
-     ============================================ */
+     ═══════════════════════════════════════════ */
   .footer {
-    position: relative; text-align: center;
+    position: relative;
+    text-align: center;
     padding: 1.5rem;
-    border-top: 1px solid rgba(196, 77, 77, 0.1);
-    background-color: #18202e;
+    border-top: 1px solid rgba(c.$primary-sub, 0.08);
+    background: #fefaf6;
 
     @media (prefers-reduced-motion: no-preference) {
       animation: fadeInUp 0.7s both;
@@ -1450,23 +2016,44 @@ const blessings = [
 
     p {
       font-family: var(--app-font-family);
-      font-size: 0.8rem; color: #8899aa; margin: 0;
+      font-size: 0.8rem;
+      color: transparent;
+      background: linear-gradient(90deg, c.$primary-sub, c.$assistance-3, c.$assistance-1);
+      -webkit-background-clip: text;
+      background-clip: text;
+      margin: 0;
     }
   }
 }
 
-
-/* ============================================
+/* ═══════════════════════════════════════════
    RESPONSIVE
-   ============================================ */
+   ═══════════════════════════════════════════ */
 @media (max-width: 640px) {
   #family {
-    .timer__display { gap: 0.2rem; }
-    .timer__sep     { font-size: 1.2rem; }
-    .milestone      { padding-left: 2.8rem; }
-    .milestones__timeline::before { left: 1.1rem; }
-    .milestone .milestone__dot    { left: 0.65rem; }
-    .spring__banner { gap: 0.8rem; }
+    .timer__display {
+      gap: 0.2rem;
+    }
+
+    .timer__sep {
+      font-size: 1.2rem;
+    }
+
+    .milestone {
+      padding-left: 2.8rem;
+    }
+
+    .milestones__timeline::before {
+      left: 1.1rem;
+    }
+
+    .milestone .milestone__dot {
+      left: 0.65rem;
+    }
+
+    .spring__banner {
+      gap: 0.8rem;
+    }
   }
 }
 </style>
