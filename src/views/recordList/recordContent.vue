@@ -394,6 +394,7 @@ const listDetail = (id) => {
     },
   });
 };
+
 // 分页
 var currentPage = ref(1); // 当前页码
 var pageSize = ref(10); // 每页显示的项数

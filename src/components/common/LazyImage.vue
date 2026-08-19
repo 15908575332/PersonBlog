@@ -16,20 +16,20 @@
     <div v-if="status === 'error'" class="lazy-image-error">
       <svg viewBox="0 0 80 80" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- 头部轮廓 -->
-        <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="2.5" />
         <!-- 腮红 -->
-        <ellipse cx="22" cy="44" rx="7" ry="4" fill="currentColor" opacity="0.12"/>
-        <ellipse cx="58" cy="44" rx="7" ry="4" fill="currentColor" opacity="0.12"/>
+        <ellipse cx="22" cy="44" rx="7" ry="4" fill="currentColor" opacity="0.12" />
+        <ellipse cx="58" cy="44" rx="7" ry="4" fill="currentColor" opacity="0.12" />
         <!-- 左眼 × -->
-        <line x1="27" y1="32" x2="35" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="35" y1="32" x2="27" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="27" y1="32" x2="35" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="35" y1="32" x2="27" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
         <!-- 右眼 × -->
-        <line x1="45" y1="32" x2="53" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="53" y1="32" x2="45" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="45" y1="32" x2="53" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="53" y1="32" x2="45" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
         <!-- 汗滴 -->
-        <path d="M60 24 Q62 30 58 34 Q54 30 60 24Z" fill="currentColor" opacity="0.25"/>
+        <path d="M60 24 Q62 30 58 34 Q54 30 60 24Z" fill="currentColor" opacity="0.25" />
         <!-- 嘴 -->
-        <path d="M33 50 Q40 46 47 50" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M33 50 Q40 46 47 50" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
       </svg>
       <h2>加载失败</h2>
     </div>

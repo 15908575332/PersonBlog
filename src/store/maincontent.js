@@ -17,7 +17,8 @@ export const useMainStore = defineStore('main', () => {
                 params: {
                     category_id: category_id,
                     user_id: user_id,
-                }
+                },
+                headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
             });
             if (!response.data) throw new Error("无效数据");
             contentData.value = response.data.result;
@@ -34,7 +35,9 @@ export const useMainStore = defineStore('main', () => {
     };
     const fetchNavData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/main/getNavData');
+            const response = await axios.get('http://localhost:3000/main/getNavData', {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
+            });
             if (!response.data) throw new Error("无效数据");
             navData.value = response.data.navContent;
         } catch (err) {

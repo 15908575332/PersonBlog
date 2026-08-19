@@ -412,18 +412,26 @@ onUnmounted(() => {
                 @include flexCenter(row, space-between);
 
                 .iconImg {
-                    height: 3rem;
-                    margin: 0.5rem;
+                    min-width: 3.2rem;
+                    max-width: 4rem;
+                    height: 3.2rem;
+                    background-size: cover;
                     overflow: hidden;
-                    border-radius: 0.5rem;
-                    padding: 0.1rem;
+                    border-radius: 0.75rem;
+                    margin-right: 0.75rem;
+                    border: 2px solid rgba(255, 255, 255, 0.15);
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+                    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        border-color 0.35s ease,
+                        box-shadow 0.35s ease;
 
                     img {
                         width: 100%;
                         height: 100%;
+                        object-fit: cover;
                     }
-
                 }
+
 
                 .text-content {
                     width: 100%;
@@ -470,8 +478,7 @@ onUnmounted(() => {
                 //     -0.03em -0.03em #0005;
                 cursor: pointer;
                 transition: 0.1s ease;
-                padding: 0.2em 0.2em 0 0;
-
+                padding: 0.2rem 0.3rem;
 
                 &:after {
                     content: '';

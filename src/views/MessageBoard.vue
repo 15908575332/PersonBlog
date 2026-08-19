@@ -63,7 +63,9 @@ if (backImgaes.value.length > 0) {
 // 在Vue组件中调用
 const fetchMessages = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/getMessageList');
+        const response = await axios.get('http://localhost:3000/getMessageList', {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
+        });
         danmus.value = response.data.data.map(item => ({
             ...item,
             avatar_url: item.avatar_url,
@@ -90,6 +92,8 @@ const insertMessage = async () => {
         const response = await axios.post('http://localhost:3000/setMessgeContent', {
             userId: authStore.user.id,
             content: inputValue.value
+        }, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
         });
         if (response.status == 201) {
             message.success(response.data.message);

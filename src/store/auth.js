@@ -16,11 +16,12 @@ export const useAuthStore = defineStore('auth', () => {
             // 更新状态
             user.value = response.data.user;
             token.value = response.data.token;
-            iat.value = response.data.user.iat; //生效时间
+            const decoded = jwtDecode(response.data.token);
+            iat.value = decoded.iat; //生效时间
             // 保存到本地存储
             localStorage.setItem('user', JSON.stringify(response.data.user))
             localStorage.setItem('token', response.data.token); //token
-            localStorage.setItem('iat', response.data.user.iat); //生成时间
+            localStorage.setItem('iat', decoded.iat); //生成时间
             return response.data;
 
         } catch (error) {

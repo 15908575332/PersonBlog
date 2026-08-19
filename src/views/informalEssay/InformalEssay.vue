@@ -253,7 +253,9 @@ const allTags = computed(() => {
 const messageList = ref([]);
 const getScrollMessageData = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/getMessageList');
+    const response = await axios.get('http://localhost:3000/getMessageList', {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
+    });
     messageList.value = response.data.data.map(item => ({
       avatar: item.avatar_url,
       text: item.message_content,

@@ -32,11 +32,11 @@ service.interceptors.request.use(
                     const refreshResult = await useStore.refreshToken();
 
                     // 处理refreshToken的不同返回结果
-                    if (refreshResult === true) {
+                    if (refreshResult?.success && refreshResult.reason === 'REFRESHED') {
                         // 刷新成功，获取新token
                         token = localStorage.getItem('token');
                         console.log('Token刷新成功，使用新token');
-                    } else if (refreshResult === 'NOT_NEEDED') {
+                    } else if (refreshResult?.success && refreshResult.reason === 'NOT_NEEDED') {
                         // 无需刷新，使用原token
                         console.log('Token无需刷新');
                     }
