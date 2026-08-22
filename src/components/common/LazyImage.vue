@@ -157,9 +157,9 @@ watch(
 <style scoped lang="scss">
 .lazy-image-wrapper {
   position: relative;
-  // overflow: hidden;
   width: 100%;
   height: 100%;
+  container-type: inline-size; //声明为尺寸容器
 }
 
 .lazy-image-real {
@@ -206,22 +206,29 @@ watch(
 
 .lazy-image-error {
   position: absolute;
-  inset: 0;
+  inset: 0; //铺满整个容器
   display: flex;
   align-items: center;
   justify-content: center;
   color: rgba(0, 0, 0, 0.25);
   z-index: 1;
   @include flexCenter(column, center);
+  font-size: clamp(12px, 8cqw, 22px);
   gap: 0.5rem;
   /* 漫画网点纸风格背景 */
   background-image: radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
   background-size: 12px 12px;
 
   h2 {
-    font-size: 0.8rem;
+    font-size: 0.9em;
+    margin: 0;
     @include text-color('text-sec-color');
   }
+}
+
+.lazy-image-error svg {
+  width: 2em;
+  height: 2em;
 }
 
 @keyframes lazy-image-fade-in {

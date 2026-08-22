@@ -209,13 +209,18 @@
                     </div>
                     <!-- 表情/提交按钮 -->
                     <div class="submit">
-                        <div class="emojipicker" v-show="_ISshow">
-                            <EmojiPicker hide-search hide-group-names :native="true" @select="onVue3Emoje"
-                                @update:text="onChangeText" theme="auto" />
-                        </div>
-                        <div @click="emojiIs_show" class="emoji__btn">
-                            <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="" />
-                        </div>
+                        <a-popover placement="top" trigger="click" :auto-adjust-overflow="true"
+                            overlay-class-name="emoji-picker-popover">
+                            <template #content>
+                                <div class="emoji-picker-content">
+                                    <EmojiPicker hide-search hide-group-names :native="true" @select="onVue3Emoje"
+                                        @update:text="onChangeText" theme="auto" />
+                                </div>
+                            </template>
+                            <div class="emoji__btn">
+                                <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="" />
+                            </div>
+                        </a-popover>
                         <button class="reMessage" @click="addMessage(recordDetail.contentId)">
                             提交
                             <div class="star-1">
@@ -419,13 +424,18 @@
                     </div>
                     <!--评论提交 -->
                     <div class="MessageSubmit">
-                        <div class="emojipicker" v-show="_ModalShow">
-                            <EmojiPicker hide-search hide-group-names :native="true" @select="getVue3Emoje"
-                                @update:text="onChangeText" theme="auto" />
-                        </div>
-                        <div @click="modalIs_show" class="emoji__btn">
-                            <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="" />
-                        </div>
+                        <a-popover placement="top" trigger="click" :auto-adjust-overflow="true"
+                            overlay-class-name="emoji-picker-popover">
+                            <template #content>
+                                <div class="emoji-picker-content">
+                                    <EmojiPicker hide-search hide-group-names :native="true" @select="getVue3Emoje"
+                                        @update:text="onChangeText" theme="auto" />
+                                </div>
+                            </template>
+                            <div class="emoji__btn">
+                                <img src="@/components/informalEssay/img/ListDetail/Rainbow.gif" alt="" />
+                            </div>
+                        </a-popover>
                         <button class="modalSubmit" @click="handleReplyPost()">
                             提交
                             <div class="star-1">
@@ -780,10 +790,6 @@ const downloadImage = (url, filename) => {
 };
 
 /** ------------------------评论区------------------------ */
-const _ISshow = ref(false); // 表情选择器状态
-const emojiIs_show = () => {
-    _ISshow.value = !_ISshow.value;
-};
 const onVue3Emoje = (val) => {
     input__message.value += val.i; // 表情输入
 };
@@ -893,11 +899,6 @@ const handleReplyClose = () => {
     showReplyModal.value = false;
     replyContent.value = "";
     document.body.classList.remove("no-scroll"); // 新增
-};
-const _ModalShow = ref(false); //回复框表情显示/隐藏控制
-const modalIs_show = () => {
-    //回复框表情显示/隐藏控制方法
-    _ModalShow.value = !_ModalShow.value;
 };
 const getVue3Emoje = (val) => {
     //回复框表情输入
@@ -1304,46 +1305,6 @@ onMounted(async () => {
 
                     &:hover>img {
                         transform: rotate(360deg) scale(1.3);
-                    }
-                }
-
-                .emojipicker {
-                    width: 100%;
-                    position: absolute;
-                    left: 0;
-                    top: 4.8rem;
-                    @include flexCenter(row, center);
-
-                    //表情模块
-                    .v3-emoji-picker {
-                        width: 100%;
-                        height: 20rem;
-
-                        //导航栏
-                        .v3-header {
-                            padding: 0.5rem 2rem;
-
-                            .v3-groups {
-                                @include flexCenter(row, space-between);
-
-                                .v3-group {
-                                    border-radius: 0.2rem;
-                                    flex-grow: 0;
-                                    cursor: pointer;
-                                    padding: 0.4rem 0.6rem;
-
-                                    &:hover {
-                                        background-color: $primary-sub;
-                                    }
-
-                                    .v3-icon {
-                                        img {
-                                            width: 30px;
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
 
@@ -1891,57 +1852,6 @@ onMounted(async () => {
                     }
                 }
 
-                .emojipicker {
-                    width: 28rem;
-                    position: absolute;
-                    left: 0;
-                    top: 2.8rem;
-                    @include flexCenter(row, center);
-
-                    //表情模块
-                    .v3-emoji-picker {
-                        width: 100%;
-                        height: 15rem;
-
-                        //导航栏
-                        .v3-header {
-                            padding: 0.5rem 2rem;
-
-                            .v3-groups {
-                                @include flexCenter(row, space-between);
-
-                                .v3-group {
-                                    border-radius: 0.2rem;
-                                    flex-grow: 0;
-                                    cursor: pointer;
-                                    padding: 0.4rem 0.6rem;
-
-                                    &:hover {
-                                        background-color: rgba(255, 138, 159);
-                                    }
-
-                                    .v3-icon {
-                                        img {
-                                            width: 30px;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        //具体表情区域
-                        .v3-body {
-                            .v3-body-inner {
-                                .v3-emojis {
-                                    button {
-                                        padding: 1rem;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
                 //提交按钮
                 .modalSubmit {
                     $color: $primary-sub;
@@ -2455,5 +2365,64 @@ onMounted(async () => {
     overflow: hidden !important;
     // position: fixed;
     width: 100%;
+}
+</style>
+
+<style lang="scss">
+// 表情弹层：a-popover 默认渲染到 body 下，scoped 样式不生效，需全局样式
+// 超高兜底（55vh）+ 保留 EmojiPicker 内部导航等原有样式
+.emoji-picker-popover {
+    .ant-popover-inner-content {
+        max-height: 55vh;
+        overflow-y: auto;
+    }
+
+    .emoji-picker-content {
+        width: 28rem;
+        max-width: 90vw;
+    }
+
+    //表情模块
+    .v3-emoji-picker {
+        width: 100%;
+        max-height: 55vh;
+
+        //导航栏
+        .v3-header {
+            padding: 0.5rem 2rem;
+
+            .v3-groups {
+                @include flexCenter(row, space-between);
+
+                .v3-group {
+                    border-radius: 0.2rem;
+                    flex-grow: 0;
+                    cursor: pointer;
+                    padding: 0.4rem 0.6rem;
+
+                    &:hover {
+                        background-color: $primary-sub;
+                    }
+
+                    .v3-icon {
+                        img {
+                            width: 30px;
+                        }
+                    }
+                }
+            }
+        }
+
+        //具体表情区域
+        .v3-body {
+            .v3-body-inner {
+                .v3-emojis {
+                    button {
+                        padding: 1rem;
+                    }
+                }
+            }
+        }
+    }
 }
 </style>
