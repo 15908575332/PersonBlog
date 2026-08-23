@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const authenticateToken = async (req, res, next) => {
     // 白名单处理（无需鉴权的公开接口；登录/注册在无 token 阶段必须放行）
-    const whiteList = ['/userInfo', '', '/send-reset-code', '/reset-password', '/user/login', '/user/register'];
+    const whiteList = ['/userInfo', '', '/send-reset-code', '/reset-password', '/verify-reset-code', '/user/send-reset-code', '/user/reset-password', '/user/verify-reset-code', '/user/login', '/user/register'];
     if (whiteList.includes(req.path)) return next();
 
     // Token格式校验

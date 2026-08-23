@@ -237,6 +237,32 @@ router.post('/send-reset-code', async (req, res) => {
     }
 });
 
+// 校验重置密码验证码（仅校验真伪，不落库、不改密码）
+router.post('/verify-reset-code', async (req, res) => {
+    const { account, code } = req.body;
+
+    if (!account || !code) {
+        return res.status(400).json({ message: '请填写完整信息' });
+    }
+    if (!/^\d{6}$/.test(code)) {
+        return res.status(400).json({ message: '验证码格式错误' });
+    }
+
+    try {
+        const [record] = await sqlQuery(
+            'SELECT id FROM reset_codes WHERE account = ? AND code = ? AND used = 0 AND expires_at > NOW()',
+            [account, code]
+        );
+        if (!record) {
+            return res.status(400).json({ message: '验证码错误或已过期' });
+        }
+        res.status(200).json({ message: '验证码正确' });
+    } catch (error) {
+        console.error('校验验证码失败:', error);
+        res.status(500).json({ message: '校验验证码失败，请稍后重试' });
+    }
+});
+
 // 重置密码
 router.post('/reset-password', async (req, res) => {
     const { account, code, newPassword } = req.body;

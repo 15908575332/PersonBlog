@@ -387,8 +387,19 @@ function validateStepOne() {
   return true;
 }
 
-function onStepOneSubmit() {
+async function onStepOneSubmit() {
   if (!validateStepOne()) return;
+  loading.value = true;
+  try {
+    // 后端校验验证码真伪（仅校验，不改密码）
+    await request.post('/user/verify-reset-code', { account: account.value, code: code.value });
+  } catch (error) {
+    const msg = error.response?.data?.message || '验证码校验失败，请重新获取';
+    message.error(msg);
+    loading.value = false;
+    return;
+  }
+  loading.value = false;
   animReady.value = false;
   clearAllAnimStates();
   step.value = 2;
