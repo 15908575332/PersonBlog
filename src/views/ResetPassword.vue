@@ -53,14 +53,14 @@
               <div class="step-progress" :style="{ width: leftProgress }"></div>
             </div>
             <div class="step-item" :class="{ active: step === 1, done: step > 1 }">
-              <span class="step-label">验证身份</span>
+              <span class="step-label">验证</span>
             </div>
             <div class="step-segment step-segment--middle">
               <div class="step-line"></div>
               <div class="step-progress" :style="{ width: middleProgress }"></div>
             </div>
             <div class="step-item" :class="{ active: step === 2 }">
-              <span class="step-label">设置密码</span>
+              <span class="step-label">设置</span>
             </div>
             <div class="step-segment step-segment--right">
               <div class="step-line"></div>
@@ -70,7 +70,7 @@
 
           <!-- Step 1 -->
           <div v-if="step === 1" class="step-form" :class="{ 'anim-ready': animReady }">
-            <div class="styled-input form-row" :class="{ filled: accountFilled }">
+            <div class="styled-input styled-input--mail form-row" :class="{ filled: accountFilled }">
               <input type="text" class="styled-input__input" v-model="account" ref="accountInputRef"
                 @focus="onAccountFocus" @blur="onAccountBlur">
               <div class="styled-input__placeholder">
@@ -83,7 +83,7 @@
             </div>
 
             <div class="form-row">
-              <div class="styled-input form-row__input" :class="{ filled: codeFilled }">
+              <div class="styled-input styled-input--code form-row__input" :class="{ filled: codeFilled }">
                 <input type="text" class="styled-input__input" v-model="code" ref="codeInputRef" @focus="onCodeFocus"
                   @blur="onCodeBlur">
                 <div class="styled-input__placeholder">
@@ -136,7 +136,7 @@
 
           <!-- Step 2 -->
           <div v-else class="step-form" :class="{ 'anim-ready': animReady }">
-            <div class="styled-input form-row" :class="{ filled: newPasswordFilled }">
+            <div class="styled-input styled-input--pwd form-row" :class="{ filled: newPasswordFilled }">
               <input type="password" class="styled-input__input" v-model="newPassword" ref="newPasswordInputRef"
                 @focus="onNewPasswordFocus" @blur="onNewPasswordBlur">
               <div class="styled-input__placeholder">
@@ -148,7 +148,7 @@
               <div class="styled-input__circle"></div>
             </div>
 
-            <div class="styled-input form-row" :class="{ filled: confirmPasswordFilled }">
+            <div class="styled-input styled-input--confirm form-row" :class="{ filled: confirmPasswordFilled }">
               <input type="password" class="styled-input__input" v-model="confirmPassword" ref="confirmPasswordInputRef"
                 @focus="onConfirmPasswordFocus" @blur="onConfirmPasswordBlur">
               <div class="styled-input__placeholder">
@@ -230,9 +230,9 @@ const confirmPassword = ref('');
 
 /* ===== 输入框 letter 数组 ===== */
 const accountLetters = [...'邮箱地址'];
-const codeLetters = [...'请输入验证码'];
-const newPasswordLetters = [...'请输入新密码（不少于6位）'];
-const confirmPasswordLetters = [...'请再次输入新密码'];
+const codeLetters = [...'输入验证码'];
+const newPasswordLetters = [...'输入新密码（不少于6位）'];
+const confirmPasswordLetters = [...'再次输入新密码'];
 
 /* ===== activeMap（逐字母动画） ===== */
 const accountActiveMap = reactive({});
@@ -485,7 +485,7 @@ onMounted(() => {
     }
 
     .form__cover {
-      @include boxshadow('shadow-card');
+      box-shadow: 1px 1px 4px themed('text-placeholder');
 
       &::after {
         transform: scale(2);
@@ -505,7 +505,7 @@ onMounted(() => {
 // ═══════════════════════════════════
 .form {
   position: relative;
-  width: 380px;
+  width: 500px;
   height: 380px;
   min-height: 380px;
   flex-shrink: 0;
@@ -522,7 +522,6 @@ onMounted(() => {
   border-radius: 7px;
   overflow: hidden;
   transition: all 0.3s ease 0.8s;
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 
   &::before {
     content: '';
@@ -596,7 +595,7 @@ onMounted(() => {
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.5s ease 0.7s;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
 
   h1 {
     font-size: 1.5rem;
@@ -617,7 +616,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 1rem 0 3rem;
+    padding: 1rem 2rem 2.5rem;
   }
 
   .step-segment {
@@ -681,7 +680,7 @@ onMounted(() => {
     justify-content: flex-start;
     gap: 1.5rem;
     width: 100%;
-    height: 80%;
+    height: 100%;
   }
 
   // ═══════════════════════════════════
@@ -734,16 +733,40 @@ onMounted(() => {
       &::after {
         content: '';
         position: absolute;
-        left: 16px;
-        top: 16px;
-        height: 10px;
-        width: 10px;
+        left: 14px;
+        top: 14px;
+        height: 18px;
+        width: 18px;
         z-index: -2;
-        border-radius: 50%;
-        background: rgba($primary-color, 0.3);
-        box-shadow: 0 0 10px rgba($primary-color, 0);
+        background-color: themed('primary-color');
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
         transition: transform 0.6s ease, opacity 1s ease;
       }
+    }
+
+    &.styled-input--mail .styled-input__circle::after {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M20%204H4c-1.1%200-2%20.9-2%202v12c0%201.1.9%202%202%202h16c1.1%200%202-.9%202-2V6c0-1.1-.9-2-2-2zm0%204-8%205-8-5V6l8%205%208-5v2z%27%2F%3E%3C%2Fsvg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M20%204H4c-1.1%200-2%20.9-2%202v12c0%201.1.9%202%202%202h16c1.1%200%202-.9%202-2V6c0-1.1-.9-2-2-2zm0%204-8%205-8-5V6l8%205%208-5v2z%27%2F%3E%3C%2Fsvg%3E");
+    }
+
+    &.styled-input--code .styled-input__circle::after {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M12%202%204%205v6c0%205%203.4%209.7%208%2011%204.6-1.3%208-6%208-11V5l-8-3zm-1.4%2014.3-2.6-2.6%201.4-1.4%201.2%201.2%203.2-3.2%201.4%201.4-4.6%204.6z%27%2F%3E%3C%2Fsvg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M12%202%204%205v6c0%205%203.4%209.7%208%2011%204.6-1.3%208-6%208-11V5l-8-3zm-1.4%2014.3-2.6-2.6%201.4-1.4%201.2%201.2%203.2-3.2%201.4%201.4-4.6%204.6z%27%2F%3E%3C%2Fsvg%3E");
+    }
+
+    &.styled-input--pwd .styled-input__circle::after {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M18%208h-1V6c0-2.76-2.24-5-5-5S7%203.24%207%206v2H6c-1.1%200-2%20.9-2%202v10c0%201.1.9%202%202%202h12c1.1%200%202-.9%202-2V10c0-1.1-.9-2-2-2zm-6%209c-1.1%200-2-.9-2-2s.9-2%202-2%202%20.9%202%202-.9%202-2%202zm3.1-9H8.9V6c0-1.71%201.39-3.1%203.1-3.1%201.71%200%203.1%201.39%203.1%203.1v2z%27%2F%3E%3C%2Fsvg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M18%208h-1V6c0-2.76-2.24-5-5-5S7%203.24%207%206v2H6c-1.1%200-2%20.9-2%202v10c0%201.1.9%202%202%202h12c1.1%200%202-.9%202-2V10c0-1.1-.9-2-2-2zm-6%209c-1.1%200-2-.9-2-2s.9-2%202-2%202%20.9%202%202-.9%202-2%202zm3.1-9H8.9V6c0-1.71%201.39-3.1%203.1-3.1%201.71%200%203.1%201.39%203.1%203.1v2z%27%2F%3E%3C%2Fsvg%3E");
+    }
+
+    &.styled-input--confirm .styled-input__circle::after {
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M17.65%206.35A7.96%207.96%200%200%200%2012%204c-4.42%200-7.99%203.58-7.99%208s3.57%208%207.99%208c3.73%200%206.84-2.55%207.73-6h-2.08A5.99%205.99%200%200%201%2012%2018c-3.31%200-6-2.69-6-6s2.69-6%206-6c1.66%200%203.14.69%204.22%201.78L13%2011h7V4l-2.35%202.35z%27%2F%3E%3C%2Fsvg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M17.65%206.35A7.96%207.96%200%200%200%2012%204c-4.42%200-7.99%203.58-7.99%208s3.57%208%207.99%208c3.73%200%206.84-2.55%207.73-6h-2.08A5.99%205.99%200%200%201%2012%2018c-3.31%200-6-2.69-6-6s2.69-6%206-6c1.66%200%203.14.69%204.22%201.78L13%2011h7V4l-2.35%202.35z%27%2F%3E%3C%2Fsvg%3E");
     }
 
     .styled-input__input {
@@ -752,7 +775,7 @@ onMounted(() => {
       font-size: 0.8rem;
       outline: none;
       background: none;
-      padding: 11px 15px;
+      padding: 11px 15px 11px 40px;
       @include text-color('text-color');
       border: none;
       font-weight: 600;
@@ -874,6 +897,7 @@ onMounted(() => {
     display: flex;
     gap: 12px;
     @include flexCenter (row, space-around);
+    margin-top: 0.5rem;
 
     .styled-button {
       flex: 1;
@@ -932,7 +956,7 @@ onMounted(() => {
       overflow: hidden;
 
       &.back {
-        color: #fff;
+        color: themed('text-sec-color');
         transform: translateX(-100%);
 
         .styled-button__text-holder {
@@ -961,6 +985,7 @@ onMounted(() => {
 
       .back {
         transform: translateX(0);
+        color: themed('border-color');
 
         .styled-button__text-holder {
           transform: translateX(0);
@@ -981,7 +1006,7 @@ onMounted(() => {
       @include flexCenter(center, center);
 
       .back {
-        color: #fff;
+        color: themed('text-color');
       }
 
       &:hover,
