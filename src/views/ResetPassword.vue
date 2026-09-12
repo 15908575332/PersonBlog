@@ -532,7 +532,7 @@ onMounted(() => {
     width: 100%;
     background: themed('border-color'); // #fff (light) / #000 (dark)
     z-index: -5;
-    border-radius: 50%;
+    border-radius: 15%;
     transition: all 0.5s ease;
     transform: scale(0);
   }
@@ -734,9 +734,9 @@ onMounted(() => {
         content: '';
         position: absolute;
         left: 14px;
-        top: 14px;
-        height: 18px;
-        width: 18px;
+        top: 12px;
+        height: 16px;
+        width: 16px;
         z-index: -2;
         background-color: themed('primary-color');
         -webkit-mask-repeat: no-repeat;

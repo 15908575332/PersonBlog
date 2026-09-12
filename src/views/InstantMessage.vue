@@ -1208,7 +1208,7 @@ onUnmounted(() => {
             .info-card {
                 @include flexCenter(column, flex-start);
                 align-items: flex-start;
-                gap: 0.5rem;
+                gap: 0rem;
                 background-color: #f9f9f9;
                 border-radius: 8px;
                 padding: 16px;
@@ -1217,14 +1217,18 @@ onUnmounted(() => {
                     @include flexCenter(row, flex-start);
 
                     img {
-                        width: 18px;
-                        height: 18px;
+                        width: 0.9rem;
+                        height: 0.9rem;
                         margin-bottom: 0.2rem;
                     }
                 }
 
+                strong {
+                    font-size: 0.9rem;
+                }
+
                 span {
-                    font-size: 18px;
+                    font-size: 0.85rem;
                 }
 
                 .level {
