@@ -2,14 +2,27 @@
  * 网易云音乐 API 封装
  * 前端调用 /api/music-api/xxx → Vite proxy → Express 3000 → music-api 3100
  */
-import axios from 'axios';
+import axios from "axios";
 
-const BASE = 'http://localhost:3000/music-api';
+const BASE = "http://localhost:3000/music-api";
 
 const api = {
   /** 搜索歌曲 */
   searchMusic(keywords, limit = 50) {
     return axios.get(`${BASE}/cloudsearch`, { params: { keywords, limit } });
+  },
+
+  /** 每日推荐歌曲 */
+  recommendSongs() {
+    return axios.get(`${BASE}/recommend/songs`);
+  },
+  /** 推荐歌单 */
+  recommendPlaylist(limit = 50) {
+    return axios.get(`${BASE}/personalized`, { params: { limit } });
+  },
+  /** 推荐MV */
+  recommendMV(limit = 30) {
+    return axios.get(`${BASE}/personalized/mv`, { params: { limit } });
   },
 
   /** 获取歌单详情 */
@@ -23,7 +36,7 @@ const api = {
   },
 
   /** 获取歌曲播放 URL */
-  songUrl(id, level = 'standard') {
+  songUrl(id, level = "standard") {
     return axios.get(`${BASE}/song/url/v1`, { params: { id, level } });
   },
 

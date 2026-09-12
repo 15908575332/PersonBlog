@@ -266,7 +266,7 @@ const formatTime = (seconds) => {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
-/** ------------------------ 搜索栏 ------------------------ */
+/** ------------------------ 搜索 ------------------------ */
 const searchValue = ref();//搜索输入值
 const isSearchBarVisible = ref(true); // 搜索栏显示状态
 const searchResults = ref([]); // 搜索结果

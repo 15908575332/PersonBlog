@@ -2,73 +2,37 @@
     <!-- 推荐 -->
     <div class="recommend">
         <h1>推荐</h1>
-        <!-- 推荐歌曲 -->
+
+        <!-- 热门歌曲 -->
         <div class="rec-music">
             <h2>推荐歌曲></h2>
             <div class="rec-music-list">
-                <div class="item">
-                    <div class="item-content"><img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-carousel-1.png" alt="music-cover">
+                <div class="item" v-for="song in recommendSongs" :key="song.id">
+                    <div class="item-content">
+                        <img :src="song.picture" :alt="song.name">
                     </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"><img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-carousel-2.png" alt="music-cover">
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"><img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-carousel-3.png" alt="music-cover">
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"><img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-carousel-4.png" alt="music-cover">
-                    </div>
+                    <p class="music-introduce">{{ song.name }} - {{ song.artist }}</p>
                 </div>
             </div>
         </div>
-        <!-- 热门歌曲 -->
-        <div class="hot-music">
-            <h2>热门歌曲></h2>
-            <div class="hot-music-list">
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover" src="@/assets/img/treasureBox/musicList/recommend/recommend-hot-1.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">《超级面对面》第254期 keshi：我的音乐永远新鲜</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover" src="@/assets/img/treasureBox/musicList/recommend/recommend-hot-2.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">《超级面对面》第253期 Charlie Puth：灵感就在开关之间</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover" src="@/assets/img/treasureBox/musicList/recommend/recommend-hot-3.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">惊喜呈现| 姜贞羽：热爱舞台上的每一个瞬间</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover" src="@/assets/img/treasureBox/musicList/recommend/recommend-hot-4.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">惊喜呈现：Yamy郭颖携手二手玫瑰玩转港味复古风</p>
-                </div>
-            </div>
-        </div>
+
         <!-- 推荐歌单 -->
-        <div class="rec-playlist">
+        <div class="hot-music">
             <h2>推荐歌单></h2>
+            <div class="hot-music-list">
+                <div class="item" v-for="value in recommendPlaylist">
+                    <div class="item-content">
+                        <img class="music-cover" :src="value.picUrl" alt="music-cover">
+                        <span class="msk"></span>
+                    </div>
+                    <p class="music-introduce">{{ value.name }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 推荐电台 -->
+        <div class="rec-playlist">
+            <h2>推荐电台></h2>
             <div class="rec-menu-list">
                 <div class="item">
                     <div class="item-content">
@@ -139,6 +103,57 @@
         </div>
     </div>
 </template>
+<script setup>
+import { ref, onMounted } from "vue";
+import musicApi from "@/utils/musicApi";
+
+/** ------------------------ 每日推荐歌曲 ------------------------ */
+const recommendSongs = ref([]); //歌曲集合
+
+const getRecommendSongs = async () => {
+    try {
+        const { data } = await musicApi.recommendSongs();
+        // 1) 先打印整个响应，确认结构（data 是对象，不是 ref！）
+        console.log(JSON.stringify(data, null, 2));   // 打印 data
+
+        // 2) 歌曲在 data.dailySongs 数组，映射成渲染用结构
+        recommendSongs.value = (data?.data?.dailySongs || []).map(song => ({
+            id: song.id,                       // 歌曲ID（播放/详情用）
+            name: song.name,                   // 歌名
+            artist: (song.ar || []).map(a => a.name).join('/'),  // 歌手
+            picture: song.al?.picUrl,          // 封面图
+            duration: song.dt ? song.dt / 1000 : 0,  // 时长（秒）
+        }));
+    } catch (e) {
+        console.error("获取每日推荐失败:", e);
+    }
+};
+
+
+/** ------------------------ 推荐歌单 ------------------------ */
+const recommendPlaylist = ref([]); //歌单集合
+const loading = ref(false);
+
+const getRecommendPlaylist = async () => {
+    loading.value = true;
+    try {
+        const { data } = await musicApi.recommendPlaylist();
+        // /personalized 接口返回 data.result 数组，每项含 id / name / picUrl / playCount
+        recommendPlaylist.value = data?.result || [];
+        console.log(recommendPlaylist.value)
+    } catch (e) {
+        console.error("获取推荐歌单失败:", e);
+    } finally {
+        loading.value = false;
+    }
+}
+/** ------------------------ 推荐MV ------------------------ */
+const recommendMV = ref([]);
+onMounted(async () => {
+    await getRecommendSongs();
+    await getRecommendPlaylist();
+})
+</script>
 <style lang="scss" scoped>
 // 大标题
 h1 {
