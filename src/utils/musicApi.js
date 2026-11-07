@@ -17,7 +17,7 @@ const api = {
     return axios.get(`${BASE}/recommend/songs`);
   },
   /** 推荐歌单 */
-  recommendPlaylist(limit = 50) {
+  recommendPlaylist(limit = 10) {
     return axios.get(`${BASE}/personalized`, { params: { limit } });
   },
   /** 推荐MV */

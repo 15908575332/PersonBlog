@@ -87,7 +87,8 @@
 
         <!-- 内容视图 -->
         <transition v-if="!isSearching" name="bounce" mode="out-in">
-          <router-view :current-song-index="currentSongIndex" :is-playing="isPlaying" @play-song="handlePlaySong">
+          <router-view :current-song-index="currentSongIndex" :is-playing="isPlaying" :current-song-id="currentSong?.id"
+            @play-song="handlePlaySong" @toggle-play="handleTogglePlay">
           </router-view>
         </transition>
 
@@ -368,6 +369,17 @@ const handlePlaySong = (payload) => { // 接收子组件传递的播放参数
   currentSong.value = payload.song;
   currentSongIndex.value = payload.startIndex;
   playSong(payload.song, payload.startIndex)
+}
+
+// 子组件点击「正在播放的这首歌」：只切换播放/暂停，不重新设置 src（暂停后继续播放，不从头播）
+const handleTogglePlay = (payload) => {
+  if (!payload?.song) return;
+  const sameSong = currentSong.value && String(currentSong.value.id) === String(payload.song.id);
+  if (sameSong) {
+    togglePlay();
+    return;
+  }
+  handlePlaySong(payload);
 }
 
 const togglePlayMode = () => { // 切换播放模式
