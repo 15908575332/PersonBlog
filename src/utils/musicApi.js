@@ -17,12 +17,30 @@ const api = {
     return axios.get(`${BASE}/recommend/songs`);
   },
   /** 推荐歌单 */
-  recommendPlaylist(limit = 10) {
+  recommendPlayList(limit = 10) {
     return axios.get(`${BASE}/personalized`, { params: { limit } });
   },
-  /** 推荐MV */
-  recommendMV(limit = 30) {
-    return axios.get(`${BASE}/personalized/mv`, { params: { limit } });
+  /** 热门电台 */
+  recommendDjprogram(limit = 12) {
+    return axios.get(`${BASE}/dj/hot`, { params: { limit } });
+  },
+  /** MV排行 */
+  recommendMv(limit = 6) {
+    return axios.get(`${BASE}/top/mv`, { params: { limit } });
+  },
+  /** 推荐节目 */
+  recommendProgram(limit = 4) {
+    return axios.get(`${BASE}/program/recommend`, { params: { limit } });
+  },
+  /** 独家放送 */
+  exclusiveRelease(limit = 8, offset = 0) {
+    return axios.get(`${BASE}/personalized/privatecontent/list`, {
+      params: { limit, offset },
+    });
+  },
+  /** 新歌速递 */
+  newSongExpress(type = 8) {
+    return axios.get(`${BASE}/top/song`, { params: { type } });
   },
 
   /** 获取歌单详情 */

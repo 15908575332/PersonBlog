@@ -13,9 +13,9 @@
                         <a-badge-ribbon :class="{ 'no-badge': !song.badge }" :text="song.badge?.text"
                             :color="song.badge?.color">
                             <div class="cover-layer">
-                                <img :src="song.picture" :alt="song.name">
+                                <img :src="song.coverUrl" :alt="song.name">
                                 <!-- 专辑名遮罩 -->
-                                <span class="cover-album">[{{ song.album }}]</span>
+                                <span class="cover-album">[{{ song.albumName }}]</span>
                                 <!-- 悬浮播放按钮 -->
                                 <button class="play-btn" type="button"
                                     :title="`${isCurrentSong(song, index) && isPlaying ? '暂停' : '播放'} ${song.name}`"
@@ -33,7 +33,7 @@
                             </div>
                         </a-badge-ribbon>
                     </div>
-                    <p class="music-introduce">{{ song.name }} - {{ song.artist }}</p>
+                    <p class="music-introduce">{{ song.name }} - {{ song.artistText }}</p>
                 </div>
             </div>
         </div>
@@ -42,85 +42,67 @@
         <div class="hot-music">
             <h2>推荐歌单></h2>
             <div class="hot-music-list">
-                <div class="item" v-for="value in recommendPlaylist">
+                <div class="item" v-for="value in recommendPlayList">
                     <div class="item-content">
-                        <img class="music-cover" :src="value.picUrl" alt="music-cover">
+                        <img class="music-cover" :src="value.coverUrl" alt="music-cover">
                         <span class="msk"></span>
+                        <!-- 播放量：封面右下角胶囊 -->
+                        <span class="play-count" v-if="value.playCount">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10"
+                                height="10" aria-hidden="true">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            <em>{{ formatPlayCount(value.playCount) }}</em>
+                        </span>
                     </div>
                     <p class="music-introduce">{{ value.name }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- 推荐电台 -->
+        <!-- 热门电台 -->
         <div class="rec-playlist">
-            <h2>推荐电台></h2>
+            <h2>热门电台></h2>
             <div class="rec-menu-list">
-                <div class="item">
+                <div class="item" v-for="radio in recommendDjprogramList">
                     <div class="item-content">
-                        <img src="@/assets/img/treasureBox/musicList/recommend/10004.png" alt="">
+                        <img :src="radio.coverUrl" alt="radio-cover">
+                        <!-- 播放量：封面右下角胶囊 -->
+                        <span class="play-count" v-if="radio.playCount">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10"
+                                height="10" aria-hidden="true">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            <em>{{ formatPlayCount(radio.playCount) }}</em>
+                        </span>
                     </div>
-                    <p class="music-introduce">Next To Me-ImagineDragons-Break Ups To Make Ups》</p>
+                    <p class="music-introduce">{{ radio.name }}</p>
                 </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img src="@/assets/img/treasureBox/musicList/recommend/10011.png" alt="">
-                    </div>
-                    <p class="music-introduce">Hello Summer (Radio Edit)-Rameez</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img src="@/assets/img/treasureBox/musicList/recommend/10005.png" alt="">
-                    </div>
-                    <p class="music-introduce">We Don't Belong-Dash Berlin/Haneri</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img src="@/assets/img/treasureBox/musicList/recommend/10008.png" alt="">
-                    </div>
-                    <p class="music-introduce">爱就一个字（live）-张信哲/丁芙妮</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img src="@/assets/img/treasureBox/musicList/recommend/10009.png" alt="">
-                    </div>
-                    <p class="music-introduce">Lone Ranger-Rachel Platten</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img src="@/assets/img/treasureBox/musicList/recommend/10010.png" alt="">
-                    </div>
-                    <p class="music-introduce">把回忆拼好给你-王贰浪</p>
-                </div>
-
             </div>
         </div>
-        <!-- 推荐mv -->
+        <!-- MV排行 -->
         <div class="mv-video">
-            <h2>推荐mv></h2>
+            <h2>MV排行></h2>
             <div class="mv-video-list">
-                <div class="item">
+                <div class="item" v-for="mv in recommendMvList">
                     <div class="item-content">
-                        <img class="music-cover" src="@/assets/img/treasureBox/musicList/treasure/treasure-mv-1.png"
-                            alt="mv-cover">
+                        <img class="music-cover" :src="mv.coverUrl" alt="mv-cover">
                         <span class="msk"></span>
+                        <!-- 播放量：封面右下角胶囊 -->
+                        <span class="play-count" v-if="mv.playCount">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10"
+                                height="10" aria-hidden="true">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            <em>{{ formatPlayCount(mv.playCount) }}</em>
+                        </span>
                     </div>
                     <div class="music-introduce">
-                        <p class="music-name">Mute</p>
-                        <p class="music-artist">孟美岐</p>
+                        <p class="music-name">{{ mv.artistText }}</p>
+                        <p class="music-artist">{{ mv.name }}</p>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover" src="@/assets/img/treasureBox/musicList/treasure/treasure-mv-2.png"
-                            alt="mv-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">孟美岐</p>
-                        <p class="music-artist">Shawn Mendes</p>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -129,12 +111,67 @@
 import { ref, onMounted } from "vue";
 import musicApi from "@/utils/musicApi";
 
+/* ------------------------ 通用格式化 ------------------------ */
+/**
+ * 播放量格式化：1 万以上转「x.x万」，1 亿以上转「x.x亿」，整数值不带小数
+ * 例：9800 → 9800；12800 → 1.3万；3358971 → 335.9万；120000000 → 1.2亿
+ */
+const formatPlayCount = (count) => {
+    const num = Number(count);
+    if (!Number.isFinite(num) || num <= 0) return '';
+    if (num >= 100000000) return `${(num / 100000000).toFixed(1).replace(/\.0$/, '')}亿`;
+    if (num >= 10000) return `${(num / 10000).toFixed(1).replace(/\.0$/, '')}万`;
+    return String(Math.round(num));
+};
+
 /* ------------------------ 费用角标映射 ------------------------ */
 // fee：1=会员，4=付费；其余（0、8、缺失、未知）不展示角标
 const FEE_BADGE_MAP = {
-    1: { text: '会员', color: 'volcano' },
+    8: { text: '会员', color: 'volcano' },
     4: { text: '付费', color: 'red' },
 };
+
+/* ------------------------ 视图模型映射 ------------------------ */
+// 接口字段与模板展示解耦：模板只消费统一后的 name / artistText / coverUrl / playCount，
+// 接口结构变动时只改这里的 mapper，不改模板
+const toSongItem = (song, urlMap) => {
+    const artistText = (song?.ar || []).map(item => item?.name).filter(Boolean).join('/') || '未知歌手';
+    const coverUrl = song?.al?.picUrl || '';
+    return {
+        id: song?.id,
+        name: song?.name || '',
+        artistText,
+        coverUrl,
+        albumName: song?.al?.name || '',
+        duration: song?.dt ? song.dt / 1000 : 0,
+        fee: song?.fee ?? null,
+        badge: FEE_BADGE_MAP[song?.fee] || null,
+        url: urlMap?.[song?.id] || '',
+        // 父级播放器（Music.vue）按 picture / artist / album 读取当前曲目，保留同值别名
+        picture: coverUrl,
+        artist: artistText,
+        album: song?.al?.name || '',
+    };
+};
+const toPlaylistItem = (item) => ({
+    id: item?.id,
+    name: item?.name || '',
+    coverUrl: item?.picUrl || '',
+    playCount: item?.playCount ?? 0,
+});
+const toRadioItem = (item) => ({
+    id: item?.id,
+    name: item?.name || '',
+    coverUrl: item?.picUrl || '',
+    playCount: item?.playCount ?? 0,
+});
+const toMvItem = (item) => ({
+    id: item?.id,
+    name: item?.name || '',
+    artistText: item?.artistName || '',
+    coverUrl: item?.cover || '',
+    playCount: item?.playCount ?? 0,
+});
 
 /* ------------------------ 组件入参 / 出参 ------------------------ */
 const props = defineProps({
@@ -164,7 +201,7 @@ const getSongUrlMap = async (ids) => {
     }
 };
 
-const getRecommendSongs = async () => {
+const getRecommendSongsFn = async () => {
     try {
         const { data } = await musicApi.recommendSongs();
         // 1) 先打印整个响应，确认结构（data 是对象，不是 ref！）
@@ -174,17 +211,7 @@ const getRecommendSongs = async () => {
         const dailySongs = data?.data?.dailySongs || [];
         const urlMap = await getSongUrlMap(dailySongs.map(s => s.id));
 
-        recommendSongs.value = dailySongs.map(song => ({
-            id: song.id,                       // 歌曲ID（播放/详情用）
-            name: song.name,                   // 歌名
-            artist: (song.ar || []).map(a => a.name).join('/'),  // 歌手
-            picture: song.al?.picUrl,          // 封面图
-            album: song.al?.name || '',        // 专辑名
-            duration: song.dt ? song.dt / 1000 : 0,  // 时长（秒）
-            fee: song.fee ?? null,             // 费用标识
-            badge: FEE_BADGE_MAP[song.fee] || null,  // 角标配置，null 表示不展示
-            url: urlMap[song.id] || '',        // 播放地址
-        }));
+        recommendSongs.value = dailySongs.map(song => toSongItem(song, urlMap));
     } catch (e) {
         console.error("获取每日推荐失败:", e);
     }
@@ -228,26 +255,47 @@ const handlePlay = (index) => {
 
 
 /** ------------------------ 推荐歌单 ------------------------ */
-const recommendPlaylist = ref([]); //歌单集合
+const recommendPlayList = ref([]); //歌单集合
 const loading = ref(false);
 
-const getRecommendPlaylist = async () => {
+const getRecommendPlaylistFn = async () => {
     loading.value = true;
     try {
-        const { data } = await musicApi.recommendPlaylist();
+        const { data } = await musicApi.recommendPlayList();
         // /personalized 接口返回 data.result 数组，每项含 id / name / picUrl / playCount
-        recommendPlaylist.value = data?.result || [];
+        recommendPlayList.value = (data?.result || []).map(toPlaylistItem);
     } catch (e) {
         console.error("获取推荐歌单失败:", e);
     } finally {
         loading.value = false;
     }
 }
-/** ------------------------ 推荐MV ------------------------ */
-const recommendMV = ref([]);
+/** ------------------------ 热门电台 ------------------------ */
+const recommendDjprogramList = ref([]);
+const recommendDjprogramFn = async () => {
+    try {
+        const { data } = await musicApi.recommendDjprogram();
+        recommendDjprogramList.value = (data?.djRadios || []).map(toRadioItem);
+    } catch (e) {
+        console.error("获取热门电台失败:", e);
+    }
+}
+/** ------------------------ MV排行 ------------------------ */
+const recommendMvList = ref([]);
+const recommendMvFn = async () => {
+    try {
+        const { data } = await musicApi.recommendMv();
+        recommendMvList.value = (data?.data || []).map(toMvItem);
+    } catch (e) {
+        console.error("获取MV排行失败:", e);
+    }
+}
+
 onMounted(async () => {
-    await getRecommendSongs();
-    await getRecommendPlaylist();
+    await getRecommendSongsFn();
+    await getRecommendPlaylistFn();
+    await recommendDjprogramFn();
+    await recommendMvFn();
 })
 </script>
 <style lang="scss" scoped>
@@ -347,8 +395,8 @@ h2 {
             position: absolute;
             right: 0.5rem;
             bottom: 0.5rem;
-            width: 1.8rem;
-            height: 1.8rem;
+            width: 1.5rem;
+            height: 1.5rem;
             padding: 0;
             border: none;
             border-radius: 50%;
@@ -372,6 +420,45 @@ h2 {
                 transform: translateY(0);
                 background-color: themed('primary-sub');
             }
+        }
+    }
+
+    // 播放量胶囊：封面右下角，深色半透明底 + 白字 + 播放图标前缀
+    .play-count {
+        position: absolute;
+        right: 0.4rem;
+        bottom: 0.4rem;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.15rem;
+        padding: 0.1rem 0.4rem;
+        border-radius: 999px;
+        color: #fff;
+        font-size: 0.65rem;
+        line-height: 1.2;
+        font-family: var(--app-font-family);
+        pointer-events: none; // 不拦截封面上的点击
+
+        // 底色取主题遮罩色，靠透明度实现半透明，避免写死色值
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: themed('bg-overlay');
+            opacity: 0.55;
+        }
+
+        // 图标与数字压在底色之上
+        svg,
+        em {
+            position: relative;
+            z-index: 1;
+        }
+
+        em {
+            font-style: normal;
         }
     }
 
@@ -485,10 +572,11 @@ h2 {
         }
 
         .item {
+            position: relative;
+
             .item-content {
                 height: 10rem;
                 overflow: hidden;
-
             }
 
         }

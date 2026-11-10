@@ -2,27 +2,11 @@
     <!-- 音乐馆  -->
     <div class="treasure">
         <h1>音乐馆</h1>
-        <!-- 宝藏歌曲 -->
+        <!-- 推荐节目 -->
         <div class="treasure-music">
             <div class="treasure-music-list">
-                <div class="item">
-                    <div class="item-content"><img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-carousel-1.png" alt="music-cover">
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"><img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-carousel-2.png" alt="music-cover">
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"><img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-carousel-3.png" alt="music-cover">
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"><img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-carousel-4.png" alt="music-cover">
+                <div class="item" v-for="value in recommendProgramList">
+                    <div class="item-content"><img class="music-cover" :src="value.coverUrl" alt="music-cover">
                     </div>
                 </div>
             </div>
@@ -33,79 +17,13 @@
             <h2>独家放送></h2>
             <div class="exclusive-music-list">
 
-                <div class="item">
+                <div class="item" v-for="exclusive in exclusiveReleaseList">
                     <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-1.png"
-                            alt="music-cover">
+                        <img class="music-cover" :src="exclusive.coverUrl" alt="music-cover">
                         <span class="msk"></span>
                     </div>
-                    <p class="music-introduce">自然轻旅 | 音乐相伴</p>
+                    <p class="music-introduce">{{ exclusive.copywriter }}</p>
                 </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-2.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">过去的回忆一遍遍刺伤我</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-3.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">讨厌我们有话藏着不说</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-4.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">黑化Bgm | 大反派的超强压迫感</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-5.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">最好听的歌曲精选</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-6.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">伤感华语：无可救药 把回忆撕碎后落跑</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-7.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">高能电子|肾上腺素飙升</p>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-8.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <p class="music-introduce">前奏一响，爱和遗憾先后登场</p>
-                </div>
-
             </div>
         </div>
 
@@ -113,141 +31,76 @@
         <div class="new-music">
             <h2>新歌速递</h2>
             <div class="new-music-list">
-                <div class="item">
+                <div class="item" v-for="(song, index) in newSongExpressList.slice(0, 12)" :key="song.id || index">
                     <div class="item-content">
-                        <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-1.png" alt="music-cover">
+                        <img class="music-cover" :src="song.coverUrl" alt="music-cover">
                         <span class="msk"></span>
                     </div>
                     <div class="music-introduce">
-                        <p class="music-name">一半一半</p>
-                        <p class="music-artist">Top Barry</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-2.png" alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">精卫（万物终归向海）</p>
-                        <p class="music-artist">银翼杀手</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-3.png" alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">是你没选我啊</p>
-                        <p class="music-artist">音乐科代表洪嘉源</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-4.png" alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">冬与你pt2</p>
-                        <p class="music-artist">万乐体</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-exclusive-5.png"
-                            alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">江南雪</p>
-                        <p class="music-artist">鱼忆</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-6.png" alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">幻昼（PHONK）</p>
-                        <p class="music-artist">漂移的人（Drifting Man）</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-7.png" alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">如果我因为你夜不能寐</p>
-                        <p class="music-artist">彭雅琦（Yakisa）</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-8.png" alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">窃爱者</p>
-                        <p class="music-artist">L8R</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-9.png" alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">Little Bouquet</p>
-                        <p class="music-artist">Aimer</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content"> <img class="music-cover"
-                            src="@/assets/img/treasureBox/musicList/treasure/treasure-newsong-10.png" alt="music-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">本原(TheVeryBeginning)</p>
-                        <p class="music-artist">邓典</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 视频 -->
-        <div class="mv-video">
-            <h2>视频></h2>
-            <div class="mv-video-list">
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover" src="@/assets/img/treasureBox/musicList/treasure/treasure-mv-1.png"
-                            alt="mv-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">Mute</p>
-                        <p class="music-artist">孟美岐</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="item-content">
-                        <img class="music-cover" src="@/assets/img/treasureBox/musicList/treasure/treasure-mv-2.png"
-                            alt="mv-cover">
-                        <span class="msk"></span>
-                    </div>
-                    <div class="music-introduce">
-                        <p class="music-name">孟美岐</p>
-                        <p class="music-artist">Shawn Mendes</p>
+                        <p class="music-name">{{ song.name }}</p>
+                        <p class="music-artist">{{ song.artistText }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+<script setup>
+import { ref, onMounted } from "vue";
+import musicApi from "@/utils/musicApi";
+
+/* ------------------------ 视图模型映射 ------------------------ */
+// 模板只消费统一后的 name / artistText / coverUrl / copywriter，接口结构变动只改 mapper
+const toProgramItem = (program) => ({
+    id: program?.id,
+    name: program?.name || '',
+    coverUrl: program?.coverUrl || '',
+});
+const toExclusiveItem = (item) => ({
+    id: item?.id,
+    name: item?.name || '',
+    coverUrl: item?.picUrl || '',
+    copywriter: item?.copywriter || '',
+});
+const toNewSongItem = (song) => ({
+    id: song?.id,
+    name: song?.name || '',
+    artistText: (song?.artists || []).map(item => item?.name).filter(Boolean).join(' / ') || '未知歌手',
+    coverUrl: song?.album?.picUrl,
+});
+
+/* ------------------------ 推荐节目 ------------------------ */
+const recommendProgramList = ref([]);
+const recommendProgramFn = async () => {
+    const { data } = await musicApi.recommendProgram();
+    recommendProgramList.value = (data?.programs || []).map(toProgramItem);
+}
+
+/* ------------------------ 独家放送 ------------------------ */
+const exclusiveReleaseList = ref([]);
+const exclusiveReleaseFn = async () => {
+    const { data } = await musicApi.exclusiveRelease();
+    exclusiveReleaseList.value = (data?.result || []).map(toExclusiveItem);
+}
+
+/* ------------------------ 新歌速递 ------------------------ */
+const newSongExpressList = ref([]);
+const newSongExpressFn = async () => {
+    try {
+        const { data } = await musicApi.newSongExpress(8);
+        newSongExpressList.value = (data?.data || []).map(toNewSongItem);
+    } catch (error) {
+        console.error("[新歌速递] 请求失败:", error);
+        newSongExpressList.value = [];
+    }
+}
+
+onMounted(async () => {
+    await recommendProgramFn();
+    await exclusiveReleaseFn();
+    await newSongExpressFn();
+})
+</script>
 <style scoped lang="scss">
 // 大标题
 h1 {
@@ -281,6 +134,7 @@ h2 {
         img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
     }
 
@@ -297,13 +151,13 @@ h2 {
     }
 }
 
-// 宝藏歌曲
+// 推荐节目
 .treasure {
     padding: 4rem 4rem 3rem;
     @include flexCenter(column, flex-start);
     gap: 1rem;
 
-    // 宝藏歌曲
+    // 推荐节目
     .treasure-music {
         width: 100%;
 
@@ -314,11 +168,28 @@ h2 {
         }
 
         .item {
-            .item-content {
-                height: 6rem;
-                overflow: hidden;
+            position: relative;
+            overflow: visible;
+
+            &::after {
+                content: '';
+                display: block;
+                width: 100%;
+                height: 100%;
+                background-image: url('@/assets/img/treasureBox/fkce44hbh.jpeg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                border: 1px solid #999;
+                position: absolute;
+                top: -0.4rem;
+                right: -0.4rem;
+                z-index: -1;
             }
 
+            .item-content {
+                height: 6rem;
+            }
         }
     }
 
@@ -342,6 +213,8 @@ h2 {
                 .music-cover {
                     width: 100%;
                     height: 100%;
+                    object-fit: cover;
+                    object-position: 20%;
                 }
 
                 .msk {
@@ -353,7 +226,6 @@ h2 {
                     background: url('@/assets/icon/treasureBox/coverall.png') no-repeat;
                     background-position: 0 -570px;
                     z-index: 0;
-
                 }
             }
 
@@ -401,26 +273,6 @@ h2 {
                     @include text-color('text-sec-color');
                 }
             }
-        }
-    }
-
-    // 视频
-    .mv-video {
-        width: 100%;
-
-        .mv-video-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 1rem;
-        }
-
-        .item {
-            .item-content {
-                height: 10rem;
-                overflow: hidden;
-
-            }
-
         }
     }
 }

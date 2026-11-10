@@ -41,7 +41,7 @@
                 <span> 我喜欢</span>
               </router-link>
             </li>
-            <li :class="{ 'nav-active': $route.name === 'fff' }">
+            <!-- <li :class="{ 'nav-active': $route.name === 'fff' }">
               <router-link to="#">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="size-6">
@@ -52,7 +52,7 @@
             </li>
             <li :class="{ 'nav-active': $route.name === 'fff' }">
               <router-link>最近播放</router-link>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -682,7 +682,7 @@ onUnmounted(() => {
 
     // 导航svg图标
     .size-6 {
-      width: 1rem;
+      width: 0.8rem;
     }
 
     // 导航列表
