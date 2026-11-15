@@ -2,9 +2,10 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useAuthStore } from '@/store/auth';
+import { API_ORIGIN } from './apiBase';
 // 创建 Axios 实例（可根据需求配置多个实例）
 const service = axios.create({
-    baseURL: 'http://localhost:3000', // 从环境变量获取基础 URL（需配置 Vite 或 Vue CLI）
+    baseURL: API_ORIGIN, // 按当前访问 hostname 动态推导（见 src/utils/apiBase.js）
     timeout: 5000, // 请求超时时间（5秒）
     // withCredentials: true, // 跨域时是否携带 Cookie（根据后端需求）
 });

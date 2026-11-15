@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 import viteCompression from "vite-plugin-compression";
-import basicSsl from "@vitejs/plugin-basic-ssl";
+// import basicSsl from "@vitejs/plugin-basic-ssl"; // 已关闭自签 HTTPS（与下方 https 配置同步注释）
 import autoprefixer from "autoprefixer";
 
 // https://vitejs.dev/config/
@@ -13,7 +13,7 @@ export default defineConfig({
     headers: {
       "Cache-Control": "no-store, max-age=0", // 设置缓存策略，禁用缓存
     },
-    https: {}, // 是否开启 https
+    // https: {}, // 已关闭：dev 使用 HTTPS 时，其他设备用局域网 IP 访问页面会因 http 接口被判定为混合内容而拦截
     port: 8008, // 自定义端口
     strictPort: false, // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口
     open: false, // 启动后是否浏览器自动打开
@@ -29,7 +29,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    basicSsl(),
+    // basicSsl(), // 已关闭自签 HTTPS
     viteCompression({
       //algorithm: 'gzip', // 压缩算法，可选[‘gzip’，‘brotliCompress’，‘deflate’，‘deflateRaw’]
       //threshold: 10240, // 如果体积大于阈值，则进行压缩，单位为b

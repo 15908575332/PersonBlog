@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { API_ORIGIN } from '@/utils/apiBase';
 export const useMainStore = defineStore('main', () => {
     const navData = ref([]); //导航数据
     const contentData = ref(''); //主要内容数据
@@ -13,7 +14,7 @@ export const useMainStore = defineStore('main', () => {
     const fetchMainContent = async (category_id, user_id) => {
         loading.value = true;
         try {
-            const response = await axios.get('http://localhost:3000/main/getArticleInfo', {
+            const response = await axios.get(`${API_ORIGIN}/main/getArticleInfo`, {
                 params: {
                     category_id: category_id,
                     user_id: user_id,
@@ -35,7 +36,7 @@ export const useMainStore = defineStore('main', () => {
     };
     const fetchNavData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/main/getNavData', {
+            const response = await axios.get(`${API_ORIGIN}/main/getNavData`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
             });
             if (!response.data) throw new Error("无效数据");

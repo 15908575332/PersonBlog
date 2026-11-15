@@ -3,8 +3,9 @@
  * 前端调用 /api/music-api/xxx → Vite proxy → Express 3000 → music-api 3100
  */
 import axios from "axios";
+import { MUSIC_API_BASE } from "./apiBase";
 
-const BASE = "http://localhost:3000/music-api";
+const BASE = MUSIC_API_BASE;
 
 const api = {
   /** 搜索歌曲 */

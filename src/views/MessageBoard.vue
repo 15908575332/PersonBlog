@@ -33,6 +33,7 @@ import Navigation from "@/components/common/NavigationMenu.vue";
 import vueDanmaku from 'vue3-danmaku';
 import utils from '@/utils/getAssetsFile';
 import axios from 'axios';
+import { API_ORIGIN } from '@/utils/apiBase';
 const danmaku = ref();
 const randomIndex = ref();
 const inputValue = ref();
@@ -63,7 +64,7 @@ if (backImgaes.value.length > 0) {
 // 在Vue组件中调用
 const fetchMessages = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/getMessageList', {
+        const response = await axios.get(`${API_ORIGIN}/getMessageList`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
         });
         danmus.value = response.data.data.map(item => ({
@@ -89,7 +90,7 @@ const insertMessage = async () => {
         return;
     }
     try {
-        const response = await axios.post('http://localhost:3000/setMessgeContent', {
+        const response = await axios.post(`${API_ORIGIN}/setMessgeContent`, {
             userId: authStore.user.id,
             content: inputValue.value
         }, {

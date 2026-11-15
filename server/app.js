@@ -6,6 +6,7 @@ import mainContentApi from "./routes/mainContentApi.js";
 import blogCommentsApi from "./routes/blogCommentsApi.js";
 import instantMessagingApi from "./routes/instantMessagingApi.js";
 import express from "express"; // express框架
+import { networkInterfaces } from "os";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { config } from "dotenv";
@@ -57,6 +58,17 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ code: "99", msg: "Internal Server Error" });
 });
-// 监听端口
-app.listen(3000); // 监听server3000端口
-console.log("success listen at http://localhost:3000");
+// 监听端口：显式绑定 0.0.0.0，保证局域网内其他设备可以连入（不能只绑本机回环地址）
+const PORT = 3000;
+const HOST = "0.0.0.0";
+
+// 列出本机局域网 IPv4 地址，启动时直接打印可访问地址
+const lanAddresses = Object.values(networkInterfaces())
+  .flat()
+  .filter((item) => item && item.family === "IPv4" && !item.internal)
+  .map((item) => item.address);
+
+app.listen(PORT, HOST, () => {
+  console.log(`success listen at http://localhost:${PORT} (bind ${HOST})`);
+  lanAddresses.forEach((ip) => console.log(`lan access at http://${ip}:${PORT}`));
+});

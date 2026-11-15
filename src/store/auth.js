@@ -5,10 +5,11 @@ import { ref, computed, watch } from 'vue'
 import { jwtDecode } from 'jwt-decode'
 import { message } from 'ant-design-vue'
 import { clearAllLocalStorage } from '@/utils/clearAllLocalStorage';
+import { API_ORIGIN } from '@/utils/apiBase';
 export const useAuthStore = defineStore('auth', () => {
     const login = async (credentials) => {
         try {
-            const response = await axios.post('http://localhost:3000/user/login', credentials);
+            const response = await axios.post(`${API_ORIGIN}/user/login`, credentials);
             if (response.status === 401) {
                 message.warning('密码错误')
             }
@@ -84,7 +85,7 @@ export const useAuthStore = defineStore('auth', () => {
     //更新用户信息.
     const updateUserProfile = async (updateData) => {
         try {
-            const response = await axios.post('http://localhost:3000/user/updateUserInfo', updateData, {
+            const response = await axios.post(`${API_ORIGIN}/user/updateUserInfo`, updateData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token.value}`
@@ -118,7 +119,7 @@ export const useAuthStore = defineStore('auth', () => {
                 throw new Error("No token available for refresh");
             }
 
-            const response = await axios.post('http://localhost:3000/user/refresh', {}, {
+            const response = await axios.post(`${API_ORIGIN}/user/refresh`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token.value}`
                 }

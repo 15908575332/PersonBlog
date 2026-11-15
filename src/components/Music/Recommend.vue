@@ -13,7 +13,7 @@
                         <a-badge-ribbon :class="{ 'no-badge': !song.badge }" :text="song.badge?.text"
                             :color="song.badge?.color">
                             <div class="cover-layer">
-                                <img :src="song.coverUrl" :alt="song.name">
+                                <LazyImage :src="song.coverUrl" :alt="song.name" />
                                 <!-- 专辑名遮罩 -->
                                 <span class="cover-album">[{{ song.albumName }}]</span>
                                 <!-- 悬浮播放按钮 -->
@@ -44,7 +44,7 @@
             <div class="hot-music-list">
                 <div class="item" v-for="value in recommendPlayList">
                     <div class="item-content">
-                        <img class="music-cover" :src="value.coverUrl" alt="music-cover">
+                        <LazyImage class="music-cover" :src="value.coverUrl" alt="music-cover" />
                         <span class="msk"></span>
                         <!-- 播放量：封面右下角胶囊 -->
                         <span class="play-count" v-if="value.playCount">
@@ -66,7 +66,7 @@
             <div class="rec-menu-list">
                 <div class="item" v-for="radio in recommendDjprogramList">
                     <div class="item-content">
-                        <img :src="radio.coverUrl" alt="radio-cover">
+                        <LazyImage :src="radio.coverUrl" alt="radio-cover" />
                         <!-- 播放量：封面右下角胶囊 -->
                         <span class="play-count" v-if="radio.playCount">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10"
@@ -86,7 +86,7 @@
             <div class="mv-video-list">
                 <div class="item" v-for="mv in recommendMvList">
                     <div class="item-content">
-                        <img class="music-cover" :src="mv.coverUrl" alt="mv-cover">
+                        <LazyImage class="music-cover" :src="mv.coverUrl" alt="mv-cover" />
                         <span class="msk"></span>
                         <!-- 播放量：封面右下角胶囊 -->
                         <span class="play-count" v-if="mv.playCount">
@@ -299,6 +299,25 @@ onMounted(async () => {
 })
 </script>
 <style lang="scss" scoped>
+/* ------------------------ 间距与标题尺度 ------------------------ */
+// 间距阶梯（1rem = 20px @1440 视口）
+$space-1: 0.5rem;
+$space-2: 1rem;
+$space-3: 1.5rem;
+// 语义变量：区块间距、分隔线后内距、标题与内容间距
+$section-gap: $space-3;
+$section-pad-top: $space-3;
+$section-pad-bottom: $space-2;
+$title-to-body: $space-2;
+$title-inset: 0.75rem;
+$title-size: 1.125rem;
+$title-tracking: 0.02em;
+// 标题左侧 accent 竖条
+$accent-bar-width: 3px;
+$accent-bar-height: 1em;
+$accent-bar-radius: 2px;
+$accent-bar-offset: 0em;
+
 // 大标题
 h1 {
     width: 100%;
@@ -307,12 +326,25 @@ h1 {
     @include text-color('text-color');
 }
 
-// 二级标题
+// 二级标题：字号/字重/字距分层，左侧留出 accent 竖条位置
 h2 {
-    font-size: 1rem;
+    position: relative;
+    font-size: $title-size;
     font-weight: bold;
-    padding: 0.5rem 0;
-    @include text-color('text-sec-color');
+    letter-spacing: $title-tracking;
+    padding: 0 0 $title-to-body $title-inset;
+    @include text-color('text-color');
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: $accent-bar-offset;
+        width: $accent-bar-width;
+        height: $accent-bar-height;
+        border-radius: $accent-bar-radius;
+        background-color: themed('color-accent');
+    }
 }
 
 // 每项内容
@@ -482,11 +514,22 @@ h2 {
 .recommend {
     padding: 4rem 4rem 3rem;
     @include flexCenter(column, flex-start);
-    gap: 1rem;
+    // 区块间距的唯一来源（1.5rem = 30px），不再用 padding-top 二次叠加
+    gap: $section-gap;
+
+    // 区块间分隔线：从第二个内容区块起生效，上内距只补线下方呼吸量
+    >.hot-music,
+    >.rec-playlist,
+    >.mv-video {
+        border-top: 1px solid themed('border-default');
+        padding-top: $space-1;
+        padding-bottom: $section-pad-bottom;
+    }
 
     // 推荐歌曲
     .rec-music {
         width: 100%;
+        padding-bottom: $section-pad-bottom;
 
         .rec-music-list {
             display: grid;

@@ -189,6 +189,7 @@ import { useAuthStore } from "@/store/auth";
 import { useMainStore } from "@/store/maincontent";
 import dayjs from "dayjs";
 import axios from "axios";
+import { API_ORIGIN } from "@/utils/apiBase";
 import { debounce } from "@/utils/debounce"; // 导入防抖函数
 const mainStore = useMainStore();
 const authStore = useAuthStore();
@@ -253,7 +254,7 @@ const allTags = computed(() => {
 const messageList = ref([]);
 const getScrollMessageData = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/getMessageList', {
+    const response = await axios.get(`${API_ORIGIN}/getMessageList`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
     });
     messageList.value = response.data.data.map(item => ({
