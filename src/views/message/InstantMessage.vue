@@ -174,7 +174,7 @@
                                 </p>
                                 <p class="level">
                                     <strong>会员等级：</strong>
-                                    <img class="level-icon" :src="utils.getAssetsFile('icon/shared/level/lv' + selectedItem.vip_level
+                                    <img class="level-icon" :src="utils.getAssetsFile('icon/user/level/lv' + selectedItem.vip_level
                                         + '.svg')" alt="level">
                                 <div v-for="index in parseInt(selectedItem.vip_level)" :key="index">
                                     <img class="sun" src="@/assets/icon/message/icons8-sun-50.png" alt="">

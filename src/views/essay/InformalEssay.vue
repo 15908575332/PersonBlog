@@ -52,7 +52,7 @@
                 </ul>
               </div>
               <div class="interest">
-                <img src="@/assets/icon/shared/informalEssay/friend.svg" alt="friend" />
+                <img src="@/assets/icon/essay/friend.svg" alt="friend" />
                 <span>朋友圈</span>
               </div>
             </div>
@@ -61,7 +61,7 @@
               <h1>搜索</h1>
               <form class="search__form">
                 <input type="text" v-model="searchQuery" placeholder="搜索文章" />
-                <img src=" @/assets/icon/shared/informalEssay/informalEssaySearch.svg" alt="" />
+                <img src=" @/assets/icon/essay/informalEssaySearch.svg" alt="" />
               </form>
             </div>
             <!-- 友站 -->
@@ -104,7 +104,7 @@
           <div class="right">
             <div class="notice">
               <p>
-                <img src="@/assets/icon/shared/informalEssay/notice.svg" alt="notice" />
+                <img src="@/assets/icon/essay/notice.svg" alt="notice" />
                 <span>公告：本站为个人博客，用于记录个人学习笔记，如有侵权请联系删除</span>
               </p>
             </div>
@@ -113,11 +113,11 @@
               <section v-for="module in navData" :key="module.category_id" :id="module.category_id">
                 <div class="menu">
                   <div class="flex__layout">
-                    <img src=" @/assets/icon/shared/informalEssay/informalEssayMenu.svg" alt="" />
+                    <img src=" @/assets/icon/essay/informalEssayMenu.svg" alt="" />
                     <span>{{ module.nav_btn_title }}</span>
                   </div>
                   <div class="flex__layout">
-                    <img src=" @/assets/icon/shared/informalEssay/informalEssayMore.svg" alt="" />
+                    <img src=" @/assets/icon/essay/informalEssayMore.svg" alt="" />
                     <span>MORE</span>
                   </div>
                 </div>
@@ -132,31 +132,31 @@
                     <div class="text__content">
                       <!-- 发布 -->
                       <div class="release">
-                        <img src="@/assets/icon/shared/recordList/release.svg" alt="" />
+                        <img src="@/assets/icon/record/recordList/release.svg" alt="" />
                         <span>发布于{{ dayjs(item.release_time).format('YYYY-MM-DD HH:mm:ss') }}</span>
                       </div>
                       <h1>{{ item.title }}</h1>
                       <ul class="funcition">
                         <li>
-                          <img src="@/assets/icon/shared/recordList/heat.svg" alt="heat" />
+                          <img src="@/assets/icon/record/recordList/heat.svg" alt="heat" />
                           <span>{{ item.heat }}热度</span>
                         </li>
                         <li>
-                          <!-- <img src="@/assets/icon/shared/recordList/comment.svg" alt="comment" /> -->
+                          <!-- <img src="@/assets/icon/record/recordList/comment.svg" alt="comment" /> -->
                           <!-- <span>{{ item.comment.length }}评论</span> -->
                         </li>
                         <li>
-                          <img src="@/assets/icon/shared/recordList/like.svg" alt="like" />
+                          <img src="@/assets/icon/record/recordList/like.svg" alt="like" />
                           <span>{{ item.like_count }}赞</span>
                         </li>
                       </ul>
                       <div class="footer__tags">
                         <p :style="`--btn-color: ${randomAssistanceColor()}`">
-                          <img src="@/assets/icon/shared/recordList/blog.svg" alt="blog" />
+                          <img src="@/assets/icon/record/recordList/blog.svg" alt="blog" />
                           <span>{{ item.master_tag }}</span>
                         </p>
                         <p :style="`--btn-color: ${randomAssistanceColor()}`">
-                          <img src="@/assets/icon/shared/recordList/arrange.svg" alt="arrange" />
+                          <img src="@/assets/icon/record/recordList/arrange.svg" alt="arrange" />
                           <span>{{ item.sub_tag }}</span>
                         </p>
                       </div>
@@ -193,7 +193,7 @@ import { API_ORIGIN } from "@/api/base";
 import { debounce } from "@/utils/debounce"; // 导入防抖函数
 const mainStore = useMainStore();
 const authStore = useAuthStore();
-import { randomAssistanceColor } from '@/styles/colorTokens';
+import { randomAssistanceColor } from '@/styles/palette';
 
 /** ------------------------ 获取分类 ------------------------ */
 const navData = ref([]);

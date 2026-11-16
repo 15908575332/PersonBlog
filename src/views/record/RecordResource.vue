@@ -30,7 +30,7 @@
       <div class="moudle__content">
         <!-- 横线 -->
         <div class="br">
-          <img src="@/assets/icon/shared/recordList/leaf.svg" alt="" width="18" />
+          <img src="@/assets/icon/record/recordList/leaf.svg" alt="" width="18" />
           <span>发现</span>
         </div>
         <!-- 内容 -->
@@ -43,21 +43,21 @@
             <div class="text__content">
               <!-- 发布 -->
               <div class="release">
-                <img src="@/assets/icon/shared/recordList/release.svg" alt="" />
+                <img src="@/assets/icon/record/recordList/release.svg" alt="" />
                 <span>发布于{{ release_time_format(module.release_time) }}</span>
               </div>
               <h1>{{ module.title }}</h1>
               <ul class="funcition">
                 <li>
-                  <img src="@/assets/icon/shared/recordList/heat.svg" alt="heat" />
+                  <img src="@/assets/icon/record/recordList/heat.svg" alt="heat" />
                   <span>{{ module.heat }}热度</span>
                 </li>
                 <li>
-                  <img src="@/assets/icon/shared/recordList/comment.svg" alt="comment" />
+                  <img src="@/assets/icon/record/recordList/comment.svg" alt="comment" />
                   <span>{{ 0 }}评论</span>
                 </li>
                 <li>
-                  <img src="@/assets/icon/shared/recordList/like.svg" alt="like" />
+                  <img src="@/assets/icon/record/recordList/like.svg" alt="like" />
                   <span>{{ module.like_count }}赞</span>
                 </li>
               </ul>
@@ -67,11 +67,11 @@
               </div>
               <div class="footer__tags">
                 <p :style="`--btn-color: ${randomAssistanceColor()}`">
-                  <img src="@/assets/icon/shared/recordList/blog.svg" alt="blog" />
+                  <img src="@/assets/icon/record/recordList/blog.svg" alt="blog" />
                   <span>{{ module.master_tag }}</span>
                 </p>
                 <p :style="`--btn-color: ${randomAssistanceColor()}`">
-                  <img src="@/assets/icon/shared/recordList/arrange.svg" alt="arrange" />
+                  <img src="@/assets/icon/record/recordList/arrange.svg" alt="arrange" />
                   <span>{{ module.sub_tag }}</span>
                 </p>
               </div>
@@ -188,7 +188,7 @@ const getLayoutClass = (index) => {
   return index % 2 === 0 ? "image-left" : "image-right";
 };
 // 导航按钮按序渲染颜色
-import { randomAssistanceColor, assistanceColorByIndex } from '@/styles/colorTokens';
+import { randomAssistanceColor, assistanceColorByIndex } from '@/styles/palette';
 
 
 //背景加载

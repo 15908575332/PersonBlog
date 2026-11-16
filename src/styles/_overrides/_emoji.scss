@@ -1,0 +1,13 @@
+span.cc-cmd {
+    padding: 3px 0;
+}
+
+// 记录页面详情>表情样式重写
+.v3-group {
+    .v3-emojis {
+        button {
+            max-width: 5.5% !important;
+            flex-basis: 5.5% !important;
+        }
+    }
+}

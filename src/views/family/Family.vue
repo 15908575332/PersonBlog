@@ -478,7 +478,6 @@ dayjs.locale("zh-cn")
 import relativeTime from "dayjs/plugin/relativeTime"
 import duration from "dayjs/plugin/duration"
 dayjs.extend(relativeTime, duration)
-import { assistanceColors } from "@/styles/colorTokens"
 
 // === Tag Icons (unified 14x14 stroke-based SVGs) ===
 const iconSvgs = {
@@ -1358,7 +1357,7 @@ const blessings = [
 
         @for $i from 1 through 12 {
           &:nth-child(#{$i}) {
-            animation-duration: #{6 + random(6)}s;
+            animation-duration: #{6 + math.random(6)}s;
             animation-delay: #{$i * 0.6}s;
           }
         }

@@ -81,7 +81,7 @@
                   </button> -->
                   <div class="info">
                     <span>{{ userStore.user.username }}</span>
-                    <img class="level" :src="utils.getAssetsFile('icon/shared/level/lv' + userStore.user.vipLevel + '.svg')"
+                    <img class="level" :src="utils.getAssetsFile('icon/user/level/lv' + userStore.user.vipLevel + '.svg')"
                       alt="level">
                   </div>
 

@@ -1,3 +1,5 @@
+@use "../color.scss" as *;
+
 //会员中心徽标样式重写
 #memberCenter {
     .ant-ribbon-text {
@@ -44,40 +46,6 @@
     font-family: var(--app-font-family);
 }
 
-span.cc-cmd {
-    padding: 3px 0;
-}
-// 留言板样式重写
-.vue-danmaku .danmus .dm {
-    color: #fff !important;
-    font-size: 22px;
-    font-family: var(--app-font-family);
-    background: #272b2d90;
-    padding: 8px 15px;
-    border-radius: 30px;
-    @include flexCenter(row, center);
-}
-// 记录页面详情>表情样式重写
-.v3-group {
-    .v3-emojis {
-        button {
-            max-width: 5.5% !important;
-            flex-basis: 5.5% !important;
-        }
-    }
-}
-
-// Notification 通知提醒框样式重写
-.ant-notification-notice {
-    .ant-notification-notice-with-icon {
-        .ant-notification-notice-message {
-            font-size: 1rem;
-        }
-        .ant-notification-notice-description {
-            font-size: 0.8rem;
-        }
-    }
-}
 // Ant Design Vue 浮动按钮样式重写
 .ant-float-btn {
     position: relative;
@@ -93,7 +61,8 @@ span.cc-cmd {
         display: block;
     }
 }
-//ant-design-vue 通知提醒框组件样式重写
+// Notification 通知提醒框样式重写
+// ant-design-vue 通知提醒框组件样式重写（原两处 .ant-notification-notice 定义已合并，选择器与层叠语义不变）
 .ant-notification-notice {
     font-family: var(--app-font-family);
     font-weight: 700;
@@ -102,6 +71,15 @@ span.cc-cmd {
     width: 20rem;
     &:hover {
         cursor: pointer;
+    }
+    // 带图标状态下标题与内容字号（原 Notification 通知提醒框样式重写块，特异性高于下方基础规则）
+    .ant-notification-notice-with-icon {
+        .ant-notification-notice-message {
+            font-size: 1rem;
+        }
+        .ant-notification-notice-description {
+            font-size: 0.8rem;
+        }
     }
     //标题
     .ant-notification-notice-message {

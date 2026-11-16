@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { assistanceColors } from '@/styles/colorTokens'
+import { assistanceColors } from '@/styles/palette'
 
 const props = defineProps({
   tags: {

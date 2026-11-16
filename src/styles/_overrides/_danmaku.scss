@@ -1,0 +1,12 @@
+@use "../mixins.scss" as *;
+
+// 留言板样式重写
+.vue-danmaku .danmus .dm {
+    color: #fff !important;
+    font-size: 22px;
+    font-family: var(--app-font-family);
+    background: #272b2d90;
+    padding: 8px 15px;
+    border-radius: 30px;
+    @include flexCenter(row, center);
+}

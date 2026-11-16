@@ -18,11 +18,11 @@
                                     <h1>{{ item.title }}</h1>
                                     <ul>
                                         <li>
-                                            <img src="@/assets/icon/shared/recordList/countCat-icon.svg" alt="cat">
+                                            <img src="@/assets/icon/record/recordList/countCat-icon.svg" alt="cat">
                                             <span>{{ item.heat }}</span>
                                         </li>
                                         <li>
-                                            <img src="@/assets/icon/shared/recordList/like.svg" alt="message">
+                                            <img src="@/assets/icon/record/recordList/like.svg" alt="message">
                                             <span>{{ item.like_count }}</span>
                                         </li>
                                     </ul>
@@ -35,11 +35,11 @@
             <section>
                 <div class="menu">
                     <div class="flex__layout">
-                        <img src="@/assets/icon/shared/recordList/specialColumn-icon.svg" alt=" img">
+                        <img src="@/assets/icon/record/recordList/specialColumn-icon.svg" alt=" img">
                         <span>专栏</span>
                     </div>
                     <div class="flex__layout">
-                        <img src="@/assets/icon/shared/recordList/orange-icon.svg" alt="img">
+                        <img src="@/assets/icon/record/recordList/orange-icon.svg" alt="img">
                     </div>
                 </div>
                 <div class="content__container" v-for="module in specialColumn" :key="module.category_id"
@@ -77,7 +77,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 import { useAuthStore } from '@/stores/auth';
 const authStore = useAuthStore();
-import { assistanceColors, assistanceColorByIndex } from '@/styles/colorTokens';
+import { assistanceColors, assistanceColorByIndex } from '@/styles/palette';
 
 //标题栏
 const specialColumn = ref([]);

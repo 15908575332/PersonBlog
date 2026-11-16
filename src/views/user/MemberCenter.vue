@@ -13,7 +13,7 @@
                 <div class="content">
                     <div class="card-header">
                         <div class="level">
-                            <img :src="utils.getAssetsFile(`icon/shared/level/lv${card.level}.svg`)" alt="member">
+                            <img :src="utils.getAssetsFile(`icon/user/level/lv${card.level}.svg`)" alt="member">
 
                         </div>
                         <h3>{{ card.title }}</h3>
@@ -37,7 +37,7 @@
                 <div class="content">
                     <div class="card-header">
                         <div class="level">
-                            <img :src="utils.getAssetsFile(`icon/shared/level/lv${selectedCard.level}.svg`)" alt="member">
+                            <img :src="utils.getAssetsFile(`icon/user/level/lv${selectedCard.level}.svg`)" alt="member">
                         </div>
                         <h3>{{ selectedCard.title }}</h3>
                     </div>

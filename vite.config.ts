@@ -85,7 +85,6 @@ export default defineConfig({
       scss: {
         additionalData: `
           @use "@/styles/color.scss" as *;
-          @use "@/styles/global.scss" as *;
           @use "sass:math";
           @use "sass:color";
           @use "sass:list";

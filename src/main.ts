@@ -4,7 +4,6 @@ import App from "./App.vue";
 //图像hover效果
 import "@ciar4n/izmir/izmir.min.css";
 // 个人编辑文件
-import "@/styles/reset.scss";
 import "@/styles/index.scss";
 
 import router from "./router/index";

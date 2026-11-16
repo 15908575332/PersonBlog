@@ -549,6 +549,12 @@ const showRippleToggle = computed(() => {
 </script>
 
 <style scoped lang="scss">
+
+// 内部凹陷阴影（S3：仅本文件使用，自全局标量下沉为局部定义）
+$width: clamp(90px, 106px, 200px);
+$insideShadow:
+    calc($width * 0) calc($width * -0.025) calc($width * 0.025) 0 hsl(210 10% 10% / 0.15) inset,
+    calc($width * 0) calc($width * 0.025) calc($width * 0.025) 0 hsl(210 10% 10% / 0.65) inset;
 .pagesOption {
   position: relative;
   min-height: 100vh;

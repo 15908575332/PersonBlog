@@ -85,12 +85,12 @@
                         <div style="display: flex" class="content">
                             <!-- 作者 -->
                             <div class="auther">
-                                <img src="@/assets/icon/shared/recordList/auther.svg" alt="" />
+                                <img src="@/assets/icon/record/recordList/auther.svg" alt="" />
                                 <span class="name">{{ recordDetail.username }}</span>
                             </div>
                             <!-- 发布 -->
                             <div class="release">
-                                <img src="@/assets/icon/shared/recordList/release.svg" alt="" />
+                                <img src="@/assets/icon/record/recordList/release.svg" alt="" />
                                 <span>发布于{{
                                     dayjs(recordDetail.release_time).format(
                                         "YYYY-MM-DD HH:mm:ss",
@@ -99,15 +99,15 @@
                             </div>
                             <ul class="funcition">
                                 <li>
-                                    <img src="@/assets/icon/shared/recordList/heat.svg" alt="heat" />
+                                    <img src="@/assets/icon/record/recordList/heat.svg" alt="heat" />
                                     <span>{{ recordDetail.heat }}热度</span>
                                 </li>
                                 <li>
-                                    <img src="@/assets/icon/shared/recordList/comment.svg" alt="comment" />
+                                    <img src="@/assets/icon/record/recordList/comment.svg" alt="comment" />
                                     <span>{{ totals }}评论</span>
                                 </li>
                                 <li>
-                                    <img src="@/assets/icon/shared/recordList/like.svg" alt="like" />
+                                    <img src="@/assets/icon/record/recordList/like.svg" alt="like" />
                                     <span>{{ recordDetail.like_count }}赞</span>
                                 </li>
                             </ul>
@@ -158,7 +158,7 @@
                 <div class="comment__show" v-else>
                     <div class="text">评论可见</div>
                     <div class="warring">
-                        <img src="@/assets/icon/shared/informalEssay/warring-icon.svg" alt="warring" />
+                        <img src="@/assets/icon/essay/warring-icon.svg" alt="warring" />
                         <span>此处内容已隐藏</span>
                     </div>
                 </div>
@@ -178,7 +178,7 @@
                     <div class="card">
                         <div class="collectBtn btn" @click="shareLike">
                             <p>收藏</p>
-                            <img src="@/assets/icon/shared/informalEssay/icons8-favorite-48.png"
+                            <img src="@/assets/icon/essay/icons8-favorite-48.png"
                                 alt="favorite" />
                         </div>
                         <button class="likeBtn btn" @click="handleLikeClick(recordDetail.article_id)">
@@ -187,14 +187,14 @@
                         </button>
                         <div class="shareBtn btn" @click="shareLike">
                             <p>分享</p>
-                            <img src="@/assets/icon/shared/informalEssay/icons8-share-48.png" alt="share" />
+                            <img src="@/assets/icon/essay/icons8-share-48.png" alt="share" />
                         </div>
                     </div>
                 </div>
                 <!-- 评论区 -->
                 <div class="comment">
                     <h1 class="title">
-                        <img src="@/assets/icon/shared/informalEssay/icons8-write-64.png" alt="edit" />
+                        <img src="@/assets/icon/essay/icons8-write-64.png" alt="edit" />
                         <span>评论</span>
                     </h1>
                     <!-- 输入框 -->
@@ -344,7 +344,7 @@
                                             <div class="nickname">
                                                 <span>{{ message.user.username }}</span>
                                                 <img class="level" :src="utils.getAssetsFile(
-                                                    'icon/shared/level/lv' + message.user.vip_level + '.svg',
+                                                    'icon/user/level/lv' + message.user.vip_level + '.svg',
                                                 )
                                                     " alt="level" />
                                             </div>
@@ -371,7 +371,7 @@
                                             <div class="nickname">
                                                 <span>{{ value.user.username }}</span>
                                                 <img class="level" :src="utils.getAssetsFile(
-                                                    'icon/shared/level/lv' + value.user.vip_level + '.svg',
+                                                    'icon/user/level/lv' + value.user.vip_level + '.svg',
                                                 )
                                                     " alt="level" />
                                             </div>

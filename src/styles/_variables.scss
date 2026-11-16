@@ -1,0 +1,66 @@
+@use "sass:map";
+@use "sass:list";
+
+// 媒体查询断点（供 media-to 使用）
+$breakpointers: (
+  "phone": (
+    320px,
+    480px
+  ),
+  "pad": (
+    481px,
+    768px
+  ),
+  "notebook": (
+    769px,
+    1024px
+  ),
+  "desktop": (
+    1025px,
+    1200px
+  ),
+  "tv": 1201px
+);
+
+// ===================== 颜色与尺寸标量（S3 自 color.scss 归位）=====================
+
+/* 主色调 */
+$primary-color: #25bbe4; // 主蓝色
+$primary-hover: #82dbf4; // 主色悬停状态
+$primary-sub: #f24257; //次主色
+// 辅色
+$assistance-1: #f1b9b9;
+$assistance-2: #df9e98;
+$assistance-3: #f0b43e;
+$assistance-4: #9ed4d4;
+$assistance-5: #ffc0cb;
+$assistance-6: #7296de;
+$assistance-7: #7c95b5;
+$assistance-8: #86bfbf;
+$assistance-9: #af9b9b;
+$assistance-10: #c57d76;
+
+// 辅色色板列表（色值唯一来源）：由 _palette-output.scss 用 @each 生成为 --assistance-1 … --assistance-10，
+// JS 端统一通过 src/styles/palette.ts 读取 CSS 变量，不再维护第二份十六进制色板。
+$assistance-palette:
+    $assistance-1, $assistance-2, $assistance-3, $assistance-4, $assistance-5, $assistance-6, $assistance-7,
+    $assistance-8, $assistance-9, $assistance-10;
+
+//中性色用于文字、背景、边框等
+$color-1: #808080;
+$color-2: #d3d3d3;
+$color-3: #a9a9a9;
+$color-4: #eae2de;
+$color-5: #ffa500;
+// 通用卡片阴影
+$shadow-card:
+    0px 4px 20px rgba(113, 113, 113, 0.25),
+    0px 0px 0px 1px rgba(113, 113, 113, 0.1);
+
+// 通用颜色
+$general-black: #111;
+$general-white: #fff;
+
+// 定义过渡时间变量（可根据需要调整）
+$theme-transition-duration: 0.5s;
+$theme-transition-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);

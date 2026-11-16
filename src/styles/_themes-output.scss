@@ -1,0 +1,10 @@
+@use "./themes" as *;
+
+// 应用主题变量到 CSS（全站仅输出一份，仅由 index.scss 引入）
+@each $theme-name, $theme-map in $themes {
+    [data-theme="#{$theme-name}"] {
+        @each $key, $value in $theme-map {
+            #{$key}: $value;
+        }
+    }
+}

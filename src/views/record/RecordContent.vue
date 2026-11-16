@@ -12,7 +12,7 @@
       <span class="closeInput" @click="inputBlur">×</span>
       <form class="search__form" @submit.prevent="handleSearch">
         <input type="text" ref="inputSearch" v-model="searchQuery" placeholder="请输入搜索内容" @focus="inputFocus" />
-        <img src=" @/assets/icon/shared/informalEssay/informalEssaySearch.svg" @click="handleSearch" />
+        <img src=" @/assets/icon/essay/informalEssaySearch.svg" @click="handleSearch" />
       </form>
       <div class="search__suggestion">
         <h3>一些有用的建议</h3>
@@ -26,11 +26,11 @@
     <div v-if="isSearching" class="search__result">
       <div class="menu search-result-menu">
         <div class="flex__layout">
-          <img src=" @/assets/icon/shared/recordList/search_result.svg" alt="advocate" style="width: 1.5rem;" />
+          <img src=" @/assets/icon/record/recordList/search_result.svg" alt="advocate" style="width: 1.5rem;" />
           <span>“{{ searchTitle }}”</span>
         </div>
         <div class="flex__layout">
-          <img src=" @/assets/icon/shared/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
+          <img src=" @/assets/icon/essay/informalEssayMore.svg" alt="informalEssayMore" />
           <span>MORE</span>
         </div>
       </div>
@@ -52,17 +52,17 @@
               <LazyImage :src="item.cover_image_url" @load="onLoad" @error="onError" alt="Image" />
               <ul class="item_count">
                 <li v-if="item.cover_video_url !== null">
-                  <img src="@/assets/icon/shared/recordList/countPlay-icon.svg" alt="play" />
+                  <img src="@/assets/icon/record/recordList/countPlay-icon.svg" alt="play" />
                   <span>3</span>
                 </li>
                 <!-- 预览量 -->
                 <li>
-                  <img src="@/assets/icon/shared/recordList/countCat-icon.svg" alt="cat" />
+                  <img src="@/assets/icon/record/recordList/countCat-icon.svg" alt="cat" />
                   <span>{{ item.heat }}</span>
                 </li>
                 <!-- 点赞量 -->
                 <li>
-                  <img src="@/assets/icon/shared/recordList/like.svg" alt="message" />
+                  <img src="@/assets/icon/record/recordList/like.svg" alt="message" />
                   <span>{{ item.like_count }}</span>
                 </li>
               </ul>
@@ -122,10 +122,10 @@
         <section v-if="advocateItems && advocateItems.length > 0">
           <div class="menu advocate-menu">
             <div class="flex__layout">
-              <img src=" @/assets/icon/shared/recordList/advocate.svg" alt="advocate" style="width: 2.9rem;" />
+              <img src=" @/assets/icon/record/recordList/advocate.svg" alt="advocate" style="width: 2.9rem;" />
             </div>
             <div class="flex__layout">
-              <img src=" @/assets/icon/shared/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
+              <img src=" @/assets/icon/essay/informalEssayMore.svg" alt="informalEssayMore" />
               <span class="advocate-more">MORE</span>
             </div>
           </div>
@@ -138,17 +138,17 @@
                   <div class="item__count">
                     <ul>
                       <li v-if="item.cover_video_url !== null">
-                        <img src="@/assets/icon/shared/recordList/countPlay-icon.svg" alt="play" />
+                        <img src="@/assets/icon/record/recordList/countPlay-icon.svg" alt="play" />
                         <span>3</span>
                       </li>
                       <!-- 预览量 -->
                       <li>
-                        <img src="@/assets/icon/shared/recordList/countCat-icon.svg" alt="cat" />
+                        <img src="@/assets/icon/record/recordList/countCat-icon.svg" alt="cat" />
                         <span>{{ item.heat }}</span>
                       </li>
                       <!-- 点赞量 -->
                       <li>
-                        <img src="@/assets/icon/shared/recordList/like.svg" alt="message" />
+                        <img src="@/assets/icon/record/recordList/like.svg" alt="message" />
                         <span>{{ item.like_count }}</span>
                       </li>
                     </ul>
@@ -169,11 +169,11 @@
         <section>
           <div class="menu">
             <div class="flex__layout" v-if="navContent.length > 0">
-              <img src=" @/assets/icon/shared/informalEssay/informalEssayMenu.svg" alt="informalEssayMenu" />
+              <img src=" @/assets/icon/essay/informalEssayMenu.svg" alt="informalEssayMenu" />
               <span>{{ navContent[currentIndex || 0].nav_btn_title }}</span>
             </div>
             <div class="flex__layout">
-              <img src=" @/assets/icon/shared/informalEssay/informalEssayMore.svg" alt="informalEssayMore" />
+              <img src=" @/assets/icon/essay/informalEssayMore.svg" alt="informalEssayMore" />
               <span>MORE</span>
             </div>
           </div>
@@ -188,17 +188,17 @@
                 <div class="item__count">
                   <ul>
                     <li v-if="item.cover_video_url !== null">
-                      <img src="@/assets/icon/shared/recordList/countPlay-icon.svg" alt="play" />
+                      <img src="@/assets/icon/record/recordList/countPlay-icon.svg" alt="play" />
                       <span>3</span>
                     </li>
                     <!-- 预览量 -->
                     <li>
-                      <img src="@/assets/icon/shared/recordList/countCat-icon.svg" alt="cat" />
+                      <img src="@/assets/icon/record/recordList/countCat-icon.svg" alt="cat" />
                       <span>{{ item.heat }}</span>
                     </li>
                     <!-- 点赞量 -->
                     <li>
-                      <img src="@/assets/icon/shared/recordList/like.svg" alt="message" />
+                      <img src="@/assets/icon/record/recordList/like.svg" alt="message" />
                       <span>{{ item.like_count }}</span>
                     </li>
                   </ul>

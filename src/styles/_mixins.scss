@@ -1,0 +1,139 @@
+@use "sass:math";
+@use "sass:map";
+@use "sass:meta";
+@use "sass:list";
+@use "./variables" as *;
+@use "./themes" as *;
+
+// 遮罩层公共样式
+@mixin mask-overlay($bg: rgba(0, 0, 0, 0.3), $height: 100%, $position: absolute, $z-index: auto) {
+  position: $position;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $height;
+  background-color: $bg;
+  z-index: $z-index;
+}
+
+@mixin flexCenter($direction, $layout) {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex-direction: $direction;
+  justify-content: $layout;
+}
+
+// 媒体查询
+@mixin media-to($breakname) {
+  $bp: map.get($breakpointers, $breakname);
+
+  @if meta.type-of($bp) == "list" {
+    $min: list.nth($bp, 1);
+    $max: list.nth($bp, 2);
+
+    @media (min-width: $min) and (max-width: $max) {
+      @content; //类似于slot
+    }
+  } @else {
+    @media (min-width: $bp) {
+      @content;
+    }
+  }
+}
+
+// 统一分页组件样式
+@mixin pagination-styles {
+  @include flexCenter(row, center);
+  padding-bottom: 1rem;
+
+  .pagination-container {
+    display: flex;
+    column-gap: 0.5rem;
+    align-items: center;
+  }
+
+  .paginate-buttons,
+  .back-btn,
+  .next-btn,
+  .first-page-button,
+  .last-page-button {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+    font-family: var(--app-font-family);
+    font-weight: 400;
+    margin: 0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    background-color: transparent;
+    color: themed("text-color");
+    border: 1px solid themed("border-default");
+    @include theme-transition();
+
+    &:hover {
+      color: var(--primary-color, #e0e0e5);
+      border-color: themed("border-default");
+      background-color: rgba(128, 128, 128, 0.12);
+    }
+  }
+
+  .active-page {
+    background-color: themed("color-accent");
+    border: 1px solid themed("color-accent");
+    color: #fff;
+    font-weight: 500;
+    @include theme-transition();
+
+    &:hover {
+      color: #fff;
+      background-color: themed("color-accent");
+      border-color: themed("color-accent");
+    }
+  }
+}
+
+// 基础过渡混入
+@mixin theme-transition {
+    transition:
+        background-color $theme-transition-duration $theme-transition-timing,
+        color $theme-transition-duration $theme-transition-timing,
+        border-color $theme-transition-duration $theme-transition-timing,
+        box-shadow $theme-transition-duration $theme-transition-timing;
+}
+
+// 普通背景色
+@mixin background($color-key) {
+    @include theme-foreach {
+        background-color: themed($color-key);
+    }
+    @include theme-transition();
+}
+//文字颜色
+@mixin text-color($color-key) {
+    @each $theme-name, $theme-map in $themes {
+        [data-theme="#{$theme-name}"] & {
+            color: map.get($theme-map, --#{$color-key});
+        }
+    }
+    @include theme-transition();
+}
+// 阴影
+@mixin boxshadow($color-key) {
+    @include theme-foreach {
+        box-shadow: themed($color-key);
+    }
+    @include theme-transition();
+}
+
+// 随机辅色背景（从 $assistance-palette 中取）
+@function random-assistance-color($seed: 0) {
+    @if $seed > 0 {
+        @return list.nth($assistance-palette, ($seed % list.length($assistance-palette)) + 1);
+    }
+    @return list.nth($assistance-palette, math.random(list.length($assistance-palette)));
+}
+
+@mixin random-assistance-bg($seed: 0) {
+    background-color: random-assistance-color($seed);
+}

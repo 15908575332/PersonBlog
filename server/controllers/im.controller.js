@@ -30,8 +30,10 @@ export async function systemNotifications(req, res) { //系统通知
 
 export async function friendList(req, res) { //好友列表（多状态）
     try {
-        // 获取当前用户ID
-        const currentUserId = req?.query;
+        // 获取当前用户ID：本接口在全局 authenticateToken 之后执行，身份以 token 挂载的 req.user 为准；
+        // 前端 InstantMessage.vue 同时显式传 query.user_id（登录返回的同一 user_id），作为兜底来源
+        const rawUserId = req.user?.user_id ?? req.query?.user_id;
+        const currentUserId = typeof rawUserId === 'string' ? rawUserId.trim() : '';
         if (!currentUserId) {
             return res.status(401).json({ message: '未授权访问' });
         }

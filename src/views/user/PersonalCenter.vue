@@ -45,7 +45,7 @@
                         </div>
                         <h3 class="display-name">{{ userStore.user.username }}</h3>
                         <div class="level-badge">
-                            <img :src="utils.getAssetsFile('icon/shared/level/lv' + userStore.user.vipLevel + '.svg')"
+                            <img :src="utils.getAssetsFile('icon/user/level/lv' + userStore.user.vipLevel + '.svg')"
                                 alt="level">
                             <span>Lv.{{ userStore.user.vipLevel }}</span>
                         </div>
