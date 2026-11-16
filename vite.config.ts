@@ -39,7 +39,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"), // 兼容src目录下的文件夹可通过 @/components/HelloWorld.vue写法
-      "@assetImg": resolve(__dirname, "src/assets/images"),
     },
   },
   build: {

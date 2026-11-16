@@ -29,7 +29,7 @@
 
       <!-- 占位gif -->
       <div class="ripple__toggle secBtn">
-        <img :src="utils.getAssetsFile('icon/1479.gif')" alt="占位符" />
+        <img :src="utils.getAssetsFile('icon/shared/1479.gif')" alt="占位符" />
       </div>
 
       <!-- 返回顶部 -->
@@ -254,12 +254,12 @@
 <script setup>
 import { computed, onMounted, watch, ref } from 'vue'
 
-import ClickRipple from "./components/common/ClickRipple.vue";
-import { rippleStore } from "@/store/isEnabledRipple";
-import flowerAnimate from "./components/common/FlowerAnimate.vue"
+import ClickRipple from "./components/layout/ClickRipple.vue";
+import { rippleStore } from "@/stores/isEnabledRipple";
+import flowerAnimate from "./components/layout/FlowerAnimate.vue"
 import utils from "@/utils/getAssetsFile";
 import { useRoute } from 'vue-router'
-import { useMainStore } from '@/store/maincontent'
+import { useMainStore } from '@/stores/maincontent'
 
 /** ------------------------ 主题 ------------------------ */
 import { initTheme, setTheme, watchSystemTheme } from '@/utils/theme';
@@ -358,7 +358,7 @@ const toggleFontFamily = () => {
   document.documentElement.style.setProperty('--app-font-family', currentFontValue.value);
 
   // （可选）预加载自定义字体文件
-  if (['lmst', 'gtpy'].includes(nextFontId)) {
+  if (['lmst'].includes(nextFontId)) {
     preloadFont(nextFontId);
   }
 };
@@ -368,7 +368,6 @@ function preloadFont(fontId) {
   // 此映射需要与 SCSS 中的 $font-assets 或实际路径保持一致
   const fontPathMap = {
     'lmst': new URL('@/assets/fonts/langmanstar.ttf', import.meta.url).href,
-    'gtpy': new URL('@/assets/fonts/getype.ttf', import.meta.url).href,
   };
   const path = fontPathMap[fontId];
   if (path && !document.querySelector(`link[href="${path}"]`)) {
