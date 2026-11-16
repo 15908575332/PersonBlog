@@ -1,7 +1,7 @@
 // node后端服务器
 import userRelatedApi from "./routes/userRelatedApi.js";
 import messageBoardApi from "./routes/messageBoardApi.js";
-import favoritesApi from "./routes/favoritesApi.js";
+import favoritesRoutes from "./routes/favorite.routes.js";
 import mainContentApi from "./routes/mainContentApi.js";
 import blogCommentsApi from "./routes/blogCommentsApi.js";
 import instantMessagingApi from "./routes/instantMessagingApi.js";
@@ -48,7 +48,7 @@ app.use(authenticateToken);
 // 后端api路由
 app.use("/user", userRelatedApi); //用户信息
 app.use("/", messageBoardApi); //messageBoard留言
-app.use("/treasureBox", favoritesApi); //收藏夹
+app.use("/treasureBox", favoritesRoutes); //收藏夹
 app.use("/main", mainContentApi); //主要内容
 app.use("/message", blogCommentsApi); // 博客留言
 app.use("/instansMessaging", instantMessagingApi); //im聊天板块
