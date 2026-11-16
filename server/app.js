@@ -2,7 +2,7 @@
 import userRoutes from "./routes/user.routes.js";
 import messageBoardRoutes from "./routes/messageBoard.routes.js";
 import favoritesRoutes from "./routes/favorite.routes.js";
-import mainContentApi from "./routes/mainContentApi.js";
+import articleRoutes from "./routes/article.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
 import instantMessagingApi from "./routes/instantMessagingApi.js";
 import express from "express"; // express框架
@@ -49,7 +49,7 @@ app.use(authenticateToken);
 app.use("/user", userRoutes); //用户信息
 app.use("/", messageBoardRoutes); //messageBoard留言
 app.use("/treasureBox", favoritesRoutes); //收藏夹
-app.use("/main", mainContentApi); //主要内容
+app.use("/main", articleRoutes); //主要内容
 app.use("/message", commentRoutes); // 博客留言
 app.use("/instansMessaging", instantMessagingApi); //im聊天板块
 
