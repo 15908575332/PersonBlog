@@ -7,7 +7,7 @@ import "@ciar4n/izmir/izmir.min.css";
 import "@/styles/reset.scss";
 import "@/styles/index.scss";
 
-import router from "./router/index.js";
+import router from "./router/index";
 import { createPinia } from "pinia";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -21,7 +21,7 @@ AOS.init({
 // 创建 Pinia 实例
 const pinia = createPinia();
 //懒加载
-import LazyImage from "@/components/common/LazyImage.vue";
+import LazyImage from "@/components/base/LazyImage.vue";
 //图片预览
 import vPreviewImage from "v-preview-image";
 import Carousel3d from "vue3-carousel-3d";
@@ -37,7 +37,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 hljs.registerLanguage("javascript", javascript);
 //@ts-ignore
-import request from "@/utils/request";
+import request from "@/api/http";
 function setRemUnit() {
   // 获取视口宽度
   var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
