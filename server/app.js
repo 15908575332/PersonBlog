@@ -4,7 +4,7 @@ import messageBoardRoutes from "./routes/messageBoard.routes.js";
 import favoritesRoutes from "./routes/favorite.routes.js";
 import articleRoutes from "./routes/article.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
-import instantMessagingApi from "./routes/instantMessagingApi.js";
+import imRoutes from "./routes/im.routes.js";
 import express from "express"; // express框架
 import { networkInterfaces } from "os";
 import cors from "cors";
@@ -51,7 +51,7 @@ app.use("/", messageBoardRoutes); //messageBoard留言
 app.use("/treasureBox", favoritesRoutes); //收藏夹
 app.use("/main", articleRoutes); //主要内容
 app.use("/message", commentRoutes); // 博客留言
-app.use("/instansMessaging", instantMessagingApi); //im聊天板块
+app.use("/instansMessaging", imRoutes); //im聊天板块
 
 // 错误处理中间件（放在所有路由之后）
 app.use((err, req, res, next) => {
