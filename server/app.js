@@ -11,7 +11,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import { config } from "dotenv";
 config({ path: "./.env" });
-import authenticateToken from "./middleware/authenticateToken.js";
+import authenticateToken from "./middlewares/authenticateToken.js";
 
 // body-parser是非常常用的一个express中间件，作用是对http请求体进行解析
 const { json, urlencoded } = bodyParser;

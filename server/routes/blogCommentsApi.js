@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
-import sqlQuery from '../db/sqlQuery.js';
-import authenticateToken from '../middleware/authenticateToken.js';
+import sqlQuery from '../utils/sqlQuery.js';
+import authenticateToken from '../middlewares/authenticateToken.js';
 
 
 // 获取评论列表（分页 + 回复内容）

@@ -1,7 +1,7 @@
 //留言主页面数据接口
 import express from 'express';
 const router = express.Router();
-import sqlQuery from '../db/sqlQuery.js';
+import sqlQuery from '../utils/sqlQuery.js';
 
 router.post('/setMessgeContent', async (req, res) => {
     const userId = req.body.userId;

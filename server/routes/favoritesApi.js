@@ -1,8 +1,8 @@
 // favoritesApi.js 收藏夹数据接口
 import express from 'express';
 const router = express.Router();
-import sqlQuery from '../db/sqlQuery.js';
-import authenticateToken from '../middleware/authenticateToken.js';
+import sqlQuery from '../utils/sqlQuery.js';
+import authenticateToken from '../middlewares/authenticateToken.js';
 
 router.get('/favorite-data', authenticateToken, async (req, res) => {
     try {

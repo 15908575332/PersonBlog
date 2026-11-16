@@ -1,4 +1,4 @@
-import { pool } from './db.js';
+import { pool } from '../config/db.js';
 
 const sqlQuery = (statement, values) => new Promise((resolve, reject) => {
     // 输入校验

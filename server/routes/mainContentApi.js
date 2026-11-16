@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import sqlQuery from '../db/sqlQuery.js';
+import sqlQuery from '../utils/sqlQuery.js';
 
 //获取导航数据
 router.get('/getNavData', async (req, res) => {

@@ -3,14 +3,14 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import validateRegister from '../middleware/validateRegisterNotnull.js';
-import validateLoginNotnull from '../middleware/validateLoginNotnull.js';
-import validateUpdateInfo from '../middleware/validateUpdateInfo.js';
+import validateRegister from '../middlewares/validateRegisterNotnull.js';
+import validateLoginNotnull from '../middlewares/validateLoginNotnull.js';
+import validateUpdateInfo from '../middlewares/validateUpdateInfo.js';
 import { sendResetCodeEmail } from '../utils/email.js';
 const router = express.Router();
 const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
 const JWT_SECRET = process.env.JWT_SECRET;
-import sqlQuery from '../db/sqlQuery.js';
+import sqlQuery from '../utils/sqlQuery.js';
 
 // 用户注册接口
 router.post('/register', validateRegister, async (req, res) => {
