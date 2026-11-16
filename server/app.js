@@ -1,5 +1,5 @@
 // node后端服务器
-import userRelatedApi from "./routes/userRelatedApi.js";
+import userRoutes from "./routes/user.routes.js";
 import messageBoardRoutes from "./routes/messageBoard.routes.js";
 import favoritesRoutes from "./routes/favorite.routes.js";
 import mainContentApi from "./routes/mainContentApi.js";
@@ -46,7 +46,7 @@ app.use("/music-api", async (req, res) => {
 app.use(authenticateToken);
 
 // 后端api路由
-app.use("/user", userRelatedApi); //用户信息
+app.use("/user", userRoutes); //用户信息
 app.use("/", messageBoardRoutes); //messageBoard留言
 app.use("/treasureBox", favoritesRoutes); //收藏夹
 app.use("/main", mainContentApi); //主要内容
