@@ -62,7 +62,8 @@
                             v-model="defaultLoginInfo.loginPassword">
                         <a href="/resetPassword" class="form__link">忘记密码</a>
                         <button class="form__button button submit" @click="login"
-                            :disabled="isLoginLoading"><span>登录</span></button>
+                            :disabled="isLoginLoading || lockLeft > 0"><span>{{ lockLeft > 0 ? `${lockLeft}s 后重试` : '登录'
+                                }}</span></button>
                     </form>
                 </div>
                 <!-- login/register 切换按钮 -->
@@ -220,14 +221,21 @@ async function UserRegister(e) {
 /** ------------------------ 登录 ------------------------ */
 
 const defaultLoginInfo = ref({
-    loginEmail: 'henry@163.com',
-    loginPassword: '123456',
+    loginEmail: '',
+    loginPassword: '',
 })
 const msg = ref('向右滑动');
 const block = ref('');
 const msgColor = ref(); //文本颜色
 const placeholderText = ref('按住箭头向右拖动滑块'); //滑块提示文本
 const isLoginLoading = ref(false); //登录状态 
+const MAX_LOGIN_FAIL = 5; //允许的连续失败次数
+const LOCK_SECONDS = 60; //达到失败上限后的冷却时长
+const isSubmitting = ref(false); //登录请求重入锁
+const failCount = ref(0); //连续失败计数
+const lockLeft = ref(0); //冷却剩余秒数
+let lockTimer = null;
+let lockUntil = 0;
 const customImages = ref([ //可滑动图片
     new URL('@/assets/img/shared/public-33.png', import.meta.url).href,
     new URL('@/assets/img/shared/public-34.png', import.meta.url).href,
@@ -237,25 +245,68 @@ const customImages = ref([ //可滑动图片
     new URL('@/assets/img/shared/public-38.png', import.meta.url).href,
 ])
 
+// 冷却计时器清理
+const clearLockTimer = () => {
+    if (lockTimer) {
+        clearInterval(lockTimer);
+        lockTimer = null;
+    }
+};
+
+// 启动冷却倒计时（锁定期间禁止提交）
+const startCooldown = () => {
+    lockUntil = Date.now() + LOCK_SECONDS * 1000;
+    lockLeft.value = LOCK_SECONDS;
+    clearLockTimer();
+    lockTimer = setInterval(() => {
+        lockLeft.value = Math.max(0, Math.ceil((lockUntil - Date.now()) / 1000));
+        if (lockLeft.value === 0) clearLockTimer();
+    }, 1000);
+};
+
+// 关闭验证弹窗并清理滑块/提示残留，保证可再次打开
+const resetCaptchaState = () => {
+    block.value?.refresh?.();
+    isShowModal.value = false;
+    captchaVerified.value = false;
+    msg.value = '向右滑动';
+    msgColor.value = '';
+};
+
+// 跳转首页：先展示提示，跳转完成后销毁，避免首页残留
+const goHome = async () => {
+    const hideLoading = message.loading('登录成功，正在前往首页...', 0);
+    try {
+        await route.replace('/home');
+    } finally {
+        hideLoading();
+        message.destroy();
+    }
+};
+
+// 登录失败：计数、关闭弹窗、达上限则冷却
+const onLoginFail = (error) => {
+    failCount.value += 1;
+    message.error(error?.response?.data?.message || '登录失败，请重试！');
+    defaultLoginInfo.value.loginPassword = '';
+    resetCaptchaState();
+    if (failCount.value < MAX_LOGIN_FAIL) return;
+    failCount.value = 0;
+    startCooldown();
+    message.warning(`连续登录失败${MAX_LOGIN_FAIL}次，请${LOCK_SECONDS}秒后再试`);
+};
+
 const onAgain = () => {
     msg.value = "检测到非人为操作的哦！ try again";
     // 刷新
     block.value?.refresh();
 };
-const onSuccess = (...args) => {
+// 图形验证码
+const onSuccess = async (...args) => {
+    if (isSubmitting.value) return; //重复滑动不再触发请求
     msgColor.value = 'green';
     msg.value = `login success, 耗时${(args[0]?.timestamp / 1000).toFixed(1)}s`;
-    setTimeout(() => {
-        isShowModal.value = false;
-        isLoginLoading.value = true;
-        message.loading({
-            content: '验证成功，正在前往首页...',
-            duration: 2,
-            onClose() {
-                handleLoginAfterCaptcha();
-            }
-        });
-    }, 1000);
+    await handleLoginAfterCaptcha();
 };
 
 const onFail = () => { //失败后自动调用刷新方法
@@ -265,28 +316,39 @@ const onFail = () => { //失败后自动调用刷新方法
 
 // 登录后的验证码处理
 const handleLoginAfterCaptcha = async () => {
+    if (isSubmitting.value) return; //同一时刻只允许一个登录请求
+    if (lockLeft.value > 0) {
+        message.warning(`登录尝试过于频繁，请${lockLeft.value}秒后再试`);
+        resetCaptchaState();
+        return;
+    }
+    isSubmitting.value = true;
+    isLoginLoading.value = true;
     try {
         await useAuthStore().login({
             loginEmail: defaultLoginInfo.value.loginEmail,
             loginPassword: defaultLoginInfo.value.loginPassword
         });
-
-        // 模拟网络延迟
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        route.replace('/home');
-    } catch (error) {
-        if (error.response) {
-            message.error(error.response.data.message);
-        }
-        // 登录失败时重置验证状态
+        failCount.value = 0; //成功即清零
+        defaultLoginInfo.value.loginPassword = '';
+        isShowModal.value = false;
         captchaVerified.value = false;
+        await goHome();
+    } catch (error) {
+        onLoginFail(error);
+    } finally {
+        isSubmitting.value = false;
         isLoginLoading.value = false;
     }
 };
 
 const login = async (e) => {
     e.preventDefault();
-    if (isLoginLoading.value) { //防止频繁点击
+    if (isLoginLoading.value || isSubmitting.value) { //防止频繁点击
+        return;
+    }
+    if (lockLeft.value > 0) {
+        message.warning(`请${lockLeft.value}秒后再试`);
         return;
     }
     if (!defaultLoginInfo.value.loginEmail) {
@@ -303,7 +365,9 @@ const login = async (e) => {
         alert('密码不能为空')
         return false
     }
-
+    
+    msg.value = '向右滑动';
+    msgColor.value = '';
     isShowModal.value = true;
 }
 
@@ -357,7 +421,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-    // clearInterval(timer.value);
+    clearLockTimer();
 })
 </script>
 
