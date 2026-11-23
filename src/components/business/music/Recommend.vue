@@ -1,6 +1,6 @@
 <template>
     <!-- 推荐 -->
-    <div class="recommend">
+    <div class="recommend" data-aos="fade-up">
         <h1>推荐</h1>
 
         <!-- 热门歌曲 -->

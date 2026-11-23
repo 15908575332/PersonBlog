@@ -25,7 +25,7 @@
     <!-- 主体 -->
     <div id="AlbumCollection" ref="AlbumCollection">
       <!-- 堆叠切换 -->
-      <div class="stacking_switch page snap-section">
+      <div class="stacking_switch page snap-section" data-aos="fade-up">
         <div class="content">
           <h1>人生就像一场旅行，不在于目的地，而在于沿途的风景</h1>
           <p>

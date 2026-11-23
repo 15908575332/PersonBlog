@@ -5,7 +5,7 @@
             <Navigation></Navigation>
         </div>
 
-        <div class="trends_nav">
+        <div class="trends_nav" data-aos="fade-down">
             <h1>友情链接</h1>
             <video src="@/assets/videos/9b09b3e56cc7abc842f2985bafdc4c74_preview.mp4" autoplay loop></video>
         </div>
@@ -46,7 +46,7 @@
             </div>
         </div>
         <!-- module -->
-        <div class="module_container">
+        <div class="module_container" data-aos="fade-up">
             <!-- 本站信息 -->
             <div class="site_info">
                 <div class="title">
@@ -73,7 +73,7 @@
             </div>
         </div>
         <!-- 内容 -->
-        <div class="content_container">
+        <div class="content_container" data-aos="fade-up">
             <hr>
             <h1>💯发布订阅</h1>
             <ul>

@@ -1,6 +1,6 @@
 <template>
     <!-- 音乐馆  -->
-    <div class="treasure">
+    <div class="treasure" data-aos="fade-up">
         <h1>音乐馆</h1>
         <!-- 推荐节目 -->
         <div class="treasure-music">
