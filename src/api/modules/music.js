@@ -54,9 +54,12 @@ const api = {
     return axios.get(`${BASE}/playlist/track/all`, { params: { id, limit } });
   },
 
-  /** 获取歌曲播放 URL */
-  songUrl(id, level = "standard") {
-    return axios.get(`${BASE}/song/url/v1`, { params: { id, level } });
+  /** 获取歌曲播放 URL（走 /song/url：v1 通道匿名请求会被风控返回 -460） */
+  songUrl(id, level = "exhigh") {
+    const LEVEL_TO_BR = { standard: 128000, higher: 192000, exhigh: 320000, lossless: 999000 };
+    return axios.get(`${BASE}/song/url`, {
+      params: { id, br: LEVEL_TO_BR[level] ?? 320000 },
+    });
   },
 
   /** 获取歌词 */
