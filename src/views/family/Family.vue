@@ -18,7 +18,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:85%;top:70%;width:28px;--rot:-10deg;--ri:2" viewBox="0 0 28 28"
           fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,7 +28,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:55%;top:45%;width:36px;--rot:15deg;--ri:3" viewBox="0 0 28 28" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -38,7 +38,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
       </div>
       <div class="hero__overlay"></div>
@@ -107,7 +107,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="right:10%;top:65%;width:34px;--rot:12deg;--ri:2" viewBox="0 0 28 28"
           fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -117,7 +117,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
       </div>
       <div class="timer__container">
@@ -176,7 +176,7 @@
             <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
             <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
             <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-            <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+            <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
           </svg>
           <svg class="section-rose" style="right:12%;top:55%;width:26px;--rot:18deg;--ri:2" viewBox="0 0 28 28"
             fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -186,7 +186,7 @@
             <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
             <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
             <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-            <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+            <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
           </svg>
           <svg class="section-rose" style="left:45%;top:75%;width:38px;--rot:6deg;--ri:3" viewBox="0 0 28 28"
             fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -196,7 +196,7 @@
             <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
             <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
             <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-            <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+            <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
           </svg>
         </div>
         <div class="section__header">
@@ -235,7 +235,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:82%;top:55%;width:32px;--rot:20deg;--ri:2" viewBox="0 0 28 28" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -245,7 +245,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
       </div>
       <div class="spring__banner">
@@ -291,7 +291,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:88%;top:40%;width:34px;--rot:14deg;--ri:2" viewBox="0 0 28 28" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -301,7 +301,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:50%;top:75%;width:40px;--rot:8deg;--ri:3" viewBox="0 0 28 28" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -311,7 +311,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
       </div>
       <div class="section__header">
@@ -347,7 +347,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:85%;top:55%;width:26px;--rot:16deg;--ri:2" viewBox="0 0 28 28" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -357,7 +357,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:40%;top:70%;width:36px;--rot:5deg;--ri:3" viewBox="0 0 28 28" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -367,7 +367,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
       </div>
       <div class="section__header">
@@ -404,7 +404,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:78%;top:60%;width:30px;--rot:18deg;--ri:2" viewBox="0 0 28 28" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -414,7 +414,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
       </div>
       <div class="explore__content">
@@ -450,7 +450,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
         <svg class="section-rose" style="left:72%;top:45%;width:28px;--rot:10deg;--ri:2" viewBox="0 0 28 28" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -460,7 +460,7 @@
           <circle cx="14" cy="8.5" r="4" fill="currentColor" opacity="0.26" />
           <circle cx="11.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
           <circle cx="16.5" cy="11.5" r="3.5" fill="currentColor" opacity="0.34" />
-          <line x1="14" y1="18" x2="14" y2="26" stroke="#b8956a" stroke-width="1" opacity="0.4" />
+          <line x1="14" y1="18" x2="14" y2="26" stroke="var(--deco-warning)" stroke-width="1" opacity="0.4" />
         </svg>
       </div>
 
@@ -492,17 +492,17 @@ const iconSvgs = {
 }
 
 const authorTags = [
-  { label: "工程师", icon: "code", color: "#7296de", delay: "0s" },
-  { label: "摄影控", icon: "camera", color: "#f0b43e", delay: "0.25s" },
-  { label: "旅行家", icon: "compass", color: "#9ed4d4", delay: "0.5s" },
-  { label: "咖啡成瘾", icon: "coffee", color: "#af9b9b", delay: "0.75s" },
+  { label: "工程师", icon: "code", color: "var(--deco-primary)", delay: "0s" },
+  { label: "摄影控", icon: "camera", color: "var(--deco-warning)", delay: "0.25s" },
+  { label: "旅行家", icon: "compass", color: "var(--deco-success)", delay: "0.5s" },
+  { label: "咖啡成瘾", icon: "coffee", color: "var(--deco-info)", delay: "0.75s" },
 ]
 
 const abbyTags = [
-  { label: "设计师", icon: "palette", color: "#c57d76", delay: "0.5s" },
-  { label: "绘画师", icon: "brush", color: "#ffc0cb", delay: "0.75s" },
-  { label: "音乐迷", icon: "music", color: "#7c95b5", delay: "1s" },
-  { label: "生活家", icon: "sparkle", color: "#f1b9b9", delay: "1.25s" },
+  { label: "设计师", icon: "palette", color: "var(--deco-danger)", delay: "0.5s" },
+  { label: "绘画师", icon: "brush", color: "var(--deco-primary)", delay: "0.75s" },
+  { label: "音乐迷", icon: "music", color: "var(--deco-info)", delay: "1s" },
+  { label: "生活家", icon: "sparkle", color: "var(--deco-warning)", delay: "1.25s" },
 ]
 
 const getIcon = (name) => iconSvgs[name] || ""
@@ -601,12 +601,12 @@ const blessings = [
 <style scoped lang="scss">
 /* ============================================
    Design: "春日花信" — Spring Blossom Letters
-   Palette: color.scss assistance palette — warm,
+   Palette: 主题暖色令牌（--primary-sub / --color-accent）— warm,
    bright, section-differentiated, full of life
    ============================================ */
 
 // ── Import project color system ──
-@use "@/styles/color.scss" as c;
+
 
 #family {
   font-family: var(--app-font-family);
@@ -767,11 +767,11 @@ const blessings = [
 
       0%,
       100% {
-        box-shadow: 0 0 0 0 rgba(242, 66, 87, 0.35);
+        box-shadow: 0 0 0 0 rgba(var(--primary-sub-rgb), 0.35);
       }
 
       50% {
-        box-shadow: 0 0 0 12px rgba(242, 66, 87, 0);
+        box-shadow: 0 0 0 12px rgba(var(--mask-rgb), 0);
       }
     }
 
@@ -827,11 +827,11 @@ const blessings = [
 
       0%,
       100% {
-        border-color: rgba(242, 66, 87, 0.15);
+        border-color: rgba(var(--primary-sub-rgb), 0.15);
       }
 
       50% {
-        border-color: rgba(242, 66, 87, 0.4);
+        border-color: rgba(var(--primary-sub-rgb), 0.4);
       }
     }
 
@@ -851,13 +851,13 @@ const blessings = [
       0%,
       100% {
         box-shadow:
-          0 2px 12px rgba(242, 66, 87, 0.08),
-          0 0 40px rgba(242, 66, 87, 0.04);
+          0 2px 12px rgba(var(--primary-sub-rgb), 0.08),
+          0 0 40px rgba(var(--primary-sub-rgb), 0.04);
       }
       50% {
         box-shadow:
-          0 4px 24px rgba(242, 66, 87, 0.16),
-          0 0 60px rgba(242, 66, 87, 0.08);
+          0 4px 24px rgba(var(--primary-sub-rgb), 0.16),
+          0 0 60px rgba(var(--primary-sub-rgb), 0.08);
       }
     }
 
@@ -887,10 +887,10 @@ const blessings = [
 
     .section-rose {
       position: absolute;
-      color: c.$assistance-1;
+      color: var(--primary-sub);
       opacity: 0;
       height: auto;
-      filter: drop-shadow(0 1px 4px rgba(c.$assistance-1, 0.3));
+      filter: drop-shadow(0 1px 4px rgba(var(--primary-sub-rgb), 0.3));
 
       @media (prefers-reduced-motion: no-preference) {
         animation: whisperBloom 10s ease-in-out infinite;
@@ -913,12 +913,12 @@ const blessings = [
       font-size: clamp(0.7rem, 1.2vw, 0.85rem);
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: c.$primary-sub;
+      color: var(--primary-sub);
       margin-bottom: 0.75rem;
       padding: 0.25em 0.75em;
       border-radius: 2px;
-      background: rgba(c.$primary-sub, 0.06);
-      border: 1px solid rgba(c.$primary-sub, 0.15);
+      background: rgba(var(--primary-sub-rgb), 0.06);
+      border: 1px solid rgba(var(--primary-sub-rgb), 0.15);
 
       @media (prefers-reduced-motion: no-preference) {
         animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
@@ -929,7 +929,7 @@ const blessings = [
       font-family: var(--app-font-family);
       font-size: clamp(2rem, 4vw, 3.2rem);
       font-weight: 400;
-      color: #2c2c3a;
+      color: var(--text-color);
       margin: 0 0 0.5rem;
       letter-spacing: 0.08em;
 
@@ -940,7 +940,7 @@ const blessings = [
 
     .section__subtitle {
       font-size: clamp(0.9rem, 1.3vw, 1.05rem);
-      color: #7a7a8e;
+      color: var(--text-sec-color);
       margin: 0;
       font-weight: 300;
 
@@ -961,7 +961,7 @@ const blessings = [
     padding: 0.5rem 1.5rem;
     max-width: 32rem;
     margin: 0 auto;
-    color: rgba(c.$primary-sub, 0.2);
+    color: rgba(var(--primary-sub-rgb), 0.2);
     user-select: none;
 
     .section-divider__line {
@@ -996,17 +996,17 @@ const blessings = [
 
     /* layered warm gradient */
     background:
-      radial-gradient(ellipse at 25% 30%, rgba(c.$assistance-5, 0.25) 0%, transparent 55%),
-      radial-gradient(ellipse at 75% 60%, rgba(c.$assistance-1, 0.3) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 85%, rgba(c.$assistance-3, 0.12) 0%, transparent 60%),
-      linear-gradient(175deg, #fefaf6 0%, #fdf3ee 30%, #faf0ea 60%, #fef8f5 100%);
+      radial-gradient(ellipse at 25% 30%, rgba(var(--primary-sub-rgb), 0.25) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 60%, rgba(var(--primary-sub-rgb), 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 85%, rgba(var(--primary-sub-rgb), 0.12) 0%, transparent 60%),
+      linear-gradient(175deg, var(--deco-light) 0%, var(--deco-light) 30%, var(--deco-light) 60%, var(--deco-light) 100%);
 
     .hero__overlay {
       position: absolute;
       inset: 0;
       z-index: 1;
       background:
-        radial-gradient(ellipse at 50% 40%, rgba(c.$assistance-5, 0.08) 0%, transparent 60%);
+        radial-gradient(ellipse at 50% 40%, rgba(var(--primary-sub-rgb), 0.08) 0%, transparent 60%);
       pointer-events: none;
     }
 
@@ -1054,11 +1054,11 @@ const blessings = [
 
         0%,
         100% {
-          box-shadow: 0 0 20px rgba(c.$primary-sub, 0.15), 0 0 0 0 rgba(c.$primary-sub, 0.2);
+          box-shadow: 0 0 20px rgba(var(--primary-sub-rgb), 0.15), 0 0 0 0 rgba(var(--primary-sub-rgb), 0.2);
         }
 
         50% {
-          box-shadow: 0 0 40px rgba(c.$primary-sub, 0.3), 0 0 0 8px rgba(c.$primary-sub, 0);
+          box-shadow: 0 0 40px rgba(var(--primary-sub-rgb), 0.3), 0 0 0 8px rgba(var(--primary-sub-rgb), 0);
         }
       }
     }
@@ -1087,7 +1087,7 @@ const blessings = [
         height: clamp(7rem, 12vw, 11rem);
         border-radius: 50%;
         padding: 4px;
-        background: linear-gradient(135deg, c.$primary-sub 0%, c.$assistance-10 50%, c.$assistance-2 100%);
+        background: linear-gradient(135deg, var(--primary-sub) 0%, var(--primary-sub) 50%, var(--color-accent) 100%);
 
         @media (prefers-reduced-motion: no-preference) {
           animation: ringPulse 4s ease-in-out infinite;
@@ -1106,7 +1106,7 @@ const blessings = [
         margin-top: 1rem;
         font-family: var(--app-font-family);
         font-size: clamp(1rem, 1.6vw, 1.3rem);
-        color: #3c3c4e;
+        color: var(--text-color);
         letter-spacing: 0.1em;
         font-weight: 400;
       }
@@ -1137,21 +1137,21 @@ const blessings = [
 
       .tag {
         --delay: 0s;
-        --tag-color: #7296de;
+        --tag-color: var(--deco-light-2);
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
         padding: 0.25rem 0.85rem;
         font-family: var(--app-font-family);
         font-size: clamp(0.65rem, 1vw, 0.78rem);
-        background: rgba(255, 255, 255, 0.75);
-        color: #3c3c4e;
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: rgba(var(--highlight-rgb), 0.75);
+        color: var(--text-color);
+        border: 1px solid rgba(var(--mask-rgb), 0.08);
         border-radius: 2px 6px 6px 2px;
         white-space: nowrap;
         letter-spacing: 0.04em;
         backdrop-filter: blur(8px);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 4px rgba(var(--mask-rgb), 0.05);
 
         transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
           color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
@@ -1177,13 +1177,13 @@ const blessings = [
 
         &:hover {
           background: var(--tag-color);
-          color: #fff;
+          color: var(--text-on-dark);
           border-color: var(--tag-color);
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 10px rgba(var(--mask-rgb), 0.1);
         }
 
         &:focus-visible {
-          outline: 2px solid c.$primary-sub;
+          outline: 2px solid var(--primary-sub);
           outline-offset: 2px;
         }
       }
@@ -1205,7 +1205,7 @@ const blessings = [
       .heart-shape {
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, c.$primary-sub);
+        background: linear-gradient(135deg, var(--primary-sub));
         transform: rotate(135deg) scale(0.82);
         position: relative;
 
@@ -1220,7 +1220,7 @@ const blessings = [
           width: 100%;
           height: 100%;
           border-radius: 50%;
-          background: linear-gradient(135deg, c.$primary-sub);
+          background: linear-gradient(135deg, var(--primary-sub));
         }
 
         &::after {
@@ -1237,7 +1237,7 @@ const blessings = [
       margin-top: clamp(1.5rem, 3vw, 2.5rem);
       font-family: var(--app-font-family);
       font-size: clamp(1.1rem, 2vw, 1.5rem);
-      color: #8a8280;
+      color: var(--text-sec-color);
       letter-spacing: 0.15em;
       font-style: italic;
 
@@ -1248,7 +1248,7 @@ const blessings = [
 
     .hero__ornament {
       margin-top: clamp(1rem, 2.5vw, 2rem);
-      color: c.$assistance-10;
+      color: var(--primary-sub);
       opacity: 0.25;
       display: flex;
       justify-content: center;
@@ -1265,7 +1265,7 @@ const blessings = [
       --i: 1;
       position: absolute;
       border-radius: 50%;
-      background: c.$assistance-5;
+      background: var(--color-accent);
       opacity: 0;
 
       &:nth-child(1) {
@@ -1373,9 +1373,9 @@ const blessings = [
     position: relative;
     padding: clamp(3rem, 8vw, 6rem) 1.5rem;
     background:
-      radial-gradient(ellipse at 30% 30%, rgba(c.$assistance-3, 0.2) 0%, transparent 55%),
-      radial-gradient(ellipse at 70% 70%, rgba(c.$assistance-1, 0.25) 0%, transparent 50%),
-      linear-gradient(180deg, #fefcf8 0%, #fdf6ed 50%, #fefaf4 100%);
+      radial-gradient(ellipse at 30% 30%, rgba(var(--primary-sub-rgb), 0.2) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 70%, rgba(var(--primary-sub-rgb), 0.25) 0%, transparent 50%),
+      linear-gradient(180deg, var(--deco-light) 0%, var(--deco-light) 50%, var(--deco-light) 100%);
 
     .timer__container {
       max-width: 54rem;
@@ -1387,7 +1387,7 @@ const blessings = [
       font-family: var(--app-font-family);
       font-size: clamp(1.5rem, 2.8vw, 2.2rem);
       font-weight: 400;
-      color: #3c3c4e;
+      color: var(--text-color);
       margin: 0 0 clamp(2rem, 4vw, 3rem);
       letter-spacing: 0.12em;
 
@@ -1454,18 +1454,18 @@ const blessings = [
       color: transparent;
       background: linear-gradient(
         110deg,
-        c.$primary-sub 20%,
-        c.$assistance-10 45%,
-        rgba(255, 255, 255, 0.5) 50%,
-        c.$assistance-10 55%,
-        c.$assistance-3 80%
+        var(--primary-sub) 20%,
+        var(--primary-sub) 45%,
+        rgba(var(--highlight-rgb), 0.5) 50%,
+        var(--primary-sub) 55%,
+        var(--color-accent-hover) 80%
       );
       background-size: 200% 100%;
       -webkit-background-clip: text;
       background-clip: text;
       line-height: 1.1;
       font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 20px rgba(242, 66, 87, 0.15), 0 2px 4px rgba(197, 125, 118, 0.12);
+      text-shadow: 0 0 20px rgba(var(--primary-sub-rgb), 0.15), 0 2px 4px rgba(var(--primary-sub-rgb), 0.12);
 
       @media (prefers-reduced-motion: no-preference) {
         animation:
@@ -1486,7 +1486,7 @@ const blessings = [
 
     .timer__label {
       font-size: clamp(0.7rem, 1.1vw, 0.9rem);
-      color: #8a8280;
+      color: var(--text-sec-color);
       margin-top: 0.3rem;
       letter-spacing: 0.05em;
     }
@@ -1494,7 +1494,7 @@ const blessings = [
     .timer__sep {
       font-family: var(--app-font-family);
       font-size: clamp(1.5rem, 3vw, 2.5rem);
-      color: c.$assistance-10;
+      color: var(--primary-sub);
       opacity: 0.35;
       align-self: center;
       user-select: none;
@@ -1507,9 +1507,9 @@ const blessings = [
      ═══════════════════════════════════════════ */
   .miles {
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(c.$assistance-4, 0.18) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 100%, rgba(c.$assistance-8, 0.2) 0%, transparent 50%),
-      linear-gradient(180deg, #f8fcfa 0%, #f2f8f5 100%);
+      radial-gradient(ellipse at 50% 0%, rgba(var(--color-accent-rgb), 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(var(--color-accent-rgb), 0.2) 0%, transparent 50%),
+      linear-gradient(180deg, var(--deco-light) 0%, var(--deco-light) 100%);
 
     .milestones {
       position: relative;
@@ -1528,7 +1528,7 @@ const blessings = [
           top: 0;
           bottom: 0;
           width: 2px;
-          background: linear-gradient(180deg, c.$assistance-4 0%, rgba(c.$assistance-4, 0.4) 60%, transparent 100%);
+          background: linear-gradient(180deg, var(--primary-sub) 0%, rgba(var(--color-accent-rgb), 0.4) 60%, transparent 100%);
           border-radius: 1px;
         }
       }
@@ -1579,9 +1579,9 @@ const blessings = [
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background: c.$assistance-4;
-          border: 3px solid #f8fcfa;
-          box-shadow: 0 0 0 4px rgba(c.$assistance-4, 0.2);
+          background: var(--primary-sub);
+          border: 3px solid var(--deco-light);
+          box-shadow: 0 0 0 4px rgba(var(--color-accent-rgb), 0.2);
           z-index: 1;
 
           @media (prefers-reduced-motion: no-preference) {
@@ -1590,8 +1590,8 @@ const blessings = [
         }
 
         .milestone__card {
-          background: rgba(255, 255, 255, 0.8);
-          border: 1px solid rgba(c.$assistance-4, 0.2);
+          background: rgba(var(--highlight-rgb), 0.8);
+          border: 1px solid rgba(var(--color-accent-rgb), 0.2);
           border-radius: 2px;
           padding: 1.5rem 1.75rem;
           backdrop-filter: blur(8px);
@@ -1601,12 +1601,12 @@ const blessings = [
 
           &:hover {
             transform: translateY(-3px);
-            border-color: rgba(c.$assistance-4, 0.5);
-            box-shadow: 0 8px 32px rgba(c.$assistance-4, 0.12);
+            border-color: rgba(var(--color-accent-rgb), 0.5);
+            box-shadow: 0 8px 32px rgba(var(--color-accent-rgb), 0.12);
           }
 
           &:focus-visible {
-            outline: 2px solid c.$assistance-4;
+            outline: 2px solid var(--primary-sub);
             outline-offset: 2px;
           }
         }
@@ -1614,7 +1614,7 @@ const blessings = [
         .milestone__date {
           font-family: var(--app-font-family);
           font-size: 0.8rem;
-          color: c.$assistance-4;
+          color: var(--primary-sub);
           letter-spacing: 0.12em;
         }
 
@@ -1622,13 +1622,13 @@ const blessings = [
           font-family: var(--app-font-family);
           font-size: 1.25rem;
           font-weight: 400;
-          color: #2c3a35;
+          color: var(--text-color);
           margin: 0.35rem 0 0.4rem;
         }
 
         .milestone__desc {
           font-size: 0.9rem;
-          color: #5a6b61;
+          color: var(--text-sec-color);
           margin: 0;
           line-height: 1.7;
         }
@@ -1644,9 +1644,9 @@ const blessings = [
     position: relative;
     padding: clamp(2rem, 4vw, 3.5rem) 1.5rem;
     background:
-      radial-gradient(ellipse at 40% 50%, rgba(c.$assistance-5, 0.3) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 30%, rgba(c.$assistance-1, 0.2) 0%, transparent 50%),
-      linear-gradient(180deg, #fffafc 0%, #fdf2f5 100%);
+      radial-gradient(ellipse at 40% 50%, rgba(var(--primary-sub-rgb), 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(var(--primary-sub-rgb), 0.2) 0%, transparent 50%),
+      linear-gradient(180deg, var(--deco-light) 0%, var(--deco-light) 100%);
 
     .spring__banner {
       display: flex;
@@ -1660,7 +1660,7 @@ const blessings = [
     .spring__line {
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(c.$primary-sub, 0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(var(--primary-sub-rgb), 0.3), transparent);
       opacity: 0.5;
       min-width: 2rem;
     }
@@ -1673,7 +1673,7 @@ const blessings = [
     .spring__icon {
       display: block;
       margin-bottom: 0.5rem;
-      color: c.$primary-sub;
+      color: var(--primary-sub);
       opacity: 0.6;
 
       svg {
@@ -1685,7 +1685,7 @@ const blessings = [
     .spring__text {
       font-family: var(--app-font-family);
       font-size: clamp(0.85rem, 1.3vw, 1rem);
-      color: #8a7a80;
+      color: var(--text-sec-color);
       margin: 0 0 0.6rem;
     }
 
@@ -1694,17 +1694,17 @@ const blessings = [
       align-items: baseline;
       justify-content: center;
       gap: 0.15rem;
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(var(--highlight-rgb), 0.6);
       border-radius: 4px;
       padding: 0.5rem 1.2rem;
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(c.$primary-sub, 0.1);
+      border: 1px solid rgba(var(--primary-sub-rgb), 0.1);
     }
 
     .spring__num {
       font-family: var(--app-font-family);
       font-size: clamp(1.3rem, 2.5vw, 2rem);
-      color: c.$primary-sub;
+      color: var(--primary-sub);
       font-variant-numeric: tabular-nums;
       min-width: 2.2rem;
       text-align: center;
@@ -1716,7 +1716,7 @@ const blessings = [
 
     .spring__unit {
       font-size: 0.8rem;
-      color: #8a7a80;
+      color: var(--text-sec-color);
       margin: 0 0.4rem 0 0.1rem;
     }
   }
@@ -1729,9 +1729,9 @@ const blessings = [
     position: relative;
     padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
     background:
-      radial-gradient(ellipse at 20% 30%, rgba(c.$assistance-6, 0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 80%, rgba(c.$primary-color, 0.1) 0%, transparent 50%),
-      linear-gradient(180deg, #f8fafd 0%, #f2f6fc 100%);
+      radial-gradient(ellipse at 20% 30%, rgba(var(--color-accent-rgb), 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(var(--primary-color-rgb), 0.1) 0%, transparent 50%),
+      linear-gradient(180deg, var(--deco-light) 0%, var(--deco-light) 100%);
 
     .gallery__grid {
       max-width: 60rem;
@@ -1746,12 +1746,12 @@ const blessings = [
       position: relative;
       overflow: hidden;
       border-radius: 4px;
-      background: #fff;
+      background: var(--bg-surface);
       aspect-ratio: 4 / 3;
       transform: rotate(var(--rotate, 0deg));
       transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
         box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 16px rgba(var(--mask-rgb), 0.06);
 
       @media (prefers-reduced-motion: no-preference) {
         animation: fadeInScale 0.7s ease-out var(--delay) both;
@@ -1767,8 +1767,8 @@ const blessings = [
         z-index: 1;
         pointer-events: none;
         background: linear-gradient(135deg,
-            rgba(c.$assistance-6, 0.12) 0%, transparent 50%,
-            rgba(c.$primary-color, 0.06) 100%);
+            rgba(var(--color-accent-rgb), 0.12) 0%, transparent 50%,
+            rgba(var(--primary-color-rgb), 0.06) 100%);
         opacity: 0;
         transition: opacity 0.4s ease;
       }
@@ -1779,14 +1779,14 @@ const blessings = [
         inset: 0;
         z-index: 1;
         pointer-events: none;
-        background: linear-gradient(to top, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.2) 40%, transparent 70%);
+        background: linear-gradient(to top, rgba(var(--highlight-rgb), 0.9) 0%, rgba(var(--highlight-rgb), 0.2) 40%, transparent 70%);
         transform: translateY(100%);
         transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       &:hover {
         transform: rotate(0deg) scale(1.04);
-        box-shadow: 0 12px 40px rgba(c.$assistance-6, 0.2);
+        box-shadow: 0 12px 40px rgba(var(--color-accent-rgb), 0.2);
         z-index: 1;
 
         &::before {
@@ -1799,7 +1799,7 @@ const blessings = [
       }
 
       &:focus-visible {
-        outline: 2px solid c.$assistance-6;
+        outline: 2px solid var(--color-accent-hover);
         outline-offset: 2px;
       }
 
@@ -1825,9 +1825,9 @@ const blessings = [
     position: relative;
     padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(4rem, 8vw, 6rem);
     background:
-      radial-gradient(ellipse at 30% 20%, rgba(c.$assistance-7, 0.15) 0%, transparent 55%),
-      radial-gradient(ellipse at 70% 70%, rgba(c.$assistance-6, 0.1) 0%, transparent 50%),
-      linear-gradient(180deg, #f5f5fa 0%, #f0f0f6 100%);
+      radial-gradient(ellipse at 30% 20%, rgba(var(--primary-sub-rgb), 0.15) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 70%, rgba(var(--color-accent-rgb), 0.1) 0%, transparent 50%),
+      linear-gradient(180deg, var(--deco-light) 0%, var(--deco-light) 100%);
 
     .blessings__grid {
       max-width: 56rem;
@@ -1840,8 +1840,8 @@ const blessings = [
 
     .blessing-card {
       position: relative;
-      background: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(c.$assistance-7, 0.15);
+      background: rgba(var(--highlight-rgb), 0.7);
+      border: 1px solid rgba(var(--primary-sub-rgb), 0.15);
       border-radius: 4px;
       padding: 1.75rem;
       backdrop-filter: blur(8px);
@@ -1876,7 +1876,7 @@ const blessings = [
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, c.$assistance-7, c.$assistance-6, c.$primary-color);
+        background: linear-gradient(90deg, var(--primary-sub), var(--color-accent-hover), var(--primary-color));
         border-radius: 4px 4px 0 0;
         opacity: 0;
         transform: scaleX(0);
@@ -1887,8 +1887,8 @@ const blessings = [
 
       &:hover {
         transform: translateY(-4px);
-        border-color: rgba(c.$assistance-7, 0.35);
-        box-shadow: 0 8px 30px rgba(c.$assistance-7, 0.12);
+        border-color: rgba(var(--primary-sub-rgb), 0.35);
+        box-shadow: 0 8px 30px rgba(var(--primary-sub-rgb), 0.12);
 
         &::before {
           opacity: 1;
@@ -1897,13 +1897,13 @@ const blessings = [
       }
 
       &:focus-visible {
-        outline: 2px solid c.$assistance-7;
+        outline: 2px solid var(--primary-sub);
         outline-offset: 2px;
       }
 
       .blessing-card__text {
         font-size: 0.9rem;
-        color: #3c3c4e;
+        color: var(--text-color);
         line-height: 1.8;
         margin: 0 0 1rem;
         letter-spacing: 0.02em;
@@ -1912,7 +1912,7 @@ const blessings = [
       .blessing-card__author {
         font-family: var(--app-font-family);
         font-size: 0.8rem;
-        color: c.$assistance-6;
+        color: var(--color-accent-hover);
         font-style: italic;
       }
     }
@@ -1928,9 +1928,9 @@ const blessings = [
     display: flex;
     justify-content: center;
     background:
-      radial-gradient(ellipse at 50% 40%, rgba(c.$assistance-3, 0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 50% 80%, rgba(c.$assistance-1, 0.2) 0%, transparent 50%),
-      linear-gradient(180deg, #fefcf8 0%, #fdf6ed 100%);
+      radial-gradient(ellipse at 50% 40%, rgba(var(--primary-sub-rgb), 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 80%, rgba(var(--primary-sub-rgb), 0.2) 0%, transparent 50%),
+      linear-gradient(180deg, var(--deco-light) 0%, var(--deco-light) 100%);
 
     .explore__content {
       position: relative;
@@ -1945,7 +1945,7 @@ const blessings = [
         transform: translateX(-50%);
         width: clamp(10rem, 30vw, 18rem);
         height: clamp(10rem, 30vw, 18rem);
-        border: 1.5px dashed rgba(c.$primary-sub, 0.1);
+        border: 1.5px dashed rgba(var(--primary-sub-rgb), 0.1);
         border-radius: 50%;
         pointer-events: none;
 
@@ -1960,7 +1960,7 @@ const blessings = [
       font-size: clamp(2rem, 3.5vw, 2.8rem);
       font-weight: 400;
       color: transparent;
-      background: linear-gradient(135deg, c.$primary-sub, c.$assistance-3);
+      background: linear-gradient(135deg, var(--primary-sub), var(--color-accent-hover));
       -webkit-background-clip: text;
       background-clip: text;
       margin: 0 0 1rem;
@@ -1973,7 +1973,7 @@ const blessings = [
 
     .explore__text {
       font-size: clamp(1rem, 1.5vw, 1.2rem);
-      color: #8a8280;
+      color: var(--text-sec-color);
       margin: 0 0 2rem;
       line-height: 2;
       font-weight: 300;
@@ -1984,7 +1984,7 @@ const blessings = [
     }
 
     .explore__icon {
-      color: c.$primary-sub;
+      color: var(--primary-sub);
       opacity: 0.45;
       transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 
@@ -2006,8 +2006,8 @@ const blessings = [
     position: relative;
     text-align: center;
     padding: 1.5rem;
-    border-top: 1px solid rgba(c.$primary-sub, 0.08);
-    background: #fefaf6;
+    border-top: 1px solid rgba(var(--primary-sub-rgb), 0.08);
+    background: var(--deco-light);
 
     @media (prefers-reduced-motion: no-preference) {
       animation: fadeInUp 0.7s both;
@@ -2017,7 +2017,7 @@ const blessings = [
       font-family: var(--app-font-family);
       font-size: 0.8rem;
       color: transparent;
-      background: linear-gradient(90deg, c.$primary-sub, c.$assistance-3, c.$assistance-1);
+      background: linear-gradient(90deg, var(--primary-sub), var(--color-accent-hover), var(--primary-sub));
       -webkit-background-clip: text;
       background-clip: text;
       margin: 0;

@@ -868,10 +868,10 @@ onUnmounted(() => {
     width: 60vw;
     height: 80vh;
     margin: 10vh auto;
-    color: #333;
-    box-shadow: $shadow-card;
+    color: var(--text-color);
+    box-shadow: var(--shadow-card-outline);
     border-radius: 0.4rem;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--bg-surface);
     @include flexCenter(row, flex-start);
 }
 
@@ -881,7 +881,7 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     height: 100%;
-    border-right: 1px solid #e8e8e8;
+    border-right: 1px solid var(--border-solid);
 
     .avatar {
         width: 100%;
@@ -925,10 +925,10 @@ onUnmounted(() => {
             }
 
             &.active {
-                color: #1890ff;
+                color: var(--primary-color);
 
                 &::after {
-                    background-color: #1890ff;
+                    background-color: var(--primary-color);
                 }
             }
         }
@@ -950,7 +950,7 @@ onUnmounted(() => {
 
         .icon-btn {
             cursor: pointer;
-            background-color: #fff;
+            background-color: var(--bg-surface);
 
             img {
                 width: 23px;
@@ -967,14 +967,14 @@ onUnmounted(() => {
     width: 320px;
     max-width: 320px;
     overflow: hidden;
-    border-right: 1px solid #e8e8e8;
+    border-right: 1px solid var(--border-solid);
     display: flex;
     flex-direction: column;
     height: 100%;
 
     .list-header {
         padding: 10px;
-        border-bottom: 1px solid #e8e8e8;
+        border-bottom: 1px solid var(--border-solid);
     }
 
     .search-box {
@@ -984,7 +984,7 @@ onUnmounted(() => {
     .search-input {
         width: 100%;
         padding: 6px 20px;
-        border: 1px solid #d9d9d9;
+        border: 1px solid var(--border-solid);
         border-radius: 20px;
         outline: none;
         transition: all 0.3s;
@@ -992,8 +992,8 @@ onUnmounted(() => {
     }
 
     .search-input:focus {
-        border-color: #40a9ff;
-        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
     }
 
     .list-content {
@@ -1013,7 +1013,7 @@ onUnmounted(() => {
         @include flexCenter(row, center);
 
         &:hover {
-            background-color: #e6f7ff;
+            background-color: var(--deco-light);
         }
 
         span {
@@ -1040,7 +1040,7 @@ onUnmounted(() => {
             height: 100%;
             text-align: center;
             line-height: 24px;
-            color: #999;
+            color: var(--text-muted);
         }
 
         &::after,
@@ -1051,7 +1051,7 @@ onUnmounted(() => {
             display: block;
             width: 33%;
             height: 1px;
-            background-color: #eee;
+            background-color: var(--bg-surface-alt);
         }
 
         &::before {
@@ -1077,7 +1077,7 @@ onUnmounted(() => {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.02);
+            background: rgba(var(--mask-rgb), 0.02);
             opacity: 0;
             transition: opacity 0.2s;
             pointer-events: none;
@@ -1090,7 +1090,7 @@ onUnmounted(() => {
         .avatar {
             @include flexCenter(row, center);
             margin-right: 0.5rem;
-            background-color: #ccc;
+            background-color: var(--deco-light-2);
             width: 35px;
             height: 35px;
             border-radius: 0.2rem;
@@ -1107,11 +1107,11 @@ onUnmounted(() => {
         }
 
         &:hover {
-            background-color: #f5f7fa;
+            background-color: var(--deco-light);
         }
 
         &.active {
-            background-color: #e6f7ff;
+            background-color: var(--deco-light);
         }
 
         // 好友列表
@@ -1138,7 +1138,7 @@ onUnmounted(() => {
     .preview,
     .members {
         font-size: 14px;
-        color: #666;
+        color: var(--text-sec-color);
         margin-bottom: 4px;
         white-space: nowrap;
         overflow: hidden;
@@ -1147,7 +1147,7 @@ onUnmounted(() => {
 
     .time {
         font-size: 12px;
-        color: #999;
+        color: var(--text-muted);
     }
 }
 
@@ -1197,7 +1197,7 @@ onUnmounted(() => {
                     }
 
                     .selectedContent {
-                        background-color: #cfe7ff;
+                        background-color: var(--deco-light);
                         padding: 0.2rem 0.5rem;
                         font-size: 16px;
                         border-radius: 0.2rem;
@@ -1209,7 +1209,7 @@ onUnmounted(() => {
                 @include flexCenter(column, flex-start);
                 align-items: flex-start;
                 gap: 0rem;
-                background-color: #f9f9f9;
+                background-color: var(--bg-surface-alt);
                 border-radius: 8px;
                 padding: 16px;
 
@@ -1283,7 +1283,7 @@ onUnmounted(() => {
 
             .btn {
                 padding: 8px 16px;
-                background-color: #1890ff;
+                background-color: var(--primary-color);
                 color: white;
                 border: none;
                 border-radius: 4px;
@@ -1292,16 +1292,16 @@ onUnmounted(() => {
             }
 
             .btn:hover {
-                background-color: #40a9ff;
+                background-color: var(--primary-color);
             }
 
             .btn.secondary {
-                background-color: #f0f0f0;
-                color: #333;
+                background-color: var(--bg-surface-alt);
+                color: var(--text-color);
             }
 
             .btn.secondary:hover {
-                background-color: #d9d9d9;
+                background-color: var(--deco-light);
             }
 
             .reply-box {
@@ -1311,7 +1311,7 @@ onUnmounted(() => {
             .reply-box textarea {
                 width: 100%;
                 padding: 12px;
-                border: 1px solid #d9d9d9;
+                border: 1px solid var(--border-solid);
                 border-radius: 4px;
                 resize: vertical;
                 margin-bottom: 12px;
@@ -1321,7 +1321,7 @@ onUnmounted(() => {
         .chat-section {
             height: calc(100% - 56px) !important;
             @include flexCenter (column, space-between);
-            background-color: #f8f8f8;
+            background-color: var(--bg-surface-alt);
 
             .chatMessage {
                 overflow-y: hidden;
@@ -1330,7 +1330,7 @@ onUnmounted(() => {
 
             .chatInput {
                 width: 100%;
-                background-color: $general-white;
+                background-color: var(--bg-surface);
             }
         }
     }
@@ -1341,7 +1341,7 @@ onUnmounted(() => {
         align-items: center;
         justify-content: center;
         height: 100%;
-        color: #999;
+        color: var(--text-muted);
 
         .empty-icon {
             font-size: 64px;
@@ -1361,7 +1361,7 @@ onUnmounted(() => {
     z-index: 1000;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(var(--mask-rgb), 0.15);
     min-width: 150px;
     padding: 8px 0;
 
@@ -1379,14 +1379,14 @@ onUnmounted(() => {
         }
 
         &:hover {
-            background: #f5f7ff;
+            background: var(--deco-light);
         }
 
         &:first-child {
-            color: #ff4757;
+            color: var(--deco-danger);
 
             &:hover {
-                background: #fff0f0;
+                background: var(--deco-light);
             }
         }
     }

@@ -465,11 +465,11 @@ onMounted(async () => {
             user-select: none;
 
             &:hover {
-                background-color: #f0f0f0;
+                background-color: var(--bg-surface-alt);
             }
 
             &.active {
-                background-color: #e0e0e0;
+                background-color: var(--deco-light);
             }
 
         }
@@ -488,7 +488,7 @@ onMounted(async () => {
                 max-width: 100px;
                 max-height: 50px;
                 border-radius: 4px;
-                border: 1px solid #d9d9d9;
+                border: 1px solid var(--border-solid);
             }
 
             .close-btn {
@@ -497,7 +497,7 @@ onMounted(async () => {
                 right: -4px;
                 width: 12px;
                 height: 12px;
-                background: #ff4d4f;
+                background: var(--deco-danger);
                 color: white;
                 border-radius: 50%;
                 display: flex;
@@ -517,9 +517,9 @@ onMounted(async () => {
         left: 0;
         width: 300px;
         background: white;
-        border: 1px solid #d9d9d9;
+        border: 1px solid var(--border-solid);
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 12px rgba(var(--mask-rgb), 0.15);
         z-index: 100;
         padding: 12px;
         animation: slideDownRetourn 0.5s;
@@ -542,7 +542,7 @@ onMounted(async () => {
             align-items: center;
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--border-solid);
             font-size: 14px;
             font-weight: bold;
 
@@ -551,7 +551,7 @@ onMounted(async () => {
                 border: none;
                 font-size: 16px;
                 cursor: pointer;
-                color: #ff0c0c;
+                color: var(--deco-danger);
                 padding: 0;
                 width: 18px;
                 height: 18px;
@@ -572,7 +572,7 @@ onMounted(async () => {
 
             button {
                 padding: 6px 12px;
-                border: 1px solid #e0e0e0;
+                border: 1px solid var(--border-solid);
                 border-radius: 6px;
                 background: white;
                 cursor: pointer;
@@ -580,12 +580,12 @@ onMounted(async () => {
                 transition: all 0.2s;
 
                 &:hover {
-                    background: #f5f5f5;
+                    background: var(--bg-surface-alt);
                 }
 
                 &.active {
-                    border-color: #1890ff;
-                    background: #e6f7ff;
+                    border-color: var(--primary-color);
+                    background: var(--deco-light);
                 }
             }
         }
@@ -625,7 +625,7 @@ onMounted(async () => {
                 }
 
                 &:hover {
-                    background-color: #f5f5f5;
+                    background-color: var(--bg-surface-alt);
                 }
 
                 .emoji-preview {
@@ -643,7 +643,7 @@ onMounted(async () => {
 
                 .emoji-name {
                     font-size: 12px;
-                    color: #666;
+                    color: var(--text-sec-color);
                     -webkit-user-select: none;
                     /* Safari */
                     -moz-user-select: none;
@@ -670,7 +670,7 @@ onMounted(async () => {
             min-height: 5rem;
             max-height: 8rem;
             padding: 8px;
-            border: 1px solid #d9d9d9;
+            border: 1px solid var(--border-solid);
             border-radius: 4px;
             font-size: 16px;
             line-height: 1.5;
@@ -682,13 +682,13 @@ onMounted(async () => {
             flex-direction: row;
 
             &:focus {
-                border-color: #1890ff;
-                box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
             }
 
             &:empty:before {
                 content: attr(placeholder);
-                color: #bfbfbf;
+                color: var(--text-on-dark);
             }
         }
     }
@@ -706,7 +706,7 @@ onMounted(async () => {
         margin-top: 0.5rem;
 
         .send-btn {
-            background-color: #1890ff;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             font-size: 16px;
@@ -717,11 +717,11 @@ onMounted(async () => {
             font-family: inherit;
 
             &:hover:not(:disabled) {
-                background-color: #40a9ff;
+                background-color: var(--primary-color);
             }
 
             &:disabled {
-                background-color: #d9d9d9;
+                background-color: var(--deco-light);
                 cursor: not-allowed;
             }
         }

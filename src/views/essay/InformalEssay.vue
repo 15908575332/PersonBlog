@@ -303,7 +303,7 @@ $contentWidth: 65rem; // 内容宽度
 
   // 通用阴影
   .box__shadow {
-    box-shadow: 0px 0px 6px 4px rgba(17, 17, 26, 0.1);
+    box-shadow: 0px 0px 6px 4px rgba(var(--mask-rgb), 0.1);
   }
 
   // 背景图
@@ -325,7 +325,7 @@ $contentWidth: 65rem; // 内容宽度
     height: 100%;
     position: fixed;
     top: 0;
-    background-color: #00000010;
+    background-color: rgba(var(--mask-rgb), 0.063);
     z-index: -1;
   }
 
@@ -339,7 +339,7 @@ $contentWidth: 65rem; // 内容宽度
       bottom: 0;
       left: 50%;
       z-index: 5;
-      color: #ffffff;
+      color: var(--text-on-dark);
       font-family: var(--app-font-family);
       font-size: 2rem;
       font-weight: 700;
@@ -431,7 +431,7 @@ $contentWidth: 65rem; // 内容宽度
       width: 100%;
       margin-top: 5rem;
       padding: 1rem 0 0 0;
-      background-color: #ffffff;
+      background-color: var(--bg-surface);
 
       .content__box {
         font-family: var(--app-font-family);
@@ -448,15 +448,15 @@ $contentWidth: 65rem; // 内容宽度
 
           .personCard {
             background-image: linear-gradient(135deg,
-                #a9e0ec 15%,
-                #c0bdf0 100%);
+                var(--deco-light-2) 15%,
+                var(--deco-light) 100%);
             border-radius: 10px;
             padding: 1rem 0;
             transition: all 0.3s;
             @include flexCenter(column, center);
 
             &:hover {
-              box-shadow: 5px 5px 0px 0px #cacaca;
+              box-shadow: 5px 5px 0px 0px rgba(var(--mask-rgb), 0.2);
             }
 
             .profilePicture {
@@ -464,7 +464,7 @@ $contentWidth: 65rem; // 内容宽度
               height: 6rem;
               border-radius: 50%;
               overflow: hidden;
-              background-color: #000;
+              background-color: var(--deco-dark);
 
               img {
                 width: 100%;
@@ -499,7 +499,7 @@ $contentWidth: 65rem; // 内容宽度
             }
 
             .interest {
-              background-color: #4dd5cc;
+              background-color: var(--primary-color);
               @include flexCenter(row, center);
               color: white;
               font-family: var(--app-font-family);
@@ -522,7 +522,7 @@ $contentWidth: 65rem; // 内容宽度
             margin: 1.5rem 0;
 
             h1 {
-              color: #4dd5cc;
+              color: var(--primary-color);
               font-size: 1.1rem;
               font-weight: 700;
               width: 100%;
@@ -534,18 +534,18 @@ $contentWidth: 65rem; // 内容宽度
 
               input {
                 border-radius: 1rem;
-                border: 2px solid #4dd5cc;
+                border: 2px solid var(--primary-color);
                 padding: 0.2rem 1rem;
                 padding-right: 2rem;
                 width: 100%;
-                color: #666;
+                color: var(--text-sec-color);
                 font-size: 0.8rem;
                 display: flex;
                 font-family: var(--app-font-family);
                 align-items: center;
 
                 &::placeholder {
-                  color: #666;
+                  color: var(--text-sec-color);
                   font-size: 0.8rem;
                 }
               }
@@ -573,7 +573,7 @@ $contentWidth: 65rem; // 内容宽度
             @include flexCenter(row, center);
 
             h1 {
-              color: #ff416c;
+              color: var(--primary-sub);
               font-weight: 700;
             }
           }
@@ -587,7 +587,7 @@ $contentWidth: 65rem; // 内容宽度
             position: relative;
 
             h1 {
-              color: #1ae8c5;
+              color: var(--deco-primary);
               font-size: 1rem;
               font-weight: 700;
               width: 100%;
@@ -637,8 +637,8 @@ $contentWidth: 65rem; // 内容宽度
               li {
                 border-radius: 0.5rem;
                 background-image: linear-gradient(100deg,
-                    #348cff 15%,
-                    #17c3ff 100%);
+                    var(--deco-primary) 15%,
+                    var(--deco-primary) 100%);
                 margin-bottom: 1.5rem;
 
                 a {
@@ -661,20 +661,20 @@ $contentWidth: 65rem; // 内容宽度
 
                 &:nth-child(2) {
                   background-image: linear-gradient(100deg,
-                      #18e7af 15%,
-                      #1eebe9 100%);
+                      var(--deco-primary) 15%,
+                      var(--deco-primary) 100%);
                 }
 
                 &:nth-child(3) {
                   background-image: linear-gradient(100deg,
-                      #ff6954 15%,
-                      #ffbc38 100%);
+                      var(--deco-danger) 15%,
+                      var(--deco-warning) 100%);
                 }
 
                 &:nth-child(4) {
                   background-image: linear-gradient(100deg,
-                      #ff2cda 15%,
-                      #ff7816 100%);
+                      var(--deco-danger) 15%,
+                      var(--deco-warning) 100%);
                 }
               }
             }
@@ -685,8 +685,8 @@ $contentWidth: 65rem; // 内容宽度
           width: 73%;
 
           .notice {
-            border: 1px dashed #ccc;
-            color: #666;
+            border: 1px dashed var(--border-strong);
+            color: var(--text-sec-color);
             font-size: 0.8rem;
             border-radius: 5px;
             padding: 1rem;
@@ -707,7 +707,7 @@ $contentWidth: 65rem; // 内容宽度
           .content__container {
             .menu {
               @include flexCenter(row, space-between);
-              border-bottom: 1px dashed #ccc;
+              border-bottom: 1px dashed var(--border-strong);
               padding: 0.2rem;
               padding-top: 2rem;
 
@@ -722,7 +722,7 @@ $contentWidth: 65rem; // 内容宽度
 
                 span {
                   font-size: 1rem;
-                  color: #999;
+                  color: var(--text-muted);
                 }
               }
             }
@@ -751,7 +751,7 @@ $contentWidth: 65rem; // 内容宽度
 
                 .text__content {
                   padding: 0.5rem;
-                  color: #a2a2a2;
+                  color: var(--text-on-dark);
 
                   img {
                     margin-right: 0.25rem;
@@ -814,7 +814,7 @@ $contentWidth: 65rem; // 内容宽度
                 }
 
                 &:hover {
-                  box-shadow: rgba(3, 3, 3, 0.498) 0px 1.15244px 19.6189px -5.58078px;
+                  box-shadow: rgba(var(--mask-rgb), 0.498) 0px 1.15244px 19.6189px -5.58078px;
                 }
               }
             }
@@ -846,7 +846,7 @@ $contentWidth: 65rem; // 内容宽度
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(var(--mask-rgb), 0.5);
         border-top-left-radius: 3rem;
         border-top-right-radius: 3rem;
         z-index: -1;
@@ -861,7 +861,7 @@ $contentWidth: 65rem; // 内容宽度
         }
 
         &:nth-child(2) {
-          color: #cfcfcf;
+          color: var(--text-on-dark);
           font-size: 0.7rem;
         }
       }
@@ -883,7 +883,7 @@ $contentWidth: 65rem; // 内容宽度
   /* 按钮的宽度 */
   height: 3rem;
   /* 按钮的高度 */
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(var(--mask-rgb), 0.6);
   /* 半透明背景 */
   border: none;
   border-radius: 50%;

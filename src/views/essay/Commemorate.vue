@@ -92,8 +92,8 @@ import FireWorks from "@/components/layout/FireWorks.vue";
       width: 120px;
       height: 90px;
       margin: 50px;
-      background: #d8000f;
-      background: rgba(216, 0, 15, 0.8);
+      background: var(--primary-sub);
+      background: rgba(var(--primary-sub-rgb), 0.8);
       border-radius: 50% 50%;
       transform-origin: 50% -100px;
       -webkit-transform-origin: 50% -100px;
@@ -101,11 +101,11 @@ import FireWorks from "@/components/layout/FireWorks.vue";
       .deng-a {
         width: 100px;
         height: 90px;
-        background: #d8000f;
-        background: rgba(216, 0, 15, 0.1);
+        background: var(--primary-sub);
+        background: rgba(var(--primary-sub-rgb), 0.1);
         margin: 12px 8px 8px 10px;
         border-radius: 50% 50%;
-        border: 2px solid #dc8f03;
+        border: 2px solid var(--deco-warning);
 
         .deng-b {
           width: 45px;
@@ -119,7 +119,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
           .deng-t {
             font-family: 华文行楷, Arial, Lucida Grande, Tahoma, sans-serif;
             font-size: 2rem;
-            color: #dc8f03;
+            color: var(--deco-warning);
             font-weight: bold;
             line-height: 85px;
             text-align: center;
@@ -133,7 +133,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
         left: 60px;
         width: 2px;
         height: 5rem;
-        background: #dc8f03;
+        background: var(--deco-warning);
       }
 
       .shui-a {
@@ -145,7 +145,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
         animation: swing 4s infinite ease-in-out;
         transform-origin: 50% -45px;
         -webkit-transform-origin: 50% -45px;
-        background: #ffa500;
+        background: var(--color-accent);
         border-radius: 0 0 5px 5px;
 
         .shui-b {
@@ -154,7 +154,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
           left: -2px;
           width: 10px;
           height: 10px;
-          background: #dc8f03;
+          background: var(--deco-warning);
           border-radius: 50%;
         }
 
@@ -164,7 +164,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
           left: -2px;
           width: 10px;
           height: 35px;
-          background: #ffa500;
+          background: var(--color-accent);
           border-radius: 0 0 0 5px;
         }
       }
@@ -179,14 +179,14 @@ import FireWorks from "@/components/layout/FireWorks.vue";
         display: block;
         z-index: 999;
         border-radius: 5px 5px 0 0;
-        border: solid 1px #dc8f03;
-        background: #ffa500;
+        border: solid 1px var(--deco-warning);
+        background: var(--color-accent);
         background: linear-gradient(to right,
-            #dc8f03,
-            #ffa500,
-            #dc8f03,
-            #ffa500,
-            #dc8f03);
+            var(--deco-warning),
+            var(--color-accent),
+            var(--deco-warning),
+            var(--color-accent),
+            var(--deco-warning));
       }
 
       &:after {
@@ -199,14 +199,14 @@ import FireWorks from "@/components/layout/FireWorks.vue";
         display: block;
         margin-left: 20px;
         border-radius: 0 0 5px 5px;
-        border: solid 1px #dc8f03;
-        background: #ffa500;
+        border: solid 1px var(--deco-warning);
+        background: var(--color-accent);
         background: linear-gradient(to right,
-            #dc8f03,
-            #ffa500,
-            #dc8f03,
-            #ffa500,
-            #dc8f03);
+            var(--deco-warning),
+            var(--color-accent),
+            var(--deco-warning),
+            var(--color-accent),
+            var(--deco-warning));
       }
     }
   }
@@ -218,7 +218,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
     .deng {
       -webkit-animation: swing 3s infinite ease-in-out;
       animation: swing 3s infinite ease-in-out;
-      box-shadow: -5px 5px 50px 4px rgba(250, 108, 0, 1);
+      box-shadow: -5px 5px 50px 4px rgba(var(--color-accent-rgb), 0.35);
     }
   }
 
@@ -229,7 +229,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
     .deng {
       -webkit-animation: swing 4s infinite ease-in-out;
       animation: swing 4s infinite ease-in-out;
-      box-shadow: -5px 5px 30px 4px rgba(252, 144, 61, 1);
+      box-shadow: -5px 5px 30px 4px rgba(var(--color-accent-rgb), 0.35);
     }
   }
 
@@ -240,7 +240,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
     .deng {
       -webkit-animation: swing 5s infinite ease-in-out;
       animation: swing 5s infinite ease-in-out;
-      box-shadow: -5px 5px 50px 4px rgba(250, 108, 0, 1);
+      box-shadow: -5px 5px 50px 4px rgba(var(--color-accent-rgb), 0.35);
     }
   }
 
@@ -251,7 +251,7 @@ import FireWorks from "@/components/layout/FireWorks.vue";
     .deng {
       -webkit-animation: swing 4s infinite ease-in-out;
       animation: swing 4s infinite ease-in-out;
-      box-shadow: -5px 5px 30px 4px rgba(252, 144, 61, 1);
+      box-shadow: -5px 5px 30px 4px rgba(var(--color-accent-rgb), 0.35);
     }
   }
 

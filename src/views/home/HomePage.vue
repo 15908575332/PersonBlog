@@ -399,11 +399,11 @@ onUnmounted(() => {
       top: 0;
       z-index: -1;
       animation: fadeIn 1s;
-      background-color: #252627;
+      background-color: var(--deco-dark);
     }
 
     .mask {
-      @include mask-overlay(#00000020);
+      @include mask-overlay(rgba(var(--mask-rgb), 0.125));
     }
 
     //内容
@@ -445,7 +445,7 @@ onUnmounted(() => {
 
           // 农历
           .lunarday-year {
-            color: #b5c3d1;
+            color: var(--text-on-dark);
             font-size: 1rem;
             font-weight: 700;
           }
@@ -453,7 +453,7 @@ onUnmounted(() => {
           // 公历
           .day-date {
             font-weight: 700;
-            color: #dce4ed;
+            color: var(--text-on-dark);
             padding: 0.5rem;
             font-size: 1.4rem;
           }
@@ -466,7 +466,7 @@ onUnmounted(() => {
           width: 32vw;
           min-width: 10rem;
           font-size: 0.8rem;
-          background-color: rgba(0, 0, 0, 0.3);
+          background-color: rgba(var(--mask-rgb), 0.3);
           border-radius: 0.2rem;
 
           //按钮组
@@ -491,7 +491,7 @@ onUnmounted(() => {
               }
 
               &:hover {
-                background-color: rgb(0, 0, 0, .6);
+                background-color: rgba(var(--mask-rgb), .6);
               }
             }
 
@@ -528,17 +528,16 @@ onUnmounted(() => {
               height: 2rem;
               width: 100%;
               font-family: var(--app-font-family);
-              color: $general-black;
               font-size: 0.9rem;
               padding: 0 0.5rem;
-              color: $general-white;
+              color: var(--text-on-dark);
               background-color: transparent;
               border: none;
               outline: none;
 
               &::placeholder {
                 text-align: center;
-                color: $color-4;
+                color: var(--text-on-dark);
               }
             }
           }
@@ -554,7 +553,7 @@ onUnmounted(() => {
             }
 
             &:hover {
-              background-color: rgb(0, 0, 0, .6);
+              background-color: rgba(var(--mask-rgb), .6);
             }
           }
         }
@@ -578,7 +577,7 @@ onUnmounted(() => {
             text-align: center;
 
             a {
-              color: $primary-hover;
+              color: var(--primary-hover);
               text-decoration: underline;
             }
           }
@@ -586,7 +585,7 @@ onUnmounted(() => {
       }
 
       .help-link {
-        background: rgb(78, 73, 72, 0.6);
+        background: rgba(var(--mask-rgb), 0.6);
         @include flexCenter(row, space-between);
         padding: 0.5rem 0.75rem;
         border-radius: 0.75rem;
@@ -628,13 +627,13 @@ onUnmounted(() => {
         padding: 1.5rem 2rem;
         width: 85vw;
         max-width: 1200px;
-        color: $general-white;
-        background-color: rgba(255, 255, 255, 0.08);
+        color: var(--text-on-dark);
+        background-color: rgba(var(--highlight-rgb), 0.08);
         backdrop-filter: blur(24px) saturate(1.2);
         -webkit-backdrop-filter: blur(24px) saturate(1.2);
         border-radius: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow: $shadow-card;
+        border: 1px solid rgba(var(--highlight-rgb), 0.12);
+        box-shadow: var(--shadow-card-outline);
         overflow-y: auto;
 
         ul {
@@ -648,11 +647,11 @@ onUnmounted(() => {
             padding: 0.75rem;
             min-height: 4.5rem;
             border-radius: 1rem;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+            background: linear-gradient(135deg, rgba(var(--highlight-rgb), 0.16), rgba(var(--highlight-rgb), 0.06));
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22), 0 1px 3px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(var(--highlight-rgb), 0.18);
+            box-shadow: 0 4px 16px rgba(var(--mask-rgb), 0.22), 0 1px 3px rgba(var(--mask-rgb), 0.12);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
               background 0.35s ease,
@@ -667,18 +666,18 @@ onUnmounted(() => {
 
             &:hover {
               transform: translateY(-6px);
-              box-shadow: 0 10px 32px rgba(0, 0, 0, 0.32), 0 2px 6px rgba(0, 0, 0, 0.18);
-              background: linear-gradient(135deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.12));
-              border-color: rgba(93, 233, 224, 0.5);
+              box-shadow: 0 10px 32px rgba(var(--mask-rgb), 0.32), 0 2px 6px rgba(var(--mask-rgb), 0.18);
+              background: linear-gradient(135deg, rgba(var(--highlight-rgb), 0.26), rgba(var(--highlight-rgb), 0.12));
+              border-color: rgba(var(--primary-color-rgb), 0.5);
 
               .iconImg {
                 transform: scale(1.06) rotate(2deg);
-                border-color: rgba(93, 233, 224, 0.5);
-                box-shadow: 0 4px 14px rgba(93, 233, 224, 0.25);
+                border-color: rgba(var(--primary-color-rgb), 0.5);
+                box-shadow: 0 4px 14px rgba(var(--primary-color-rgb), 0.25);
               }
 
               h5 {
-                color: #8bf5ee;
+                color: var(--deco-primary);
                 transform: translateY(-1px);
               }
             }
@@ -691,18 +690,18 @@ onUnmounted(() => {
 
               &:hover {
                 transform: none;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22), 0 1px 3px rgba(0, 0, 0, 0.12);
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
-                border-color: rgba(255, 255, 255, 0.18);
+                box-shadow: 0 4px 16px rgba(var(--mask-rgb), 0.22), 0 1px 3px rgba(var(--mask-rgb), 0.12);
+                background: linear-gradient(135deg, rgba(var(--highlight-rgb), 0.16), rgba(var(--highlight-rgb), 0.06));
+                border-color: rgba(var(--highlight-rgb), 0.18);
 
                 .iconImg {
                   transform: none;
-                  border-color: rgba(255, 255, 255, 0.15);
-                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+                  border-color: rgba(var(--highlight-rgb), 0.15);
+                  box-shadow: 0 2px 8px rgba(var(--mask-rgb), 0.18);
                 }
 
                 h5 {
-                  color: $primary-color;
+                  color: var(--primary-color);
                   transform: none;
                 }
               }
@@ -715,8 +714,8 @@ onUnmounted(() => {
               overflow: hidden;
               border-radius: 0.75rem;
               margin-right: 0.75rem;
-              border: 2px solid rgba(255, 255, 255, 0.15);
-              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+              border: 2px solid rgba(var(--highlight-rgb), 0.15);
+              box-shadow: 0 2px 8px rgba(var(--mask-rgb), 0.18);
               transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 border-color 0.35s ease,
                 box-shadow 0.35s ease;
@@ -740,7 +739,7 @@ onUnmounted(() => {
               padding-left: 0;
               margin-bottom: 0.25rem;
               line-height: 1.3;
-              color: $primary-color;
+              color: var(--primary-color);
               transition: color 0.35s ease,
                 transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
@@ -765,15 +764,15 @@ onUnmounted(() => {
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             font-size: 0.95rem;
             font-weight: 700;
-            background: linear-gradient(135deg, $color-5, #ff8c00);
-            color: #fff;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent));
+            color: var(--text-on-dark);
             border-radius: 0.75rem;
-            box-shadow: 0 4px 14px rgba(255, 165, 0, 0.4);
+            box-shadow: 0 4px 14px rgba(var(--color-accent-rgb), 0.4);
 
             &:hover {
-              background: linear-gradient(135deg, #ffb733, #ff8c00);
+              background: linear-gradient(135deg, var(--deco-warning), var(--color-accent));
               transform: translateY(-2px) scale(1.04);
-              box-shadow: 0 6px 20px rgba(255, 165, 0, 0.55);
+              box-shadow: 0 6px 20px rgba(var(--color-accent-rgb), 0.55);
             }
           }
         }
@@ -801,11 +800,11 @@ onUnmounted(() => {
 
   from,
   to {
-    color: rgb(255, 255, 255, 0.2);
+    color: rgba(var(--highlight-rgb), 0.2);
   }
 
   50% {
-    color: rgb(255, 255, 255);
+    color: var(--text-on-dark);
   }
 }
 
@@ -814,11 +813,11 @@ onUnmounted(() => {
 
   from,
   to {
-    color: rgb(66, 61, 70, 0);
+    color: rgba(var(--mask-rgb), 0);
   }
 
   50% {
-    color: rgb(66, 61, 70, 0.7);
+    color: rgba(var(--mask-rgb), 0.7);
     /* 或者任何你想要的颜色 */
   }
 }

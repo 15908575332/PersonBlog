@@ -366,12 +366,12 @@ onUnmounted(() => {
         min-width: 20rem;
         overflow: hidden;
         position: relative;
-        background-color: rgb(189, 189, 189);
+        background-color: var(--deco-light-2);
         border-radius: 0.5rem;
 
         h1 {
             position: absolute;
-            color: $general-black;
+            color: var(--text-on-light);
             font-size: 1.5rem;
             top: 1rem;
             left: 1rem;
@@ -419,8 +419,8 @@ onUnmounted(() => {
                     overflow: hidden;
                     border-radius: 0.75rem;
                     margin-right: 0.75rem;
-                    border: 2px solid rgba(255, 255, 255, 0.15);
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+                    border: 2px solid rgba(var(--highlight-rgb), 0.15);
+                    box-shadow: 0 2px 8px rgba(var(--mask-rgb), 0.18);
                     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                         border-color 0.35s ease,
                         box-shadow 0.35s ease;
@@ -439,11 +439,11 @@ onUnmounted(() => {
                     h5 {
                         font-size: 1.1rem;
                         padding-left: 0.15rem;
-                        color: rgb(0, 0, 0);
+                        color: rgba(var(--mask-rgb), 1);
                     }
 
                     .ant-typography {
-                        color: #272626;
+                        color: var(--text-color);
                     }
 
                     p {
@@ -460,14 +460,14 @@ onUnmounted(() => {
                 border-radius: 0.1em;
                 // background-image: linear-gradient(#0003, #0000);
                 box-shadow:
-                    0 -0.125em 0.25em #0002,
+                    0 -0.125em 0.25em rgba(var(--mask-rgb), 0),
                     0 0.25em 0.25em hsl(var(--h) var(--s) var(--l) / 0.5),
                     0 0 0 0.1em hsl(var(--h) var(--s) var(--l) / 0.5),
                     0 0.175em 0.3em hsl(var(--h) var(--s) var(--l) / 0.5) inset,
                     0 -0.025em 0.175em hsl(var(--h) var(--s) var(--l) / 0.4) inset,
                     0 -0.25em 1em 0.3em hsl(var(--h) var(--s) var(--l) / 0.3) inset,
                     0 0.6em 0 hsl(var(--h) var(--s) var(--l) / 0.3) inset,
-                    0 1.5em 1em #0004;
+                    0 1.5em 1em rgba(var(--mask-rgb), 0);
                 backdrop-filter: blur(0.15em);
                 position: relative;
                 display: grid;
@@ -504,14 +504,14 @@ onUnmounted(() => {
                 &:hover {
                     translate: .01em .25em;
                     box-shadow:
-                        0 -0.125em 0.25em #0002,
+                        0 -0.125em 0.25em rgba(var(--mask-rgb), 0),
                         0 0.25em 0.25em hsl(var(--h) var(--s) var(--l) / 0.5),
                         0 0 0 0.1em hsl(var(--h) var(--s) var(--l) / 0.5),
                         0 0.175em 0.3em hsl(var(--h) var(--s) var(--l) / 0.8) inset,
                         0 -0.025em 0.175em hsl(var(--h) var(--s) var(--l) / 0.4) inset,
                         0 -0.25em 1em 0.3em hsl(var(--h) var(--s) var(--l) / 0.3) inset,
                         0 0.6em 0 hsl(var(--h) var(--s) var(--l) / 0.3) inset,
-                        0 1em 0.5em #0004;
+                        0 1em 0.5em rgba(var(--mask-rgb), 0);
                     backdrop-filter: blur(0.08em);
 
                     &:before {

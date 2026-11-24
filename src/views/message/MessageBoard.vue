@@ -146,7 +146,7 @@ onUnmounted(() => {
 
         &::after {
             content: "";
-            @include mask-overlay(rgba(50, 50, 50, 0.2), 100%, absolute, inherit);
+            @include mask-overlay(rgba(var(--mask-rgb), 0.2), 100%, absolute, inherit);
             pointer-events: none;
         }
 
@@ -172,7 +172,7 @@ onUnmounted(() => {
                 width: 25px;
                 height: 25px;
                 overflow: hidden;
-                background-color: #fff;
+                background-color: var(--bg-surface);
                 border-radius: 50%;
                 display: inline-block;
                 margin-right: 10px;
@@ -210,7 +210,7 @@ onUnmounted(() => {
                 font-family: inherit;
 
                 &::placeholder {
-                    color: #ffffff;
+                    color: var(--text-on-dark);
                     font-size: 0.9rem;
                 }
             }

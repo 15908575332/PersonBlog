@@ -77,9 +77,9 @@ function lineStyle(index) {
 .skeleton-line {
   background: linear-gradient(
     90deg,
-    rgba(200, 200, 200, 0.12) 25%,
-    rgba(220, 220, 220, 0.22) 50%,
-    rgba(200, 200, 200, 0.12) 75%
+    rgba(var(--highlight-rgb), 0.12) 25%,
+    rgba(var(--highlight-rgb), 0.22) 50%,
+    rgba(var(--highlight-rgb), 0.12) 75%
   );
   background-size: 200% 100%;
   animation: skeleton-pulse 1.5s ease-in-out infinite;

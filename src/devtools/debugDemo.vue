@@ -344,7 +344,7 @@ function sendCode() {
         message: '验证码已发送',
         description: codeSent.value,
         duration: 6,
-        style: { color: '#5de9e0', fontFamily: 'gtpy' },
+        style: { color: 'var(--deco-primary)', fontFamily: 'gtpy' },
     });
     countdown.value = 30;
     timer = setInterval(() => {
@@ -391,13 +391,13 @@ onMounted(() => {
 
 <style scoped lang="scss">
 // ── Project Dark 调色板（对齐 color.scss）──
-$bg: #1a1d28;
-$surface: #242b3b;
-$accent: #5de9e0;
-$text-primary: #f0f1f5;
-$text-muted: #9ca3b2;
-$border-subtle: rgba(255, 255, 255, 0.06);
-$border-hover: rgba(255, 255, 255, 0.12);
+$bg: var(--deco-dark);
+$surface: var(--deco-dark);
+$accent: var(--deco-primary);
+$text-primary: var(--deco-light);
+$text-muted: var(--deco-light-2);
+$border-subtle: rgba(var(--highlight-rgb), 0.06);
+$border-hover: rgba(var(--highlight-rgb), 0.12);
 
 .main {
     @include flexCenter(center, center);
@@ -418,7 +418,7 @@ $border-hover: rgba(255, 255, 255, 0.12);
 
     &.document-loaded {
         .form__cover {
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 50px rgba(var(--mask-rgb), 0.3);
         }
 
         .form__cover {
@@ -470,7 +470,7 @@ $border-hover: rgba(255, 255, 255, 0.12);
         border-radius: 8px;
         overflow: hidden;
         transition: all 0.3s ease 0.8s;
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+        box-shadow: 0 0 0 0 rgba(var(--mask-rgb), 0);
 
         &::after,
         &::before {
@@ -918,7 +918,7 @@ $border-hover: rgba(255, 255, 255, 0.12);
             border: none;
             border-radius: 3px;
             position: relative;
-            color: #0d1117;
+            color: var(--text-color);
             font-weight: 700;
             letter-spacing: 0.1em;
             overflow: hidden;
@@ -926,8 +926,8 @@ $border-hover: rgba(255, 255, 255, 0.12);
 
             &:hover,
             &:active {
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-                background: #7eebe6;
+                box-shadow: 0 8px 20px rgba(var(--mask-rgb), 0.3);
+                background: var(--deco-light-2);
 
                 .styled-button__moving-block {
                     &.face {
@@ -949,18 +949,18 @@ $border-hover: rgba(255, 255, 255, 0.12);
             }
 
             &:active {
-                box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 0 5px rgba(var(--mask-rgb), 0.3);
             }
 
             &.styled-button--secondary {
                 background: transparent;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                color: rgba(255, 255, 255, 0.6);
+                border: 1px solid rgba(var(--highlight-rgb), 0.2);
+                color: rgba(var(--highlight-rgb), 0.6);
 
                 .styled-button__moving-block {
                     &.face {
                         .styled-button__text {
-                            color: rgba(255, 255, 255, 0.6);
+                            color: rgba(var(--highlight-rgb), 0.6);
                         }
                     }
 
@@ -975,15 +975,15 @@ $border-hover: rgba(255, 255, 255, 0.12);
 
                 &:hover,
                 &:active {
-                    background: rgba(255, 255, 255, 0.08);
-                    border-color: rgba(255, 255, 255, 0.35);
-                    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+                    background: rgba(var(--highlight-rgb), 0.08);
+                    border-color: rgba(var(--highlight-rgb), 0.35);
+                    box-shadow: 0 0 10px rgba(var(--highlight-rgb), 0.1);
                     color: white;
 
                     .styled-button__moving-block {
                         &.face {
                             .styled-button__text {
-                                color: rgba(255, 255, 255, 0.6);
+                                color: rgba(var(--highlight-rgb), 0.6);
                             }
                         }
                     }
@@ -1022,7 +1022,7 @@ $border-hover: rgba(255, 255, 255, 0.12);
 
                 &.face {
                     transform: translateX(0);
-                    color: #0d1117;
+                    color: var(--text-color);
                 }
 
                 &.back {

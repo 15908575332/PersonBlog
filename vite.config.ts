@@ -84,7 +84,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `
-          @use "@/styles/color.scss" as *;
+          @use "@/styles/mixins.scss" as *;
           @use "sass:math";
           @use "sass:color";
           @use "sass:list";

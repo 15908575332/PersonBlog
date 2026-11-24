@@ -49,7 +49,7 @@ const props = withDefaults(
   }>(),
   {
     alt: '',
-    placeholderColor: '#f0f0f2',
+    placeholderColor: 'var(--bg-surface-alt)',
     spinnerSize: '46px',
     loadTimeout: Number(import.meta.env.VITE_LAZY_IMAGE_LOAD_TIMEOUT) || 15000,
   },
@@ -185,7 +185,7 @@ watch(
 
 .lazy-image-spinner-inner {
   position: relative;
-  border: 3px solid $general-white;
+  border: 3px solid var(--border-color);
   border-radius: 50%;
   -webkit-animation: rotation 1s linear infinite;
   animation: lazy-image-spin 1s linear infinite;
@@ -200,7 +200,7 @@ watch(
     height: 38px;
     border-radius: 50%;
     border: 3px solid;
-    border-color: $primary-sub transparent;
+    border-color: var(--primary-sub) transparent;
   }
 }
 
@@ -210,13 +210,13 @@ watch(
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(0, 0, 0, 0.25);
+  color: rgba(var(--mask-rgb), 0.25);
   z-index: 1;
   @include flexCenter(column, center);
   font-size: clamp(12px, 8cqw, 22px);
   gap: 0.5rem;
   /* 漫画网点纸风格背景 */
-  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(var(--mask-rgb), 0.06) 1px, transparent 1px);
   background-size: 12px 12px;
 
   h2 {

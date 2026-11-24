@@ -11,7 +11,7 @@
             <!-- 登录验证码组件 -->
             <slide-verify v-else ref="block" :w="400" :h="200" :imgs="customImages" :show="false"
                 :slider-text="placeholderText" @again="onAgain" @success="onSuccess" @fail="onFail"
-                style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);"></slide-verify>
+                style="box-shadow: var(--shadow-elevated);"></slide-verify>
             <div class="verification-msg" :style="{ color: msgColor }">{{ msg }}</div>
         </ModalBox>
 
@@ -436,7 +436,7 @@ onBeforeUnmount(() => {
 
     &::after {
         content: "";
-        @include mask-overlay(#00000030, 100%, absolute, -1);
+        @include mask-overlay(rgba(var(--mask-rgb), 0.188), 100%, absolute, -1);
         pointer-events: none;
     }
 
@@ -479,7 +479,7 @@ onBeforeUnmount(() => {
 
 // 按钮公共样式
 .button {
-    color: #fff;
+    color: var(--text-on-dark);
     font-size: 0.8rem;
     margin-top: 30px;
     padding: 8px 40px;
@@ -497,7 +497,7 @@ onBeforeUnmount(() => {
     height: 100%;
     padding: 1.56rem;
     color: white;
-    background-color: #f2405690;
+    background-color: rgba(var(--primary-sub-rgb), 0.565);
     transition: 1.25s;
 
     input {
@@ -514,10 +514,10 @@ onBeforeUnmount(() => {
     height: 100%;
 
     .form__button {
-        border: 1px solid #fff;
+        border: 1px solid var(--border-color);
 
         &:hover {
-            background-color: #fff;
+            background-color: var(--bg-surface);
             color: black;
         }
     }
@@ -546,14 +546,14 @@ onBeforeUnmount(() => {
     border: none;
     outline: none;
     font-family: var(--app-font-family);
-    background-color: #ecf0f3;
+    background-color: var(--deco-light);
     transition: 0.25s ease;
     border-radius: 0.5rem;
-    box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9;
+    box-shadow: inset 2px 2px 4px var(--deco-light), inset -2px -2px 4px var(--deco-light);
 }
 
 .form__input:focus {
-    box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9;
+    box-shadow: inset 4px 4px 4px var(--deco-light), inset -4px -4px 4px var(--deco-light);
 }
 
 .form__span {
@@ -565,7 +565,7 @@ onBeforeUnmount(() => {
 .form__link {
     font-size: 0.8rem;
     margin-top: 1.56rem;
-    border-bottom: 1px solid #f7f7f7;
+    border-bottom: 1px solid var(--deco-neutral-weak);
     line-height: 1;
     cursor: pointer;
 }
@@ -606,17 +606,17 @@ onBeforeUnmount(() => {
     padding: 3.13rem;
     z-index: 200;
     transition: 1.25s;
-    background-color: #ffffffe6;
+    background-color: rgba(var(--highlight-rgb), 0.902);
     color: black;
     overflow: hidden;
 
     .switch__button {
         color: black;
-        border: 1px solid #f24056;
+        border: 1px solid var(--primary-sub);
 
         &:hover {
-            background-color: #f24056;
-            color: #fff;
+            background-color: var(--primary-sub);
+            color: var(--text-on-dark);
         }
     }
 }
@@ -626,7 +626,7 @@ onBeforeUnmount(() => {
     width: 22rem;
     height: 24rem;
     border-radius: 50%;
-    box-shadow: inset 0.5rem 0.5rem 0.75rem #bfccdf, inset -0.5rem -0.5rem 0.75rem #f9f9f9;
+    box-shadow: inset 0.5rem 0.5rem 0.75rem rgba(var(--primary-color-rgb), 0.35), inset -0.5rem -0.5rem 0.75rem var(--deco-light);
     bottom: -60%;
     left: -30%;
     transition: 1.25s;

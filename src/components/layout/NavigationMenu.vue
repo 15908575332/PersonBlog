@@ -238,7 +238,7 @@ onMounted(async () => { });
       span {
         font-size: 1rem;
         @include text-color('text-color');
-        text-shadow: themed('text-shadow');
+        text-shadow: var(--text-shadow);
       }
     }
   }
@@ -282,7 +282,7 @@ onMounted(async () => { });
       .br {
         height: 0.25rem;
         width: 0;
-        background: #ffa500;
+        background: var(--color-accent);
         position: absolute;
         left: 0;
         bottom: 0;
@@ -308,7 +308,7 @@ onMounted(async () => { });
       margin: 0 0.4rem;
       margin-left: 1.5rem;
       position: relative;
-      color: $general-black;
+      color: var(--text-on-light);
 
       //头像
       .profilePicture {
@@ -319,7 +319,7 @@ onMounted(async () => { });
         transition: transform 0.2s, box-shadow 0.3s;
 
         &:hover {
-          box-shadow: 0 0 0 2px #ffa89f;
+          box-shadow: 0 0 0 2px rgba(var(--primary-sub-rgb), 0.35);
         }
 
         .avatar-icon {
@@ -344,8 +344,8 @@ onMounted(async () => { });
           cursor: auto;
           user-select: none;
           border-radius: 0.5rem;
-          background: $general-white;
-          box-shadow: 1px 1px 3px #b9b7b7;
+          background: var(--bg-surface);
+          box-shadow: 1px 1px 3px rgba(var(--mask-rgb), 0.2);
           animation: fadeOutBottomRight 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
           background-image: url('@/assets/img/layout/view.jpg');
           background-position: center center;
@@ -355,7 +355,7 @@ onMounted(async () => { });
             padding: 0.2rem 0;
             @include flexCenter(row, center);
             font-family: var(--app-font-family);
-            border-bottom: 2px solid #ee9999;
+            border-bottom: 2px solid var(--deco-danger);
 
             span {
               font-size: 0.9rem;
@@ -378,7 +378,7 @@ onMounted(async () => { });
               padding: 0.4rem 0.5rem;
               width: 100%;
               font-size: 0.8rem;
-              color: #303132;
+              color: var(--text-color);
               transition: all 0.3s;
               // border-radius: 5px;
               margin: 0.2rem 0;
@@ -387,7 +387,7 @@ onMounted(async () => { });
 
               .item__left {
                 @include flexCenter(row, flex-start);
-                color: #000;
+                color: var(--text-color);
               }
 
               span {
@@ -412,7 +412,7 @@ onMounted(async () => { });
               }
 
               &:last-child {
-                border-top: 1px solid #e8e8e8;
+                border-top: 1px solid var(--border-solid);
                 @include flexCenter(row, flex-start);
               }
             }
@@ -474,14 +474,14 @@ onMounted(async () => { });
       height: 1.9rem;
       border-radius: 50%;
       margin: 0.5rem;
-      background: linear-gradient(135deg, #ff9ecf, #9a7cff);
+      background: linear-gradient(135deg, var(--deco-light-2), var(--deco-light-2));
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(154, 124, 255, 0.3);
+      box-shadow: 0 4px 10px rgba(var(--primary-color-rgb), 0.3);
       @include flexCenter(center, center);
     }
   }
@@ -491,11 +491,11 @@ onMounted(async () => { });
 // 背景变化
 @keyframes bgcFade {
   0% {
-    background-color: rgb(25, 29, 15, 0);
+    background-color: rgba(var(--mask-rgb), 0);
   }
 
   100% {
-    background-color: rgb(25, 29, 15, 0.6);
+    background-color: rgba(var(--deco-success-rgb), 0.6);
   }
 }
 

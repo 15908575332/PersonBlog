@@ -12,7 +12,7 @@
                         :display="true">
                         <slide v-for="(item, index) in spliceData" :key="index" :index="index">
                             <a class="image">
-                                <a-badge-ribbon color="#fe3459" text="推荐"></a-badge-ribbon>
+                                <a-badge-ribbon color="var(--deco-danger)" text="推荐"></a-badge-ribbon>
                                 <LazyImage :src="item.cover_image_url" alt="Image" />
                                 <div class="item__count">
                                     <h1>{{ item.title }}</h1>
@@ -77,7 +77,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 import { useAuthStore } from '@/stores/auth';
 const authStore = useAuthStore();
-import { assistanceColors, assistanceColorByIndex } from '@/styles/palette';
+import { assistanceColorByIndex } from '@/styles/palette';
 
 //标题栏
 const specialColumn = ref([]);
@@ -177,7 +177,7 @@ onMounted(() => {
                             left: 0;
                             width: 100%;
                             height: 100%;
-                            background-image: linear-gradient(0deg, rgb(29, 27, 27, .6), transparent 15%);
+                            background-image: linear-gradient(0deg, rgba(var(--mask-rgb), 0.6), transparent 15%);
                             border-radius: 0.5rem;
                         }
                     }
@@ -240,7 +240,7 @@ onMounted(() => {
 
             .menu {
                 @include flexCenter(row, space-between);
-                border-bottom: 1px dashed #ccc;
+                border-bottom: 1px dashed var(--border-strong);
                 padding: 0.2rem;
                 padding-top: 2rem;
 
@@ -256,7 +256,7 @@ onMounted(() => {
 
                     span {
                         font-size: 1rem;
-                        color: #999;
+                        color: var(--text-muted);
                     }
                 }
 
@@ -306,7 +306,7 @@ onMounted(() => {
                             left: 0;
                             width: 100%;
                             height: 100%;
-                            background-color: rgb(0, 0, 0, .3);
+                            background-color: rgba(var(--mask-rgb), .3);
                         }
 
                         img {
@@ -351,7 +351,7 @@ onMounted(() => {
     }
 
     .box__shadow {
-        box-shadow: 0px 0px 6px 4px rgba(17, 17, 26, 0.1);
+        box-shadow: 0px 0px 6px 4px rgba(var(--mask-rgb), 0.1);
     }
 }
 </style>

@@ -343,7 +343,7 @@ h2 {
         width: $accent-bar-width;
         height: $accent-bar-height;
         border-radius: $accent-bar-radius;
-        background-color: themed('color-accent');
+        background-color: var(--color-accent);
     }
 }
 
@@ -410,8 +410,8 @@ h2 {
             padding: 0.25rem 2.8rem 0.25rem 0.5rem;
             font-size: 0.7rem;
             line-height: 1.4;
-            color: #fff;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+            color: var(--text-on-dark);
+            background: linear-gradient(180deg, rgba(var(--mask-rgb), 0) 0%, rgba(var(--mask-rgb), 0.6) 100%);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -436,21 +436,21 @@ h2 {
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            background-color: rgba(0, 0, 0, 0.55);
+            color: var(--text-on-dark);
+            background-color: rgba(var(--mask-rgb), 0.55);
             opacity: 0;
             transform: translateY(0.25rem);
             transition: opacity 0.3s, transform 0.3s, background-color 0.3s;
 
             &:hover {
-                background-color: rgba(0, 0, 0, 0.8);
+                background-color: rgba(var(--mask-rgb), 0.8);
             }
 
             &.active {
                 opacity: 1;
                 // 播放中的按钮常驻显示，需归位，避免残留 translateY 偏移
                 transform: translateY(0);
-                background-color: themed('primary-sub');
+                background-color: var(--primary-sub);
             }
         }
     }
@@ -466,7 +466,7 @@ h2 {
         gap: 0.15rem;
         padding: 0.1rem 0.4rem;
         border-radius: 999px;
-        color: #fff;
+        color: var(--text-on-dark);
         font-size: 0.65rem;
         line-height: 1.2;
         font-family: var(--app-font-family);
@@ -478,7 +478,7 @@ h2 {
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: themed('bg-overlay');
+            background: var(--bg-overlay);
             opacity: 0.55;
         }
 
@@ -521,7 +521,7 @@ h2 {
     >.hot-music,
     >.rec-playlist,
     >.mv-video {
-        border-top: 1px solid themed('border-default');
+        border-top: 1px solid var(--border-default);
         padding-top: $space-1;
         padding-bottom: $section-pad-bottom;
     }

@@ -42,7 +42,7 @@ watch(() => props.isVisible, (newValue) => {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(var(--mask-rgb), 0.5);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -54,13 +54,13 @@ watch(() => props.isVisible, (newValue) => {
 
     .modal-content {
         position: relative;
-        background-color: #fff;
+        background-color: var(--bg-surface);
         background-position: center center;
         background-size: cover;
         padding: 2rem;
         border-radius: 8px;
         min-width: 300px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 5px 15px rgba(var(--mask-rgb), 0.3);
         cursor: auto;
         user-select: none;
         display: flex;

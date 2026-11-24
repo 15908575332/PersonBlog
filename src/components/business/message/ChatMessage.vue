@@ -74,7 +74,7 @@ const previewImage = (imageUrl) => { //图片预览
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(0,0,0,0.8);
+        background: var(--bg-overlay);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -247,7 +247,7 @@ onUnmounted(() => {
                 height: 35px;
                 border-radius: 0.2rem;
                 object-fit: cover;
-                background-color: #f0f0f0;
+                background-color: var(--bg-surface-alt);
             }
         }
 
@@ -261,7 +261,7 @@ onUnmounted(() => {
             //消息发送人名
             .sender-name {
                 font-size: 0.8rem;
-                color: $color-1;
+                color: var(--text-sec-color);
                 display: inline-block;
             }
 
@@ -274,7 +274,7 @@ onUnmounted(() => {
                 justify-content: flex-start;
                 flex-wrap: wrap;
                 max-width: 100%;
-                color: $general-black;
+                color: var(--text-on-light);
                 line-height: 25px;
                 position: relative;
                 border: 10px solid transparent;
@@ -313,8 +313,8 @@ onUnmounted(() => {
                     max-height: 150px;
                     border-radius: 0.5rem;
                     cursor: zoom-in;
-                    border: 1px solid #e8e8e8;
-                    background-color: #f9f9f9;
+                    border: 1px solid var(--border-solid);
+                    background-color: var(--bg-surface-alt);
                 }
             }
         }

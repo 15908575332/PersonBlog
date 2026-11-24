@@ -463,7 +463,7 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  font-family: themed('app-font-family');
+  font-family: var(--app-font-family);
   @include theme-transition();
 
   &.on-start {
@@ -485,7 +485,7 @@ onMounted(() => {
     }
 
     .form__cover {
-      box-shadow: 1px 1px 4px themed('text-placeholder');
+      box-shadow: 1px 1px 4px var(--text-placeholder);
 
       &::after {
         transform: scale(2);
@@ -530,7 +530,7 @@ onMounted(() => {
     top: 0;
     height: 100%;
     width: 100%;
-    background: themed('border-color'); // #fff (light) / #000 (dark)
+    background: var(--border-color); // var(--bg-surface) (light) / var(--deco-dark) (dark)
     z-index: -5;
     border-radius: 15%;
     transition: all 0.5s ease;
@@ -578,7 +578,7 @@ onMounted(() => {
     animation: dash 1.3s ease forwards 0.5s;
     opacity: 0;
     stroke-linecap: round;
-    stroke: themed('primary-color');
+    stroke: var(--primary-color);
     @include theme-transition();
     animation-play-state: running;
   }
@@ -631,7 +631,7 @@ onMounted(() => {
       right: 0;
       top: 0;
       height: 100%;
-      background: themed('border-subtle');
+      background: var(--border-subtle);
       @include theme-transition();
     }
 
@@ -640,7 +640,7 @@ onMounted(() => {
       left: 0;
       top: 0;
       height: 100%;
-      background: $primary-color;
+      background: var(--primary-color);
       transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
     }
   }
@@ -661,13 +661,13 @@ onMounted(() => {
     }
 
     &.active .step-label {
-      color: $primary-color;
+      color: var(--primary-color);
       animation: dotPulse 2s ease infinite;
-      text-shadow: 0 0 8px rgba($primary-color, 0.4);
+      text-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.4);
     }
 
     &.done .step-label {
-      color: $primary-color;
+      color: var(--primary-color);
     }
   }
 
@@ -702,17 +702,17 @@ onMounted(() => {
   .styled-input {
     width: 100%;
     position: relative;
-    border: 1px solid themed('border-subtle');
+    border: 1px solid var(--border-subtle);
     border-radius: 3px;
     // @include background('card-background');
     @include theme-transition();
 
     &:hover {
-      border-color: themed('border-default');
+      border-color: var(--border-default);
     }
 
     &.filled {
-      border-color: themed('border-subtle');
+      border-color: var(--border-subtle);
 
       .styled-input__circle::after {
         transform: scale(90);
@@ -738,7 +738,7 @@ onMounted(() => {
         height: 16px;
         width: 16px;
         z-index: -2;
-        background-color: themed('primary-color');
+        background-color: var(--primary-color);
         -webkit-mask-repeat: no-repeat;
         mask-repeat: no-repeat;
         -webkit-mask-position: center;
@@ -780,7 +780,7 @@ onMounted(() => {
       border: none;
       font-weight: 600;
       letter-spacing: 0.1rem;
-      font-family: themed('app-font-family');
+      font-family: var(--app-font-family);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -825,11 +825,11 @@ onMounted(() => {
       letter-spacing: 2px;
       font-weight: 700;
       font-size: 14px;
-      caret-color: $primary-color;
+      caret-color: var(--primary-color);
       @include theme-transition();
 
       &::selection {
-        background: rgba($primary-color, 0.18);
+        background: rgba(var(--primary-color-rgb), 0.18);
         @include text-color('text-color');
       }
     }
@@ -842,7 +842,7 @@ onMounted(() => {
     flex-shrink: 0;
     padding: 11px 14px;
     border-radius: 3px;
-    border: 1px solid themed('border-subtle');
+    border: 1px solid var(--border-subtle);
     background: transparent;
     @include text-color('text-color');
     font-size: 14px;
@@ -850,12 +850,12 @@ onMounted(() => {
     cursor: pointer;
     white-space: nowrap;
     @include theme-transition();
-    font-family: themed('app-font-family');
+    font-family: var(--app-font-family);
 
     &:hover:not(:disabled) {
       @include background('bg-tag');
-      border-color: rgba($primary-color, 0.35);
-      color: $primary-color;
+      border-color: rgba(var(--primary-color-rgb), 0.35);
+      color: var(--primary-color);
     }
 
     &:disabled {
@@ -875,7 +875,7 @@ onMounted(() => {
     justify-content: center;
     min-width: 64px;
     border-radius: 3px;
-    border: 1px solid rgba($primary-color, 0.18);
+    border: 1px solid rgba(var(--primary-color-rgb), 0.18);
     @include text-color('text-color');
     font-size: 0.8rem;
     font-weight: 700;
@@ -885,7 +885,7 @@ onMounted(() => {
     @include theme-transition();
 
     &:hover {
-      border-color: rgba($primary-color, 0.45);
+      border-color: rgba(var(--primary-color-rgb), 0.45);
       @include text-color('text-color');
     }
   }
@@ -902,7 +902,7 @@ onMounted(() => {
     .styled-button {
       flex: 1;
       width: auto;
-      font-family: themed('app-font-family');
+      font-family: var(--app-font-family);
       max-width: 40%;
     }
   }
@@ -923,7 +923,7 @@ onMounted(() => {
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 0.1em;
-    background: $primary-color;
+    background: var(--primary-color);
     transition: all 0.3s ease;
     overflow: hidden;
 
@@ -956,7 +956,7 @@ onMounted(() => {
       overflow: hidden;
 
       &.back {
-        color: themed('text-sec-color');
+        color: var(--text-sec-color);
         transform: translateX(-100%);
 
         .styled-button__text-holder {
@@ -972,8 +972,8 @@ onMounted(() => {
 
     &:hover,
     &:active {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      background: $primary-hover;
+      box-shadow: 0 8px 20px rgba(var(--mask-rgb), 0.3);
+      background: var(--primary-hover);
 
       .face {
         transform: translateX(100%);
@@ -985,7 +985,7 @@ onMounted(() => {
 
       .back {
         transform: translateX(0);
-        color: themed('border-color');
+        color: var(--border-color);
 
         .styled-button__text-holder {
           transform: translateX(0);
@@ -994,19 +994,19 @@ onMounted(() => {
     }
 
     &:active {
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 5px rgba(var(--mask-rgb), 0.3);
     }
 
     // Outline 变体
     &.styled-button--outline {
       background: transparent;
-      color: $primary-color;
-      box-shadow: $shadow-card;
+      color: var(--primary-color);
+      box-shadow: var(--shadow-card-outline);
       max-height: 2rem;
       @include flexCenter(center, center);
 
       .back {
-        color: themed('text-color');
+        color: var(--text-color);
       }
 
       &:hover,
@@ -1044,7 +1044,7 @@ onMounted(() => {
       border-radius: 50%;
       display: block;
       stroke-width: 3;
-      stroke: $primary-color;
+      stroke: var(--primary-color);
       @include theme-transition();
       stroke-miterlimit: 10;
       animation: successFill 0.4s ease forwards 0.2s;
@@ -1084,11 +1084,11 @@ onMounted(() => {
 
   0%,
   100% {
-    text-shadow: 0 0 4px rgba($primary-color, 0.2);
+    text-shadow: 0 0 4px rgba(var(--primary-color-rgb), 0.2);
   }
 
   50% {
-    text-shadow: 0 0 12px rgba($primary-color, 0.6), 0 0 24px rgba($primary-color, 0.15);
+    text-shadow: 0 0 12px rgba(var(--primary-color-rgb), 0.6), 0 0 24px rgba(var(--primary-color-rgb), 0.15);
   }
 }
 
@@ -1123,13 +1123,13 @@ onMounted(() => {
 
   25% {
     transform: translate(0, 10px);
-    color: $primary-hover;
+    color: var(--primary-hover);
   }
 
   45% {
     transform: translate(0, 10px);
     opacity: 0;
-    color: $primary-hover;
+    color: var(--primary-hover);
   }
 
   55% {
@@ -1140,11 +1140,11 @@ onMounted(() => {
   56% {
     transform: translate(-30px, -27px);
     opacity: 0;
-    color: $primary-color;
+    color: var(--primary-color);
   }
 
   76% {
-    color: $primary-color;
+    color: var(--primary-color);
     opacity: 1;
     transform: translate(-30px, -27px);
   }
@@ -1174,12 +1174,12 @@ onMounted(() => {
   55% {
     transform: translate(0, 10px);
     opacity: 0;
-    color: $primary-hover;
+    color: var(--primary-hover);
   }
 
   56% {
     transform: translate(0, 10px);
-    color: $primary-hover;
+    color: var(--primary-hover);
   }
 
   100% {
@@ -1203,7 +1203,7 @@ onMounted(() => {
 
 @keyframes successFill {
   100% {
-    box-shadow: inset 0 0 0 100px rgba($primary-color, 0.05);
+    box-shadow: inset 0 0 0 100px rgba(var(--primary-color-rgb), 0.05);
   }
 }
 

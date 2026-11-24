@@ -32,15 +32,15 @@ const goHome = () => {
     .text {
         @include flexCenter(column, center);
         gap: 1rem;
-        color: #22af85;
+        color: var(--deco-primary);
         font-family: var(--app-font-family);
 
         .backhome {
             padding: 0.5rem 1rem;
-            background-color: #22af85;
+            background-color: var(--deco-primary);
             border-radius: 0.5rem;
             cursor: pointer;
-            color: #fff;
+            color: var(--text-on-dark);
         }
 
     }

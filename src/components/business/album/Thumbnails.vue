@@ -100,8 +100,8 @@ onUnmounted(() => {
   border-radius: 15px;
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
-  background-image: linear-gradient(to right, #fff, #fff),
-    linear-gradient(to right, #cef5eb, #286aee);
+  background-image: linear-gradient(to right, var(--bg-surface), var(--bg-surface)),
+    linear-gradient(to right, var(--deco-light), var(--deco-primary));
   border: 3px solid transparent;
 }
 

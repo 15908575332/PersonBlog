@@ -714,15 +714,15 @@ onUnmounted(() => {
 
     // 当前激活导航样式
     .nav-active {
-      background-image: linear-gradient(75deg, #e73636 10%, #c20c0c 120%);
+      background-image: linear-gradient(75deg, var(--deco-danger) 10%, var(--deco-danger) 120%);
 
       a {
         span {
-          color: $general-white;
+          color: var(--text-on-dark);
         }
 
         svg {
-          color: $general-white;
+          color: var(--text-on-dark);
         }
       }
     }
@@ -766,8 +766,8 @@ onUnmounted(() => {
         padding: 0.3rem 1rem;
         font-size: 0.9rem;
         font-family: var(--app-font-family);
-        background-color: $general-white;
-        border: 1px solid #e8eaef;
+        background-color: var(--bg-surface);
+        border: 1px solid var(--deco-neutral-weak);
 
         &::placeholder {
           font-size: 0.8rem;
@@ -782,7 +782,7 @@ onUnmounted(() => {
       align-items: center;
       gap: 1rem;
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid #e8eaef;
+      border-bottom: 1px solid var(--deco-neutral-weak);
       flex-shrink: 0;
 
       .result-count {
@@ -806,7 +806,7 @@ onUnmounted(() => {
         transition: background-color 0.2s;
 
         &:hover {
-          background-color: rgba(255, 131, 69, 0.06);
+          background-color: rgba(var(--color-accent-rgb), 0.06);
         }
 
         .song-index {
@@ -823,7 +823,7 @@ onUnmounted(() => {
           border-radius: 6px;
           object-fit: cover;
           flex-shrink: 0;
-          background-color: #f2f2f2;
+          background-color: var(--bg-surface-alt);
         }
 
         .info {
@@ -884,7 +884,7 @@ onUnmounted(() => {
         border-radius: 0.25rem;
         overflow: hidden;
         position: relative;
-        background-color: #fff;
+        background-color: var(--bg-surface);
         @include flexCenter(row, center);
         cursor: pointer;
         transition: all 0.4s ease;
@@ -906,7 +906,7 @@ onUnmounted(() => {
           left: 0;
           width: 100%;
           height: 100%;
-          background-color: rgb(12, 11, 11, .5);
+          background-color: rgba(var(--mask-rgb), 0.5);
           z-index: 1;
         }
 
@@ -914,7 +914,7 @@ onUnmounted(() => {
         .arrows {
           display: none;
           opacity: 0;
-          color: #ffffff;
+          color: var(--text-on-dark);
           position: absolute;
           z-index: 2;
           @include flexCenter(column, flex-start);
@@ -994,7 +994,7 @@ onUnmounted(() => {
           //进度条
           .progress-bar {
             height: 5px;
-            background: #ddd;
+            background: var(--deco-light);
             cursor: pointer;
             position: relative;
             width: 100%;
@@ -1002,7 +1002,7 @@ onUnmounted(() => {
 
             .progress {
               height: 100%;
-              background: $primary-color;
+              background: var(--primary-color);
               transition: width 0.1s linear;
             }
           }
@@ -1076,13 +1076,13 @@ onUnmounted(() => {
                   transform: translateY(-50%);
                   width: 100%;
                   height: 0.3rem;
-                  background: rgba(255, 255, 255, 0.3);
+                  background: rgba(var(--highlight-rgb), 0.3);
                   border-radius: 0.2rem;
                   overflow: hidden;
 
                   .current-volume {
                     height: 100%;
-                    background: $primary-color;
+                    background: var(--primary-color);
                     transition: width 0.1s ease;
                   }
 
@@ -1093,9 +1093,9 @@ onUnmounted(() => {
                     transform: translate(-50%, -50%);
                     width: 0.6rem;
                     height: 0.8rem;
-                    background: #ffffff;
+                    background: var(--bg-surface);
                     border-radius: 50%;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    box-shadow: 0 2px 4px rgba(var(--mask-rgb), 0.2);
                     transition: left 0.1s ease;
                   }
                 }
@@ -1120,10 +1120,10 @@ onUnmounted(() => {
 .player-controls {
   background-size: cover;
   border-radius: 0.5rem;
-  box-shadow: 0 0 20px rgba(23, 24, 44, 0.72);
+  box-shadow: 0 0 20px rgba(var(--primary-color-rgb), 0.72);
   gap: 1rem;
   position: relative;
-  background-image: linear-gradient(180deg, #2e2e2e 30%, #121212 100%);
+  background-image: linear-gradient(180deg, var(--deco-dark) 30%, var(--deco-dark) 100%);
 
   // 专辑图片
   .album-pic {
@@ -1159,13 +1159,13 @@ onUnmounted(() => {
     @include flexCenter(row, center);
     gap: 2rem;
     padding: 0.5rem;
-    box-shadow: 0 1px 10px rgb(255, 255, 255, .2);
-    background-color: rgb(65, 65, 65, .3);
+    box-shadow: 0 1px 10px rgba(var(--highlight-rgb), .2);
+    background-color: rgba(var(--mask-rgb), 0.3);
 
     &>div {
       min-width: 30px;
       cursor: pointer;
-      color: $general-white;
+      color: var(--text-on-dark);
 
       img {
         width: 0.8rem;
@@ -1190,7 +1190,7 @@ onUnmounted(() => {
       text-align: center;
       overflow-y: auto;
       overscroll-behavior: contain;
-      background-color: rgb(65, 65, 65, .3);
+      background-color: rgba(var(--mask-rgb), 0.3);
       padding: 0.5rem 0;
 
       /* IE 10+ */
@@ -1201,13 +1201,13 @@ onUnmounted(() => {
 
       .lyric-line {
         font-size: 0.9rem;
-        color: #f4f3f3;
+        color: var(--text-on-dark);
         padding: 0.5rem 0.2rem;
         transition: all 0.3s ease;
         line-height: 24px;
 
         &.active {
-          color: $primary-hover;
+          color: var(--primary-hover);
           font-size: 0.9rem;
           font-weight: bold;
           transform: scale(1.05);
@@ -1215,7 +1215,7 @@ onUnmounted(() => {
       }
 
       .no-lyrics {
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(var(--highlight-rgb), 0.5);
         font-style: italic;
         padding: 2rem;
       }

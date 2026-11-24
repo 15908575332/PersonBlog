@@ -176,7 +176,7 @@ h2 {
         width: $accent-bar-width;
         height: $accent-bar-height;
         border-radius: $accent-bar-radius;
-        background-color: themed('color-accent');
+        background-color: var(--color-accent);
     }
 }
 
@@ -223,7 +223,7 @@ h2 {
     // 区块间分隔线：仅从第二个内容区块起生效，上内距只补线下方呼吸量
     >.exclusive-music,
     >.new-music {
-        border-top: 1px solid themed('border-default');
+        border-top: 1px solid var(--border-default);
         padding-top: $space-1;
         padding-bottom: $section-pad-bottom;
     }
@@ -252,7 +252,7 @@ h2 {
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
-                border: 1px solid #999;
+                border: 1px solid var(--deco-neutral);
                 position: absolute;
                 top: -0.4rem;
                 right: -0.4rem;
@@ -327,14 +327,14 @@ h2 {
             }
         }
 
-        // 地区筛选控件（配色统一走 themed() 主题变量）
+        // 地区筛选控件（配色统一走 CSS 变量）
         .region-select {
             flex: none;
             width: 4.5rem;
 
             :deep(.ant-select-selector) {
-                background-color: themed("card-background") !important;
-                border: 1px solid themed("border-default") !important;
+                background-color: var(--card-background) !important;
+                border: 1px solid var(--border-default) !important;
                 border-radius: 0.5rem !important;
                 @include theme-transition();
                 border-radius: 0.2rem !important;
@@ -344,15 +344,15 @@ h2 {
             }
 
             :deep(.ant-select-selection-item) {
-                color: themed("text-color");
+                color: var(--text-color);
             }
 
             :deep(.ant-select-arrow) {
-                color: themed("text-sec-color");
+                color: var(--text-sec-color);
             }
 
             &:hover :deep(.ant-select-selector) {
-                border-color: themed("color-accent") !important;
+                border-color: var(--color-accent) !important;
             }
         }
 
@@ -398,15 +398,15 @@ h2 {
 
 // 地区筛选下拉面板挂载在 body 下，需用全局选择器适配主题
 :global(.region-select-dropdown) {
-    background-color: themed("card-background");
+    background-color: var(--card-background);
     border-radius: 0.5rem;
     padding: 0.25rem;
-    box-shadow: themed("shadow-card");
+    box-shadow: var(--shadow-card);
     @include theme-transition();
 }
 
 :global(.region-select-dropdown .ant-select-item) {
-    color: themed("text-color");
+    color: var(--text-color);
     font-size: 0.75rem;
     border-radius: 0.25rem;
     border-radius: 0;
@@ -415,12 +415,12 @@ h2 {
 }
 
 :global(.region-select-dropdown .ant-select-item-option-active) {
-    background-color: themed("color-accent-soft");
+    background-color: var(--color-accent-soft);
 }
 
 :global(.region-select-dropdown .ant-select-item-option-selected) {
-    background-color: themed("color-accent-soft");
-    color: themed("color-accent");
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
     font-weight: 500;
 }
 </style>

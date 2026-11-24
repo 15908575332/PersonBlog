@@ -317,18 +317,18 @@ const generateRandomGradient = (seed) => {
   if (isDark) {
     // 暗色主题：深色背景 + 主题色微光
     const darkGradients = [
-      `linear-gradient(${angle}deg, rgba(93, 233, 224, 0.1) 0%, rgba(42, 51, 64, 0.9) 100%)`,
-      `linear-gradient(${angle}deg, rgba(242, 66, 87, 0.1) 0%, rgba(30, 34, 48, 0.9) 100%)`,
-      `linear-gradient(${angle}deg, rgba(240, 152, 110, 0.1) 0%, rgba(42, 26, 46, 0.9) 100%)`
+      `linear-gradient(${angle}deg, rgba(var(--primary-color-rgb),.1) 0%, rgba(var(--mask-rgb),.9) 100%)`,
+      `linear-gradient(${angle}deg, rgba(var(--primary-sub-rgb),.1) 0%, rgba(var(--mask-rgb),.9) 100%)`,
+      `linear-gradient(${angle}deg, rgba(var(--color-accent-rgb),.1) 0%, rgba(var(--mask-rgb),.9) 100%)`
     ];
     const index = Math.floor(seedNum % darkGradients.length);
     return darkGradients[index];
   } else {
     // 亮色主题：柔和渐变
     const lightGradients = [
-      `linear-gradient(${angle}deg, rgba(93, 233, 224, 0.15) 0%, rgba(236, 248, 255, 0.9) 100%)`,
-      `linear-gradient(${angle}deg, rgba(242, 66, 87, 0.15) 0%, rgba(255, 255, 255, 0.9) 100%)`,
-      `linear-gradient(${angle}deg, rgba(232, 132, 92, 0.15) 0%, rgba(255, 247, 240, 0.9) 100%)`
+      `linear-gradient(${angle}deg, rgba(var(--primary-color-rgb),.15) 0%, rgba(var(--highlight-rgb),.9) 100%)`,
+      `linear-gradient(${angle}deg, rgba(var(--primary-sub-rgb),.15) 0%, rgba(var(--highlight-rgb),.9) 100%)`,
+      `linear-gradient(${angle}deg, rgba(var(--color-accent-rgb),.15) 0%, rgba(var(--highlight-rgb),.9) 100%)`
     ];
     const index = Math.floor(seedNum % lightGradients.length);
     return lightGradients[index];
@@ -424,7 +424,7 @@ onMounted(() => {
 
 <style lang="scss">
 .recordContent {
-  font-family: themed('app-font-family');
+  font-family: var(--app-font-family);
   user-select: none;
   min-height: 100vh;
   $main_content_width: 60rem;
@@ -450,7 +450,7 @@ onMounted(() => {
 
     &::after {
       content: "";
-      @include mask-overlay(rgba(0, 0, 0, 0.1));
+      @include mask-overlay(rgba(var(--mask-rgb), 0.1));
       pointer-events: none;
     }
   }
@@ -466,7 +466,7 @@ onMounted(() => {
       position: absolute;
       top: 10vh;
       right: 30vw;
-      color: themed('primary-color');
+      color: var(--primary-color);
       font-size: 1.5rem;
       cursor: pointer;
       z-index: 2;
@@ -480,19 +480,19 @@ onMounted(() => {
 
       input {
         border-radius: 1rem;
-        border: 2px solid themed('primary-color');
+        border: 2px solid var(--primary-color);
         padding: 0.3rem 1rem;
         padding-right: 2rem;
         width: 20rem;
-        color: #202433;
+        color: var(--text-color);
         font-size: 0.9rem;
         display: flex;
-        font-family: themed('app-font-family');
+        font-family: var(--app-font-family);
         align-items: center;
         background-color: transparent;
 
         &::placeholder {
-          color: $general-white;
+          color: var(--text-on-dark);
           font-size: 0.9rem;
         }
       }
@@ -526,9 +526,9 @@ onMounted(() => {
 
       .suggestion-tag {
         display: inline-block;
-        background: themed('bg-tag');
-        border: 1px solid themed('primary-color');
-        color: $general-white;
+        background: var(--bg-tag);
+        border: 1px solid var(--primary-color);
+        color: var(--text-on-dark);
         border-radius: 1rem;
         padding: 0.2rem 0.8rem;
         font-size: 0.95rem;
@@ -540,8 +540,8 @@ onMounted(() => {
       }
 
       .suggestion-tag:hover {
-        background: themed('primary-sub');
-        color: $general-white;
+        background: var(--primary-sub);
+        color: var(--text-on-dark);
         transition: all ease 0.4s;
       }
 
@@ -556,7 +556,7 @@ onMounted(() => {
       h3 {
         padding: 1rem 0;
         font-size: 1.2rem;
-        color: $primary-color;
+        color: var(--primary-color);
       }
     }
 
@@ -568,7 +568,7 @@ onMounted(() => {
       width: 100%;
       height: 100%;
       pointer-events: none;
-      background: themed('bg-overlay');
+      background: var(--bg-overlay);
       opacity: 0;
       transition: opacity 0.5s;
       transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
@@ -624,7 +624,7 @@ onMounted(() => {
 
     .menu {
       @include flexCenter(row, space-between);
-      border-bottom: 1px solid themed('border-subtle');
+      border-bottom: 1px solid var(--border-subtle);
       padding: 0.2rem;
       padding-top: 2rem;
 
@@ -639,13 +639,13 @@ onMounted(() => {
 
         span {
           font-size: 1rem;
-          color: themed('primary-sub');
+          color: var(--primary-sub);
         }
       }
     }
 
     .search-result-menu {
-      border-color: themed('primary-color');
+      border-color: var(--primary-color);
     }
 
     .noSearchResult {
@@ -681,15 +681,15 @@ onMounted(() => {
         padding: 0.2rem;
         border-radius: 0.75rem;
         z-index: 1;
-        border: 1px solid themed('border-subtle');
+        border: 1px solid var(--border-subtle);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
           box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
           border-color 0.18s ease;
 
         &:hover {
           transform: translateY(-2px);
-          box-shadow: themed('shadow-elevated');
-          border-color: themed('border-default');
+          box-shadow: var(--shadow-elevated);
+          border-color: var(--border-default);
 
           &::before {
             opacity: 1;
@@ -709,7 +709,7 @@ onMounted(() => {
         &::before,
         &::after {
           content: "";
-          background: radial-gradient(circle at 23% 70%, rgba(255, 255, 255, 0.8), #ffffff 30%);
+          background: radial-gradient(circle at 23% 70%, rgba(var(--highlight-rgb), 0.8), var(--bg-surface) 30%);
           width: 20%;
           height: 150%;
           opacity: 0;
@@ -722,7 +722,7 @@ onMounted(() => {
         }
 
         &::after {
-          background: rgba(255, 255, 255, 0.5);
+          background: rgba(var(--highlight-rgb), 0.5);
           right: auto;
           right: 9%;
           top: -131%;
@@ -794,7 +794,7 @@ onMounted(() => {
             text-transform: capitalize;
             margin: 0 0 10px;
             display: block;
-            color: themed('text-sec-color');
+            color: var(--text-sec-color);
           }
 
           .icon {
@@ -808,7 +808,7 @@ onMounted(() => {
 
               a {
                 @include text-color('text-color');
-                background-color: themed('card-background');
+                background-color: var(--card-background);
                 font-size: 18px;
                 text-align: center;
                 line-height: 35px;
@@ -820,9 +820,9 @@ onMounted(() => {
 
                 &:hover {
                   @include text-color('card-background');
-                  background-color: themed('text-color');
+                  background-color: var(--text-color);
                   border-radius: 10%;
-                  box-shadow: 0 0 5px themed('text-color') inset;
+                  box-shadow: 0 0 5px var(--text-color) inset;
                 }
               }
             }
@@ -872,7 +872,7 @@ onMounted(() => {
         transform: translateY(-60%) !important;
 
         h1 {
-          color: #202433 !important;
+          color: var(--text-color) !important;
         }
       }
 
@@ -883,8 +883,8 @@ onMounted(() => {
           box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
           border-color 0.18s ease;
         border-radius: 0.875rem;
-        background-color: themed('bg-card-glass');
-        border: 1px solid themed('border-subtle');
+        background-color: var(--bg-card-glass);
+        border: 1px solid var(--border-subtle);
         overflow: hidden;
 
         p {
@@ -908,8 +908,8 @@ onMounted(() => {
         &:hover {
           cursor: pointer;
           transform: translateY(-60%);
-          box-shadow: themed('shadow-elevated');
-          border-color: themed('border-default');
+          box-shadow: var(--shadow-elevated);
+          border-color: var(--border-default);
 
           .hoverBanner {
             opacity: 1;
@@ -953,7 +953,7 @@ onMounted(() => {
     .content__container {
       .menu {
         @include flexCenter(row, space-between);
-        border-bottom: 1px solid themed('border-subtle');
+        border-bottom: 1px solid var(--border-subtle);
         padding: 0.2rem;
         padding-top: 2rem;
         position: relative;
@@ -969,13 +969,13 @@ onMounted(() => {
 
           span {
             font-size: 1rem;
-            color: themed('primary-sub');
+            color: var(--primary-sub);
           }
         }
       }
 
       .advocate-menu {
-        border-color: themed('primary-color');
+        border-color: var(--primary-color);
         padding: 1.2rem 0.2rem 0.5rem;
 
         .flex__layout:first-child {
@@ -995,13 +995,13 @@ onMounted(() => {
             font-weight: 600;
             font-size: 0.8rem;
             letter-spacing: 0.06em;
-            color: themed('primary-color') !important;
+            color: var(--primary-color) !important;
           }
         }
       }
 
       .advocate-more {
-        color: themed('primary-color') !important;
+        color: var(--primary-color) !important;
       }
 
       .content_aera {
@@ -1017,15 +1017,15 @@ onMounted(() => {
           overflow: hidden;
           cursor: pointer;
           position: relative;
-          border: 1px solid themed('border-subtle');
+          border: 1px solid var(--border-subtle);
           transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
             box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
             border-color 0.18s ease;
 
           &:hover {
             transform: translateY(-3px);
-            box-shadow: themed('shadow-elevated');
-            border-color: themed('border-default');
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--border-default);
 
             .item__count {
               opacity: 1;
@@ -1061,8 +1061,8 @@ onMounted(() => {
           .text__content {
             position: relative;
             background: linear-gradient(180deg,
-                themed('bg-card-glass') 0%,
-                rgba(themed('bg-card-glass-rgb'), 0.92) 100%);
+                var(--bg-card-glass) 0%,
+                rgba(var(--bg-card-glass-rgb), 0.92) 100%);
             width: 100%;
             padding: 0.7rem 0.6rem 0.5rem;
             transition: background 0.3s ease;
@@ -1077,8 +1077,8 @@ onMounted(() => {
               height: 2px;
               border-radius: 1px;
               background: linear-gradient(90deg,
-                  themed('primary-color') 0%,
-                  themed('primary-sub') 50%,
+                  var(--primary-color) 0%,
+                  var(--primary-sub) 50%,
                   transparent 100%);
               opacity: 0.55;
             }
@@ -1089,13 +1089,13 @@ onMounted(() => {
               font-size: 0.65rem;
               font-weight: 400;
               margin-bottom: 0.35rem;
-              color: themed('text-sec-color');
+              color: var(--text-sec-color);
               border-radius: 0.2rem;
               width: fit-content;
               overflow: hidden;
 
               span {
-                color: $general-white;
+                color: var(--text-on-dark);
                 padding: 0.1rem 0.2rem;
                 @include flexCenter(center, center);
                 font-size: 0.65rem;
@@ -1107,7 +1107,7 @@ onMounted(() => {
               }
 
               span:nth-child(2) {
-                background-color: $primary-color;
+                background-color: var(--primary-color);
 
               }
             }
@@ -1120,14 +1120,14 @@ onMounted(() => {
               white-space: nowrap;
               line-height: 1.4;
               letter-spacing: 0.01em;
-              color: themed('text-color');
+              color: var(--text-color);
               padding-bottom: 0.15rem;
               transition: color 0.2s ease;
             }
 
             // hover 时标题微变
             .specific__content:hover & h1 {
-              color: themed('primary-color');
+              color: var(--primary-color);
             }
           }
         }
@@ -1140,7 +1140,7 @@ onMounted(() => {
           transform: translate(-50%, -50%);
           width: 3rem;
           height: 2rem;
-          background: rgba(0, 0, 0, 0.6);
+          background: rgba(var(--mask-rgb), 0.6);
           border: none;
           border-radius: 10px;
           cursor: pointer;
@@ -1177,9 +1177,9 @@ onMounted(() => {
               font-weight: 500;
               padding: 3px 8px;
               margin-right: 0.3rem;
-              background: rgba(0, 0, 0, 0.6);
+              background: rgba(var(--mask-rgb), 0.6);
               backdrop-filter: blur(8px);
-              color: #fff;
+              color: var(--text-on-dark);
               border-radius: 12px;
 
               img {
@@ -1198,16 +1198,16 @@ onMounted(() => {
 
         // 推荐位卡片
         .specific__content {
-          border-color: themed('border-default');
+          border-color: var(--border-default);
           border-width: 1.5px;
           border-radius: 0.85rem;
-          box-shadow: themed('shadow-card');
+          box-shadow: var(--shadow-card);
 
           &:hover {
-            border-color: themed('color-accent');
+            border-color: var(--color-accent);
             box-shadow:
-              0 4px 20px rgba(232, 132, 92, 0.18),
-              0 0 0 1px rgba(232, 132, 92, 0.12) inset;
+              0 4px 20px rgba(var(--color-accent-rgb), 0.18),
+              0 0 0 1px rgba(var(--color-accent-rgb), 0.12) inset;
           }
 
           // 让包裹层div撑满flex容器
@@ -1234,7 +1234,7 @@ onMounted(() => {
 
           // hover 标题变 accent 色
           &:hover .text__content h1 {
-            color: $primary-color;
+            color: var(--primary-color);
           }
         }
 
@@ -1254,19 +1254,19 @@ onMounted(() => {
             font-size: 0.68rem;
             font-weight: 700;
             letter-spacing: 0.04em;
-            color: #fff;
+            color: var(--text-on-dark);
             border-radius: 0.3rem;
-            box-shadow: 0 2px 8px rgba(232, 132, 92, 0.35);
-            background: themed('primary-sub');
+            box-shadow: 0 2px 8px rgba(var(--color-accent-rgb), 0.35);
+            background: var(--primary-sub);
             pointer-events: none;
           }
 
           &:hover {
-            border-color: themed('color-accent');
+            border-color: var(--color-accent);
             box-shadow:
-              0 6px 28px rgba(232, 132, 92, 0.22),
-              0 0 0 1.5px rgba(232, 132, 92, 0.15) inset,
-              0 0 80px rgba(232, 132, 92, 0.06);
+              0 6px 28px rgba(var(--color-accent-rgb), 0.22),
+              0 0 0 1.5px rgba(var(--color-accent-rgb), 0.15) inset,
+              0 0 80px rgba(var(--color-accent-rgb), 0.06);
           }
 
           .text__content {
@@ -1277,21 +1277,21 @@ onMounted(() => {
             padding: 0.8rem 1rem;
             background: linear-gradient(180deg,
                 transparent 0%,
-                rgba(0, 0, 0, 0.65) 100%);
+                rgba(var(--mask-rgb), 0.65) 100%);
 
             &::before {
               display: none;
             }
 
             .release {
-              color: rgba(255, 255, 255, 0.8);
+              color: rgba(var(--highlight-rgb), 0.8);
             }
 
             h1 {
-              color: #fff;
+              color: var(--text-on-dark);
               font-size: 1.15rem;
               font-weight: 750;
-              text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+              text-shadow: 0 1px 4px rgba(var(--mask-rgb), 0.4);
             }
           }
         }

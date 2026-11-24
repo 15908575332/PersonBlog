@@ -76,9 +76,9 @@ onMounted(() => {
 .weather {
     width: 11rem;
     height: 5rem;
-    background-color: #c3ebc320;
+    background-color: rgba(var(--deco-success-rgb), 0.125);
     border-radius: 10px;
-    color: #fff;
+    color: var(--text-on-dark);
     font-size: 1rem;
     backdrop-filter: blur(10px);
     animation: rotateInDownLeft 1s;

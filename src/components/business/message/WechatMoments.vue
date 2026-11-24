@@ -346,11 +346,11 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .demo-2 {
     font-family: var(--app-font-family);
-    --color-text: #000;
-    --color-bg: #9c9c9c;
-    --color-link: #8958b1;
-    --color-link-hover: #fff;
-    --color-info: #000;
+    --color-text: var(--text-color);
+    --color-bg: var(--deco-dark-2);
+    --color-link: var(--deco-dark-2);
+    --color-link-hover: var(--text-on-dark);
+    --color-info: var(--text-color);
 
     main {
         position: relative;
@@ -366,14 +366,14 @@ onUnmounted(() => {
         left: 0.5rem;
         min-height: 0;
         padding: 0.5rem;
-        color: #fff;
+        color: var(--text-on-dark);
         font-size: 16px;
         font-family: var(--app-font-family);
         text-align: center;
 
         // 展开按钮
         .arrows {
-            background-color: #fff;
+            background-color: var(--bg-surface);
             @include flexCenter(row, flex-start);
 
             div {
@@ -479,7 +479,7 @@ onUnmounted(() => {
         width: 100%;
         height: 20%;
         bottom: 0;
-        background: linear-gradient(transparent, #000);
+        background: linear-gradient(transparent, var(--deco-dark));
     }
 }
 
@@ -493,7 +493,7 @@ onUnmounted(() => {
     margin: 0;
     position: relative;
     font-weight: normal;
-    color: $general-white;
+    color: var(--text-on-dark);
 }
 
 // 内容区域副标题
@@ -502,7 +502,7 @@ onUnmounted(() => {
     padding: 1rem 0;
     letter-spacing: 2px;
     text-indent: 2px;
-    color: $general-white;
+    color: var(--text-on-dark);
 
     &::after {
         content: "\2014";
@@ -596,16 +596,16 @@ $grid-areas: (
 }
 
 $grim-bg-colors: (
-    1: $assistance-1,
-    2: $assistance-2,
-    3: $assistance-3,
-    4: $assistance-4,
-    5: $assistance-5,
-    6: $assistance-6,
-    7: $assistance-7,
-    8: $assistance-8,
-    9: $assistance-9,
-    10: $assistance-10
+    1: var(--primary-sub),
+    2: var(--color-accent),
+    3: var(--color-accent-hover),
+    4: var(--primary-sub),
+    5: var(--color-accent),
+    6: var(--color-accent-hover),
+    7: var(--primary-sub),
+    8: var(--color-accent),
+    9: var(--color-accent-hover),
+    10: var(--primary-sub)
 );
 
 @each $num, $color in $grim-bg-colors {
@@ -661,7 +661,7 @@ $grim-bg-colors: (
 
 .grim__item-content {
     position: relative;
-    color: #000;
+    color: var(--text-color);
     overflow: hidden;
 }
 
@@ -684,10 +684,10 @@ $grim-bg-colors: (
 
     //关闭按钮
     .menu-trigger--close {
-        color: #000;
+        color: var(--text-color);
         align-self: center;
         font-size: 14px;
-        background-color: rgb(254, 0, 216);
+        background-color: var(--deco-danger);
     }
 }
 
@@ -696,7 +696,7 @@ $grim-bg-colors: (
     margin: 0;
     font-size: 4vmax;
     font-family: var(--app-font-family);
-    color: #fff;
+    color: var(--text-on-dark);
 }
 
 .grim__item:nth-child(-n + 6) .grim__item-title {
@@ -704,13 +704,13 @@ $grim-bg-colors: (
 }
 
 .grim__item:nth-child(5) .grim__item-title {
-    color: #fff;
+    color: var(--text-on-dark);
 }
 
 .grim__item-desc {
     font-size: 0.85rem;
     margin: 0.5rem 0 0 0;
-    color: #fff;
+    color: var(--text-on-dark);
 }
 
 .grim__item-desc::after {

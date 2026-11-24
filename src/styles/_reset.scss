@@ -23,14 +23,14 @@ input {
 }
 a {
     text-decoration: none;
-    color: #fff;
+    color: var(--text-on-dark);
     cursor: pointer;
 }
 li {
     list-style-type: none;
 }
 button {
-    background-color: rgb(255 255 225 / 0);
+    background-color: rgba(var(--mask-rgb), 0);
     border: none;
 }
 p {

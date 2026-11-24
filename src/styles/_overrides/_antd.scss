@@ -1,11 +1,11 @@
-@use "../color.scss" as *;
+@use "../mixins" as *;
 
 //会员中心徽标样式重写
 #memberCenter {
     .ant-ribbon-text {
         font-size: 18px;
         font-family: var(--app-font-family);
-        color: #fff;
+        color: var(--text-on-dark);
     }
 }
 #recordColumn {
@@ -13,7 +13,7 @@
         .ant-ribbon {
             padding: 0.3rem 1rem;
             position: absolute;
-            background-color: #ffa500 !important;
+            background-color: var(--color-accent) !important;
             .ant-ribbon-text {
                 font-size: 20px;
                 font-family: var(--app-font-family);
@@ -53,7 +53,7 @@
     inset-block-end: 0;
     box-shadow: none;
     height: 2.5rem;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--border-solid);
     .ant-float-btn-icon {
         @include flexCenter(center, center);
         width: 100% !important;
@@ -89,7 +89,7 @@
     //内容
     .ant-notification-notice-description {
         font-size: 0.8rem;
-        color: #ff416c;
+        color: var(--primary-sub);
     }
     //图标
     .ant-notification-notice-icon {

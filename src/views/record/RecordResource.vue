@@ -256,7 +256,7 @@ onMounted(() => {
     // 遮罩
     &::after {
       content: "";
-      @include mask-overlay(#00000020, 21rem, absolute, -1);
+      @include mask-overlay(rgba(var(--mask-rgb), 0.125), 21rem, absolute, -1);
       animation: zoomInDown 0.6s ease-out forwards;
     }
 
@@ -296,14 +296,14 @@ onMounted(() => {
       @include flexCenter(row, space-around);
       flex-wrap: wrap;
       transition: all 0.2s linear;
-      // box-shadow: $shadow-card;
-      box-shadow: themed('shadow-card');
+      // box-shadow: var(--shadow-card-outline);
+      box-shadow: var(--shadow-card);
       @include background('card-background');
       font-size: 0.9rem;
 
       /* 7 */
       .btn-7 {
-        color: #fff;
+        color: var(--text-on-dark);
         margin: 0.2rem 0;
         font-family: var(--app-font-family);
         background: transparent;
@@ -311,9 +311,9 @@ onMounted(() => {
         transition: all 0.3s ease;
         position: relative;
         display: inline-block;
-        box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-          7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-          4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+        box-shadow: inset 2px 2px 2px 0px rgba(var(--highlight-rgb), 0.5),
+          7px 7px 20px 0px rgba(var(--mask-rgb), 0.1),
+          4px 4px 5px 0px rgba(var(--mask-rgb), 0.1);
         outline: none;
         border-radius: 5px;
         padding: 0;
@@ -337,7 +337,7 @@ onMounted(() => {
           content: "";
           right: 0;
           bottom: 0;
-          background: $primary-color;
+          background: var(--primary-color);
           transition: all 0.3s ease;
         }
 
@@ -360,7 +360,7 @@ onMounted(() => {
         }
 
         &:hover {
-          color: rgba(251, 75, 2, 1);
+          color: var(--deco-warning);
           background: transparent !important;
 
           &::before,
@@ -376,7 +376,7 @@ onMounted(() => {
       }
 
       &:hover {
-        box-shadow: themed('shadow-elevated');
+        box-shadow: var(--shadow-elevated);
       }
     }
 
@@ -389,7 +389,7 @@ onMounted(() => {
         width: 40rem;
         padding: 5px;
         margin-top: 2rem;
-        border-bottom: 1px dashed #ccc;
+        border-bottom: 1px dashed var(--border-strong);
 
         img {
           margin-right: 0.5rem;
@@ -397,7 +397,7 @@ onMounted(() => {
 
         span {
           font-size: 1rem;
-          color: #797979;
+          color: var(--text-sec-color);
         }
       }
 
@@ -415,7 +415,7 @@ onMounted(() => {
       .module {
         display: flex;
         align-items: center;
-        box-shadow: themed('shadow-card');
+        box-shadow: var(--shadow-card);
         margin-top: 2rem;
         @include background('card-background');
         border-radius: 0.2rem;
@@ -447,7 +447,7 @@ onMounted(() => {
       .text__content {
         padding: 0.9rem 1.5rem;
         height: 15rem;
-        color: #a4a6a4;
+        color: var(--text-on-dark);
         width: 20rem;
 
         img {
@@ -509,7 +509,7 @@ onMounted(() => {
 
           p {
             background-color: var(--btn-color);
-            color: $general-white;
+            color: var(--text-on-dark);
             display: flex;
             justify-content: center;
             padding: 0.25rem 0.5rem;
@@ -524,8 +524,8 @@ onMounted(() => {
 
 // 导航按钮激活时样式
 .btn__active {
-  color: themed('primary-sub') !important;
-  background: themed('card-background') !important;
+  color: var(--primary-sub) !important;
+  background: var(--card-background) !important;
 
   &::before,
   &>span::before {

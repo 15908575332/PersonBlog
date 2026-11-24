@@ -1,0 +1,134 @@
+// ============================================================================
+// 设计令牌（Design Tokens）—— 全站唯一色值来源
+// ----------------------------------------------------------------------------
+// 色板基准：snows_l's Blog（参考站）
+//   主色 #25bbe4；中性色阶 #222222 / #616060 / #8c8c8c / #dfe2e5 / #9b9a9a；
+//   表面层半透明 #ffffffed / #ffffffbb / #2f2f2fd1 / #333333b3；
+//   语义色沿用 Element Plus（success / warning / danger / info）。
+//
+// 约定：
+//  1. 本项目不保留任何 SCSS 颜色标量，颜色一律通过 CSS 变量消费。
+//  2. 每个颜色先以「--x-rgb 三元组」登记数值，--x 再由 rgb(var(--x-rgb)) 派生；
+//     需要透明度时写 rgba(var(--x-rgb), .12)，不为每种透明度另立色值。
+//  3. 颜色字面量只允许出现在主题块内；:root 只登记与主题无关的量与派生式。
+//     组件内不得出现颜色字面量，历史「内容固定色」统一收敛到文末固定色池
+//     （--deco-*，两主题共用）。
+//  4. 两个主题取值相同的颜色只声明一次，写在默认层并标注「两主题共用」，
+//     深色块不再重复。
+// ============================================================================
+
+:root {
+    // 主题过渡
+    --transition-duration: 0.5s;
+    --transition-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    // 透明基色三元组：全站 rgba 遮罩 / 高光统一由此派生
+    // 例 rgba(var(--mask-rgb), .3)、rgba(var(--highlight-rgb), .7)，两主题共用
+    --mask-rgb: 0, 0, 0;
+    --highlight-rgb: 255, 255, 255;
+
+    // 派生式：本身不含色值，数值统一在主题块登记，主题切换只需改 -rgb
+    --primary-color: rgb(var(--primary-color-rgb));
+    --primary-sub: rgb(var(--primary-sub-rgb));
+    --color-accent: rgb(var(--color-accent-rgb));
+}
+
+// 浅色主题：同时挂在 :root 上，避免首屏 data-theme 尚未写入时颜色为空
+:root,
+[data-theme="light"] {
+    // 文字
+    --text-color: #222222;
+    --text-sec-color: #616060;
+    --text-muted: #8c8c8c;
+    --text-placeholder: var(--text-muted);
+    --text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+
+    // 固定明暗底色上的文字（语义色值固定，两主题共用，不随主题反色）
+    --text-on-light: #333333;
+    --text-on-dark: #ffffff;
+
+    // 主题色：参考站主色 #25bbe4
+    --primary-color-rgb: 37, 187, 228;
+    --primary-hover: #25bbe4e6;
+    // 副色：参考站未另立副色，取语义色 danger #f56c6c
+    --primary-sub-rgb: 245, 108, 108;
+    // 强调色：取语义色 warning #e6a23c
+    --color-accent-rgb: 230, 162, 60;
+    --color-accent-hover: #e6a23cb3;
+    --color-accent-soft: rgba(var(--color-accent-rgb), 0.12);
+
+    // 阴影
+    --shadow-card-outline: 0 4px 20px rgba(var(--mask-rgb), 0.12), 0 0 0 1px rgba(var(--mask-rgb), 0.06);
+    --shadow-card: 2px 2px 6px rgba(var(--mask-rgb), 0.1);
+    --shadow-elevated: 4px 6px 16px rgba(var(--mask-rgb), 0.12);
+
+    // 卡片 / 面板背景
+    --card-background: #ffffffed;
+    --bg-card-glass-rgb: 255, 255, 255;
+    --bg-card-glass: rgba(var(--bg-card-glass-rgb), 0.73);
+    --bg-tag: rgba(var(--mask-rgb), 0.08);
+    --bg-overlay: rgba(var(--mask-rgb), 0.85);
+
+    // 边框
+    --border-subtle: rgba(var(--mask-rgb), 0.06);
+    --border-default: rgba(var(--mask-rgb), 0.12);
+    --border-color: #ffffff;
+
+    // 表面 / 描边 / 补充层
+    --bg-surface: #ffffff;
+    --bg-surface-alt: #f6f8fa;
+    --border-strong: #cccccc;
+    --border-solid: #dfe2e5;
+
+    // ------------------------------------------------------------------------
+    // 固定色池：原 306 条模块装饰色板（--{模块}-{用途}-{序号}）收敛而来，
+    // 取值全部来自参考站色板，两主题共用。
+    // 需要透明度时直接写 rgba(var(--{池}-rgb), α)，不新增令牌。
+    // ------------------------------------------------------------------------
+    --deco-primary: var(--primary-color);
+    --deco-danger: var(--primary-sub);
+    --deco-warning: var(--color-accent);
+    --deco-success: #67c23a;
+    --deco-success-rgb: 103, 194, 58;
+    --deco-info: #909399;
+    --deco-light: #ffffffed;
+    --deco-light-2: #ffffffbb;
+    --deco-dark: #2f2f2fd1;
+    --deco-dark-2: #333333b3;
+    --deco-neutral: #9b9a9a;
+    --deco-neutral-weak: #dfe2e5;
+}
+
+[data-theme="dark"] {
+    // 文字
+    --text-color: #eeeeee;
+    --text-sec-color: #929292;
+    --text-muted: #a19f9f;
+    --text-placeholder: var(--text-muted);
+    --text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
+
+    // 主题色：与浅色同值（参考站深色不覆盖主色），已在默认层声明
+
+    // 阴影
+    --shadow-card-outline: 0 4px 20px rgba(var(--mask-rgb), 0.55), 0 0 0 1px rgba(var(--highlight-rgb), 0.08);
+    --shadow-card: 1px 1px 1px rgba(var(--mask-rgb), 0.6);
+    --shadow-elevated: 2px 4px 12px rgba(var(--mask-rgb), 0.45);
+
+    // 卡片 / 面板背景
+    --card-background: #333333b3;
+    --bg-card-glass-rgb: 47, 47, 47;
+    --bg-card-glass: rgba(var(--bg-card-glass-rgb), 0.82);
+    --bg-tag: rgba(var(--highlight-rgb), 0.12);
+    --bg-overlay: rgba(var(--mask-rgb), 0.85);
+
+    // 边框
+    --border-subtle: rgba(var(--highlight-rgb), 0.06);
+    --border-default: rgba(var(--highlight-rgb), 0.1);
+    --border-color: #cbc3c372;
+
+    // 表面 / 描边 / 补充层
+    --bg-surface: #2f2f2fd1;
+    --bg-surface-alt: #222323;
+    --border-strong: #8f8f8f;
+    --border-solid: #cbc3c372;
+}

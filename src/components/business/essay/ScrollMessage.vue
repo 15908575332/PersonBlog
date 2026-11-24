@@ -122,7 +122,7 @@ function resume() {
     // padding: 0 16px;
     font-size: 18px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-color);
     background-color: transparent;
     position: relative;
     z-index: 1;
@@ -145,7 +145,7 @@ function resume() {
             width: 100%;
             line-height: 1.5;
             font-size: 16px;
-            color: #333;
+            color: var(--text-color);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -160,7 +160,7 @@ function resume() {
                 border-radius: 50%;
                 overflow: hidden;
                 margin-right: 8px;
-                background-color: #33bafb;
+                background-color: var(--deco-primary);
 
                 img {
                     width: 100%;
@@ -175,13 +175,13 @@ function resume() {
                 // margin-right: 4px;
                 margin: 0 4px 0 0;
                 white-space: nowrap;
-                color: rgba(12, 174, 249);
+                color: var(--deco-primary);
             }
 
             .text {
                 flex: 1; // 允许文本内容占据剩余空间
                 white-space: normal; // 允许文本换行
-                color: #666;
+                color: var(--text-sec-color);
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 2;
@@ -192,7 +192,7 @@ function resume() {
             // 冒号
             span {
                 margin: 0 4px;
-                color: #999;
+                color: var(--text-muted);
             }
         }
     }

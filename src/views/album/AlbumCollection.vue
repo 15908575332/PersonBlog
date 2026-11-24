@@ -257,12 +257,12 @@ const imageList_right = ref([
 
 /** ------------------------ 常见布局 ------------------------ */
 const colors = ref([
-  "#a3bded",
-  "#c4f4fe",
-  "#fdefbe",
-  "#28C76F",
-  "#ee7752",
-  "#23a6d5",
+  "var(--deco-primary)",
+  "var(--deco-primary)",
+  "var(--deco-warning)",
+  "var(--deco-success)",
+  "var(--deco-danger)",
+  "var(--deco-info)",
 ]);
 const buttonStyles = (index) => {
   return {
@@ -387,7 +387,7 @@ onBeforeUnmount(() => {
   .circle-left {
     width: 300px;
     height: 300px;
-    background: linear-gradient(135deg, rgba(255, 182, 193, 0.2), rgba(255, 105, 180, 0.1));
+    background: linear-gradient(135deg, rgba(var(--primary-sub-rgb), 0.2), rgba(var(--primary-sub-rgb), 0.1));
     border-radius: 50%;
     bottom: -50px;
     left: -50px;
@@ -396,7 +396,7 @@ onBeforeUnmount(() => {
   .circle-right {
     width: 200px;
     height: 200px;
-    background: linear-gradient(135deg, rgba(154, 124, 255, 0.15), rgba(255, 158, 207, 0.1));
+    background: linear-gradient(135deg, rgba(var(--primary-color-rgb), 0.15), rgba(var(--primary-sub-rgb), 0.1));
     border-radius: 50%;
     bottom: 100px;
     right: 50px;
@@ -407,7 +407,7 @@ onBeforeUnmount(() => {
     height: 0;
     border-left: 50px solid transparent;
     border-right: 50px solid transparent;
-    border-bottom: 100px solid rgba(255, 182, 193, 0.2);
+    border-bottom: 100px solid rgba(var(--primary-sub-rgb), 0.2);
     top: 30%;
     right: 10%;
     transform-origin: center center;
@@ -417,7 +417,7 @@ onBeforeUnmount(() => {
   .floating-dot {
     position: absolute;
     border-radius: 50%;
-    background: linear-gradient(135deg, #FF9ECF, #9A7CFF);
+    background: linear-gradient(135deg, var(--deco-light-2), var(--deco-light-2));
     opacity: 0.3;
     z-index: -1;
     animation: float 6s ease-in-out infinite;
@@ -489,7 +489,7 @@ onBeforeUnmount(() => {
         transform: translate(-50%, -50%);
         width: 90%;
         height: 120%;
-        background: linear-gradient(135deg, rgba(255, 158, 207, 0.1), rgba(154, 124, 255, 0.1));
+        background: linear-gradient(135deg, rgba(var(--primary-sub-rgb), 0.1), rgba(var(--primary-color-rgb), 0.1));
         border-radius: 50% 20% 50% 20%;
         filter: blur(15px);
         opacity: 1;
@@ -498,7 +498,7 @@ onBeforeUnmount(() => {
       .gallery-title {
         font-size: 2rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #FF9ECF 0%, #9A7CFF 100%);
+        background: linear-gradient(135deg, var(--deco-light-2) 0%, var(--deco-light-2) 100%);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -509,7 +509,7 @@ onBeforeUnmount(() => {
         letter-spacing: 1px;
         transition: all 0.3s ease;
         cursor: pointer;
-        text-shadow: 0 2px 10px rgba(154, 124, 255, 0.2);
+        text-shadow: 0 2px 10px rgba(var(--primary-color-rgb), 0.2);
       }
 
       /* 标题装饰线条 */
@@ -520,7 +520,7 @@ onBeforeUnmount(() => {
         transform: translateX(-50%);
         width: 180px;
         height: 8px;
-        background: linear-gradient(90deg, transparent, #FF9ECF, #9A7CFF, transparent);
+        background: linear-gradient(90deg, transparent, var(--deco-light-2), var(--deco-light-2), transparent);
         border-radius: 4px;
         opacity: 0.8;
       }
@@ -549,7 +549,7 @@ onBeforeUnmount(() => {
         font-family: var(--app-font-family);
         font-size: clamp(2rem, 4vw, 2.5rem);
         font-weight: 700;
-        background: -webkit-linear-gradient(0deg, #f76591, #ffc16f);
+        background: -webkit-linear-gradient(0deg, var(--deco-danger), var(--deco-warning));
         background-clip: text;
         -webkit-background-clip: text;
         background-clip: text;
@@ -566,15 +566,15 @@ onBeforeUnmount(() => {
       }
 
       .btn {
-        background-image: linear-gradient(-180deg, #ffc16f, #f76591);
+        background-image: linear-gradient(-180deg, var(--deco-warning), var(--deco-danger));
         font-size: clamp(0.8rem, 8vw, 0.9rem);
         font-weight: 600;
-        color: $general-white;
+        color: var(--text-on-dark);
         width: max-content;
         outline: 0;
         border: 0;
         border-radius: 6px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(var(--mask-rgb), 0.1);
         padding: 10px 20px;
         margin-top: 26px;
         text-align: center;
@@ -588,7 +588,7 @@ onBeforeUnmount(() => {
         font-family: var(--app-font-family);
 
         &:hover {
-          box-shadow: 0 4px 10px rgba(247, 101, 145, 0.5);
+          box-shadow: 0 4px 10px rgba(var(--primary-sub-rgb), 0.5);
           transform: scale(0.98);
         }
       }
@@ -605,8 +605,8 @@ onBeforeUnmount(() => {
         width: 350px;
         height: 500px;
         border-radius: 2rem;
-        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25),
-          0 15px 20px 0 rgba(0, 0, 0, 0.125);
+        box-shadow: 0 5px 10px 0 rgba(var(--mask-rgb), 0.25),
+          0 15px 20px 0 rgba(var(--mask-rgb), 0.125);
         transition: transform 0.6s;
         user-select: none;
 
@@ -622,7 +622,7 @@ onBeforeUnmount(() => {
         &:nth-last-child(n + 5) {
           --x: calc(-50% + 90px);
           transform: translate(var(--x), -50%) scale(0.85);
-          box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.01);
+          box-shadow: 0 0 1px 1px rgba(var(--mask-rgb), 0.01);
         }
 
         &:nth-last-child(4) {
@@ -646,7 +646,7 @@ onBeforeUnmount(() => {
         }
 
         &:nth-last-child(1) img {
-          box-shadow: 0 1px 5px 5px rgba(255, 193, 111, 0.5);
+          box-shadow: 0 1px 5px 5px rgba(var(--color-accent-rgb), 0.5);
         }
       }
     }
@@ -690,8 +690,8 @@ onBeforeUnmount(() => {
       width: 100%;
       height: 100%;
       background-image: linear-gradient(0deg,
-          rgba(211, 196, 252, 0.9),
-          rgba(147, 197, 252, 0.2));
+          rgba(var(--primary-color-rgb), 0.9),
+          rgba(var(--primary-color-rgb), 0.2));
       position: absolute;
     }
 
@@ -726,9 +726,9 @@ onBeforeUnmount(() => {
             transition: all 0.3s ease;
             position: relative;
             display: inline-block;
-            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-              7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-              4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 2px 2px 2px 0px rgba(var(--highlight-rgb), 0.5),
+              7px 7px 20px 0px rgba(var(--mask-rgb), 0.1),
+              4px 4px 5px 0px rgba(var(--mask-rgb), 0.1);
             outline: none;
             border-radius: 5px;
             padding: 0;
@@ -751,11 +751,11 @@ onBeforeUnmount(() => {
               content: "";
               right: 0;
               bottom: 0;
-              background: rgba(251, 75, 2, 1);
-              box-shadow: -7px -7px 20px 0px rgba(255, 255, 255, 0.9),
-                -4px -4px 5px 0px rgba(255, 255, 255, 0.9),
-                7px 7px 20px 0px rgba(0, 0, 0, 0.2),
-                4px 4px 5px 0px rgba(0, 0, 0, 0.3);
+              background: var(--deco-warning);
+              box-shadow: -7px -7px 20px 0px rgba(var(--highlight-rgb), 0.9),
+                -4px -4px 5px 0px rgba(var(--highlight-rgb), 0.9),
+                7px 7px 20px 0px rgba(var(--mask-rgb), 0.2),
+                4px 4px 5px 0px rgba(var(--mask-rgb), 0.3);
               transition: all 0.3s ease;
             }
 
@@ -778,7 +778,7 @@ onBeforeUnmount(() => {
             }
 
             &:hover {
-              color: rgba(251, 75, 2, 1);
+              color: var(--deco-warning);
               background: transparent !important;
 
               &::before,
@@ -804,14 +804,14 @@ onBeforeUnmount(() => {
         width: calc(15vw + 1rem);
         padding: 0.5rem;
         border-radius: 15px;
-        box-shadow: 0px 0px 3px 1px rgba(17, 17, 26, 0.1);
+        box-shadow: 0px 0px 3px 1px rgba(var(--mask-rgb), 0.1);
 
         .img__box {
           width: 100%;
           height: 36vh;
           overflow: hidden;
           border-radius: 15px;
-          box-shadow: 0px 0px 6px 2px rgba(17, 17, 26, 0.1);
+          box-shadow: 0px 0px 6px 2px rgba(var(--mask-rgb), 0.1);
 
           img {
             transition: all 0.5s;
@@ -844,7 +844,7 @@ onBeforeUnmount(() => {
 
           h2 {
             font-size: 0.8rem;
-            color: #b4b4b4;
+            color: var(--text-on-dark);
             padding: 0 0.5rem;
           }
         }
@@ -882,7 +882,7 @@ onBeforeUnmount(() => {
     .item {
       width: calc($index * 3);
       height: calc($index * 12);
-      background-color: #222;
+      background-color: var(--deco-dark);
       background-size: cover;
       background-position: center;
       cursor: pointer;
@@ -990,7 +990,7 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(0, 0, 0, .5);
+    background-color: rgba(var(--mask-rgb), .5);
     border-radius: 10px;
 
     img {

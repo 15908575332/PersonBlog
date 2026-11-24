@@ -1,5 +1,0 @@
-// 兼容层：历史入口 @use "@/styles/color.scss" 继续可用
-// 仅转发成员，零 CSS 输出；定义已按域归位到 _variables / _themes / _mixins
-@forward "./variables";
-@forward "./themes";
-@forward "./mixins";

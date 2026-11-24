@@ -137,9 +137,9 @@ onMounted(() => {
 <style scoped lang="scss">
 .captcha-container {
     padding: 20px;
-    background: $general-white;
+    background: var(--bg-surface);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(var(--mask-rgb), 0.15);
     min-height: 25vh;
     min-width: 30vw;
     @include flexCenter(column, flex-start);
@@ -151,7 +151,7 @@ onMounted(() => {
     justify-content: space-between;
     align-items: center;
     font-size: 16px;
-    color: #333;
+    color: var(--text-color);
     width: 100%;
 
     .refresh-btn {
@@ -188,7 +188,7 @@ onMounted(() => {
         flex: 1;
         padding: 10px;
         border-radius: 4px;
-        outline: 1px solid #ccc;
+        outline: 1px solid var(--border-strong);
         height: 100%;
         font-family: inherit;
     }
@@ -196,7 +196,7 @@ onMounted(() => {
     .confirm-btn {
         display: inline-block;
         padding: 6px 12px;
-        background: #f24056;
+        background: var(--primary-sub);
         color: white;
         border: none;
         border-radius: 4px;
@@ -210,7 +210,7 @@ onMounted(() => {
     width: 100%;
     height: 1rem;
     line-height: 1rem;
-    color: #f24056;
+    color: var(--primary-sub);
     font-size: 0.6rem;
 }
 </style>

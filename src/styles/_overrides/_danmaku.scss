@@ -2,10 +2,10 @@
 
 // 留言板样式重写
 .vue-danmaku .danmus .dm {
-    color: #fff !important;
+    color: var(--text-on-dark) !important;
     font-size: 22px;
     font-family: var(--app-font-family);
-    background: #272b2d90;
+    background: rgba(var(--mask-rgb), 0.565);
     padding: 8px 15px;
     border-radius: 30px;
     @include flexCenter(row, center);

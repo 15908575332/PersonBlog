@@ -127,7 +127,7 @@ onMounted(() => {
         border-radius: 5px;
         gap: 0.5rem;
         font-weight: 700;
-        border: 1px solid themed("border-default");
+        border: 1px solid var(--border-default);
         background: transparent;
         overflow: hidden;
         @include text-color("text-color");
@@ -157,15 +157,15 @@ onMounted(() => {
           width: 3px;
           height: 3px;
           // @include background("primary-color");
-          background-color: $color-5;
+          background-color: var(--color-accent);
           border-radius: 50%;
           opacity: 0;
           transition: transform .35s cubic-bezier(.25, .8, .25, 1.2), width .35s, height .35s, opacity .3s;
         }
 
         &:hover {
-          border-color: $color-5;
-          box-shadow: 0 0 18px rgba(167, 139, 250, .2);
+          border-color: var(--color-accent);
+          box-shadow: 0 0 18px rgba(var(--primary-color-rgb), 0.2);
         }
 
         &:hover :deep(.particle) {
@@ -185,7 +185,7 @@ onMounted(() => {
       height: 0;
       border-left: 0.3rem solid transparent;
       border-right: 0.3rem solid transparent;
-      border-bottom: 0.3rem solid #a9a7a7;
+      border-bottom: 0.3rem solid var(--deco-neutral);
     }
   }
 }

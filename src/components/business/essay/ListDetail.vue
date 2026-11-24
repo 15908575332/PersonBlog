@@ -957,8 +957,8 @@ onMounted(async () => {
     min-height: 100vh;
     width: 100%;
     background-image:
-        linear-gradient(90deg, rgba(147, 157, 163, 0.1) 1px, #fff 0),
-        linear-gradient(180deg, rgba(37, 82, 110, 0.1) 1px, #fff 0);
+        linear-gradient(90deg, rgba(var(--highlight-rgb), 0.1) 1px, var(--text-on-dark) 0),
+        linear-gradient(180deg, rgba(var(--primary-color-rgb), 0.1) 1px, var(--text-on-dark) 0);
     background-size: 2rem 2rem;
 
     // 背景设置
@@ -999,14 +999,14 @@ onMounted(async () => {
         // 遮罩
         &::after {
             content: "";
-            @include mask-overlay(#00000020, var(--back-text-height));
+            @include mask-overlay(rgba(var(--mask-rgb), 0.125), var(--back-text-height));
             animation: zoomInDown 0.6s ease-out forwards;
         }
 
         .back__text {
             @include flexCenter(column, center);
             height: 100%;
-            color: $general-white;
+            color: var(--text-on-dark);
             font-family: var(--app-font-family);
             z-index: 1;
             position: relative;
@@ -1091,10 +1091,10 @@ onMounted(async () => {
         //标签
         .module__tag {
             padding: 0.5rem;
-            background-color: #ecf8ff;
-            color: #6b6c6d;
+            background-color: var(--deco-light);
+            color: var(--text-sec-color);
             font-size: 0.9rem;
-            border-left: 2px solid #ff6d6d;
+            border-left: 2px solid var(--color-accent);
             margin: 1rem 0;
         }
 
@@ -1105,12 +1105,12 @@ onMounted(async () => {
             //标题
             .content_title {
                 padding: 0.2rem 0;
-                border-bottom: 1px dashed #ccc;
+                border-bottom: 1px dashed var(--border-strong);
                 font-size: 1.5rem;
                 font-weight: 600;
 
                 span {
-                    color: #ff6d6d;
+                    color: var(--color-accent);
                     padding: 0 0.2rem;
                 }
             }
@@ -1137,7 +1137,7 @@ onMounted(async () => {
         }
 
         .comment__show {
-            border: 2px dashed #ff416c;
+            border: 2px dashed var(--primary-sub);
             border-radius: 0.4rem;
             padding: 3rem;
             font-weight: 700;
@@ -1146,7 +1146,7 @@ onMounted(async () => {
             margin-top: 3rem;
 
             .text {
-                background-color: #ff416c;
+                background-color: var(--primary-sub);
                 color: white;
                 font-size: 1.2rem;
                 border-radius: 1rem;
@@ -1160,7 +1160,7 @@ onMounted(async () => {
 
             .warring {
                 font-size: 0.8rem;
-                color: #ff416c;
+                color: var(--primary-sub);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1172,14 +1172,14 @@ onMounted(async () => {
         }
 
         .abstract {
-            background-color: #ecf8ff;
-            border-left: 2px solid #ff6d6d;
+            background-color: var(--deco-light);
+            border-left: 2px solid var(--color-accent);
             padding: 0.5rem;
             line-height: 1.5rem;
             margin-top: 2rem;
 
             li>a {
-                color: #3c8dfe;
+                color: var(--deco-primary);
             }
         }
 
@@ -1188,7 +1188,7 @@ onMounted(async () => {
             .title {
                 font-size: 1.2rem;
                 font-weight: 700;
-                color: $primary-sub;
+                color: var(--primary-sub);
                 display: flex;
                 align-items: center;
                 padding: 1rem 0;
@@ -1202,8 +1202,8 @@ onMounted(async () => {
                 $layoutPosition: 0.2rem;
                 $outLineWidth: 0.1rem; //外圈线宽
                 $innerLineWidth: 0.05rem; //内圈线宽
-                $outLineColor: $primary-sub; //外圈颜色
-                $innerLineColor: $assistance-8; //内圈颜色
+                $outLineColor: var(--primary-sub); //外圈颜色
+                $innerLineColor: var(--color-accent); //内圈颜色
                 position: relative;
                 padding: $layoutPosition;
                 border: $outLineWidth solid $outLineColor;
@@ -1313,11 +1313,11 @@ onMounted(async () => {
                     font-family: var(--app-font-family);
                     position: relative;
                     padding: 0.2rem 0.8rem;
-                    background: $primary-sub;
+                    background: var(--primary-sub);
                     font-size: 0.9rem;
                     font-weight: 500;
-                    color: rgb(255, 255, 255);
-                    border: 1.5px solid $primary-sub;
+                    color: var(--text-on-dark);
+                    border: 1.5px solid var(--primary-sub);
                     border-radius: 8px;
                     // box-shadow: 0 0 0 rgba(255, 138, 159, 0.55);
                     transition: all 0.3s ease-in-out;
@@ -1329,7 +1329,7 @@ onMounted(async () => {
                         left: 20%;
                         width: 25px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 1s cubic-bezier(0.05, 0.83, 0.43, 0.96);
                     }
@@ -1340,7 +1340,7 @@ onMounted(async () => {
                         left: 45%;
                         width: 15px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 1s cubic-bezier(0, 0.4, 0, 1.01);
                     }
@@ -1351,7 +1351,7 @@ onMounted(async () => {
                         left: 40%;
                         width: 5px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 1s cubic-bezier(0, 0.4, 0, 1.01);
                     }
@@ -1362,7 +1362,7 @@ onMounted(async () => {
                         left: 40%;
                         width: 8px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 0.8s cubic-bezier(0, 0.4, 0, 1.01);
                     }
@@ -1373,7 +1373,7 @@ onMounted(async () => {
                         left: 45%;
                         width: 15px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 0.6s cubic-bezier(0, 0.4, 0, 1.01);
                     }
@@ -1384,20 +1384,20 @@ onMounted(async () => {
                         left: 50%;
                         width: 5px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 0.8s ease;
                     }
 
                     //星颜色
                     .fil0 {
-                        fill: #f24056;
+                        fill: var(--primary-sub);
                     }
 
                     &:hover {
                         background: transparent;
-                        color: #f24056;
-                        box-shadow: 0 0 25px rgba(254, 149, 205, 0.55);
+                        color: var(--primary-sub);
+                        box-shadow: 0 0 25px rgba(var(--primary-sub-rgb), 0.55);
 
                         .star-1 {
                             position: absolute;
@@ -1405,7 +1405,7 @@ onMounted(async () => {
                             left: -30%;
                             width: 25px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1415,7 +1415,7 @@ onMounted(async () => {
                             left: 10%;
                             width: 15px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1425,7 +1425,7 @@ onMounted(async () => {
                             left: 25%;
                             width: 5px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1435,7 +1435,7 @@ onMounted(async () => {
                             left: 80%;
                             width: 8px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1445,7 +1445,7 @@ onMounted(async () => {
                             left: 115%;
                             width: 15px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1455,7 +1455,7 @@ onMounted(async () => {
                             left: 60%;
                             width: 5px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
                     }
@@ -1465,13 +1465,13 @@ onMounted(async () => {
 
         .comment__module {
             .sum {
-                color: #696969;
+                color: var(--text-sec-color);
             }
 
             //评论记录
             .comment__item {
                 padding: 0.5rem;
-                border-bottom: 1px solid #ccc;
+                border-bottom: 1px solid var(--border-strong);
 
                 .louyt {
                     @include flexCenter(row, space-between);
@@ -1493,7 +1493,7 @@ onMounted(async () => {
                         font-weight: 700;
 
                         .nickname {
-                            color: #ff7645;
+                            color: var(--color-accent);
                             width: 100%;
                             @include flexCenter(row, flex-start);
 
@@ -1509,15 +1509,15 @@ onMounted(async () => {
 
                         .time {
                             font-size: 0.75rem;
-                            color: #8d8d8d;
+                            color: var(--text-muted);
                         }
                     }
 
                     //回复
                     .reply {
-                        border: 1px solid $color-3;
+                        border: 1px solid var(--deco-neutral);
                         font-size: 0.7rem;
-                        color: $primary-sub;
+                        color: var(--primary-sub);
                         border-radius: 0.2rem;
                         padding: 0.1rem 0.2rem;
                         transition: all 0.3s ease;
@@ -1528,7 +1528,7 @@ onMounted(async () => {
 
                         &:hover {
                             cursor: pointer;
-                            background-color: $primary-sub;
+                            background-color: var(--primary-sub);
                             color: white;
                         }
                     }
@@ -1539,7 +1539,7 @@ onMounted(async () => {
                     padding-left: 1.75rem;
 
                     .content {
-                        background-color: #f7f9fe;
+                        background-color: var(--deco-light);
                         padding: 0.7rem;
                         border-radius: 0.25rem;
                         letter-spacing: 1px;
@@ -1574,7 +1574,7 @@ onMounted(async () => {
                         font-weight: 700;
 
                         .nickname {
-                            color: #ff7645;
+                            color: var(--color-accent);
                             width: 100%;
                             @include flexCenter(row, flex-start);
 
@@ -1590,7 +1590,7 @@ onMounted(async () => {
 
                         .time {
                             font-size: 0.75rem;
-                            color: #8d8d8d;
+                            color: var(--text-muted);
                         }
                     }
                 }
@@ -1600,7 +1600,7 @@ onMounted(async () => {
                     padding-left: 1.75rem;
 
                     .content {
-                        background-color: #f7f9fe;
+                        background-color: var(--deco-light);
                         padding: 0.7rem;
                         border-radius: 0.25rem;
                         letter-spacing: 1px;
@@ -1608,7 +1608,7 @@ onMounted(async () => {
                         word-break: break-all;
 
                         span {
-                            color: #2e82f9;
+                            color: var(--deco-primary);
                         }
                     }
                 }
@@ -1617,7 +1617,7 @@ onMounted(async () => {
             //没有评论
             .noComment {
                 margin: 1rem 0;
-                border-top: dashed 1px #ccc;
+                border-top: dashed 1px var(--border-strong);
                 text-align: center;
                 padding: 2rem 0;
             }
@@ -1647,7 +1647,7 @@ onMounted(async () => {
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #a1c4fd);
+            background: linear-gradient(45deg, var(--deco-danger), var(--deco-light), var(--deco-light), var(--deco-light-2));
             animation: rotate 4s linear infinite;
         }
 
@@ -1670,7 +1670,7 @@ onMounted(async () => {
 
         .btn {
             display: inline-block;
-            background-color: #fff;
+            background-color: var(--bg-surface);
             width: 90px;
             height: 40px;
             line-height: 40px;
@@ -1679,7 +1679,7 @@ onMounted(async () => {
             position: relative;
             overflow: hidden;
             border-radius: 5px;
-            box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px -5px rgba(var(--mask-rgb), 0.1);
             opacity: 0.99;
             @include flexCenter(row, center);
 
@@ -1692,8 +1692,8 @@ onMounted(async () => {
                 transform: rotate(45deg);
                 top: 90%;
                 left: -110%;
-                background-color: #ffffff;
-                box-shadow: $shadow-card;
+                background-color: var(--bg-surface);
+                box-shadow: var(--shadow-card-outline);
                 z-index: -1;
             }
 
@@ -1761,7 +1761,7 @@ onMounted(async () => {
             width: 100%;
             height: 60%;
             position: relative;
-            background-color: #ecf8ff;
+            background-color: var(--deco-light);
             padding: 2rem 0;
         }
     }
@@ -1771,7 +1771,7 @@ onMounted(async () => {
         position: fixed;
         top: 0;
         left: 0;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(var(--mask-rgb), 0.5);
         backdrop-filter: blur(5px);
         display: flex;
         justify-content: center;
@@ -1788,7 +1788,7 @@ onMounted(async () => {
             border-radius: 8px;
             min-width: 30rem;
             max-width: 40vw;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(var(--mask-rgb), 0.3);
             cursor: auto;
             position: relative;
             user-select: none;
@@ -1805,7 +1805,7 @@ onMounted(async () => {
                     border-radius: 0.25rem;
                     transition: all 0.1s linear;
                     background-color: transparent;
-                    border-color: #3f3d56;
+                    border-color: var(--text-color);
                     position: relative;
                     z-index: 2;
 
@@ -1814,7 +1814,7 @@ onMounted(async () => {
                     }
 
                     &:focus {
-                        border-color: #ffa500;
+                        border-color: var(--color-accent);
                     }
                 }
 
@@ -1854,14 +1854,14 @@ onMounted(async () => {
 
                 //提交按钮
                 .modalSubmit {
-                    $color: $primary-sub;
+                    $color: var(--primary-sub);
                     font-family: var(--app-font-family);
                     position: relative;
                     padding: 0.2rem 0.6rem;
                     background: $color;
                     font-size: 0.8rem;
                     font-weight: 500;
-                    color: rgb(255, 255, 255);
+                    color: var(--text-on-dark);
                     border: 1.5px solid $color;
                     border-radius: 8px;
                     transition: all 0.3s ease-in-out;
@@ -1873,7 +1873,7 @@ onMounted(async () => {
                         left: 20%;
                         width: 25px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 1s cubic-bezier(0.05, 0.83, 0.43, 0.96);
                     }
@@ -1884,7 +1884,7 @@ onMounted(async () => {
                         left: 45%;
                         width: 15px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 1s cubic-bezier(0, 0.4, 0, 1.01);
                     }
@@ -1895,7 +1895,7 @@ onMounted(async () => {
                         left: 40%;
                         width: 5px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 1s cubic-bezier(0, 0.4, 0, 1.01);
                     }
@@ -1906,7 +1906,7 @@ onMounted(async () => {
                         left: 40%;
                         width: 8px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 0.8s cubic-bezier(0, 0.4, 0, 1.01);
                     }
@@ -1917,7 +1917,7 @@ onMounted(async () => {
                         left: 45%;
                         width: 15px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 0.6s cubic-bezier(0, 0.4, 0, 1.01);
                     }
@@ -1928,20 +1928,20 @@ onMounted(async () => {
                         left: 50%;
                         width: 5px;
                         height: auto;
-                        filter: drop-shadow(0 0 0 #fffdef);
+                        filter: drop-shadow(0 0 0 var(--deco-light));
                         z-index: -5;
                         transition: all 0.8s ease;
                     }
 
                     //星颜色
                     .fil0 {
-                        fill: #f24056;
+                        fill: var(--primary-sub);
                     }
 
                     &:hover {
                         background: transparent;
-                        color: #f24056;
-                        box-shadow: 0 0 25px rgba(254, 149, 205, 0.55);
+                        color: var(--primary-sub);
+                        box-shadow: 0 0 25px rgba(var(--primary-sub-rgb), 0.55);
 
                         .star-1 {
                             position: absolute;
@@ -1949,7 +1949,7 @@ onMounted(async () => {
                             left: -30%;
                             width: 25px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1959,7 +1959,7 @@ onMounted(async () => {
                             left: 10%;
                             width: 15px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1969,7 +1969,7 @@ onMounted(async () => {
                             left: 25%;
                             width: 5px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1979,7 +1979,7 @@ onMounted(async () => {
                             left: 80%;
                             width: 8px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1989,7 +1989,7 @@ onMounted(async () => {
                             left: 115%;
                             width: 15px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
 
@@ -1999,7 +1999,7 @@ onMounted(async () => {
                             left: 60%;
                             width: 5px;
                             height: auto;
-                            filter: drop-shadow(0 0 10px #fffdef);
+                            filter: drop-shadow(0 0 10px var(--deco-light));
                             z-index: 2;
                         }
                     }
@@ -2013,7 +2013,7 @@ onMounted(async () => {
         position: fixed;
         top: 0;
         left: 0;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(var(--mask-rgb), 0.5);
         backdrop-filter: blur(5px);
         @include flexCenter(row, center);
         z-index: 998;
@@ -2024,7 +2024,7 @@ onMounted(async () => {
         .modal {
             width: 27vw;
             min-height: 27rem;
-            background-color: #f5f4ce;
+            background-color: var(--deco-light);
             padding: 1rem 2rem;
             border-radius: 8px;
             cursor: auto;
@@ -2042,8 +2042,8 @@ onMounted(async () => {
             }
 
             .modal__content {
-                background-color: #ffffff;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                background-color: var(--bg-surface);
+                box-shadow: 0 5px 15px rgba(var(--mask-rgb), 0.3);
                 padding: 1rem;
                 border-radius: 8px;
                 padding-bottom: 0;
@@ -2054,7 +2054,7 @@ onMounted(async () => {
                     height: 50px;
                     border-radius: 50%;
                     overflow: hidden;
-                    background-color: #e84343;
+                    background-color: var(--deco-danger);
 
                     img {
                         width: 100%;
@@ -2066,7 +2066,7 @@ onMounted(async () => {
                 //分享时间
                 .dateTime {
                     font-size: 0.8rem;
-                    color: #676767;
+                    color: var(--text-sec-color);
                     margin-top: 0.5rem;
                 }
 
@@ -2098,19 +2098,19 @@ onMounted(async () => {
                     // 作者
                     .content_author {
                         font-size: 0.8rem;
-                        color: #676767;
+                        color: var(--text-sec-color);
                         padding: 1rem 0;
                         text-align: right;
                     }
 
                     // 二维码生成区域
                     .content_qrcode {
-                        border-top: 1px solid #ccc;
+                        border-top: 1px solid var(--border-strong);
                         @include flexCenter(row, space-between);
 
                         .text {
                             font-size: 1.2rem;
-                            color: #999;
+                            color: var(--text-muted);
                             padding: 1rem 0;
                             font-weight: 700;
                             text-align: right;
@@ -2120,7 +2120,7 @@ onMounted(async () => {
                             width: 2.5rem;
                             height: 2.5rem;
                             // overflow: hidden;
-                            background-color: #999393;
+                            background-color: var(--deco-dark-2);
 
                             img {
                                 width: 100%;
@@ -2140,8 +2140,8 @@ onMounted(async () => {
 
                 span {
                     display: inline-block;
-                    background-color: #fa9be7;
-                    color: #fff;
+                    background-color: var(--deco-light-2);
+                    color: var(--text-on-dark);
                     border-radius: 1rem;
                     font-size: 0.8rem;
                     padding: 0.3rem 0.7rem;
@@ -2152,7 +2152,7 @@ onMounted(async () => {
                 }
 
                 .more {
-                    background-color: #4400ff6e;
+                    background-color: rgba(var(--primary-color-rgb), 0.431);
                 }
             }
         }
@@ -2164,13 +2164,13 @@ onMounted(async () => {
     font-family: var(--app-font-family);
 
     .fancy-copyright {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        border: 2px solid #e9ecef;
+        background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-alt) 100%);
+        border: 2px solid var(--border-solid);
         border-radius: 12px;
         padding: 25px;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 20px rgba(var(--mask-rgb), 0.08);
         overflow-y: auto;
     }
 
@@ -2181,14 +2181,14 @@ onMounted(async () => {
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, #007bff, #6f42c1, #e83e8c);
+        background: linear-gradient(90deg, var(--primary-color), var(--deco-dark-2), var(--deco-danger));
     }
 
     .copyright-header {
         @include flexCenter(row, center);
         margin-bottom: 25px;
         padding-bottom: 15px;
-        border-bottom: 2px dashed #dee2e6;
+        border-bottom: 2px dashed var(--border-solid);
     }
 
     .copyright-header .icon {
@@ -2198,7 +2198,7 @@ onMounted(async () => {
 
     .copyright-header h3 {
         margin: 0;
-        color: #343a40;
+        color: var(--text-color);
         font-size: 22px;
         font-weight: 600;
     }
@@ -2206,11 +2206,11 @@ onMounted(async () => {
     .copyright-item {
         display: flex;
         margin-bottom: 20px;
-        background: #fff;
+        background: var(--bg-surface);
         border-radius: 8px;
         padding: 15px;
-        border-left: 4px solid #007bff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border-left: 4px solid var(--primary-color);
+        box-shadow: 0 2px 8px rgba(var(--mask-rgb), 0.04);
         transition:
             transform 0.3s,
             border-left-color 0.3s ease;
@@ -2218,22 +2218,22 @@ onMounted(async () => {
 
     .copyright-item:hover {
         transform: translateY(5px);
-        border-left-color: #e83e8c;
+        border-left-color: var(--deco-danger);
 
         &:nth-child(2) {
-            border-left-color: #28a745;
+            border-left-color: var(--deco-success);
         }
 
         &:nth-child(3) {
-            border-left-color: #ffc107;
+            border-left-color: var(--deco-warning);
         }
 
         &:nth-child(4) {
-            border-left-color: #17a2b8;
+            border-left-color: var(--deco-primary);
         }
 
         &:nth-child(5) {
-            border-left-color: #6f42c1;
+            border-left-color: var(--deco-dark-2);
         }
     }
 
@@ -2245,13 +2245,13 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #f8f9fa;
+        background: var(--bg-surface-alt);
         border-radius: 50%;
     }
 
     .item-content h4 {
         margin: 0 0 8px 0;
-        color: #495057;
+        color: var(--text-color);
         font-weight: 600;
         display: flex;
         align-items: center;
@@ -2263,12 +2263,12 @@ onMounted(async () => {
         flex: 1;
         margin-left: 10px;
         height: 1px;
-        background: linear-gradient(90deg, #dee2e6, transparent);
+        background: linear-gradient(90deg, var(--deco-light), transparent);
     }
 
     .item-content p {
         margin: 0 0 5px 0;
-        color: #6c757d;
+        color: var(--text-sec-color);
         line-height: 1.5;
         font-size: 0.8rem;
     }
@@ -2278,7 +2278,7 @@ onMounted(async () => {
     }
 
     .copyright-mark {
-        color: #dc3545;
+        color: var(--deco-danger);
         font-weight: bold;
         font-size: 16px;
         margin-left: 5px;
@@ -2288,7 +2288,7 @@ onMounted(async () => {
         text-align: center;
         margin-top: 25px;
         padding-top: 20px;
-        border-top: 1px dashed #dee2e6;
+        border-top: 1px dashed var(--border-solid);
     }
 
     .seal-icon {
@@ -2298,7 +2298,7 @@ onMounted(async () => {
     }
 
     .seal-text {
-        color: #6c757d;
+        color: var(--text-sec-color);
         font-size: 12px;
         letter-spacing: 1px;
         text-transform: uppercase;
@@ -2329,7 +2329,7 @@ onMounted(async () => {
     /* 按钮的宽度 */
     height: 2.5rem;
     /* 按钮的高度 */
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(var(--mask-rgb), 0.6);
     /* 半透明背景 */
     border: none;
     border-radius: 10%;
@@ -2355,7 +2355,7 @@ onMounted(async () => {
     }
 
     &:hover {
-        background: rgb(0, 135, 245, 0.6); //
+        background: rgba(var(--primary-color-rgb), 0.6); //
         /* 鼠标悬停时背景变亮 */
     }
 }
@@ -2401,7 +2401,7 @@ onMounted(async () => {
                     padding: 0.4rem 0.6rem;
 
                     &:hover {
-                        background-color: $primary-sub;
+                        background-color: var(--primary-sub);
                     }
 
                     .v3-icon {

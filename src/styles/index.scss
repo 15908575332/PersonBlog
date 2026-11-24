@@ -1,8 +1,7 @@
+@use "./tokens";
 @use "./_overrides/antd";
 @use "./_overrides/danmaku";
 @use "./_overrides/emoji";
-@use "./themes-output";
-@use "./palette-output";
 @use "./layout";
 @use "./animations";
 @use "./fonts";

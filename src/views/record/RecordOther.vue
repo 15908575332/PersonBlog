@@ -245,14 +245,14 @@ onUnmounted(() => {
             padding: 20px;
 
             .background {
-                background: $primary-hover;
+                background: var(--primary-hover);
                 border-radius: 0.5rem;
                 position: absolute;
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 opacity: 0;
                 z-index: 1;
                 pointer-events: none;
-                box-shadow: 0 0.5rem 1.5rem rgb(225, 248, 244, .5);
+                box-shadow: 0 0.5rem 1.5rem rgba(var(--primary-color-rgb), 0.5);
                 left: 0;
                 top: 0;
                 /* 添加transform-origin确保从左上角展开 */
@@ -280,8 +280,8 @@ onUnmounted(() => {
 
                 &:hover {
                     .card-main {
-                        border-color: #fa6952;
-                        box-shadow: 0 8px 25px rgba(106, 17, 203, 0.15);
+                        border-color: var(--deco-danger);
+                        box-shadow: 0 8px 25px rgba(var(--primary-color-rgb), 0.15);
                     }
                 }
 
@@ -308,7 +308,7 @@ onUnmounted(() => {
                             height: auto;
                             margin: 15px 0;
                             border-radius: 10px;
-                            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                            box-shadow: 0 4px 15px rgba(var(--mask-rgb), 0.1);
 
                         }
                     }
@@ -317,7 +317,7 @@ onUnmounted(() => {
                         font-size: 26px;
                         margin-bottom: 15px;
                         font-weight: 700;
-                        color: #2c3e50;
+                        color: var(--text-color);
                         position: relative;
                         display: inline-block;
 
@@ -328,7 +328,7 @@ onUnmounted(() => {
                             left: 0;
                             width: 50px;
                             height: 3px;
-                            background: $color-5;
+                            background: var(--color-accent);
                             border-radius: 2px;
 
                         }
@@ -337,7 +337,7 @@ onUnmounted(() => {
                     p {
                         font-size: 16px;
                         font-weight: 400;
-                        color: #555;
+                        color: var(--text-sec-color);
                         line-height: 1.7;
                         overflow: hidden;
                         text-overflow: ellipsis;
@@ -349,14 +349,14 @@ onUnmounted(() => {
 
                     .flower-info {
                         padding-top: 15px;
-                        border-top: 1px solid #e0e6ed;
+                        border-top: 1px solid var(--deco-neutral-weak);
                         font-size: 14px;
-                        color: #7e8c9a;
+                        color: var(--text-sec-color);
                         display: flex;
                         justify-content: space-between;
 
                         strong {
-                            color: $primary-sub;
+                            color: var(--primary-sub);
                         }
                     }
 
@@ -411,7 +411,7 @@ onUnmounted(() => {
         position: absolute;
         top: 20px;
         right: 20px;
-        background: $assistance-9;
+        background: var(--color-accent-hover);
         border: none;
         width: 40px;
         height: 40px;
@@ -421,7 +421,7 @@ onUnmounted(() => {
         justify-content: center;
         cursor: pointer;
         font-size: 20px;
-        color: $general-white;
+        color: var(--text-on-dark);
         transition: all 0.3s ease;
         z-index: 1001;
     }
@@ -467,7 +467,7 @@ onUnmounted(() => {
         z-index: 1;
         font-family: var(--app-font-family);
         margin: auto;
-        background: linear-gradient(45deg, $assistance-1, $assistance-2, $assistance-4);
+        background: linear-gradient(45deg, var(--primary-sub), var(--color-accent), var(--primary-sub));
         animation: hueRotate 10s infinite alternate;
 
         @keyframes hueRotate {
@@ -477,7 +477,7 @@ onUnmounted(() => {
         }
 
         p {
-            color: $general-white;
+            color: var(--text-on-dark);
             margin-bottom: 1rem;
         }
     }

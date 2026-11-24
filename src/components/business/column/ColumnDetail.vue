@@ -34,7 +34,7 @@
                         <div class="time__axis">
                             <h1><span>#</span>UL 时间表卡片</h1>
                             <ul class="ul">
-                                <li style="--accent-color:#41516C">
+                                <li style="--accent-color:var(--deco-info)">
                                     <div class="date">2002</div>
                                     <div class="title">Title 1</div>
                                     <div class="descr">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas
@@ -43,7 +43,7 @@
                                         quibusdam
                                         fugiat est numquam harum, accusamus suscipit consequatur laboriosam!</div>
                                 </li>
-                                <li style="--accent-color:#FBCA3E">
+                                <li style="--accent-color:var(--deco-warning)">
                                     <div class="date">2007</div>
                                     <div class="title">Title 2</div>
                                     <div class="descr">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quos
@@ -51,7 +51,7 @@
                                         nostrum
                                         vero nihil veniam.</div>
                                 </li>
-                                <li style="--accent-color:#E24A68">
+                                <li style="--accent-color:var(--deco-danger)">
                                     <div class="date">2012</div>
                                     <div class="title">Title 3</div>
                                     <div class="descr">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga
@@ -62,7 +62,7 @@
                                         sequi
                                         quo, et dolorum saepe nulla hic.</div>
                                 </li>
-                                <li style="--accent-color:#1B5F8C">
+                                <li style="--accent-color:var(--deco-primary)">
                                     <div class="date">2017</div>
                                     <div class="title">Title 4</div>
                                     <div class="descr">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
@@ -70,7 +70,7 @@
                                         cumque.
                                     </div>
                                 </li>
-                                <li style="--accent-color:#4CADAD">
+                                <li style="--accent-color:var(--deco-success)">
                                     <div class="date">2022</div>
                                     <div class="title">Title 5</div>
                                     <div class="descr">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odit,
@@ -173,7 +173,7 @@ onMounted(() => {
         left: 0;
         top: 0rem;
         width: 16rem;
-        background-color: #ecf8ff;
+        background-color: var(--deco-light);
         overflow-y: auto;
         height: 100vh;
         padding: 1rem 0;
@@ -209,7 +209,7 @@ onMounted(() => {
                     min-height: 4rem;
                     border-radius: 0.2rem;
                     overflow: hidden;
-                    background-color: #fff;
+                    background-color: var(--bg-surface);
 
                     img {
                         width: 100%;
@@ -238,13 +238,13 @@ onMounted(() => {
                 // 发布时间
                 .release-time {
                     font-size: 0.8rem;
-                    color: #444;
+                    color: var(--text-color);
                     margin: 0;
                 }
             }
 
             &:hover {
-                background-color: #ffffff;
+                background-color: var(--bg-surface);
             }
         }
     }
@@ -271,8 +271,8 @@ onMounted(() => {
 
                 // 时间轴
                 .time__axis {
-                    --color: rgba(30, 30, 30);
-                    --bgColor: #ecf8ff;
+                    --color: var(--deco-dark);
+                    --bgColor: var(--deco-light);
                     min-height: 100vh;
                     display: grid;
                     align-content: center;
@@ -283,12 +283,12 @@ onMounted(() => {
 
                     h1 {
                         padding: 0.2rem 0.5rem;
-                        border-bottom: 1px dashed #ccc;
+                        border-bottom: 1px dashed var(--border-strong);
                         font-size: 1.5rem;
                         font-weight: 600;
 
                         span {
-                            color: #ff6d6d;
+                            color: var(--color-accent);
                             padding: 0 0.2rem;
                         }
                     }
@@ -309,7 +309,7 @@ onMounted(() => {
                         &::before {
                             content: "";
                             grid-row: 1 / span 10;
-                            background: rgb(225, 225, 225);
+                            background: var(--deco-light);
                             border-radius: calc(var(--line-w) / 2);
                             width: 2px;
                             display: flex;
@@ -354,7 +354,7 @@ onMounted(() => {
                                     width: var(--inlineP);
                                     aspect-ratio: 1;
                                     background: var(--accent-color);
-                                    background-image: linear-gradient(rgba(0, 0, 0, 0.2) 100%, transparent);
+                                    background-image: linear-gradient(rgba(var(--mask-rgb), 0.2) 100%, transparent);
                                     position: absolute;
                                     top: 100%;
 
@@ -442,7 +442,7 @@ onMounted(() => {
                             position: absolute;
                             width: 90%;
                             height: 0.5rem;
-                            background: rgba(0, 0, 0, 0.5);
+                            background: rgba(var(--mask-rgb), 0.5);
                             left: 50%;
                             border-radius: 50%;
                             filter: blur(4px);
@@ -494,12 +494,12 @@ onMounted(() => {
 
                     h1 {
                         padding: 0.2rem 0.5rem;
-                        border-bottom: 1px dashed #ccc;
+                        border-bottom: 1px dashed var(--border-strong);
                         font-size: 1.3rem;
                         font-weight: 600;
 
                         span {
-                            color: #ff6d6d;
+                            color: var(--color-accent);
                             padding: 0 0.2rem;
                         }
                     }

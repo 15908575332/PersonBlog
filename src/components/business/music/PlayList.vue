@@ -82,7 +82,7 @@
                             </template>
                             <svg class="icon" width="18" height="18" viewBox="0 0 24 24"
                                 @click="toggleFavorite(song.index)"
-                                :style="{ color: song.favorite ? '#e60026' : '#666' }">
+                                :style="{ color: song.favorite ? 'var(--deco-danger)' : 'var(--deco-neutral)' }">
                                 <path fill="currentColor"
                                     d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                             </svg>
@@ -251,11 +251,11 @@ onMounted(() => {
 // 原有样式保持不变...
 .song-list-component {
     padding: 3rem 0;
-    --primary-red: #e60026;
-    --primary-blue: #0c8ed3;
-    --light-gray: #f8f8f8;
-    --medium-gray: #f2f2f2;
-    --border-color: #e0e0e0;
+    --primary-red: var(--deco-danger);
+    --primary-blue: var(--deco-primary);
+    --light-gray: var(--deco-light);
+    --medium-gray: var(--deco-light);
+    --border-color: var(--deco-light);
 
     /* 歌单头部信息 */
     .playlist-header {
@@ -315,7 +315,7 @@ onMounted(() => {
 
                 .playlist-tag {
                     background-color: var(--primary-red);
-                    color: $general-white;
+                    color: var(--text-on-dark);
                     padding: 3px 8px;
                     border-radius: 4px;
                     font-size: 0.65rem;
@@ -332,7 +332,7 @@ onMounted(() => {
                     width: 30px;
                     height: 30px;
                     border-radius: 50%;
-                    background-color: #ccc;
+                    background-color: var(--deco-light-2);
                 }
 
                 .creator-name {
@@ -381,7 +381,7 @@ onMounted(() => {
                 }
 
                 .btn-play:hover {
-                    background-color: #d10022;
+                    background-color: var(--deco-danger);
                     transform: translateY(-2px);
                 }
 
@@ -400,7 +400,7 @@ onMounted(() => {
                 }
 
                 .btn-blue:hover {
-                    background-color: #0b7db8;
+                    background-color: var(--deco-primary);
                 }
             }
 
@@ -418,7 +418,7 @@ onMounted(() => {
             padding: 0.75rem 1rem;
             padding-left: 0;
             font-weight: 600;
-            border-bottom: 1px solid $general-white;
+            border-bottom: 1px solid var(--border-color);
             font-size: 0.9rem;
             @include background('bg-gradient-color-start');
             @include text-color('text-color');
@@ -471,11 +471,11 @@ onMounted(() => {
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: rgb(12, 142, 211, .2);
+                background-color: rgba(var(--primary-color-rgb), 0.2);
             }
 
             &.active {
-                background-color: rgba(255, 0, 43, 0.1);
+                background-color: rgba(var(--primary-sub-rgb), 0.1);
             }
 
         }
@@ -566,15 +566,15 @@ onMounted(() => {
 // 新增动画样式
 @keyframes pulse-glow {
     0% {
-        box-shadow: 0 0 3px rgba(230, 0, 38, 0.3);
+        box-shadow: 0 0 3px rgba(var(--primary-sub-rgb), 0.3);
     }
 
     50% {
-        box-shadow: 0 0 10px rgba(230, 0, 38, 0.6);
+        box-shadow: 0 0 10px rgba(var(--primary-sub-rgb), 0.6);
     }
 
     100% {
-        box-shadow: 0 0 3px rgba(230, 0, 38, 0.3);
+        box-shadow: 0 0 3px rgba(var(--primary-sub-rgb), 0.3);
     }
 }
 
@@ -590,15 +590,15 @@ onMounted(() => {
 
 @keyframes text-glow {
     0% {
-        text-shadow: 0 0 1px rgba(230, 0, 38, 0.5);
+        text-shadow: 0 0 1px rgba(var(--primary-sub-rgb), 0.5);
     }
 
     50% {
-        text-shadow: 0 0 6px rgba(230, 0, 38, 0.8);
+        text-shadow: 0 0 6px rgba(var(--primary-sub-rgb), 0.8);
     }
 
     100% {
-        text-shadow: 0 0 1px rgba(230, 0, 38, 0.5);
+        text-shadow: 0 0 1px rgba(var(--primary-sub-rgb), 0.5);
     }
 }
 
@@ -608,7 +608,7 @@ onMounted(() => {
     border-left: 4px solid transparent;
 
     &.active {
-        background-color: rgba(255, 0, 43, 0.1);
+        background-color: rgba(var(--primary-sub-rgb), 0.1);
         border-color: var(--primary-red);
 
 

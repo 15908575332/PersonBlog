@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="tag-card">
     <div class="tag-card__title">
       <svg class="tag-card__title-icon" viewBox="0 0 20 20" fill="none">
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { assistanceColors } from '@/styles/palette'
+import { tagPillColors } from '@/styles/palette'
 
 const props = defineProps({
   tags: {
@@ -42,27 +42,14 @@ const props = defineProps({
 
 defineEmits(['select'])
 
-function contrastFg(hex) {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  // W3C relative luminance
-  const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  return lum > 0.5 ? '#111' : '#fff'
-}
-
 function pillStyle(index) {
-  const bg = assistanceColors[index % assistanceColors.length]
-  return {
-    '--pill-bg': bg,
-    '--pill-fg': contrastFg(bg),
-  }
+  return tagPillColors(index)
 }
 </script>
 
 <style scoped lang="scss">
 .tag-card {
-  box-shadow: $shadow-card;
+  box-shadow: var(--shadow-card-outline);
   border-radius: 0.6rem;
   padding: 0.5rem;
 }
@@ -74,13 +61,13 @@ function pillStyle(index) {
   padding: 0.5rem;
   // margin-bottom: 1rem;
   // padding-bottom: 0.6rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(var(--mask-rgb), 0.06);
 
   // background-color: rebeccapurple;
   span {
     font-size: 0.95rem;
     font-weight: 650;
-    color: themed(--text-color);
+    color: var(--text-color);
     letter-spacing: 0.02em;
   }
 }
@@ -88,7 +75,7 @@ function pillStyle(index) {
 .tag-card__title-icon {
   width: 1rem;
   height: 1rem;
-  color: themed(--text-sec-color);
+  color: var(--text-sec-color);
   flex-shrink: 0;
 }
 
@@ -100,8 +87,8 @@ function pillStyle(index) {
 }
 
 .tag-card__pill {
-  --pill-bg: themed(--text-muted);
-  --pill-fg: #fff;
+  --pill-bg: var(--text-muted);
+  --pill-fg: var(--text-on-light);
 
   display: inline-flex;
   align-items: center;
@@ -149,7 +136,7 @@ function pillStyle(index) {
 .tag-card__empty {
   text-align: center;
   padding: 1rem 0;
-  color: themed(--text-muted);
+  color: var(--text-muted);
 
   p:first-child {
     font-size: 0.85rem;

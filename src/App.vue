@@ -39,7 +39,7 @@
             p-id="6987" width="27" height="27">
             <path
               d="M774.091264 438.6816A500.992 500.992 0 0 0 512.612864 0.4096V0h-0.8704v0.4096a500.7872 500.7872 0 0 0-261.5296 438.272 191.2832 191.2832 0 0 0-95.5392 187.3408c8.448 98.3552 106.3936 163.84 143.9232 160.0512s26.5728-30.72 26.5728-30.72l12.8512-51.2s55.296 81.92 73.0112 81.92c15.9232-1.2288 91.648 0 100.7104 0h0.8704c9.0624 0 84.7872-1.2288 100.7104 0 17.7152 0 73.0112-81.92 73.0112-81.92l12.8 51.2s-10.8544 27.2896 26.624 30.72 135.4752-61.44 143.9232-160.0512a191.3344 191.3344 0 0 0-95.5392-187.3408zM512.100864 434.3296a110.2336 110.2336 0 0 1-108.3904-109.1072 108.3904 108.3904 0 1 1 216.7808 0A110.2336 110.2336 0 0 1 512.100864 434.3808z m-54.784 509.3888a22.1696 22.1696 0 0 1-44.3392 0v-107.52a22.1696 22.1696 0 0 1 44.3392 0v107.52z m81.4592 58.2144a22.4768 22.4768 0 0 1-44.9536 0v-159.7952a22.4768 22.4768 0 0 1 44.9536 0v159.8464z m74.9568-83.5072a22.1696 22.1696 0 0 1-44.3392 0v-76.8a22.1696 22.1696 0 0 1 44.3392 0z"
-              fill="#39C49E" p-id="6988"></path>
+              fill="var(--deco-success)" p-id="6988"></path>
           </svg>
         </template>
       </a-back-top>
@@ -109,7 +109,7 @@
             <svg aria-hidden="true" class="toggle__backdrop" xmlns="http://www.w3.org/2000/svg" fill="none"
               viewBox="0 0 290 228">
               <g class="clouds">
-                <path fill="#D9D9D9"
+                <path fill="var(--deco-neutral-weak)"
                   d="M335 147.5c0 27.89-22.61 50.5-50.5 50.5a50.78 50.78 0 0 1-9.29-.853c-2.478 12.606-10.595 23.188-21.615 29.011C245.699 243.749 228.03 256 207.5 256a50.433 50.433 0 0 1-16.034-2.599A41.811 41.811 0 0 1 166 262a41.798 41.798 0 0 1-22.893-6.782A42.21 42.21 0 0 1 135 256a41.82 41.82 0 0 1-19.115-4.592A41.84 41.84 0 0 1 88 262c-1.827 0-3.626-.117-5.391-.343C74.911 270.448 63.604 276 51 276c-23.196 0-42-18.804-42-42s18.804-42 42-42c1.827 0 3.626.117 5.391.343C64.089 183.552 75.396 178 88 178a41.819 41.819 0 0 1 19.115 4.592C114.532 176.002 124.298 172 135 172a41.798 41.798 0 0 1 22.893 6.782 42.066 42.066 0 0 1 7.239-.773C174.137 164.159 189.749 155 207.5 155c.601 0 1.199.01 1.794.031A41.813 41.813 0 0 1 234 147h.002c.269-27.66 22.774-50 50.498-50 27.89 0 50.5 22.61 50.5 50.5Z" />
               </g>
             </svg>
@@ -125,7 +125,7 @@
             <svg aria-hidden="true" class="toggle__backdrop" xmlns="http://www.w3.org/2000/svg" fill="none"
               viewBox="0 0 290 228">
               <g class="clouds">
-                <path fill="#fff"
+                <path fill="var(--deco-light)"
                   d="M328 167.5c0 15.214-7.994 28.56-20.01 36.068.007.31.01.621.01.932 0 23.472-19.028 42.5-42.5 42.5-3.789 0-7.461-.496-10.957-1.426C249.671 263.676 233.141 277 213.5 277a42.77 42.77 0 0 1-7.702-.696C198.089 284.141 187.362 289 175.5 289a42.338 42.338 0 0 1-27.864-10.408A42.411 42.411 0 0 1 133.5 281c-4.36 0-8.566-.656-12.526-1.876C113.252 287.066 102.452 292 90.5 292a42.388 42.388 0 0 1-15.8-3.034A42.316 42.316 0 0 1 48.5 298C25.028 298 6 278.972 6 255.5S25.028 213 48.5 213a42.388 42.388 0 0 1 15.8 3.034A42.316 42.316 0 0 1 90.5 207c4.36 0 8.566.656 12.526 1.876C110.748 200.934 121.548 196 133.5 196a42.338 42.338 0 0 1 27.864 10.408A42.411 42.411 0 0 1 175.5 204c2.63 0 5.204.239 7.702.696C190.911 196.859 201.638 192 213.5 192c3.789 0 7.461.496 10.957 1.426 2.824-10.491 9.562-19.377 18.553-24.994-.007-.31-.01-.621-.01-.932 0-23.472 19.028-42.5 42.5-42.5s42.5 19.028 42.5 42.5Z" />
               </g>
             </svg>
@@ -151,57 +151,57 @@
               <g>
                 <g class="stars">
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M61 11.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.749 3.749 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.749 3.749 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813a3.749 3.749 0 0 0 2.576-2.576l.813-2.846A.75.75 0 0 1 61 11.5Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M62.5 45.219a.329.329 0 0 1 .315.238l.356 1.245a1.641 1.641 0 0 0 1.127 1.127l1.245.356a.328.328 0 0 1 0 .63l-1.245.356a1.641 1.641 0 0 0-1.127 1.127l-.356 1.245a.328.328 0 0 1-.63 0l-.356-1.245a1.641 1.641 0 0 0-1.127-1.127l-1.245-.356a.328.328 0 0 1 0-.63l1.245-.356a1.641 1.641 0 0 0 1.127-1.127l.356-1.245a.328.328 0 0 1 .315-.238Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M32 31.188a.28.28 0 0 1 .27.204l.305 1.067a1.405 1.405 0 0 0 .966.966l1.068.305a.28.28 0 0 1 0 .54l-1.068.305a1.405 1.405 0 0 0-.966.966l-.305 1.068a.28.28 0 0 1-.54 0l-.305-1.068a1.406 1.406 0 0 0-.966-.966l-1.067-.305a.28.28 0 0 1 0-.54l1.067-.305a1.406 1.406 0 0 0 .966-.966l.305-1.068a.281.281 0 0 1 .27-.203Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M41.5 74.219a.329.329 0 0 1 .315.238l.356 1.245a1.641 1.641 0 0 0 1.127 1.127l1.245.356a.328.328 0 0 1 0 .63l-1.245.356a1.641 1.641 0 0 0-1.127 1.127l-.356 1.245a.328.328 0 0 1-.63 0l-.356-1.245a1.641 1.641 0 0 0-1.127-1.127l-1.245-.356a.328.328 0 0 1 0-.63l1.245-.356a1.641 1.641 0 0 0 1.127-1.127l.356-1.245a.328.328 0 0 1 .315-.238Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M34 83.188a.28.28 0 0 1 .27.203l.305 1.068a1.405 1.405 0 0 0 .966.966l1.068.305a.28.28 0 0 1 0 .54l-1.068.305a1.405 1.405 0 0 0-.966.966l-.305 1.068a.28.28 0 0 1-.54 0l-.305-1.068a1.406 1.406 0 0 0-.966-.966l-1.068-.305a.28.28 0 0 1 0-.54l1.068-.305a1.406 1.406 0 0 0 .966-.966l.305-1.068a.281.281 0 0 1 .27-.204Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M63 89.25a.375.375 0 0 1 .36.272l.407 1.423a1.874 1.874 0 0 0 1.288 1.288l1.423.406a.374.374 0 0 1 0 .722l-1.423.406a1.874 1.874 0 0 0-1.288 1.288l-.407 1.423a.374.374 0 0 1-.72 0l-.407-1.423a1.874 1.874 0 0 0-1.288-1.288l-1.423-.406a.374.374 0 0 1 0-.722l1.423-.406a1.874 1.874 0 0 0 1.288-1.288l.407-1.423a.376.376 0 0 1 .36-.272Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M110.5 53.156a.236.236 0 0 1 .225.17l.254.89a1.174 1.174 0 0 0 .805.805l.89.254a.23.23 0 0 1 .122.084.233.233 0 0 1-.122.366l-.89.254a1.167 1.167 0 0 0-.805.805l-.254.89a.232.232 0 0 1-.225.17.235.235 0 0 1-.225-.17l-.254-.89a1.174 1.174 0 0 0-.805-.805l-.89-.254a.23.23 0 0 1-.122-.084.233.233 0 0 1 .122-.366l.89-.254a1.167 1.167 0 0 0 .805-.805l.254-.89a.232.232 0 0 1 .225-.17Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M120 27.188a.279.279 0 0 1 .27.204l.305 1.067a1.41 1.41 0 0 0 .966.966l1.067.305a.283.283 0 0 1 .148.1.286.286 0 0 1 0 .34.283.283 0 0 1-.148.1l-1.067.305a1.403 1.403 0 0 0-.966.966l-.305 1.067a.279.279 0 0 1-.439.147.275.275 0 0 1-.101-.147l-.305-1.067a1.41 1.41 0 0 0-.966-.966l-1.068-.305a.284.284 0 0 1-.147-.1.286.286 0 0 1 0-.34.284.284 0 0 1 .147-.1l1.068-.305a1.405 1.405 0 0 0 .966-.966l.305-1.067a.279.279 0 0 1 .27-.204Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M155 28.5a.753.753 0 0 1 .721.544l.813 2.846a3.746 3.746 0 0 0 2.576 2.576l2.846.813a.747.747 0 0 1 .543.721.75.75 0 0 1-.543.721l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.747.747 0 0 1-.721.543.749.749 0 0 1-.721-.543l-.813-2.846a3.746 3.746 0 0 0-2.576-2.576l-2.846-.813a.747.747 0 0 1-.543-.721.75.75 0 0 1 .543-.721l2.846-.813a3.75 3.75 0 0 0 2.576-2.576l.813-2.846A.751.751 0 0 1 155 28.5Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M147 60.25a.377.377 0 0 1 .36.272l.407 1.423a1.883 1.883 0 0 0 1.288 1.288l1.423.407a.375.375 0 0 1 0 .72l-1.423.407a1.875 1.875 0 0 0-1.288 1.288l-.407 1.423a.371.371 0 0 1-.36.272.377.377 0 0 1-.36-.272l-.407-1.423a1.883 1.883 0 0 0-1.288-1.288l-1.423-.406a.375.375 0 0 1 0-.722l1.423-.406a1.875 1.875 0 0 0 1.288-1.288l.407-1.423a.372.372 0 0 1 .36-.272Z"
                       clip-rule="evenodd" />
                   </g>
                   <g>
-                    <path fill="#fff" fill-rule="evenodd"
+                    <path fill="var(--deco-light)" fill-rule="evenodd"
                       d="M125.5 76.344a.513.513 0 0 1 .496.374l.559 1.956a2.574 2.574 0 0 0 1.771 1.771l1.956.56a.514.514 0 0 1 .27.805.514.514 0 0 1-.27.186l-1.956.559a2.57 2.57 0 0 0-1.771 1.77l-.559 1.957a.514.514 0 0 1-.806.27.514.514 0 0 1-.186-.27l-.559-1.956a2.574 2.574 0 0 0-1.771-1.771l-1.956-.56a.514.514 0 0 1-.27-.805.514.514 0 0 1 .27-.186l1.956-.559a2.57 2.57 0 0 0 1.771-1.77l.559-1.957a.515.515 0 0 1 .496-.374Z"
                       clip-rule="evenodd" />
                   </g>
@@ -214,8 +214,8 @@
               <span class="astrobear">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 316 432">
                   <!-- 太空熊SVG路径（原文档内容） -->
-                  <circle cx="158" cy="143" r="140" fill="#444" />
-                  <path fill="#AF7128" fill-rule="evenodd"
+                  <circle cx="158" cy="143" r="140" fill="var(--deco-dark)" />
+                  <path fill="var(--deco-warning)" fill-rule="evenodd"
                     d="M65.98 159.61C49.913 155.643 38 141.134 38 123.842 38 103.495 54.495 87 74.842 87c14.337 0 26.761 8.19 32.85 20.146C119.687 100.674 133.414 97 148 97h20c14.52 0 28.19 3.641 40.146 10.059C214.251 95.15 226.65 87 240.952 87c20.347 0 36.842 16.495 36.842 36.842 0 17.222-11.818 31.685-27.787 35.72A85.104 85.104 0 0 1 253 182v66.56l10.054-10.054c11.325-11.325 29.687-11.325 41.012 0s11.325 29.687 0 41.012l-44.548 44.548a29.004 29.004 0 0 1-6.518 4.906V407c0 12.15-9.85 22-22 22h-44c-12.15 0-22-9.85-22-22v-28.69a41.072 41.072 0 0 1-14 .174V407c0 12.15-9.85 22-22 22H85c-12.15 0-22-9.85-22-22v-77.797a28.99 28.99 0 0 1-6.946-5.137l-44.548-44.548c-11.325-11.325-11.325-29.687 0-41.012 11.326-11.325 29.687-11.325 41.013 0L63 248.988V182a85.106 85.106 0 0 1 2.98-22.39Z"
                     clip-rule="evenodd" />
                 </svg>
@@ -385,17 +385,17 @@ const backgroundPreviews = [
   {
     name: '极光渐变',
     type: 'gradient',
-    gradient: 'linear-gradient(0deg,#F3E7E9 0%,#E3EEFF 100%)'
+    gradient: 'linear-gradient(0deg,rgba(var(--primary-sub-rgb),.14) 0%,rgba(var(--primary-color-rgb),.12) 100%)'
   },
   {
     name: '胶片噪点',
     type: 'noise',
-    gradient: 'linear-gradient(to right,#bb313e25,#bb313e25,#d7222925,#dd4a1625,#e4761525,#f5c50025,#f0e92725,#b1ce2425,#48a93525,#03944525,#157c4f25,#176a5825,#1b556325,#1d386f25,#1d386f25,#20277825,#52266325,#8a244b25)'
+    gradient: 'linear-gradient(to right,rgba(var(--primary-color-rgb),.14),rgba(var(--primary-sub-rgb),.14),rgba(var(--color-accent-rgb),.14))'
   },
   {
     name: '光点矩阵',
     type: 'dots',
-    gradient: 'radial-gradient(circle, #e4d1b4 0.7px, transparent 0.7px),radial-gradient(circle, transparent 0.7px, #c97b7b 0.7px 1px, transparent 1px)'
+    gradient: 'radial-gradient(circle, rgba(var(--color-accent-rgb),.5) 0.7px, transparent 0.7px),radial-gradient(circle, transparent 0.7px, rgba(var(--primary-sub-rgb),.5) 0.7px 1px, transparent 1px)'
   },
   {
     name: '自定义素材',
@@ -526,19 +526,22 @@ onMounted(() => {
 const t = 'Blog';
 const n = 'App启动';
 const e = 'info';
+// 调试输出用：从设计令牌读取颜色，避免在此处出现颜色字面量
+const token = (name) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const vn = {
   typeColor(type) {
     switch (type) {
-      case 'info': return '#39C49E';
-      case 'warn': return '#FFC16F';
-      case 'error': return '#F76591';
-      default: return '#999';
+      case 'info': return token('--deco-success');
+      case 'warn': return token('--deco-warning');
+      case 'error': return token('--deco-danger');
+      default: return token('--deco-neutral');
     }
   }
 };
 console.log(
   `%c ${t} %c ${n} %c`,
-  `background:${vn.typeColor(e)};border:1px solid ${vn.typeColor(e)};padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`,
+  `background:${vn.typeColor(e)};border:1px solid ${vn.typeColor(e)};padding: 1px; border-radius: 4px 0 0 4px; color: ${token('--text-on-dark')};`,
   `border:1px solid ${vn.typeColor(e)};padding: 1px; border-radius: 0 4px 4px 0; color: ${vn.typeColor(e)};`,
   "background:transparent"
 );
@@ -553,8 +556,8 @@ const showRippleToggle = computed(() => {
 // 内部凹陷阴影（S3：仅本文件使用，自全局标量下沉为局部定义）
 $width: clamp(90px, 106px, 200px);
 $insideShadow:
-    calc($width * 0) calc($width * -0.025) calc($width * 0.025) 0 hsl(210 10% 10% / 0.15) inset,
-    calc($width * 0) calc($width * 0.025) calc($width * 0.025) 0 hsl(210 10% 10% / 0.65) inset;
+    calc($width * 0) calc($width * -0.025) calc($width * 0.025) 0 rgba(var(--mask-rgb), 0.15) inset,
+    calc($width * 0) calc($width * 0.025) calc($width * 0.025) 0 rgba(var(--mask-rgb), 0.65) inset;
 .pagesOption {
   position: relative;
   min-height: 100vh;
@@ -570,7 +573,7 @@ $insideShadow:
     height: 100%;
     z-index: 0;
     pointer-events: none;
-    transition: opacity $theme-transition-duration $theme-transition-timing;
+    transition: opacity var(--transition-duration) var(--transition-timing);
   }
 
   .gradient-bg {
@@ -579,7 +582,7 @@ $insideShadow:
     left: 0;
     width: 100%;
     height: 100%;
-    transition: opacity $theme-transition-duration $theme-transition-timing;
+    transition: opacity var(--transition-duration) var(--transition-timing);
     z-index: -1;
   }
 
@@ -615,7 +618,7 @@ $insideShadow:
   }
 
   .dark-bg {
-    background: linear-gradient(to left, #0f172a 0%, #1e293b 50%, #334155 100%);
+    background: linear-gradient(to left, var(--deco-dark) 0%, var(--deco-dark) 50%, var(--deco-dark) 100%);
     opacity: 0;
 
     &.active {
@@ -636,9 +639,9 @@ $insideShadow:
   bottom: 2vw;
   z-index: 999;
   overflow: hidden;
-  box-shadow: 0px 0px 0.75rem 0px rgba(113, 113, 113, 0.2);
+  box-shadow: 0px 0px 0.75rem 0px rgba(var(--mask-rgb), 0.2);
   @include flexCenter(column, space-around);
-  background-color: #fff;
+  background-color: var(--bg-surface);
   user-select: none;
   -webkit-user-select: none;
   /* Safari */
@@ -684,12 +687,12 @@ $insideShadow:
 
   &:hover {
     cursor: pointer;
-    background-color: #f0f0f0;
+    background-color: var(--bg-surface-alt);
   }
 }
 
 .secBtn {
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border-solid);
 
   img {
     width: 1.5rem;
@@ -716,8 +719,8 @@ $insideShadow:
 
   .flower {
     @include flexCenter(row, space-around);
-    background-color: #f8b1c4;
-    border: 2px solid #fff;
+    background-color: var(--deco-light);
+    border: 2px solid var(--border-color);
     gap: 0.8rem;
     padding: 0.8rem;
     border-radius: 0.2rem;
@@ -737,10 +740,10 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: #fff9f0; // 沙漏的沙色背景
+      background-color: var(--deco-light); // 沙漏的沙色背景
 
       &:hover {
-        background-color: #fff3e0;
+        background-color: var(--deco-light);
       }
 
       .timekeeper-container {
@@ -755,12 +758,12 @@ $insideShadow:
           left: 15%; // 左偏移更多，形成上宽下窄
           width: 70%; // 总宽度增加
           height: 40%;
-          background: linear-gradient(145deg, rgba(255, 216, 166, 0.9), rgba(255, 194, 133, 0.9)); // 增加透明度模拟玻璃
+          background: linear-gradient(145deg, rgba(var(--color-accent-rgb), 0.9), rgba(var(--color-accent-rgb), 0.9)); // 增加透明度模拟玻璃
           border-radius: 50% 50% 10% 10%; // 顶部圆，底部平
           overflow: hidden;
           box-shadow:
-            inset 0 -3px 5px rgba(0, 0, 0, 0.15), // 内部凹陷阴影
-            inset 0 2px 4px rgba(255, 255, 255, 0.7); // 内部高光
+            inset 0 -3px 5px rgba(var(--mask-rgb), 0.15), // 内部凹陷阴影
+            inset 0 2px 4px rgba(var(--highlight-rgb), 0.7); // 内部高光
           // 使用clip-path创建更精确的梯形
           clip-path: polygon(20% 0%, 80% 0%, 60% 100%, 40% 100%);
           z-index: 2;
@@ -778,7 +781,7 @@ $insideShadow:
               position: absolute;
               width: 3px;
               height: 3px;
-              background: #fff;
+              background: var(--bg-surface);
               border-radius: 50%;
               bottom: 15%; // 从更下方开始
               left: calc(50% - 1.5px);
@@ -797,13 +800,13 @@ $insideShadow:
           left: 50%;
           width: 8%; // 变细
           height: 12%;
-          background: #bcaaa4; // 更深的金属/玻璃色
+          background: var(--deco-light-2); // 更深的金属/玻璃色
           border-radius: 2px;
           transform: translateX(-50%);
           z-index: 3;
           box-shadow:
-            inset 0 1px 2px rgba(255, 255, 255, 0.5),
-            0 0 2px rgba(0, 0, 0, 0.2);
+            inset 0 1px 2px rgba(var(--highlight-rgb), 0.5),
+            0 0 2px rgba(var(--mask-rgb), 0.2);
         }
 
         // 沙漏下半部分玻璃腔体 - 改为正梯形
@@ -813,12 +816,12 @@ $insideShadow:
           left: 15%;
           width: 70%;
           height: 40%;
-          background: linear-gradient(145deg, rgba(255, 216, 166, 0.9), rgba(255, 194, 133, 0.9));
+          background: linear-gradient(145deg, rgba(var(--color-accent-rgb), 0.9), rgba(var(--color-accent-rgb), 0.9));
           border-radius: 10% 10% 50% 50%; // 顶部平，底部圆
           overflow: hidden;
           box-shadow:
-            inset 0 3px 5px rgba(0, 0, 0, 0.15),
-            inset 0 -2px 4px rgba(255, 255, 255, 0.7);
+            inset 0 3px 5px rgba(var(--mask-rgb), 0.15),
+            inset 0 -2px 4px rgba(var(--highlight-rgb), 0.7);
           // 使用clip-path创建更精确的梯形
           clip-path: polygon(40% 0%, 60% 0%, 80% 100%, 20% 100%);
           z-index: 2;
@@ -828,7 +831,7 @@ $insideShadow:
             bottom: 0;
             left: 0;
             width: 100%;
-            background: linear-gradient(to top, #fff6a3 0%, #ffcc80 60%, #ffb74d 100%); // 沙堆锥形渐变
+            background: linear-gradient(to top, var(--deco-warning) 0%, var(--deco-warning) 60%, var(--color-accent) 100%); // 沙堆锥形渐变
             border-radius: 50% 50% 0 0;
             transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 
@@ -840,7 +843,7 @@ $insideShadow:
               left: 50%;
               width: 30%;
               height: 20%;
-              background: #ffb74d;
+              background: var(--color-accent);
               border-radius: 50%;
               transform: translate(-50%, -50%);
             }
@@ -866,8 +869,8 @@ $insideShadow:
         right: 3px;
         font-size: 0.6rem;
         font-weight: bold;
-        color: #e65100;
-        background: rgba(255, 255, 255, 0.9);
+        color: var(--deco-warning);
+        background: rgba(var(--highlight-rgb), 0.9);
         border-radius: 50%;
         width: 14px;
         height: 14px;
@@ -905,10 +908,10 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: #f0f4ff; // 淡蓝色背景
+      background-color: var(--deco-light); // 淡蓝色背景
 
       &:hover {
-        background-color: #e1e8ff;
+        background-color: var(--deco-light);
       }
 
       .boomerang-container {
@@ -921,7 +924,7 @@ $insideShadow:
           position: absolute;
           border: 2px solid transparent;
           border-radius: 50%;
-          border-top-color: #5d7af5;
+          border-top-color: var(--primary-color);
           border-right-color: transparent;
           border-bottom-color: transparent;
           border-left-color: transparent;
@@ -937,7 +940,7 @@ $insideShadow:
             height: 70%;
             top: 15%;
             left: 15%;
-            border-top-color: #8a9eff;
+            border-top-color: var(--deco-primary);
             animation: rotateArc 3s linear infinite reverse;
           }
 
@@ -946,7 +949,7 @@ $insideShadow:
             height: 40%;
             top: 30%;
             left: 30%;
-            border-top-color: #b3bfff;
+            border-top-color: var(--deco-primary);
             animation: rotateArc 2s linear infinite;
           }
         }
@@ -967,7 +970,7 @@ $insideShadow:
             left: 0;
             width: 100%;
             height: 100%;
-            background: #5d7af5;
+            background: var(--primary-color);
             clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
           }
         }
@@ -986,8 +989,8 @@ $insideShadow:
         right: 3px;
         font-size: 0.6rem;
         font-weight: bold;
-        color: #5d7af5;
-        background: rgba(255, 255, 255, 0.9);
+        color: var(--primary-color);
+        background: rgba(var(--highlight-rgb), 0.9);
         border-radius: 50%;
         width: 14px;
         height: 14px;
@@ -1021,10 +1024,10 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: #fff5f7; // 淡粉色背景，与樱花主题呼应
+      background-color: var(--deco-light); // 淡粉色背景，与樱花主题呼应
 
       &:hover {
-        background-color: #ffeef2;
+        background-color: var(--deco-light);
       }
 
       .blossom-container {
@@ -1040,16 +1043,16 @@ $insideShadow:
           transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); // 弹性过渡
 
           // 非激活状态的默认样式
-          background-color: #e0e0e0;
+          background-color: var(--deco-light);
           box-shadow: none;
 
           // 激活状态：填充樱花色并添加内阴影
           &.active {
             opacity: 1;
-            background: linear-gradient(to bottom, #ffb7d5, #ff7eb3); // 樱花粉渐变
+            background: linear-gradient(to bottom, var(--deco-light), var(--deco-danger)); // 樱花粉渐变
             box-shadow:
-              inset 0 2px 4px rgba(255, 255, 255, 0.8),
-              inset 0 -1px 2px rgba(188, 80, 120, 0.4);
+              inset 0 2px 4px rgba(var(--highlight-rgb), 0.8),
+              inset 0 -1px 2px rgba(var(--primary-sub-rgb), 0.4);
           }
 
           // 定义五个堆叠层的位置和大小（从下往上，从小到大）
@@ -1101,8 +1104,8 @@ $insideShadow:
         right: 3px;
         font-size: 0.6rem;
         font-weight: bold;
-        color: #d63384; // 深粉色数字
-        background: rgba(255, 255, 255, 0.9);
+        color: var(--deco-danger); // 深粉色数字
+        background: rgba(var(--highlight-rgb), 0.9);
         border-radius: 50%;
         width: 14px;
         height: 14px;
@@ -1119,10 +1122,10 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: #e6f7ff; // 淡蓝色背景，暗示“风”
+      background-color: var(--deco-light); // 淡蓝色背景，暗示“风”
 
       &:hover {
-        background-color: #d1e9ff;
+        background-color: var(--deco-light);
       }
 
       .fan-container {
@@ -1140,10 +1143,10 @@ $insideShadow:
           left: 50%;
           width: 20%; // 内圆大小
           height: 20%;
-          background: #2e5984; // 深色中心
+          background: var(--deco-dark-2); // 深色中心
           border-radius: 50%;
           transform: translate(-50%, -50%);
-          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+          box-shadow: inset 0 1px 3px rgba(var(--mask-rgb), 0.3);
           z-index: 3; // 确保在叶片上方
         }
 
@@ -1155,7 +1158,7 @@ $insideShadow:
           left: 50%;
           width: 30%; // 外圆大小
           height: 30%;
-          background: #4a6fa5;
+          background: var(--deco-dark-2);
           border-radius: 50%;
           transform: translate(-50%, -50%);
           z-index: 2; // 在叶片和内圆之间
@@ -1168,7 +1171,7 @@ $insideShadow:
           left: 50%;
           width: 10%;
           height: 40%;
-          background: linear-gradient(to bottom, #34e4db, #1970ea);
+          background: linear-gradient(to bottom, var(--deco-primary), var(--deco-primary));
           border-radius: 20px 20px 4px 4px;
           transform-origin: center 0; // 绕顶部中心旋转，使叶片从中心“伸出”
           z-index: 1; // 在中心圆下方
@@ -1194,8 +1197,8 @@ $insideShadow:
         right: 3px;
         font-size: 0.6rem;
         font-weight: bold;
-        color: #2e5984;
-        background: rgba(255, 255, 255, 0.8);
+        color: var(--deco-dark-2);
+        background: rgba(var(--highlight-rgb), 0.8);
         border-radius: 50%;
         width: 14px;
         height: 14px;
@@ -1228,17 +1231,17 @@ $insideShadow:
   --speed: 0.5s;
   --width: clamp(90px, 106px, 200px);
   --ar: 8 / 3;
-  --ray: hsl(0 0% 100% / 0.5);
-  --sun: hsl(47, 91%, 58%);
-  --moon: hsl(212, 13%, 82%);
-  --crater: hsl(221, 16%, 68%);
-  --bg: hsl(219, 30%, 88%);
+  --ray: rgba(var(--highlight-rgb), 0.5);
+  --sun: var(--deco-warning);
+  --moon: var(--deco-light-2);
+  --crater: var(--deco-light-2);
+  --bg: var(--deco-light);
   --bear-speed: 10s;
-  --color: hsl(219 30% 20%);
+  --color: var(--deco-dark);
   border-radius: 0.2rem;
   padding: 1rem;
-  background-color: #f8b1c4;
-  border: 2px solid $general-white;
+  background-color: var(--deco-light);
+  border: 2px solid var(--border-color);
   @include flexCenter(column, space-between);
   gap: 0.8rem;
 
@@ -1262,9 +1265,9 @@ $insideShadow:
     outline-color: transparent;
     background: hsl(calc(204 + (var(--dark, 0) * 25)) calc((53 - (var(--dark, 0) * 28)) * 1%) calc((47 - (var(--dark, 0) * 31)) * 1%));
     box-shadow:
-      calc(var(--width) * 0) calc(var(--width) * 0.02) calc(var(--width) * 0.01) calc(var(--width) * -0.0025) hsl(210 10% 100% / 0.95),
-      calc(var(--width) * 0) calc(var(--width) * -0.02) calc(var(--width) * 0.01) calc(var(--width) * -0.0025) hsl(210 10% 10% / 0.2),
-      calc(var(--width) * 0) calc(var(--width) * 0.02) calc(var(--width) * 0.5) 0 hsl(210 10% 100% / 0.15);
+      calc(var(--width) * 0) calc(var(--width) * 0.02) calc(var(--width) * 0.01) calc(var(--width) * -0.0025) rgba(var(--highlight-rgb), 0.95),
+      calc(var(--width) * 0) calc(var(--width) * -0.02) calc(var(--width) * 0.01) calc(var(--width) * -0.0025) rgba(var(--mask-rgb), 0.2),
+      calc(var(--width) * 0) calc(var(--width) * 0.02) calc(var(--width) * 0.5) 0 rgba(var(--highlight-rgb), 0.15);
 
     &::after {
       content: "";
@@ -1371,8 +1374,8 @@ $insideShadow:
         z-index: -1;
         width: 356%;
         background:
-          radial-gradient(hsl(0 0% 100% / 0.25) 40%, transparent 40.5%),
-          radial-gradient(hsl(0 0% 100% / 0.25) 56%, transparent 56.5%) hsl(0 0% 100% / 0.25);
+          radial-gradient(rgba(var(--highlight-rgb), 0.25) 40%, transparent 40.5%),
+          radial-gradient(rgba(var(--highlight-rgb), 0.25) 56%, transparent 56.5%) rgba(var(--highlight-rgb), 0.25);
         border-radius: 50%;
         aspect-ratio: 1;
         position: absolute;
@@ -1387,7 +1390,7 @@ $insideShadow:
         position: absolute;
         inset: 0;
         display: block;
-        background: hsl(0 0% 0% / 0.5);
+        background: rgba(var(--mask-rgb), 0.5);
         filter: blur(4px);
         translate: 2% 4%;
         border-radius: 50%;
@@ -1411,8 +1414,8 @@ $insideShadow:
         transition: translate var(--speed) ease-in-out;
         translate: calc((100 - (var(--dark, 0) * 100)) * 1%) 0%;
         box-shadow:
-          calc(var(--width) * 0) calc(var(--width) * -0.025) calc(var(--width) * 0.025) 0 hsl(210 10% 10% / 0.15) inset,
-          calc(var(--width) * 0) calc(var(--width) * 0.025) calc(var(--width) * 0.025) 0 hsl(210 10% 10% / 0.65) inset;
+          calc(var(--width) * 0) calc(var(--width) * -0.025) calc(var(--width) * 0.025) 0 rgba(var(--mask-rgb), 0.15) inset,
+          calc(var(--width) * 0) calc(var(--width) * 0.025) calc(var(--width) * 0.025) 0 rgba(var(--mask-rgb), 0.65) inset;
       }
 
       .moon__crater {
@@ -1424,8 +1427,8 @@ $insideShadow:
         left: calc(var(--x) * 1%);
         top: calc(var(--y) * 1%);
         box-shadow:
-          calc(var(--width) * 0.01) calc(var(--width) * 0.01) calc(var(--width) * 0.01) 0 hsl(210 10% 6% / 0.25) inset,
-          0 calc(var(--width) * 0.005) calc(var(--width) * 0.01) 0 hsl(210 10% 100% / 0.25);
+          calc(var(--width) * 0.01) calc(var(--width) * 0.01) calc(var(--width) * 0.01) 0 rgba(var(--mask-rgb), 0.25) inset,
+          0 calc(var(--width) * 0.005) calc(var(--width) * 0.01) 0 rgba(var(--highlight-rgb), 0.25);
       }
 
       .moon__crater:nth-of-type(1) {
@@ -1531,22 +1534,22 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: #f5f0e6; // 纸张米黄色
+      background-color: var(--deco-light); // 纸张米黄色
       transition: all 0.3s ease;
 
       &:hover {
-        background-color: #ede6d6;
+        background-color: var(--deco-light);
 
         .type-block {
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 4px 12px rgba(var(--mask-rgb), 0.15);
         }
       }
 
       .type-block {
         width: 60%;
         height: 60%;
-        background: #fff;
-        border: 2px solid #8b4513; // 木纹边框色
+        background: var(--bg-surface);
+        border: 2px solid var(--deco-warning); // 木纹边框色
         border-radius: 4px;
         @include flexCenter(row, center);
         position: relative;
@@ -1563,9 +1566,9 @@ $insideShadow:
           height: 100%;
           background: linear-gradient(90deg,
               transparent 0%,
-              rgba(139, 69, 19, 0.1) 25%,
+              rgba(var(--color-accent-rgb), 0.1) 25%,
               transparent 50%,
-              rgba(139, 69, 19, 0.1) 75%,
+              rgba(var(--color-accent-rgb), 0.1) 75%,
               transparent 100%);
           pointer-events: none;
         }
@@ -1573,8 +1576,8 @@ $insideShadow:
         .type-char {
           font-size: 1.5rem;
           font-weight: bold;
-          color: #5d4037;
-          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+          color: var(--text-color);
+          text-shadow: 1px 1px 2px rgba(var(--mask-rgb), 0.1);
           transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
       }
@@ -1585,8 +1588,8 @@ $insideShadow:
         right: 3px;
         font-size: 0.6rem;
         font-weight: bold;
-        color: #8b4513;
-        background: rgba(255, 255, 255, 0.9);
+        color: var(--deco-warning);
+        background: rgba(var(--highlight-rgb), 0.9);
         border-radius: 50%;
         width: 14px;
         height: 14px;
@@ -1600,7 +1603,7 @@ $insideShadow:
 
           .type-char {
             transform: scale(1.1);
-            color: #3e2723;
+            color: var(--text-color);
           }
         }
       }
@@ -1615,11 +1618,11 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: #f8f9fa; // 画廊墙面灰色
+      background-color: var(--bg-surface-alt); // 画廊墙面灰色
       transition: all 0.3s ease;
 
       &:hover {
-        background-color: #e9ecef;
+        background-color: var(--deco-light);
 
         .gallery-container::before {
           opacity: 0.8;
@@ -1635,9 +1638,9 @@ $insideShadow:
         grid-template-rows: repeat(2, 1fr);
         gap: 2px;
         padding: 3px;
-        background: #fff;
+        background: var(--bg-surface);
         border-radius: 3px;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        box-shadow: inset 0 1px 3px rgba(var(--mask-rgb), 0.1);
 
         .gallery-window {
           border-radius: 1px;
@@ -1655,7 +1658,7 @@ $insideShadow:
           &.active {
             transform: scale(1.1);
             z-index: 1;
-            box-shadow: 0 0 0 2px #5d7af5;
+            box-shadow: 0 0 0 2px var(--primary-color);
 
             .window-content {
               transform: scale(1.2);
@@ -1670,8 +1673,8 @@ $insideShadow:
         right: 3px;
         font-size: 0.6rem;
         font-weight: bold;
-        color: #5d7af5;
-        background: rgba(255, 255, 255, 0.9);
+        color: var(--primary-color);
+        background: rgba(var(--highlight-rgb), 0.9);
         border-radius: 50%;
         width: 14px;
         height: 14px;

@@ -83,7 +83,7 @@ const cards = reactive([
         title: '个人博客源码授权',
         h1: 'routine',
         level: 3,
-        ribbonColor: '#fe3459',
+        ribbonColor: 'var(--deco-danger)',
         ribbonText: '常规',
         price: 99,
         originalPrice: 199,
@@ -94,7 +94,7 @@ const cards = reactive([
         title: '其它订单商品支付 - blog',
         h1: 'advanced',
         level: 4,
-        ribbonColor: '#ff9900',
+        ribbonColor: 'var(--deco-warning)',
         ribbonText: '进阶',
         price: 198,
         originalPrice: 299,
@@ -105,7 +105,7 @@ const cards = reactive([
         title: '高级定制',
         h1: 'recommend',
         level: 6,
-        ribbonColor: '#d81e06',
+        ribbonColor: 'var(--deco-danger)',
         ribbonText: '🔥推荐',
         price: 999,
         originalPrice: '暂无',
@@ -146,7 +146,7 @@ const closeModal = () => { // 关闭购买界面
 
     &::after {
         content: "";
-        @include mask-overlay(rgba(50, 50, 50, 0.3), 100vh, absolute, -1);
+        @include mask-overlay(rgba(var(--mask-rgb), 0.3), 100vh, absolute, -1);
         pointer-events: none;
     }
 
@@ -162,7 +162,7 @@ const closeModal = () => { // 关闭购买界面
             width: 18rem;
             background: white;
             border-radius: 0.6rem;
-            box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0.2rem 1rem rgba(var(--mask-rgb), 0.1);
             transition: transform 0.3s;
             height: auto;
             overflow: hidden;
@@ -178,7 +178,7 @@ const closeModal = () => { // 关闭购买界面
             .routine,
             .advanced,
             .recommend {
-                background-color: $primary-hover;
+                background-color: var(--primary-hover);
             }
 
             .content {
@@ -200,7 +200,7 @@ const closeModal = () => { // 关闭购买界面
                         font-size: 1.5em;
                         font-weight: bold;
                         margin: 0;
-                        color: #333;
+                        color: var(--text-color);
                     }
                 }
 
@@ -212,13 +212,13 @@ const closeModal = () => { // 关闭购买界面
 
                     .current-price {
                         font-size: 2.2em;
-                        color: #ff5473;
+                        color: var(--primary-sub);
                         font-weight: bold;
                     }
 
                     .original-price {
                         font-size: 0.9em;
-                        color: #ff5473;
+                        color: var(--primary-sub);
                         text-decoration: line-through;
                     }
                 }
@@ -228,7 +228,7 @@ const closeModal = () => { // 关闭购买界面
                 text-align: center;
                 height: 4rem;
                 overflow: hidden;
-                color: #666;
+                color: var(--text-sec-color);
                 font-size: 0.95em;
                 line-height: 1.5;
                 margin: 0.5rem 0;
@@ -237,9 +237,9 @@ const closeModal = () => { // 关闭购买界面
             .buy-button {
                 width: 100%;
                 padding: 8px;
-                background: #f4e1c0;
+                background: var(--deco-light);
                 font-weight: 700;
-                color: #ff5473;
+                color: var(--primary-sub);
                 border: none;
                 border-radius: 10px;
                 cursor: pointer;
@@ -249,8 +249,8 @@ const closeModal = () => { // 关闭购买界面
             }
 
             .buy-button:hover {
-                background: #ff3333;
-                color: #fefefe;
+                background: var(--deco-danger);
+                color: var(--text-on-dark);
             }
         }
     }
@@ -260,7 +260,7 @@ const closeModal = () => { // 关闭购买界面
         position: fixed;
         top: 0;
         left: 0;
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(var(--mask-rgb), 0.8);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -276,7 +276,7 @@ const closeModal = () => { // 关闭购买界面
             border-radius: 8px;
             min-width: 30vw;
             max-width: 60%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(var(--mask-rgb), 0.3);
             cursor: auto;
             position: relative;
             user-select: none;
@@ -317,7 +317,7 @@ const closeModal = () => { // 关闭购买界面
                         font-size: 1em;
                         font-weight: bold;
                         margin: 0;
-                        color: #333;
+                        color: var(--text-color);
                     }
                 }
 
@@ -329,22 +329,22 @@ const closeModal = () => { // 关闭购买界面
 
                     .current-price {
                         font-size: 2em;
-                        color: #ff5473;
+                        color: var(--primary-sub);
                         font-weight: bold;
                     }
 
                     .original-price {
                         font-size: 0.9em;
-                        color: #ff5473;
+                        color: var(--primary-sub);
                         text-decoration: line-through;
                     }
                 }
 
                 .pay-title {
                     font-size: 0.7em;
-                    color: #666;
+                    color: var(--text-sec-color);
                     padding: 10px;
-                    border-bottom: 1px solid #ddd;
+                    border-bottom: 1px solid var(--border-solid);
                 }
 
                 //付款方式
@@ -364,7 +364,7 @@ const closeModal = () => { // 关闭购买界面
                         border: 1px solid transparent;
                         transition: all 0.3s ease-in-out;
                         border-radius: 0.2rem;
-                        border-color: #89b7ff;
+                        border-color: var(--deco-primary);
 
                         img {
                             width: 0.8rem;
@@ -372,7 +372,7 @@ const closeModal = () => { // 关闭购买界面
                         }
 
                         &:hover {
-                            background-color: #cedffb;
+                            background-color: var(--deco-light);
                         }
                     }
 
