@@ -27,8 +27,8 @@ service.interceptors.request.use(
             const expiration = getTokenExpiration(token);
             const remainingTime = expiration - Math.floor(Date.now() / 1000);
 
-            // 如果token即将过期，刷新token
-            if (remainingTime < 300) {
+            // 仅在 token 仍有效且即将过期时刷新；已过期则交给后端 401 处理，避免过期后无限续命
+            if (remainingTime > 0 && remainingTime < 300) {
                 try {
                     const refreshResult = await useStore.refreshToken();
 

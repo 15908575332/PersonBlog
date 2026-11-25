@@ -80,6 +80,9 @@ export const refresh = async (req, res) => {
     try {
         const result = await refreshUserToken(token);
 
+        if (result.expired) { // 令牌已过期，不再续期
+            return res.status(401).json({ message: '会话已过期，请重新登录' });
+        }
         if (result.tooEarly) { // 剩余有效期超过5分钟
             return res.status(400).json({ message: '无需刷新令牌' });
         }

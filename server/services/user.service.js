@@ -7,6 +7,10 @@ import { sendResetCodeEmail } from '../utils/email.js';
 
 const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
 const JWT_SECRET = process.env.JWT_SECRET;
+// Token 有效期：必须使用 '2h' / '30m' / '7d' 这类时间表达式。
+// 注意：jsonwebtoken 对纯数字的 expiresIn 按“秒”处理，写成 7200000 会变成约 83 天。
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '2h';
+const JWT_SIGN_OPTIONS = { algorithm: 'HS256', expiresIn: JWT_EXPIRES_IN };
 
 // 注册：查重 + 密码哈希 + 插入
 export const registerUser = async ({ userId, userName, userEmail, userPassword, avatarUrl = '' }) => {
@@ -44,7 +48,7 @@ export const loginUser = async (loginEmail, loginPassword) => {
     const match = await bcrypt.compare(loginPassword, user.password_hash);
     if (!match) return { passwordWrong: true };
 
-    // 生成Token（固定2小时有效期）
+    // 生成Token（有效期见 JWT_EXPIRES_IN，默认 2 小时）
     const token = jwt.sign(
         {
             userId: user.user_id,
@@ -53,7 +57,7 @@ export const loginUser = async (loginEmail, loginPassword) => {
             nbf: Math.floor(Date.now() / 1000)   // 生效时间
         },
         JWT_SECRET,
-        { algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRES_IN_MS || 7200000 }
+        JWT_SIGN_OPTIONS
     );
 
     return {
@@ -116,15 +120,21 @@ export const updateUserInfo = async (token, body) => {
 
 // 刷新令牌（增强版）
 export const refreshUserToken = async (token) => {
-    // 验证令牌（强制忽略过期时间）
+    // 验证令牌（强制忽略过期时间，以便区分“即将过期”和“已过期”）
     const decoded = jwt.verify(token, JWT_SECRET, { ignoreExpiration: true });
 
     // 检查令牌是否在有效期内窗口
     const currentTime = Math.floor(Date.now() / 1000);
-    if (decoded.exp - currentTime > 60 * 5) { // 剩余有效期超过5分钟
+    const remaining = decoded.exp - currentTime;
+
+    // 已过期：不再续期，必须重新登录（否则过期 Token 可无限续命）
+    if (remaining <= 0) {
+        return { expired: true };
+    }
+    if (remaining > 60 * 5) { // 剩余有效期超过5分钟
         return { tooEarly: true };
     }
-    // 生成新令牌（固定2小时有效期）
+    // 生成新令牌（有效期见 JWT_EXPIRES_IN）
     const newToken = jwt.sign(
         {
             userId: decoded.userId,
@@ -133,12 +143,14 @@ export const refreshUserToken = async (token) => {
             nbf: currentTime
         },
         JWT_SECRET,
-        { algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRES_IN_MS || 7200000 }
+        JWT_SIGN_OPTIONS
     );
+    // 有效期由实际签发的 Token 载荷反推，避免与配置不一致
+    const newDecoded = jwt.decode(newToken);
 
     return {
         token: newToken,
-        expiresInMs: process.env.JWT_EXPIRES_IN_MS || 7200000
+        expiresInMs: (newDecoded.exp - newDecoded.iat) * 1000
     };
 };
 
