@@ -5,14 +5,8 @@
         <!-- 遮罩 -->
         <!-- 验证 -->
         <ModalBox :isVisible="isShowModal" @close="handChangeModal" :animationType="selectedAnimation">
-            <!-- 注册验证码组件 -->
-            <Captcha v-if="formState.currentOption === 'register'" :onSuccess="onCaptchaSuccess"
-                :onCancel="onCaptchaCancel" />
-            <!-- 登录验证码组件 -->
-            <slide-verify v-else ref="block" :w="400" :h="200" :imgs="customImages" :show="false"
-                :slider-text="placeholderText" @again="onAgain" @success="onSuccess" @fail="onFail"
-                style="box-shadow: var(--shadow-elevated);"></slide-verify>
-            <div class="verification-msg" :style="{ color: msgColor }">{{ msg }}</div>
+            <!-- 图形验证码（登录/注册共用）：答案由后端校验，前端只回传 captchaId + captchaCode -->
+            <Captcha :title="captchaTitle" :onSuccess="onCaptchaSuccess" :onCancel="onCaptchaCancel" />
         </ModalBox>
 
         <div class="layout">
@@ -101,15 +95,14 @@ import { useAuthStore } from '@/stores/auth';
 import ModalBox from '@/components/base/ModalBox.vue';
 
 import Captcha from '@/components/business/auth/Captcha.vue';
-import SlideVerify from 'vue3-slide-verify';
-import "vue3-slide-verify/dist/style.css";
 
 const $http = getCurrentInstance().appContext.config.globalProperties.$http;
 const route = useRouter();
 
 /** ------------------------ 全局配置 ------------------------ */
 const isShowModal = ref(false); //验证框
-const captchaVerified = ref(false);
+// 本次图形验证码的票据：由 Captcha 组件回传，随登录/注册请求提交给后端校验
+const captchaTicket = ref({ captchaId: '', captchaCode: '' });
 
 const handChangeModal = () => {
     isShowModal.value = false;
@@ -125,12 +118,15 @@ const formState = ref({
     currentOption: 'login' // 当前操作类型
 });
 const toggleForm = () => { //类型切换
-    msg.value = '';
+    captchaTicket.value = { captchaId: '', captchaCode: '' };
     formState.value.isRegisterForm = !formState.value.isRegisterForm;
     formState.value.currentOption = formState.value.isRegisterForm ? 'register' : 'login';
 };
 const selectedAnimation = computed(() => { //返回选中动画名
     return formState.value.currentOption === 'register' ? 'spaceInUp' : 'zoomIn';
+});
+const captchaTitle = computed(() => { //验证码弹窗标题随当前表单变化
+    return formState.value.currentOption === 'register' ? '请完成注册安全验证' : '请完成登录安全验证';
 });
 
 /** ------------------------ 背景图切换 ------------------------ */
@@ -161,17 +157,24 @@ const registerData = ref({
 });
 
 const userId = `user-${uuidv4()}`;
-const onCaptchaSuccess = () => {
-    captchaVerified.value = true;
+
+// 验证码通过后按当前表单分发：注册走注册接口，登录走登录接口
+const onCaptchaSuccess = (ticket) => {
+    captchaTicket.value = ticket;
     isShowModal.value = false;
-    handleRegisterAfterCaptcha();
+    if (formState.value.currentOption === 'register') {
+        handleRegisterAfterCaptcha();
+        return;
+    }
+    handleLoginAfterCaptcha();
 };
 
 const onCaptchaCancel = () => {
     isShowModal.value = false;
-    captchaVerified.value = false;
+    captchaTicket.value = { captchaId: '', captchaCode: '' };
 };
-// 注册后的验证码处理
+
+// 注册请求：携带图形验证码票据，由后端校验通过后建号
 const handleRegisterAfterCaptcha = async () => {
     try {
         const atIndex = registerData.value.userEmail.indexOf('@');
@@ -182,15 +185,20 @@ const handleRegisterAfterCaptcha = async () => {
             userName: registerData.value.userName,
             userEmail: registerData.value.userEmail,
             userPassword: registerData.value.userPassword,
-            avatar_url: '/src/assets/img/shared/profile_picture/' + profileName + '.png'
+            avatar_url: '/src/assets/img/shared/profile_picture/' + profileName + '.png',
+            ...captchaTicket.value
         });
 
-        message.success('注册成功！正在跳转登录页面...');
-        setTimeout(() => {
-            window.location.href = '/userInfo';
-        }, 2000);
+        message.success('注册成功！请使用新账号登录');
+        // 注册接口不下发 Token，注册成功后切回登录表单并预填邮箱，避免跳转到需登录的页面
+        defaultLoginInfo.value.loginEmail = registerData.value.userEmail;
+        registerData.value.userPassword = '';
+        registerData.value.rePassword = '';
+        captchaTicket.value = { captchaId: '', captchaCode: '' };
+        if (formState.value.currentOption === 'register') toggleForm();
     } catch (error) {
-        message.error(error.response.data.message);
+        message.error(error?.response?.data?.message || '注册失败，请重试');
+        captchaTicket.value = { captchaId: '', captchaCode: '' };
     }
 };
 
@@ -214,7 +222,8 @@ async function UserRegister(e) {
         return false
     }
 
-    // 设置当前操作类型为注册
+    // 每次注册都重新做一次图形验证
+    captchaTicket.value = { captchaId: '', captchaCode: '' };
     isShowModal.value = true;
 }
 
@@ -224,10 +233,6 @@ const defaultLoginInfo = ref({
     loginEmail: '',
     loginPassword: '',
 })
-const msg = ref('向右滑动');
-const block = ref('');
-const msgColor = ref(); //文本颜色
-const placeholderText = ref('按住箭头向右拖动滑块'); //滑块提示文本
 const isLoginLoading = ref(false); //登录状态 
 const MAX_LOGIN_FAIL = 5; //允许的连续失败次数
 const LOCK_SECONDS = 60; //达到失败上限后的冷却时长
@@ -236,14 +241,6 @@ const failCount = ref(0); //连续失败计数
 const lockLeft = ref(0); //冷却剩余秒数
 let lockTimer = null;
 let lockUntil = 0;
-const customImages = ref([ //可滑动图片
-    new URL('@/assets/img/shared/public-33.png', import.meta.url).href,
-    new URL('@/assets/img/shared/public-34.png', import.meta.url).href,
-    new URL('@/assets/img/shared/public-35.png', import.meta.url).href,
-    new URL('@/assets/img/shared/public-36.png', import.meta.url).href,
-    new URL('@/assets/img/shared/public-37.png', import.meta.url).href,
-    new URL('@/assets/img/shared/public-38.png', import.meta.url).href,
-])
 
 // 冷却计时器清理
 const clearLockTimer = () => {
@@ -264,13 +261,10 @@ const startCooldown = () => {
     }, 1000);
 };
 
-// 关闭验证弹窗并清理滑块/提示残留，保证可再次打开
+// 关闭验证弹窗并清理本次验证码票据，保证下次可重新取码
 const resetCaptchaState = () => {
-    block.value?.refresh?.();
     isShowModal.value = false;
-    captchaVerified.value = false;
-    msg.value = '向右滑动';
-    msgColor.value = '';
+    captchaTicket.value = { captchaId: '', captchaCode: '' };
 };
 
 // 跳转首页：先展示提示，跳转完成后销毁，避免首页残留
@@ -296,25 +290,7 @@ const onLoginFail = (error) => {
     message.warning(`连续登录失败${MAX_LOGIN_FAIL}次，请${LOCK_SECONDS}秒后再试`);
 };
 
-const onAgain = () => {
-    msg.value = "检测到非人为操作的哦！ try again";
-    // 刷新
-    block.value?.refresh();
-};
-// 图形验证码
-const onSuccess = async (...args) => {
-    if (isSubmitting.value) return; //重复滑动不再触发请求
-    msgColor.value = 'green';
-    msg.value = `login success, 耗时${(args[0]?.timestamp / 1000).toFixed(1)}s`;
-    await handleLoginAfterCaptcha();
-};
-
-const onFail = () => { //失败后自动调用刷新方法
-    msg.value = "验证不通过";
-    msgColor.value = 'red';
-};
-
-// 登录后的验证码处理
+// 登录请求：携带图形验证码票据，由后端校验通过后比对账号密码
 const handleLoginAfterCaptcha = async () => {
     if (isSubmitting.value) return; //同一时刻只允许一个登录请求
     if (lockLeft.value > 0) {
@@ -327,12 +303,12 @@ const handleLoginAfterCaptcha = async () => {
     try {
         await useAuthStore().login({
             loginEmail: defaultLoginInfo.value.loginEmail,
-            loginPassword: defaultLoginInfo.value.loginPassword
+            loginPassword: defaultLoginInfo.value.loginPassword,
+            ...captchaTicket.value
         });
         failCount.value = 0; //成功即清零
         defaultLoginInfo.value.loginPassword = '';
-        isShowModal.value = false;
-        captchaVerified.value = false;
+        resetCaptchaState();
         await goHome();
     } catch (error) {
         onLoginFail(error);
@@ -366,8 +342,8 @@ const login = async (e) => {
         return false
     }
     
-    msg.value = '向右滑动';
-    msgColor.value = '';
+    // 每次登录都重新取码验证
+    captchaTicket.value = { captchaId: '', captchaCode: '' };
     isShowModal.value = true;
 }
 
@@ -438,14 +414,6 @@ onBeforeUnmount(() => {
         content: "";
         @include mask-overlay(rgba(var(--mask-rgb), 0.188), 100%, absolute, -1);
         pointer-events: none;
-    }
-
-    //验证组件样式
-    .verification-msg {
-        height: 2rem;
-        line-height: 2rem;
-        text-align: left;
-        width: 100%;
     }
 
     .backPhoto {

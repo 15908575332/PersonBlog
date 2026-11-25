@@ -26,8 +26,11 @@ export interface UserInfo {
 
 /** 登录请求体 */
 export interface LoginCredentials {
-    email: string
-    password: string
+    loginEmail: string
+    loginPassword: string
+    /** 图形验证码票据：GET /user/captcha 下发，登录时提交给后端校验 */
+    captchaId: string
+    captchaCode: string
 }
 
 /** /user/login 响应体 */

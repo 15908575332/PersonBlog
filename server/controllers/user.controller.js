@@ -8,10 +8,18 @@ import {
     verifyResetCode as verifyResetCodeService,
     resetPassword as resetPasswordService
 } from '../services/user.service.js';
+import {
+    buildLoginKey,
+    checkLoginLock,
+    recordLoginFail,
+    clearLoginFail
+} from '../utils/loginRateLimiter.js';
 
 // 用户注册接口
 export const register = async (req, res) => {
-    const { userId, userName, userEmail, userPassword, avatarUrl = '' } = req.body;
+    const { userId, userName, userEmail, userPassword } = req.body;
+    // 兼容前端历史字段名 avatar_url 与后端驼峰 avatarUrl
+    const avatarUrl = req.body.avatarUrl || req.body.avatar_url || '';
     try {
         const result = await registerUser({ userId, userName, userEmail, userPassword, avatarUrl });
 
@@ -27,15 +35,29 @@ export const register = async (req, res) => {
     }
 };
 
-// 用户登录接口
+// 登录失败统一处理：累计失败次数并返回统一文案，避免账号被枚举
+const replyLoginFail = (res, lockKey) => {
+    recordLoginFail(lockKey);
+    return res.status(401).json({ code: 'LOGIN_FAILED', message: '账号或密码错误' });
+};
+
+// 用户登录接口（图形验证码已由 validateCaptcha 中间件校验并消费）
 export const login = async (req, res) => {
     const { loginEmail, loginPassword } = req.body;
+    const lockKey = buildLoginKey(req, loginEmail);
+    const lock = checkLoginLock(lockKey);
+    if (lock.locked) {
+        return res.status(429).json({
+            code: 'LOGIN_LOCKED',
+            message: `尝试次数过多，请${Math.ceil(lock.retryAfter / 60)}分钟后再试`
+        });
+    }
+
     try {
         const result = await loginUser(loginEmail, loginPassword);
+        if (result.notFound || result.passwordWrong) return replyLoginFail(res, lockKey);
 
-        if (result.notFound) return res.status(404).json({ message: '用户不存在' });
-        if (result.passwordWrong) return res.status(401).json({ message: '密码错误' });
-
+        clearLoginFail(lockKey);
         res.status(200).json({
             token: result.token,
             user: result.user

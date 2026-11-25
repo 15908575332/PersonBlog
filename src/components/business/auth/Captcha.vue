@@ -1,137 +1,83 @@
 <template>
     <div class="captcha-container">
         <div class="captcha-header">
-            <span>请完成安全验证</span>
-            <button @click="refreshCaptcha" class="refresh-btn">🔄</button>
+            <span>{{ title }}</span>
+            <button class="refresh-btn" :disabled="loading" @click="refreshCaptcha">换一张</button>
         </div>
 
         <div class="captcha-body">
             <div class="captcha-image" @click="refreshCaptcha">
-                <canvas ref="canvasRef" width="120" height="40"></canvas>
+                <img v-if="codeImage" :src="codeImage" alt="图形验证码" width="120" height="40" />
+                <span v-else class="captcha-tip">{{ loading ? '加载中...' : '点击重试' }}</span>
             </div>
 
             <div class="captcha-input">
-                <input type="text" v-model="inputCode" placeholder="请输入验证码" maxlength="4"
-                    @keyup.enter="validateCaptcha" />
-                <button @click="validateCaptcha" class="confirm-btn">验证</button>
+                <input type="text" v-model.trim="inputCode" placeholder="请输入验证码" maxlength="4"
+                    autocomplete="off" @keyup.enter="submitCaptcha" />
+                <button @click="submitCaptcha" class="confirm-btn" :disabled="loading">验证</button>
             </div>
         </div>
 
-        <div v-if="errorMessage" class="error-message">*{{ errorMessage }}</div>
-        <div v-else class="error-message">*不区分大小写</div>
+        <div class="error-message">*{{ errorMessage || '不区分大小写，答案由服务端校验' }}</div>
     </div>
 </template>
 
 <script setup>
+// 图形验证码组件（服务端版）：图片与答案由后端生成，前端只负责采集并回传 captchaId + captchaCode
 import { message } from 'ant-design-vue';
 import { ref, onMounted } from 'vue';
+import request from '@/api/http';
 
 const props = defineProps({
+    title: { type: String, default: '请完成安全验证' },
     onSuccess: Function,
     onCancel: Function
 });
 
-const canvasRef = ref(null);
+const captchaId = ref('');
+const codeImage = ref('');
 const inputCode = ref('');
-const captchaCode = ref('');
 const errorMessage = ref('');
+const loading = ref(false);
 
-// 生成随机验证码
-function generateCaptcha() {
-    const chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
-    let code = '';
-    for (let i = 0; i < 4; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    captchaCode.value = code;
-    drawCaptcha(code);
-}
-
-// 绘制验证码到canvas
-function drawCaptcha(code) {
-    const canvas = canvasRef.value;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 背景色
-    ctx.fillStyle = '#f5f5f5';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // 绘制文字
-    for (let i = 0; i < code.length; i++) {
-        ctx.save();
-        ctx.font = 'bold 20px Arial';
-        ctx.fillStyle = getRandomColor();
-        ctx.translate(20 + i * 25, 25);
-        ctx.rotate((Math.random() - 0.5) * 0.4);
-        ctx.fillText(code[i], 0, 0);
-        ctx.restore();
-    }
-
-    // 绘制干扰线
-    for (let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.strokeStyle = getRandomColor();
-        ctx.lineWidth = 1;
-        ctx.stroke();
-    }
-}
-
-function getRandomColor() {
-    const colors = ['#f24056', '#409eff', '#67c23a', '#e6a23c', '#909399'];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
-
-
-// 错误计数
-const errorCount = ref(1);
-// 刷新验证码
-function refreshCaptcha() {
-    inputCode.value = '';
+// 重新申请验证码：旧 captchaId 由后端按 TTL 自然淘汰
+const refreshCaptcha = async () => {
+    loading.value = true;
     errorMessage.value = '';
-    errorCount.value = 1; // 重置错误计数
-    generateCaptcha();
-}
+    inputCode.value = '';
+    try {
+        const data = await request.get('/user/captcha');
+        captchaId.value = data.captchaId;
+        codeImage.value = data.codeImage;
+    } catch (error) {
+        captchaId.value = '';
+        codeImage.value = '';
+        errorMessage.value = error.response?.data?.message || '验证码加载失败，请点击重试';
+    } finally {
+        loading.value = false;
+    }
+};
 
-// 验证码
-function validateCaptcha() {
+// 本地只做非空与位数校验，真伪交给登录/注册接口的服务端校验
+const submitCaptcha = () => {
+    if (loading.value) return;
     if (!inputCode.value) {
         message.warning('请输入验证码');
         return;
     }
-
-    if (inputCode.value.toUpperCase() !== captchaCode.value.toUpperCase()) {
-        errorMessage.value = '验证码错误' + errorCount.value + '次';
-
-        inputCode.value = '';
-
-        errorCount.value++;
-        if (errorCount.value >= 3) {
-            message.loading({
-                content: '刷新验证码...',
-                duration: 1,
-                onClose() {
-                    refreshCaptcha();
-                }
-            })
-            errorCount.value = 0;
-        }
+    if (inputCode.value.length !== 4) {
+        errorMessage.value = '请输入 4 位验证码';
         return;
     }
-
-    // 验证成功
-    errorCount.value = 0;
+    if (!captchaId.value) {
+        refreshCaptcha();
+        return;
+    }
     errorMessage.value = '';
-    props.onSuccess?.(inputCode.value);
-}
+    props.onSuccess?.({ captchaId: captchaId.value, captchaCode: inputCode.value });
+};
 
-onMounted(() => {
-    generateCaptcha();
-});
+onMounted(refreshCaptcha);
 </script>
 
 <style scoped lang="scss">
@@ -158,7 +104,14 @@ onMounted(() => {
         background: none;
         border: none;
         cursor: pointer;
-        font-size: 18px;
+        font-size: 0.8rem;
+        font-family: var(--app-font-family);
+        color: var(--primary-sub);
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     }
 }
 
@@ -175,6 +128,23 @@ onMounted(() => {
     cursor: pointer;
     border-radius: 4px;
     height: 40px;
+    min-width: 120px;
+    outline: 1px solid var(--border-strong);
+    overflow: hidden;
+
+    img {
+        display: block;
+        height: 40px;
+        width: 120px;
+    }
+
+    .captcha-tip {
+        display: block;
+        line-height: 40px;
+        text-align: center;
+        font-size: 0.6rem;
+        color: var(--text-color);
+    }
 }
 
 .captcha-input {
@@ -202,8 +172,12 @@ onMounted(() => {
         border-radius: 4px;
         cursor: pointer;
         font-family: inherit;
-    }
 
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
 }
 
 .error-message {

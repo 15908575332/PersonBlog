@@ -1,5 +1,10 @@
 <template>
   <form action="#" class="main" :class="{ 'on-start': isOnstart, 'document-loaded': isOnloaded }" @submit.prevent>
+    <!-- 图形验证码弹窗：下发邮箱验证码前必须通过服务端校验 -->
+    <ModalBox :isVisible="isCaptchaVisible" @close="onCaptchaCancel">
+      <Captcha title="请完成安全验证" :onSuccess="onCaptchaSuccess" :onCancel="onCaptchaCancel" />
+    </ModalBox>
+
     <div class="form">
       <!-- 启动遮罩 -->
       <div class="form__cover"></div>
@@ -204,8 +209,14 @@ import { ref, reactive, onMounted, computed, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import request from '@/api/http';
+import ModalBox from '@/components/base/ModalBox.vue';
+import Captcha from '@/components/business/auth/Captcha.vue';
 
 const router = useRouter();
+
+/* ===== 图形验证码状态（发重置码前校验） ===== */
+const isCaptchaVisible = ref(false);
+const captchaTicket = ref({ captchaId: '', captchaCode: '' });
 
 /* ===== 入场动画状态 ===== */
 const isOnstart = ref(false);
@@ -354,17 +365,36 @@ function onConfirmPasswordBlur() {
   staggerActive(confirmPasswordActiveMap, confirmPasswordLetters, false);
 }
 
-/* ===== 发送验证码 ===== */
+/* ===== 发送验证码：先过图形码，再由后端下发邮箱验证码 ===== */
 async function sendCode() {
   if (countdown.value > 0) return;
   if (!account.value || !isAccountValid.value) {
     message.warning('请输入正确的邮箱地址');
     return;
   }
+  // 每次发码都要重新取一张图形码，票据由后端一次性消费
+  captchaTicket.value = { captchaId: '', captchaCode: '' };
+  isCaptchaVisible.value = true;
+}
 
+function onCaptchaCancel() {
+  isCaptchaVisible.value = false;
+  captchaTicket.value = { captchaId: '', captchaCode: '' };
+}
+
+async function onCaptchaSuccess(ticket) {
+  isCaptchaVisible.value = false;
+  captchaTicket.value = ticket;
+  await requestSendCode();
+}
+
+async function requestSendCode() {
   loading.value = true;
   try {
-    const res = await request.post('/user/send-reset-code', { account: account.value });
+    const res = await request.post('/user/send-reset-code', {
+      account: account.value,
+      ...captchaTicket.value
+    });
     message.success(res.message || '验证码已发送');
     countdown.value = 30;
     timer = setInterval(() => {
@@ -374,6 +404,8 @@ async function sendCode() {
   } catch (error) {
     const msg = error.response?.data?.message || '发送失败，请稍后重试';
     message.error(msg);
+    // 校验失败后票据作废，下次点击重新取码
+    captchaTicket.value = { captchaId: '', captchaCode: '' };
   } finally {
     loading.value = false;
   }

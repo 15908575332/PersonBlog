@@ -64,32 +64,50 @@ service.interceptors.request.use(
 // --------------------------
 // 响应拦截器（接收响应后处理）
 // --------------------------
+// 无需登录态的公开接口：它们的 401 属于业务校验失败（如账号或密码错误），不触发跳转
+const PUBLIC_PATHS = [
+    '/user/login',
+    '/user/register',
+    '/user/captcha',
+    '/user/send-reset-code',
+    '/user/verify-reset-code',
+    '/user/reset-password'
+];
+const isPublicRequest = (url = '') => PUBLIC_PATHS.some((path) => url.includes(path));
+
+// 鉴权失效统一处理：仅对需要登录态的接口生效
+const handleUnauthorized = (error) => {
+    if (isPublicRequest(error.config?.url)) return;
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('iat');
+    if (window.location.pathname !== '/userInfo') window.location.href = '/userInfo';
+};
+
 service.interceptors.response.use(
     (response) => {
-        if (response.status !== 200) {
-            // 统一处理错误提示（可使用 Element Plus 的 console 或自定义提示）
-            console.error(response.data.message || '请求失败，请稍后重试');
-
-            // 特殊状态码处理（如未登录跳转登录页）
-            if (response.status === 401) {
-                localStorage.removeItem('token'); // 清除失效 token
-                window.location.href = '/userInfo'; // 跳转到登录页
-            }
-
-            return Promise.reject(new Error(res.message || '请求失败'));
-        }
-
-        // 成功时返回业务数据
+        // axios 只在 2xx 进入成功分支，直接返回业务数据
         return response.data;
     },
     async (error) => {
-        // 处理 HTTP 状态码错误（如 404、500）
         const status = error.response?.status;
         const message = error.response?.data?.message || '网络异常，请稍后重试';
 
+        // 401 处理放在失败分支才有效（历史误放在成功分支导致成为死代码）
+        if (status === 401) {
+            handleUnauthorized(error);
+            return Promise.reject(error);
+        }
+
         switch (status) {
+            case 400:
+                // 参数或验证码校验失败，交由调用方按 message 提示
+                break;
             case 404:
                 console.error('资源不存在');
+                break;
+            case 429:
+                console.error(message);
                 break;
             case 500:
                 console.error('服务器内部错误');

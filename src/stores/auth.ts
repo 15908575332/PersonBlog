@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode'
 import { message } from 'ant-design-vue'
 import { clearAllLocalStorage } from '@/utils/clearAllLocalStorage';
 import { API_ORIGIN } from '@/api/base';
+import http from '@/api/http';
 import type {
     JwtPayload,
     LoginCredentials,
@@ -20,26 +21,23 @@ import type {
 export const useAuthStore = defineStore('auth', () => {
     const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
         try {
-            const response: AxiosResponse<LoginResponse> = await axios.post(`${API_ORIGIN}/user/login`, credentials);
-            if (response.status === 401) {
-                message.warning('密码错误')
-            }
+            // 走统一 http 实例：登录失败（含验证码错误）由响应拦截器统一处理，不再绕过拦截器
+            const data = await http.post('/user/login', credentials);
 
             // 更新状态
-            user.value = response.data.user;
-            token.value = response.data.token;
-            const decoded = jwtDecode<JwtPayload>(response.data.token);
+            user.value = data.user;
+            token.value = data.token;
+            const decoded = jwtDecode<JwtPayload>(data.token);
             iat.value = decoded.iat; //生效时间
             // 保存到本地存储
-            localStorage.setItem('user', JSON.stringify(response.data.user))
-            localStorage.setItem('token', response.data.token); //token
+            localStorage.setItem('user', JSON.stringify(data.user))
+            localStorage.setItem('token', data.token); //token
             localStorage.setItem('iat', String(decoded.iat)); //生成时间
-            return response.data;
+            return data;
 
         } catch (error) {
-            console.log(error);
             if (axios.isAxiosError(error) && error.code === 'ERR_NETWORK') {
-                alert('网络错误，后端拒绝连接');
+                message.error('网络错误，后端拒绝连接');
             }
             // 错误处理
             throw error;
