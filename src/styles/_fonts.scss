@@ -3,6 +3,8 @@
 // 1. 定义字体文件路径映射 (SCSS Map)
 $font-assets: (
     "lmst": "@/assets/fonts/langmanstar.ttf",
+    // lmst 的密码掩码变体：仅将 U+25CF(●) 的 advance 收到 480、字形缩到 400 并居中，其余字符与 lmst 完全一致
+    "lmst-pwd": "@/assets/fonts/lmst-pwd.ttf",
     "mmt": "@/assets/fonts/也字工厂喵喵体.ttf",
     "xxmt": "@/assets/fonts/也字工厂小熊猫.ttf"
 );

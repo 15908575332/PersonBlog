@@ -31,6 +31,21 @@
     --primary-color: rgb(var(--primary-color-rgb));
     --primary-sub: rgb(var(--primary-sub-rgb));
     --color-accent: rgb(var(--color-accent-rgb));
+
+    // 表单输入框排版：登录 / 注册 / 重置密码共用，由 _layout.scss 的 .form-field-input 消费
+    --field-font-size: 0.8rem;
+    --field-font-weight: 550;
+    --field-padding-y: 11px;
+    --field-padding-x: 15px;
+    --field-padding-icon: 40px; // 左侧带图标的输入框让位左侧图标
+    --field-padding-action: 40px; // 右侧带小眼睛的密码框让位切换按钮
+    --field-letter-spacing: 0.05em;
+    --field-letter-spacing-text: 0.05em; // 密码明文态
+    --field-letter-spacing-mask: 0.05em; //掩码宽度
+    --field-mask-font-family: "lmst-pwd", var(--app-font-family);
+    // 固定行高：lmst 行距约 1.017em、系统字体约 1.33em，不锁定会导致掩码/明文切换时输入框高度跳动
+    --field-line-height: 17px;
+    --field-transition: 0.25s ease;
 }
 
 // 浅色主题：同时挂在 :root 上，避免首屏 data-theme 尚未写入时颜色为空

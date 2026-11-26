@@ -7,4 +7,3 @@ declare module '*.vue' {
 }
 declare module 'vue3-carousel-3d';
 declare module 'index';
-declare module 'vue-monoplasty-slide-verify';

@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="error-message">*{{ errorMessage || '不区分大小写，答案由服务端校验' }}</div>
+        <div class="error-message">{{ errorMessage || '不区分大小写' }}</div>
     </div>
 </template>
 
@@ -52,7 +52,7 @@ const refreshCaptcha = async () => {
     } catch (error) {
         captchaId.value = '';
         codeImage.value = '';
-        errorMessage.value = error.response?.data?.message || '验证码加载失败，请点击重试';
+        errorMessage.value = error.response?.data?.message || '加载失败，请点击重试';
     } finally {
         loading.value = false;
     }
@@ -142,7 +142,7 @@ onMounted(refreshCaptcha);
         display: block;
         line-height: 40px;
         text-align: center;
-        font-size: 0.6rem;
+        // font-size: 0.6rem;
         color: var(--text-color);
     }
 }
@@ -185,6 +185,6 @@ onMounted(refreshCaptcha);
     height: 1rem;
     line-height: 1rem;
     color: var(--primary-sub);
-    font-size: 0.6rem;
+    font-size: 0.8rem;
 }
 </style>

@@ -17,23 +17,43 @@
                         <h2 class="form_title title incline_en">创建账户</h2>
                         <span class="form__span">或者使用你的邮箱进行注册</span>
                         <div class="login_email">
-                            <input class="form__input" type="text" placeholder="用户名" required max="8"
-                                v-model="registerData.userName">
-                            <img v-if="registerData.userName" @click="clearFields('userName')"
-                                src="@/assets/icon/user/input_del.svg" />
+                            <input class="form__input form-field-input form-field-input--action" type="text"
+                                placeholder="用户名" required max="8" v-model="registerData.userName">
+                            <button v-if="registerData.userName" type="button" class="input-clear" aria-label="清空用户名"
+                                @click="clearFields('userName')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6.6 6.6 17.4 17.4" />
+                                    <path d="M17.4 6.6 6.6 17.4" />
+                                </svg>
+                            </button>
                         </div>
 
                         <div class="login_email">
-                            <input class="form__input" type="email" required autocomplete="userEmail" placeholder="邮箱"
-                                v-model="registerData.userEmail">
-                            <img v-if="registerData.userEmail" @click="clearFields('userEmail')"
-                                src="@/assets/icon/user/input_del.svg" />
+                            <input class="form__input form-field-input form-field-input--action" type="email" required
+                                autocomplete="userEmail" placeholder="邮箱" v-model="registerData.userEmail">
+                            <button v-if="registerData.userEmail" type="button" class="input-clear" aria-label="清空邮箱"
+                                @click="clearFields('userEmail')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6.6 6.6 17.4 17.4" />
+                                    <path d="M17.4 6.6 6.6 17.4" />
+                                </svg>
+                            </button>
                         </div>
 
-                        <input class="form__input" type="password" autocomplete="current-password" placeholder="密码"
-                            v-model="registerData.userPassword">
-                        <input class="form__input" type="password" autocomplete="new-password" placeholder="再次输入密码"
-                            v-model="registerData.rePassword">
+                        <div class="pwd-field">
+                            <input class="form__input form-field-input form-field-input--action"
+                                :type="showRegisterPassword ? 'text' : 'password'" autocomplete="current-password"
+                                placeholder="密码" v-model="registerData.userPassword">
+                            <PwdToggle v-model="showRegisterPassword" />
+                        </div>
+                        <div class="pwd-field">
+                            <input class="form__input form-field-input form-field-input--action"
+                                :type="showRePassword ? 'text' : 'password'" autocomplete="new-password"
+                                placeholder="再次输入密码" v-model="registerData.rePassword">
+                            <PwdToggle v-model="showRePassword" />
+                        </div>
 
                         <button class="form__button button submit" type="submit"
                             @click="UserRegister"><span>注册</span></button>
@@ -46,18 +66,29 @@
                         <h2 class="form_title title incline_en"><span>登录</span></h2>
                         <span class="form__span">或者使用你的电子邮箱账户</span>
                         <div class="login_email">
-                            <input class="form__input form__input--email" autocomplete="username" type="email" required
-                                placeholder="电子邮箱" v-model="defaultLoginInfo.loginEmail">
-                            <img v-if="defaultLoginInfo.loginEmail" @click="clearFields('loginEmail')"
-                                src="@/assets/icon/user/input_del.svg" />
+                            <input class="form__input form-field-input form-field-input--action form__input--email"
+                                autocomplete="username" type="email" required placeholder="电子邮箱"
+                                v-model="defaultLoginInfo.loginEmail">
+                            <button v-if="defaultLoginInfo.loginEmail" type="button" class="input-clear"
+                                aria-label="清空邮箱" @click="clearFields('loginEmail')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6.6 6.6 17.4 17.4" />
+                                    <path d="M17.4 6.6 6.6 17.4" />
+                                </svg>
+                            </button>
                         </div>
 
-                        <input class="form__input" type="password" autocomplete="current-password" placeholder="请输入你的密码"
-                            v-model="defaultLoginInfo.loginPassword">
+                        <div class="pwd-field">
+                            <input class="form__input form-field-input form-field-input--action"
+                                :type="showLoginPassword ? 'text' : 'password'" autocomplete="current-password"
+                                placeholder="请输入你的密码" v-model="defaultLoginInfo.loginPassword">
+                            <PwdToggle v-model="showLoginPassword" />
+                        </div>
                         <a href="/resetPassword" class="form__link">忘记密码</a>
                         <button class="form__button button submit" @click="login"
                             :disabled="isLoginLoading || lockLeft > 0"><span>{{ lockLeft > 0 ? `${lockLeft}s 后重试` : '登录'
-                                }}</span></button>
+                            }}</span></button>
                     </form>
                 </div>
                 <!-- login/register 切换按钮 -->
@@ -66,7 +97,7 @@
                     <div class="switch__circle switch__circle--t"></div>
                     <div class="switch__container" id="switch-c1">
                         <h2 class="switch__title title incline_en">没有账号？</h2>
-                        <p class="switch__description description">
+                        <p class="description">
                             <img src="@/assets/icon/user/register-icon.svg"></img>
                             <span>立即注册吧</span>
                         </p>
@@ -74,7 +105,7 @@
                     </div>
                     <div class="switch__container is-hidden" id="switch-c2">
                         <h2 class="switch__title title incline_en">已有账号？</h2>
-                        <p class="switch__description description">
+                        <p class="description">
                             <img src="@/assets/icon/user/login-icon.svg"></img>
                             <span>请登录</span>
                         </p>
@@ -93,6 +124,7 @@ import { useRouter } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthStore } from '@/stores/auth';
 import ModalBox from '@/components/base/ModalBox.vue';
+import PwdToggle from '@/components/base/PwdToggle.vue';
 
 import Captcha from '@/components/business/auth/Captcha.vue';
 
@@ -101,6 +133,10 @@ const route = useRouter();
 
 /** ------------------------ 全局配置 ------------------------ */
 const isShowModal = ref(false); //验证框
+// 密码可见性（小眼睛）：注册、确认密码、登录三处互不干扰
+const showRegisterPassword = ref(false);
+const showRePassword = ref(false);
+const showLoginPassword = ref(false);
 // 本次图形验证码的票据：由 Captcha 组件回传，随登录/注册请求提交给后端校验
 const captchaTicket = ref({ captchaId: '', captchaCode: '' });
 
@@ -341,7 +377,7 @@ const login = async (e) => {
         alert('密码不能为空')
         return false
     }
-    
+
     // 每次登录都重新取码验证
     captchaTicket.value = { captchaId: '', captchaCode: '' };
     isShowModal.value = true;
@@ -494,34 +530,64 @@ onBeforeUnmount(() => {
 .login_email {
     position: relative;
 
-    img {
+    // 清空按钮：与 PwdToggle 同款线性图标、26px 圆形热区与悬停反馈
+    .input-clear {
         position: absolute;
-        right: 10px;
+        right: 6px;
         top: 50%;
         transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        border: none;
+        outline: none;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--text-sec-color);
         cursor: pointer;
-        width: 0.9rem;
+        z-index: 2;
+        transition: color 0.2s ease, background-color 0.2s ease;
+
+        svg {
+            width: 15px;
+            height: 15px;
+            display: block;
+            pointer-events: none;
+        }
+
+        &:hover {
+            color: var(--primary-color);
+            background: rgba(var(--primary-color-rgb), 0.1);
+        }
     }
 }
 
+// 皮肤：neumorphism 底色与内阴影；字号 / 字重 / 内边距 / 去边框由 .form-field-input 统一提供
 .form__input {
     width: 17rem;
-    height: 2.1rem;
     margin: 0.25rem 0;
-    padding: 0 1.4rem;
-    font-size: 0.9rem;
-    letter-spacing: 0.01rem;
-    border: none;
-    outline: none;
-    font-family: var(--app-font-family);
     background-color: var(--deco-light);
-    transition: 0.25s ease;
     border-radius: 0.5rem;
     box-shadow: inset 2px 2px 4px var(--deco-light), inset -2px -2px 4px var(--deco-light);
 }
 
 .form__input:focus {
     box-shadow: inset 4px 4px 4px var(--deco-light), inset -4px -4px 4px var(--deco-light);
+}
+
+// 密码框：外层承载定位与间距，输入框让出右侧空间给小眼睛按钮
+.pwd-field {
+    position: relative;
+    width: 17rem;
+    margin: 0.25rem 0;
+
+    .form__input {
+        width: 100%;
+        margin: 0;
+    }
 }
 
 .form__span {
@@ -549,6 +615,7 @@ onBeforeUnmount(() => {
     letter-spacing: 0.02rem;
     text-align: center;
     line-height: 1.6;
+    display: flex;
 }
 
 

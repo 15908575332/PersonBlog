@@ -202,6 +202,12 @@ select::-ms-expand {
     display: none;
 }
 
+// 隐藏 Edge / Chromium 密码框自带的「眼睛」与清除按钮，避免与自定义小眼睛重复
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
+    display: none;
+}
+
 code,
 pre {
     font-family: monospace, monospace;

@@ -1,5 +1,51 @@
 @use "./mixins.scss" as *;
 
+// 表单输入框排版基线：登录 / 注册 / 重置密码三页共用
+// 只声明三页一致的排版与去原生外观，背景、边框、圆角、阴影等皮肤差异留在各自页面
+.form-field-input {
+  width: 100%;
+  padding: var(--field-padding-y) var(--field-padding-x);
+  font-family: var(--app-font-family);
+  font-size: var(--field-font-size);
+  font-weight: var(--field-font-weight);
+  letter-spacing: var(--field-letter-spacing);
+  line-height: var(--field-line-height);
+  // 占位文字固定字体与字距：密码框会切字体/字距，占位文字若跟随继承会在空值切换时抖动
+  &::placeholder {
+    font-family: var(--app-font-family);
+    letter-spacing: var(--field-letter-spacing);
+  }
+  border: none;
+  outline: none;
+  background: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: var(--field-transition);
+
+  // 左侧带图标的输入框
+  &--icon {
+    padding-left: var(--field-padding-icon);
+  }
+
+  // 右侧带密码可见性按钮的输入框：掩码点收紧，明文态放宽
+  &--action {
+    padding-right: var(--field-padding-action);
+
+    // 密码掩码点：切到 lmst-pwd 变体，● 步进与明文字符一致，点间距不再靠负字距硬压（避免光标压字）
+    &[type="password"] {
+      font-family: var(--field-mask-font-family);
+      letter-spacing: var(--field-letter-spacing-mask);
+    }
+
+    &[type="text"] {
+      letter-spacing: var(--field-letter-spacing-text);
+    }
+  }
+}
+
 // 导航栏容器
 .nav-wrapper {
   position: fixed;

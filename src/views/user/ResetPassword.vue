@@ -76,8 +76,8 @@
           <!-- Step 1 -->
           <div v-if="step === 1" class="step-form" :class="{ 'anim-ready': animReady }">
             <div class="styled-input styled-input--mail form-row" :class="{ filled: accountFilled }">
-              <input type="text" class="styled-input__input" v-model="account" ref="accountInputRef"
-                @focus="onAccountFocus" @blur="onAccountBlur">
+              <input type="text" class="styled-input__input form-field-input form-field-input--icon" v-model="account"
+                ref="accountInputRef" @focus="onAccountFocus" @blur="onAccountBlur">
               <div class="styled-input__placeholder">
                 <span class="styled-input__placeholder-text">
                   <span v-for="(char, i) in accountLetters" :key="i" class="letter"
@@ -89,8 +89,8 @@
 
             <div class="form-row">
               <div class="styled-input styled-input--code form-row__input" :class="{ filled: codeFilled }">
-                <input type="text" class="styled-input__input" v-model="code" ref="codeInputRef" @focus="onCodeFocus"
-                  @blur="onCodeBlur">
+                <input type="text" class="styled-input__input form-field-input form-field-input--icon" v-model="code"
+                  ref="codeInputRef" @focus="onCodeFocus" @blur="onCodeBlur">
                 <div class="styled-input__placeholder">
                   <span class="styled-input__placeholder-text">
                     <span v-for="(char, i) in codeLetters" :key="i" class="letter"
@@ -142,8 +142,10 @@
           <!-- Step 2 -->
           <div v-else class="step-form" :class="{ 'anim-ready': animReady }">
             <div class="styled-input styled-input--pwd form-row" :class="{ filled: newPasswordFilled }">
-              <input type="password" class="styled-input__input" v-model="newPassword" ref="newPasswordInputRef"
-                @focus="onNewPasswordFocus" @blur="onNewPasswordBlur">
+              <input :type="showNewPassword ? 'text' : 'password'"
+                class="styled-input__input form-field-input form-field-input--icon form-field-input--action"
+                v-model="newPassword" ref="newPasswordInputRef" @focus="onNewPasswordFocus" @blur="onNewPasswordBlur">
+              <PwdToggle v-model="showNewPassword" />
               <div class="styled-input__placeholder">
                 <span class="styled-input__placeholder-text">
                   <span v-for="(char, i) in newPasswordLetters" :key="i" class="letter"
@@ -154,8 +156,11 @@
             </div>
 
             <div class="styled-input styled-input--confirm form-row" :class="{ filled: confirmPasswordFilled }">
-              <input type="password" class="styled-input__input" v-model="confirmPassword" ref="confirmPasswordInputRef"
-                @focus="onConfirmPasswordFocus" @blur="onConfirmPasswordBlur">
+              <input :type="showConfirmPassword ? 'text' : 'password'"
+                class="styled-input__input form-field-input form-field-input--icon form-field-input--action"
+                v-model="confirmPassword" ref="confirmPasswordInputRef" @focus="onConfirmPasswordFocus"
+                @blur="onConfirmPasswordBlur">
+              <PwdToggle v-model="showConfirmPassword" />
               <div class="styled-input__placeholder">
                 <span class="styled-input__placeholder-text">
                   <span v-for="(char, i) in confirmPasswordLetters" :key="i" class="letter"
@@ -210,6 +215,7 @@ import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import request from '@/api/http';
 import ModalBox from '@/components/base/ModalBox.vue';
+import PwdToggle from '@/components/base/PwdToggle.vue';
 import Captcha from '@/components/business/auth/Captcha.vue';
 
 const router = useRouter();
@@ -238,6 +244,10 @@ let timer = null;
 /* ===== Step2 数据 ===== */
 const newPassword = ref('');
 const confirmPassword = ref('');
+
+/* ===== 密码可见性切换 ===== */
+const showNewPassword = ref(false);
+const showConfirmPassword = ref(false);
 
 /* ===== 输入框 letter 数组 ===== */
 const accountLetters = [...'邮箱地址'];
@@ -801,21 +811,14 @@ onMounted(() => {
       mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%23000000%27%3E%3Cpath%20d%3D%27M17.65%206.35A7.96%207.96%200%200%200%2012%204c-4.42%200-7.99%203.58-7.99%208s3.57%208%207.99%208c3.73%200%206.84-2.55%207.73-6h-2.08A5.99%205.99%200%200%201%2012%2018c-3.31%200-6-2.69-6-6s2.69-6%206-6c1.66%200%203.14.69%204.22%201.78L13%2011h7V4l-2.35%202.35z%27%2F%3E%3C%2Fsvg%3E");
     }
 
+    // 字号 / 字重 / 内边距 / 去边框背景由 styles/_layout.scss 的 .form-field-input 统一提供
+    // 密码框的右侧让位与掩码字距由 .form-field-input--action 承担，此处只保留文字色
     .styled-input__input {
       width: 100%;
-      -webkit-appearance: none;
-      font-size: 0.8rem;
-      outline: none;
-      background: none;
-      padding: 11px 15px 11px 40px;
       @include text-color('text-color');
-      border: none;
-      font-weight: 600;
-      letter-spacing: 0.1rem;
-      font-family: var(--app-font-family);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
+
+    // 密码可见性切换（小眼睛）统一样式由 @/components/base/PwdToggle.vue 提供
 
     .styled-input__placeholder {
       position: absolute;
@@ -854,7 +857,7 @@ onMounted(() => {
     }
 
     .captcha-input {
-      letter-spacing: 2px;
+      // letter-spacing: 2px;
       font-weight: 700;
       font-size: 14px;
       caret-color: var(--primary-color);
@@ -865,6 +868,10 @@ onMounted(() => {
         @include text-color('text-color');
       }
     }
+  }
+
+  .form-field-input {
+    padding-left: 0.5rem;
   }
 
   // ═══════════════════════════════════
@@ -911,7 +918,7 @@ onMounted(() => {
     @include text-color('text-color');
     font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 6px;
+    // letter-spacing: 6px;
     cursor: pointer;
     user-select: none;
     @include theme-transition();
@@ -954,7 +961,7 @@ onMounted(() => {
     border: none;
     text-transform: uppercase;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    // letter-spacing: 0.1em;
     background: var(--primary-color);
     transition: all 0.3s ease;
     overflow: hidden;
