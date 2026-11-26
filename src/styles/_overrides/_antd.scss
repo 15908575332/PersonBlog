@@ -53,12 +53,23 @@
     inset-block-end: 0;
     box-shadow: none;
     height: 2.5rem;
-    border-top: 1px solid var(--border-solid);
+    // border-top: 1px solid var(--border-solid);
+
     .ant-float-btn-icon {
         @include flexCenter(center, center);
         width: 100% !important;
         position: relative;
         display: block;
+    }
+    .ant-badge {
+        .ant-float-btn-body {
+            @include background("card-background");
+
+            &:hover {
+                cursor: pointer;
+                background-color: var(--bg-surface-alt);
+            }
+        }
     }
 }
 // Notification 通知提醒框样式重写

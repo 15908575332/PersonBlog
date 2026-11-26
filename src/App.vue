@@ -552,12 +552,11 @@ const showRippleToggle = computed(() => {
 </script>
 
 <style scoped lang="scss">
-
 // 内部凹陷阴影（S3：仅本文件使用，自全局标量下沉为局部定义）
 $width: clamp(90px, 106px, 200px);
-$insideShadow:
-    calc($width * 0) calc($width * -0.025) calc($width * 0.025) 0 rgba(var(--mask-rgb), 0.15) inset,
-    calc($width * 0) calc($width * 0.025) calc($width * 0.025) 0 rgba(var(--mask-rgb), 0.65) inset;
+$insideShadow: calc($width * 0) calc($width * -0.025) calc($width * 0.025) 0 rgba(var(--mask-rgb), 0.15) inset,
+  calc($width * 0) calc($width * 0.025) calc($width * 0.025) 0 rgba(var(--mask-rgb), 0.65) inset;
+
 .pagesOption {
   position: relative;
   min-height: 100vh;
@@ -641,7 +640,8 @@ $insideShadow:
   overflow: hidden;
   box-shadow: 0px 0px 0.75rem 0px rgba(var(--mask-rgb), 0.2);
   @include flexCenter(column, space-around);
-  background-color: var(--bg-surface);
+  @include background("card-background");
+
   user-select: none;
   -webkit-user-select: none;
   /* Safari */
@@ -719,8 +719,9 @@ $insideShadow:
 
   .flower {
     @include flexCenter(row, space-around);
-    background-color: var(--deco-light);
-    border: 2px solid var(--border-color);
+    // 父级卡片随主题切换，内部各控制按钮保持固定色不随主题变化
+    @include background("card-background");
+    border: 2px solid var(--theme-solid);
     gap: 0.8rem;
     padding: 0.8rem;
     border-radius: 0.2rem;
@@ -740,11 +741,6 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: var(--deco-light); // 沙漏的沙色背景
-
-      &:hover {
-        background-color: var(--deco-light);
-      }
 
       .timekeeper-container {
         width: 60%;
@@ -781,7 +777,7 @@ $insideShadow:
               position: absolute;
               width: 3px;
               height: 3px;
-              background: var(--bg-surface);
+              background: #fff;
               border-radius: 50%;
               bottom: 15%; // 从更下方开始
               left: calc(50% - 1.5px);
@@ -908,11 +904,6 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: var(--deco-light); // 淡蓝色背景
-
-      &:hover {
-        background-color: var(--deco-light);
-      }
 
       .boomerang-container {
         width: 70%;
@@ -1024,11 +1015,6 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: var(--deco-light); // 淡粉色背景，与樱花主题呼应
-
-      &:hover {
-        background-color: var(--deco-light);
-      }
 
       .blossom-container {
         width: 70%;
@@ -1122,11 +1108,6 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: var(--deco-light); // 淡蓝色背景，暗示“风”
-
-      &:hover {
-        background-color: var(--deco-light);
-      }
 
       .fan-container {
         width: 70%; // 调整容器大小，为中央伪元素留出空间
@@ -1233,15 +1214,16 @@ $insideShadow:
   --ar: 8 / 3;
   --ray: rgba(var(--highlight-rgb), 0.5);
   --sun: var(--deco-warning);
-  --moon: var(--deco-light-2);
-  --crater: var(--deco-light-2);
+  --moon: var(--deco-light);
+  --crater: rgba(var(--mask-rgb), 0.12);
   --bg: var(--deco-light);
   --bear-speed: 10s;
   --color: var(--deco-dark);
   border-radius: 0.2rem;
   padding: 1rem;
-  background-color: var(--deco-light);
-  border: 2px solid var(--border-color);
+  // 父级卡片随主题切换，内部 .toggle 按钮配色由 --dark 驱动，不随卡片主题变化
+  @include background("card-background");
+  border: 2px solid var(--theme-solid);
   @include flexCenter(column, space-between);
   gap: 0.8rem;
 
@@ -1400,11 +1382,12 @@ $insideShadow:
 
     .sun {
       background: var(--sun);
+      background-image: radial-gradient(circle at 50% 50%, rgba(var(--highlight-rgb), 0.5), transparent 70%);
       position: absolute;
       inset: 0;
       border-radius: 50%;
       overflow: hidden;
-      box-shadow: $insideShadow;
+      box-shadow: 0 0 calc(var(--width) * 0.06) rgba(var(--color-accent-rgb), 0.55);
 
       .moon {
         position: absolute;
@@ -1414,8 +1397,8 @@ $insideShadow:
         transition: translate var(--speed) ease-in-out;
         translate: calc((100 - (var(--dark, 0) * 100)) * 1%) 0%;
         box-shadow:
-          calc(var(--width) * 0) calc(var(--width) * -0.025) calc(var(--width) * 0.025) 0 rgba(var(--mask-rgb), 0.15) inset,
-          calc(var(--width) * 0) calc(var(--width) * 0.025) calc(var(--width) * 0.025) 0 rgba(var(--mask-rgb), 0.65) inset;
+          calc(var(--width) * 0) calc(var(--width) * -0.025) calc(var(--width) * 0.025) 0 rgba(var(--mask-rgb), 0.08) inset,
+          calc(var(--width) * 0) calc(var(--width) * 0.025) calc(var(--width) * 0.025) 0 rgba(var(--mask-rgb), 0.18) inset;
       }
 
       .moon__crater {
@@ -1534,21 +1517,11 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: var(--deco-light); // 纸张米黄色
       transition: all 0.3s ease;
-
-      &:hover {
-        background-color: var(--deco-light);
-
-        .type-block {
-          box-shadow: 0 4px 12px rgba(var(--mask-rgb), 0.15);
-        }
-      }
 
       .type-block {
         width: 60%;
         height: 60%;
-        background: var(--bg-surface);
         border: 2px solid var(--deco-warning); // 木纹边框色
         border-radius: 4px;
         @include flexCenter(row, center);
@@ -1594,6 +1567,7 @@ $insideShadow:
         width: 14px;
         height: 14px;
         @include flexCenter(row, center);
+
       }
 
       // 点击时的"盖章"动画
@@ -1618,16 +1592,9 @@ $insideShadow:
       box-shadow: $insideShadow;
       @include flexCenter(row, center);
       cursor: pointer;
-      background-color: var(--bg-surface-alt); // 画廊墙面灰色
       transition: all 0.3s ease;
 
-      &:hover {
-        background-color: var(--deco-light);
 
-        .gallery-container::before {
-          opacity: 0.8;
-        }
-      }
 
       .gallery-container {
         width: 70%;
@@ -1638,9 +1605,9 @@ $insideShadow:
         grid-template-rows: repeat(2, 1fr);
         gap: 2px;
         padding: 3px;
-        background: var(--bg-surface);
         border-radius: 3px;
         box-shadow: inset 0 1px 3px rgba(var(--mask-rgb), 0.1);
+        border: 2px solid var(--deco-warning); // 木纹边框色
 
         .gallery-window {
           border-radius: 1px;

@@ -41,8 +41,7 @@
             </li>
             <li class="nav-item record">
               <a href="#">
-                <img src="@/assets/icon/layout/treasureBox-icon.svg" alt="treasureBox"
-                  style="width: 0.9rem" />
+                <img src="@/assets/icon/layout/treasureBox-icon.svg" alt="treasureBox" style="width: 0.9rem" />
                 <span>百宝箱</span>
               </a>
               <div id="compt" @mouseenter="dropEnter" @mouseleave="dropLeave">
@@ -78,8 +77,8 @@
                 <div class="modal-content" @click.stop>
                   <div class="info">
                     <span>{{ userStore.user.username }}</span>
-                    <img class="level" :src="utils.getAssetsFile('icon/user/level/lv' + userStore.user.vipLevel + '.svg')"
-                      alt="level">
+                    <img class="level"
+                      :src="utils.getAssetsFile('icon/user/level/lv' + userStore.user.vipLevel + '.svg')" alt="level">
                   </div>
 
                   <ul class="info-list">
@@ -114,7 +113,7 @@
                     d="M11 14.0619V20H13V14.0619C16.9463 14.554 20 17.9204 20 22H4C4 17.9204 7.05369 14.554 11 14.0619ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13Z">
                   </path>
                 </svg>
-             </a>
+              </a>
             </li>
           </ul>
         </div>
@@ -224,7 +223,6 @@ onMounted(async () => { });
   padding: 0 1rem;
   font-family: var(--app-font-family);
   z-index: 1;
-  // background-color: var(--bg-color);
   transition: all 0.3s linear;
   @include flexCenter(row, space-between);
 

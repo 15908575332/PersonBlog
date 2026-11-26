@@ -54,7 +54,7 @@
   width: calc(100% - 36px);
   z-index: 1000;
   @include flexCenter(center, center);
-  @include background("bg-card-glass-opacity");
+  @include background("card-background");
   border: 1px solid var(--bg-card-glass);
   border-radius: 0.5rem;
 

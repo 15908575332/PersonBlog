@@ -78,7 +78,7 @@
     --shadow-elevated: 4px 6px 16px rgba(var(--mask-rgb), 0.12);
 
     // 卡片 / 面板背景
-    --card-background: #ffffffed;
+    --card-background: #ffffff70;
     --bg-card-glass-rgb: 255, 255, 255;
     --bg-card-glass: rgba(var(--bg-card-glass-rgb), 0.73);
     --bg-tag: rgba(var(--mask-rgb), 0.08);
@@ -94,7 +94,7 @@
     --bg-surface-alt: #f6f8fa;
     --border-strong: #cccccc;
     --border-solid: #dfe2e5;
-
+    --theme-solid: #cbc3c372;
     // ------------------------------------------------------------------------
     // 固定色池：原 306 条模块装饰色板（--{模块}-{用途}-{序号}）收敛而来，
     // 取值全部来自参考站色板，两主题共用。
@@ -130,7 +130,7 @@
     --shadow-elevated: 2px 4px 12px rgba(var(--mask-rgb), 0.45);
 
     // 卡片 / 面板背景
-    --card-background: #333333b3;
+    --card-background: #33333370;
     --bg-card-glass-rgb: 47, 47, 47;
     --bg-card-glass: rgba(var(--bg-card-glass-rgb), 0.82);
     --bg-tag: rgba(var(--highlight-rgb), 0.12);
@@ -146,4 +146,5 @@
     --bg-surface-alt: #222323;
     --border-strong: #8f8f8f;
     --border-solid: #cbc3c372;
+    --theme-solid: #dfe2e5;
 }
