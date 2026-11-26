@@ -405,7 +405,8 @@ async function requestSendCode() {
       account: account.value,
       ...captchaTicket.value
     });
-    message.success(res.message || '验证码已发送');
+    const minutes = Math.max(1, Math.round((res.expiresIn ?? 300) / 60));
+    message.success(`验证码已发送，${minutes} 分钟内有效`);
     countdown.value = 30;
     timer = setInterval(() => {
       countdown.value--;
@@ -422,6 +423,20 @@ async function requestSendCode() {
 }
 
 /* ===== 校验 ===== */
+// 验证码状态：过期/已使用/未获取需要重新发码，错误则保留输入让用户改
+const RESET_CODE_RESEND = ['RESET_CODE_EXPIRED', 'RESET_CODE_USED', 'RESET_CODE_NOT_SENT'];
+
+function handleResetCodeError(error, fallback) {
+  const data = error.response?.data || {};
+  message.error(data.message || fallback);
+  if (RESET_CODE_RESEND.includes(data.code)) {
+    code.value = '';
+    codeFilled.value = false;
+    staggerActive(codeActiveMap, codeLetters, false);
+  }
+  return data.code;
+}
+
 function validateStepOne() {
   if (!account.value) { message.warning('请输入邮箱地址'); return false; }
   if (!isAccountValid.value) { message.warning('请输入正确的邮箱地址'); return false; }
@@ -436,8 +451,7 @@ async function onStepOneSubmit() {
     // 后端校验验证码真伪（仅校验，不改密码）
     await request.post('/user/verify-reset-code', { account: account.value, code: code.value });
   } catch (error) {
-    const msg = error.response?.data?.message || '验证码校验失败，请重新获取';
-    message.error(msg);
+    handleResetCodeError(error, '验证码校验失败，请重新获取');
     loading.value = false;
     return;
   }
@@ -476,8 +490,12 @@ async function onStepTwoSubmit() {
     message.success(res.message || '密码重置成功');
     isSuccess.value = true;
   } catch (error) {
-    const msg = error.response?.data?.message || '重置失败，请稍后重试';
-    message.error(msg);
+    // 验证码已过期/已使用/未获取时退回第一步，引导重新发码
+    const codeStatus = handleResetCodeError(error, '重置失败，请稍后重试');
+    if (RESET_CODE_RESEND.includes(codeStatus)) {
+      goStepOne();
+      return;
+    }
   } finally {
     loading.value = false;
   }

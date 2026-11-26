@@ -187,13 +187,23 @@ const matchStoredCode = (storedCode, inputCode) => {
   return safeEqual(storedCode, inputCode);
 };
 
-// 取该账号当前唯一有效验证码（发码时已把旧码置为已用）
-const findActiveResetCode = async (account) => {
+// 取该账号最近一条验证码记录（不预先过滤 used/过期，用于区分失败原因）
+const findLatestResetCode = async (account) => {
   const [record] = await sqlQuery(
-    "SELECT id, code FROM reset_codes WHERE account = ? AND used = 0 AND expires_at > NOW() ORDER BY id DESC LIMIT 1",
+    "SELECT id, code, used, (expires_at <= NOW()) AS isExpired FROM reset_codes WHERE account = ? ORDER BY id DESC LIMIT 1",
     [account],
   );
   return record || null;
+};
+
+// 状态枚举：NOT_SENT 未获取 / USED 已使用 / EXPIRED 已过期 / MISMATCH 验证码错误 / OK 正确
+const inspectResetCode = async (account, code) => {
+  const record = await findLatestResetCode(account);
+  if (!record) return { status: "NOT_SENT" };
+  if (Number(record.used) === 1) return { status: "USED" };
+  if (Number(record.isExpired) === 1) return { status: "EXPIRED" };
+  if (!matchStoredCode(record.code, code)) return { status: "MISMATCH" };
+  return { status: "OK", id: record.id };
 };
 
 export const sendResetCode = async (account) => {
@@ -230,30 +240,33 @@ export const sendResetCode = async (account) => {
     throw error;
   }
 
-  return { notFound: false };
+  return {
+    notFound: false,
+    expiresIn: Math.floor(RESET_CODE_TTL_MS / 1000),
+  };
 };
 
 // 校验重置密码验证码（仅校验真伪，不落库、不改密码）
 export const verifyResetCode = async (account, code) => {
-  const record = await findActiveResetCode(account);
-  return { valid: !!record && matchStoredCode(record.code, code) };
+  const { status } = await inspectResetCode(account, code);
+  return { status };
 };
 
 // 重置密码：验码 + 标记已用 + 更新密码
 export const resetPassword = async (account, code, newPassword) => {
-  // 只取当前唯一有效码，再比对哈希（明文不再参与 SQL 匹配）
-  const record = await findActiveResetCode(account);
-  if (!record || !matchStoredCode(record.code, code)) {
-    return { valid: false };
+  // 先区分失败原因：未获取 / 已使用 / 已过期 / 验证码错误
+  const inspected = await inspectResetCode(account, code);
+  if (inspected.status !== "OK") {
+    return { status: inspected.status };
   }
 
   // 条件更新保证并发请求下同一验证码只能被消费一次
   const consumed = await sqlQuery(
     "UPDATE reset_codes SET used = 1 WHERE id = ? AND used = 0",
-    [record.id],
+    [inspected.id],
   );
   if (!consumed || consumed.affectedRows === 0) {
-    return { valid: false };
+    return { status: "USED" };
   }
 
   // 更新密码：password_hash 变化后，tokenFingerprint 派生值随之变化，存量 Token 自动失效
@@ -263,5 +276,5 @@ export const resetPassword = async (account, code, newPassword) => {
     [hashedPassword, account],
   );
 
-  return { valid: true };
+  return { status: "OK" };
 };

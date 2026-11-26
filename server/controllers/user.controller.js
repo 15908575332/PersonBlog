@@ -23,6 +23,23 @@ import {
     clearVerifyFail
 } from '../utils/resetCodeLimiter.js';
 
+// 验证码状态 -> HTTP 响应（error=true 表示需要展示为错误并计入错误次数）
+const RESET_CODE_ISSUES = {
+    NOT_SENT: { code: 'RESET_CODE_NOT_SENT', message: '请先获取邮箱验证码', error: false },
+    USED: { code: 'RESET_CODE_USED', message: '验证码已使用，请重新获取', error: false },
+    EXPIRED: { code: 'RESET_CODE_EXPIRED', message: '验证码已过期，请重新获取', error: false },
+    MISMATCH: { code: 'RESET_CODE_INVALID', message: '验证码错误，请检查后重新输入', error: true }
+};
+
+// 统一输出验证码失败原因：只有“验证码错误”才计入失败次数，过期/已用/未获取不计
+const replyResetCodeIssue = (req, res, account, status) => {
+    const issue = RESET_CODE_ISSUES[status] || RESET_CODE_ISSUES.EXPIRED;
+    if (issue.error) {
+        recordVerifyFail(req, account);
+    }
+    return res.status(400).json({ code: issue.code, message: issue.message, status });
+};
+
 // 用户注册接口
 export const register = async (req, res) => {
     const { userId, userName, userEmail, userPassword } = req.body;
@@ -168,7 +185,12 @@ export const sendResetCode = async (req, res) => {
             return res.status(404).json({ message: '该账号未注册' });
         }
 
-        res.status(200).json({ message: '验证码已发送' });
+        res.status(200).json({
+            code: 'RESET_CODE_SENT',
+            status: 'SENT',
+            message: '验证码已发送',
+            expiresIn: result.expiresIn || 300
+        });
 
     } catch (error) {
         // 发送失败回滚配额，不让用户被一次失败请求锁住
@@ -200,12 +222,11 @@ export const verifyResetCode = async (req, res) => {
 
     try {
         const result = await verifyResetCodeService(account, code);
-        if (!result.valid) {
-            recordVerifyFail(req, account);
-            return res.status(400).json({ message: '验证码错误或已过期' });
+        if (result.status !== 'OK') {
+            return replyResetCodeIssue(req, res, account, result.status);
         }
         clearVerifyFail(req, account);
-        res.status(200).json({ message: '验证码正确' });
+        res.status(200).json({ code: 'RESET_CODE_OK', status: 'OK', message: '验证码正确' });
     } catch (error) {
         console.error('校验验证码失败:', error);
         res.status(500).json({ message: '校验验证码失败，请稍后重试' });
@@ -240,13 +261,12 @@ export const resetPassword = async (req, res) => {
     try {
         const result = await resetPasswordService(account, code, newPassword);
 
-        if (!result.valid) {
-            recordVerifyFail(req, account);
-            return res.status(400).json({ message: '验证码错误或已过期' });
+        if (result.status !== 'OK') {
+            return replyResetCodeIssue(req, res, account, result.status);
         }
 
         clearVerifyFail(req, account);
-        res.status(200).json({ message: '密码重置成功' });
+        res.status(200).json({ code: 'RESET_PASSWORD_OK', status: 'OK', message: '密码重置成功' });
 
     } catch (error) {
         console.error('重置密码失败:', error);
