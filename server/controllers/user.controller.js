@@ -14,6 +14,14 @@ import {
     recordLoginFail,
     clearLoginFail
 } from '../utils/loginRateLimiter.js';
+import {
+    checkSendAllowed,
+    recordSend,
+    releaseSend,
+    checkVerifyLock,
+    recordVerifyFail,
+    clearVerifyFail
+} from '../utils/resetCodeLimiter.js';
 
 // 用户注册接口
 export const register = async (req, res) => {
@@ -135,16 +143,36 @@ export const sendResetCode = async (req, res) => {
         return res.status(400).json({ message: '请输入有效的邮箱地址' });
     }
 
+    // 发码频控（防邮件轰炸）：图形码之后再加一层，冷却 60 秒 + 邮箱日上限 + IP 时上限
+    const sendLimit = checkSendAllowed(req, account);
+    if (!sendLimit.allowed) {
+        if (sendLimit.dailyLimited) {
+            return res.status(429).json({ code: 'SEND_DAILY_LIMIT', message: '该邮箱今日获取验证码已达上限，请明日再试' });
+        }
+        if (sendLimit.ipLimited) {
+            return res.status(429).json({ code: 'SEND_IP_LIMIT', message: '请求过于频繁，请稍后再试' });
+        }
+        return res.status(429).json({
+            code: 'SEND_TOO_FAST',
+            message: `请${sendLimit.retryAfter}秒后再获取验证码`
+        });
+    }
+    // 先占用配额，避免并发请求同时通过检查
+    recordSend(req, account);
+
     try {
         const result = await sendResetCodeService(account);
 
         if (result.notFound) {
+            releaseSend(req, account);
             return res.status(404).json({ message: '该账号未注册' });
         }
 
         res.status(200).json({ message: '验证码已发送' });
 
     } catch (error) {
+        // 发送失败回滚配额，不让用户被一次失败请求锁住
+        releaseSend(req, account);
         console.error('发送验证码失败:', error);
         res.status(500).json({ message: '发送验证码失败，请稍后重试' });
     }
@@ -161,11 +189,22 @@ export const verifyResetCode = async (req, res) => {
         return res.status(400).json({ message: '验证码格式错误' });
     }
 
+    // 连续错误锁定（防 6 位码暴力枚举）
+    const lock = checkVerifyLock(req, account);
+    if (lock.locked) {
+        return res.status(429).json({
+            code: 'VERIFY_LOCKED',
+            message: `验证码错误次数过多，请${Math.ceil(lock.retryAfter / 60)}分钟后再试`
+        });
+    }
+
     try {
         const result = await verifyResetCodeService(account, code);
         if (!result.valid) {
+            recordVerifyFail(req, account);
             return res.status(400).json({ message: '验证码错误或已过期' });
         }
+        clearVerifyFail(req, account);
         res.status(200).json({ message: '验证码正确' });
     } catch (error) {
         console.error('校验验证码失败:', error);
@@ -189,13 +228,24 @@ export const resetPassword = async (req, res) => {
         return res.status(400).json({ message: '新密码至少6位' });
     }
 
+    // 与校验接口共用同一份失败计数，避免绕过 verify 直接打 reset 接口枚举
+    const lock = checkVerifyLock(req, account);
+    if (lock.locked) {
+        return res.status(429).json({
+            code: 'VERIFY_LOCKED',
+            message: `验证码错误次数过多，请${Math.ceil(lock.retryAfter / 60)}分钟后再试`
+        });
+    }
+
     try {
         const result = await resetPasswordService(account, code, newPassword);
 
         if (!result.valid) {
+            recordVerifyFail(req, account);
             return res.status(400).json({ message: '验证码错误或已过期' });
         }
 
+        clearVerifyFail(req, account);
         res.status(200).json({ message: '密码重置成功' });
 
     } catch (error) {

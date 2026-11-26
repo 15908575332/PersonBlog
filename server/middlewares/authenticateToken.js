@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { AUTH_WHITE_LIST } from '../config/constants.js'
+import sqlQuery from '../utils/sqlQuery.js'
+import { buildPasswordFingerprint } from '../utils/tokenFingerprint.js'
 
 const authenticateToken = async (req, res, next) => {
     // 白名单处理（无需鉴权的公开接口；登录/注册在无 token 阶段必须放行）
@@ -26,6 +28,24 @@ const authenticateToken = async (req, res, next) => {
         // 防止JWT篡改攻击
         if (!decoded.userId || !decoded.userEmail) {
             throw new Error('无效的Token结构');
+        }
+
+        // 密码指纹校验：重置密码后 pv 与库中最新密码不一致，存量 Token 立即失效
+        // 旧版本签发、载荷里没有 pv 的 Token 一律视为失效，强制重新登录
+        const [currentUser] = await sqlQuery(
+            'SELECT password_hash FROM users WHERE user_id = ?',
+            [decoded.userId],
+        );
+        if (
+            !currentUser ||
+            !decoded.pv ||
+            decoded.pv !== buildPasswordFingerprint(currentUser.password_hash)
+        ) {
+            return res.status(401).json({
+                code: 401,
+                msg: '会话已失效，请重新登录',
+                error: 'TOKEN_REVOKED'
+            });
         }
 
         // 挂载用户信息（可扩展角色权限）

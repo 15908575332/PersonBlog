@@ -4,9 +4,14 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import sqlQuery from "../utils/sqlQuery.js";
 import { sendResetCodeEmail } from "../utils/email.js";
+import { buildPasswordFingerprint } from "../utils/tokenFingerprint.js";
 
 const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
 const JWT_SECRET = process.env.JWT_SECRET;
+// 验证码哈希密钥：优先独立配置，缺省回落到 JWT_SECRET（库被读但没有 .env 时仍无法还原验证码）
+const RESET_CODE_SECRET = process.env.RESET_CODE_SECRET || JWT_SECRET;
+const RESET_CODE_HASH_LENGTH = 64; // sha256 hex 长度
+const RESET_CODE_TTL_MS = 5 * 60 * 1000;
 // Token 有效期：必须使用 '2h' / '30m' / '7d' 这类时间表达式。
 // 注意：jsonwebtoken 对纯数字的 expiresIn 按“秒”处理，写成 7200000 会变成约 83 天。
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "2h";
@@ -53,10 +58,12 @@ export const loginUser = async (loginEmail, loginPassword) => {
   if (!match) return { passwordWrong: true };
 
   // 生成Token（有效期见 JWT_EXPIRES_IN，默认 2 小时）
+  // pv 为当前密码指纹：密码一旦重置，指纹变化，存量 Token 全部失效
   const token = jwt.sign(
     {
       userId: user.user_id,
       userEmail: user.email,
+      pv: buildPasswordFingerprint(user.password_hash),
       iat: Math.floor(Date.now() / 1000), // 签发时间
       nbf: Math.floor(Date.now() / 1000), // 生效时间
     },
@@ -137,10 +144,12 @@ export const refreshUserToken = async (token) => {
     return { tooEarly: true };
   }
   // 生成新令牌（有效期见 JWT_EXPIRES_IN）
+  // pv 必须沿用旧令牌的密码指纹，否则刷新后会被判定为失效令牌
   const newToken = jwt.sign(
     {
       userId: decoded.userId,
       userEmail: decoded.userEmail,
+      pv: decoded.pv,
       iat: currentTime,
       nbf: currentTime,
     },
@@ -157,6 +166,36 @@ export const refreshUserToken = async (token) => {
 };
 
 /* ------------------------ 邮箱验证码 ------------------------ */
+// 验证码哈希：库里不留明文，读库者无法据此重置任意账号密码
+const hashResetCode = (code) =>
+  crypto.createHmac("sha256", RESET_CODE_SECRET).update(String(code)).digest("hex");
+
+// 恒定时间比较，避免用响应时间差逐位试探
+const safeEqual = (a, b) => {
+  const bufA = Buffer.from(String(a));
+  const bufB = Buffer.from(String(b));
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+};
+
+// 兼容历史明文记录：长度不等于哈希长度时按明文比对（旧记录 5 分钟内自然过期）
+const matchStoredCode = (storedCode, inputCode) => {
+  if (!storedCode) return false;
+  if (String(storedCode).length === RESET_CODE_HASH_LENGTH) {
+    return safeEqual(storedCode, hashResetCode(inputCode));
+  }
+  return safeEqual(storedCode, inputCode);
+};
+
+// 取该账号当前唯一有效验证码（发码时已把旧码置为已用）
+const findActiveResetCode = async (account) => {
+  const [record] = await sqlQuery(
+    "SELECT id, code FROM reset_codes WHERE account = ? AND used = 0 AND expires_at > NOW() ORDER BY id DESC LIMIT 1",
+    [account],
+  );
+  return record || null;
+};
+
 export const sendResetCode = async (account) => {
   // 查询用户是否存在
   const [user] = await sqlQuery("SELECT user_id FROM users WHERE email = ?", [
@@ -172,46 +211,52 @@ export const sendResetCode = async (account) => {
     [account],
   );
 
-  // 生成6位验证码
+  // 生成6位验证码，仅邮件里出现明文，库里只存哈希
   const code = crypto.randomInt(100000, 999999).toString();
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5分钟有效
+  const expiresAt = new Date(Date.now() + RESET_CODE_TTL_MS);
 
-  // 存储验证码
-  await sqlQuery(
+  const insertResult = await sqlQuery(
     "INSERT INTO reset_codes (account, code, expires_at) VALUES (?, ?, ?)",
-    [account, code, expiresAt],
+    [account, hashResetCode(code), expiresAt],
   );
 
-  // 发送邮件
-  await sendResetCodeEmail(account, code);
+  try {
+    await sendResetCodeEmail(account, code);
+  } catch (error) {
+    // 发信失败必须同步作废本次验证码，避免库里留下一条用户从未收到的有效码
+    await sqlQuery("UPDATE reset_codes SET used = 1 WHERE id = ?", [
+      insertResult.insertId,
+    ]);
+    throw error;
+  }
 
   return { notFound: false };
 };
 
 // 校验重置密码验证码（仅校验真伪，不落库、不改密码）
 export const verifyResetCode = async (account, code) => {
-  const [record] = await sqlQuery(
-    "SELECT id FROM reset_codes WHERE account = ? AND code = ? AND used = 0 AND expires_at > NOW()",
-    [account, code],
-  );
-  return { valid: !!record };
+  const record = await findActiveResetCode(account);
+  return { valid: !!record && matchStoredCode(record.code, code) };
 };
 
 // 重置密码：验码 + 标记已用 + 更新密码
 export const resetPassword = async (account, code, newPassword) => {
-  // 验证验证码
-  const [record] = await sqlQuery(
-    "SELECT * FROM reset_codes WHERE account = ? AND code = ? AND used = 0 AND expires_at > NOW()",
-    [account, code],
-  );
-  if (!record) {
+  // 只取当前唯一有效码，再比对哈希（明文不再参与 SQL 匹配）
+  const record = await findActiveResetCode(account);
+  if (!record || !matchStoredCode(record.code, code)) {
     return { valid: false };
   }
 
-  // 标记验证码已使用
-  await sqlQuery("UPDATE reset_codes SET used = 1 WHERE id = ?", [record.id]);
+  // 条件更新保证并发请求下同一验证码只能被消费一次
+  const consumed = await sqlQuery(
+    "UPDATE reset_codes SET used = 1 WHERE id = ? AND used = 0",
+    [record.id],
+  );
+  if (!consumed || consumed.affectedRows === 0) {
+    return { valid: false };
+  }
 
-  // 更新密码
+  // 更新密码：password_hash 变化后，tokenFingerprint 派生值随之变化，存量 Token 自动失效
   const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
   await sqlQuery(
     "UPDATE users SET password_hash = ?, updated_at = NOW() WHERE email = ?",
