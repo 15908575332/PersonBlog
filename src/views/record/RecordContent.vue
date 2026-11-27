@@ -490,6 +490,7 @@ onMounted(() => {
         font-family: var(--app-font-family);
         align-items: center;
         background-color: transparent;
+        letter-spacing: 0.01em;
 
         &::placeholder {
           color: var(--text-on-dark);

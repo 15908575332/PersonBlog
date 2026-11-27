@@ -55,6 +55,13 @@
     height: 2.5rem;
     // border-top: 1px solid var(--border-solid);
 
+    // antd 会给 .ant-float-btn-default 的 button 本体也涂上不透明的 colorBgElevated，
+    // 只把 .ant-float-btn-body 改透明仍会透出这一层白底，故本体一并透明化
+    &.ant-float-btn-default {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
     .ant-float-btn-icon {
         @include flexCenter(center, center);
         width: 100% !important;
@@ -63,8 +70,10 @@
     }
     .ant-badge {
         .ant-float-btn-body {
-            @include background("card-background");
-
+            // 背景统一交给外层 .floot_right 容器（同为 card-background），
+            // 此处透明以避免半透明白在容器内二次叠加而显得更白
+            background-color: transparent;
+            transition: background-color var(--transition-duration) var(--transition-timing);
             &:hover {
                 cursor: pointer;
                 background-color: var(--bg-surface-alt);

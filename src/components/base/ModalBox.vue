@@ -1,9 +1,11 @@
 <template>
     <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
         <div class="modal-content" @click.stop :class="animationClass">
-            <button @click="closeModal"><img src="@/assets/icon/base/icons8-close-50.png"
+            <button class="modal-close" @click="closeModal"><img src="@/assets/icon/base/icons8-close-50.png"
                     style="width: 1rem;" alt="close"></button>
-            <slot></slot>
+            <div class="modal-body">
+                <slot></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -67,9 +69,22 @@ watch(() => props.isVisible, (newValue) => {
         @include flexCenter(column, center);
         max-width: 80%;
         max-height: 80vh;
-        overflow-y: auto;
-        overflow-x: hidden;
+        // 弹框本体不再滚动，避免关闭按钮随内容滚走；滚动下沉到 .modal-body
+        overflow: hidden;
         overscroll-behavior: contain;
+
+        // 内容滚动区：关闭按钮位于其外层，因而始终固定在面板右上角
+        .modal-body {
+            // 横向交由 stretch 撑满，避免 width:100% 与 padding 叠加溢出
+            width: auto;
+            min-width: 0;
+            min-height: 0;
+            flex: 0 1 auto;
+            align-self: stretch;
+            overflow-y: auto;
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+        }
 
         &.animation-clipRectSpIn {
             animation: clipRectSpIn 1s both;
@@ -94,6 +109,8 @@ watch(() => props.isVisible, (newValue) => {
             position: absolute;
             top: 0.4rem;
             right: 0.3rem;
+            // 始终压在内容之上，不被 sticky 头部/列表覆盖
+            z-index: 10;
 
             img {
                 transition: all 0.2s linear;

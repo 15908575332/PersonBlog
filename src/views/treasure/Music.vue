@@ -65,28 +65,98 @@
           <input type="text" v-model.lazy="searchValue" placeholder="搜索音乐、MV、歌单">
         </form>
 
-        <ModalBox :isVisible="isSearching" @close="handleCloseSearch" animationType="slideUpFromBottom">
+        <ModalBox class="search-modal" :isVisible="isSearching" @close="handleCloseSearch"
+          animationType="slideUpFromBottom">
+          <!-- 搜索面板头部：与播放列表头部同结构，计数行位于列表上方 -->
           <div class="search-header">
-            <!-- <span class="back-link" @click="clearSearch">← 返回</span> -->
-            <span class="result-count">搜索 "{{ searchValue }}" 返回结果</span>
+            <span v-if="searchResults.length" class="result-count">
+              「{{ searchValue }}」共 {{ searchResults.length }} 条结果
+            </span>
+            <span v-else class="result-count">
+              {{ searchLoading ? '正在搜索…' : '未找到「' + searchValue + '」相关歌曲' }}
+            </span>
           </div>
           <div class="search-results">
-            <div v-for="(song, index) in searchResults" :key="song.id" class="search-item"
-              @click="playSearchResult(song, index)">
-              <span class="song-index">{{ index + 1 }}</span>
-              <LazyImage :src="song.picture" class="cover" />
-              <div class="info">
-                <p class="name">{{ song.name }}</p>
-                <p class="artist">{{ song.artist }}</p>
+            <template v-if="searchResults.length">
+              <div v-for="(song, index) in searchResults" :key="song.id" class="search-item"
+                :class="{ active: String(currentSong?.id) === String(song.id) }"
+                @click="handleSearchItemClick(song, index)">
+                <span class="song-index">
+                  <template v-if="String(currentSong?.id) === String(song.id)">
+                    <svg v-if="isPlaying" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                      class="state-icon">
+                      <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                      class="state-icon">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </template>
+                  <template v-else>{{ index + 1 }}</template>
+                </span>
+                <LazyImage :src="song.picture" class="cover" />
+                <div class="info">
+                  <p class="name">{{ song.name }}</p>
+                  <p class="artist">
+                    <span class="artist-name">{{ song.artist }}</span>
+                    <span v-if="song.album" class="album-name">· {{ song.album }}</span>
+                  </p>
+                </div>
+                <span class="duration">{{ formatTime(song.duration) }}</span>
               </div>
-              <span class="duration">{{ formatTime(song.duration) }}</span>
+            </template>
+            <div v-else class="search-empty">
+              <p class="empty-title">{{ searchLoading ? '正在搜索…' : '没有找到相关歌曲' }}</p>
+              <p v-if="!searchLoading" class="empty-hint">换个关键词再试试，或关闭面板重新搜索</p>
+            </div>
+          </div>
+        </ModalBox>
+
+        <!-- 播放列表面板：随时打开查看当前队列 -->
+        <ModalBox class="playlist-modal" :isVisible="isPlaylistOpen" @close="closePlaylistPanel"
+          animationType="slideUpFromBottom">
+          <div class="playlist-header">
+            <span class="playlist-title">播放列表</span>
+            <span class="result-count">{{ currentPlaylist.length }} 首</span>
+          </div>
+          <div class="playlist-songs">
+            <template v-if="currentPlaylist.length">
+              <div v-for="(song, index) in currentPlaylist" :key="song.id + '-' + index" class="playlist-item"
+                :class="{ active: isCurrentSong(song) }" @click="handlePlaylistItemClick(song, index)">
+                <span class="song-index">
+                  <template v-if="isCurrentSong(song)">
+                    <svg v-if="isPlaying" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                      class="state-icon">
+                      <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                      class="state-icon">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </template>
+                  <template v-else>{{ index + 1 }}</template>
+                </span>
+                <LazyImage :src="song.picture" class="cover" />
+                <div class="info">
+                  <p class="name">{{ song.name }}</p>
+                  <p class="artist">
+                    <span class="artist-name">{{ song.artist }}</span>
+                    <span v-if="song.album" class="album-name">· {{ song.album }}</span>
+                  </p>
+                </div>
+                <span class="duration">{{ formatTime(song.duration) }}</span>
+              </div>
+            </template>
+            <div v-else class="playlist-empty">
+              <p class="empty-title">播放列表还是空的</p>
+              <p class="empty-hint">播放任意一首歌后，完整的播放队列会出现在这里</p>
             </div>
           </div>
         </ModalBox>
 
 
-        <!-- 内容视图 -->
-        <transition v-if="!isSearching" name="bounce" mode="out-in">
+        <!-- 内容视图：搜索结果面板打开时同样保持挂载，背面内容照常可见（与播放列表面板一致） -->
+        <transition name="bounce" mode="out-in">
           <router-view :current-song-index="currentSongIndex" :is-playing="isPlaying" :current-song-id="currentSong?.id"
             @play-song="handlePlaySong" @toggle-play="handleTogglePlay">
           </router-view>
@@ -98,7 +168,7 @@
             <!-- 歌曲图片 -->
             <div class="music-pic" @click="openMore">
               <img v-if="currentSong.picture" :src="currentSong.picture" alt="music-pic" />
-              <img v-else src="@/assets/img/treasure/default.jpg" alt="default">
+              <img v-else class="defalut-img" src="@/assets/img/treasure/default.jpg" alt="default">
               <div class="arrows">
                 <div></div>
                 <div></div>
@@ -152,6 +222,15 @@
                         d="M5.055 7.06C3.805 6.347 2.25 7.25 2.25 8.69v8.122c0 1.44 1.555 2.343 2.805 1.628L12 14.471v2.34c0 1.44 1.555 2.343 2.805 1.628l7.108-4.061c1.26-.72 1.26-2.536 0-3.256l-7.108-4.061C13.555 6.346 12 7.249 12 8.689v2.34L5.055 7.061Z" />
                     </svg>
                   </div>
+                  <!-- 播放列表 -->
+                  <div class="playlist-toggle" :class="{ active: isPlaylistOpen }" @click="togglePlaylistPanel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="currentColor"
+                      class="size-6">
+                      <path
+                        d="M4 6h11v2H4V6Zm0 5h11v2H4v-2Zm0 5h7v2H4v-2Zm13.5-4.6V15a3 3 0 1 1-2-2.83V5.5h4v2h-2v2.4Z" />
+                    </svg>
+                    <span v-if="currentPlaylist.length" class="playlist-count">{{ currentPlaylist.length }}</span>
+                  </div>
                   <!-- 随机/循环 -->
                   <div class="order-change" @click="togglePlayMode">
                     <!-- <img :src="playMode === 'order' ? cycleImg : randomImg" alt="playMode" /> -->
@@ -198,14 +277,14 @@
     </div>
 
     <!-- 歌词 -->
-    <ModalBox :isVisible="isShowModal" @close="handChangeModal" animationType="slideUpFromBottom">
+    <ModalBox class="lyrics-modal" :isVisible="isShowModal" @close="handChangeModal" animationType="slideUpFromBottom">
       <div class="player-controls" :style="{ backgroundImage: `url(${currentSong.picture})` }">
         <div class=" song-info">
           <!-- 专辑图片 -->
           <transition name="album" mode="out-in">
             <div class="album-pic" :key="currentSong.picture" :class="{ playing: isPlaying, paused: !isPlaying }">
               <img v-if="currentSong.picture" :src="currentSong.picture" alt="music-pic" />
-              <img v-else src="@/assets/img/treasure/default.jpg" alt="default">
+              <img v-else class="defalut-img" src="@/assets/img/treasure/default.jpg" alt="default">
             </div>
           </transition>
         </div>
@@ -262,59 +341,134 @@ import ModalBox from '@/components/base/ModalBox.vue';
 import musicApi from '@/api/modules/music';
 
 const formatTime = (seconds) => {
+  // 兜底非法值（undefined / NaN / 负数），避免播放器与列表出现 NaN:NaN
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
   const minutes = Math.floor(seconds / 60);
-  seconds = Math.floor(seconds % 60);
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  const rest = Math.floor(seconds % 60);
+  return `${minutes}:${rest.toString().padStart(2, "0")}`;
 };
 
 /** ------------------------ 搜索 ------------------------ */
 const searchValue = ref();//搜索输入值
 const isSearchBarVisible = ref(true); // 搜索栏显示状态
 const searchResults = ref([]); // 搜索结果
+const isPlaylistOpen = ref(false); // 播放列表面板显示状态
 const isSearching = ref(false); // 搜索状态
+const searchLoading = ref(false); // 搜索请求中
+const lastSearchKeyword = ref(''); // 上次成功搜索的关键词
 const searchMusicInfo = async () => {
-  if (!searchValue.value?.trim()) return;
-  isSearching.value = true;
-  const { data } = await musicApi.searchMusic(searchValue.value, 50);
-  searchResults.value = (data.result?.songs || []).map(song => ({
-    id: song.id,
-    name: song.name || song.al?.name,
-    artist: song.ar.map((a) => a.name).join("/") || "",
-    picture: song.al?.picUrl || "",
-    duration: song.dt ? song.dt / 1000 : 0, // 转换为秒
-    url: '',
-    lrc: ''
-  }));
-
+  const keyword = searchValue.value?.trim();
+  if (!keyword) return;
+  isPlaylistOpen.value = false; // 与播放列表面板互斥
+  // 关键词未变且已有结果：直接打开面板复用上次结果，不重复请求
+  if (keyword === lastSearchKeyword.value && searchResults.value.length) {
+    isSearching.value = true;
+    return;
+  }
+  isSearching.value = true; // 先打开面板，请求期间给反馈
+  searchLoading.value = true;
+  searchResults.value = [];
+  try {
+    const { data } = await musicApi.searchMusic(searchValue.value, 50);
+    searchResults.value = (data.result?.songs || []).map(song => ({
+      id: song.id,
+      name: song.name || song.al?.name,
+      artist: (song.ar || []).map((a) => a.name).join("/") || "",
+      album: song.al?.name || "",
+      picture: song.al?.picUrl || "",
+      duration: song.dt ? song.dt / 1000 : 0, // 转换为秒
+      url: '',
+      lrc: ''
+    }));
+  } catch (error) {
+    console.error('搜索失败:', error);
+    searchResults.value = [];
+  } finally {
+    lastSearchKeyword.value = keyword;
+    searchLoading.value = false;
+  }
 };
 // 播放搜索结果中的歌曲
 const playSearchResult = async (song, index) => {
-  // 获取播放 URL 和歌词
-  const [urlRes, lrcRes] = await Promise.all([
-    musicApi.songUrl(song.id),
-    musicApi.lyric(song.id),
-  ]);
-  song.url = urlRes.data.data?.[0]?.url;
-  song.lrc = lrcRes.data?.lrc?.lyric || '';
+  try {
+    // 获取播放 URL 和歌词
+    const [urlRes, lrcRes] = await Promise.all([
+      musicApi.songUrl(song.id),
+      musicApi.lyric(song.id),
+    ]);
+    song.url = urlRes.data.data?.[0]?.url;
+    song.lrc = lrcRes.data?.lrc?.lyric || '';
+  } catch (error) {
+    console.error('获取播放地址失败:', error);
+    return;
+  }
+
+  if (!song.url) {
+    console.error('该歌曲暂无可用播放地址:', song.id);
+    return;
+  }
 
   // 复用现有的播放机制
   currentPlaylist.value = searchResults.value;
   playSong(song, index);
+  // 面板保持打开：可直接继续选歌，关闭后也能通过播放器上的播放列表按钮再次打开
 };
 
+// 点击搜索结果项：当前曲目切播放/暂停，其余正常起播
+const handleSearchItemClick = (song, index) => {
+  const isSameSong = currentSong.value && currentSong.value !== ''
+    && String(currentSong.value.id) === String(song.id);
+  if (isSameSong) {
+    togglePlay();
+    return;
+  }
+  playSearchResult(song, index);
+};
+
+// 关闭搜索面板：仅收起，不打断播放，也不清空结果与播放列表
 const handleCloseSearch = () => {
   isSearching.value = false;
-  searchResults.value = [];
-  searchValue.value = '';
-  // 关闭搜索时停止播放并重置状态，避免激活态错位
-  if (audioElement.value) {
-    audioElement.value.pause();
-    audioElement.value.src = '';
+};
+
+/** ------------------------ 播放列表面板 ------------------------ */
+// 判断是否为当前曲目
+const isCurrentSong = (song) => !!currentSong.value && currentSong.value !== ''
+  && String(currentSong.value?.id) === String(song?.id);
+
+const closePlaylistPanel = () => {
+  isPlaylistOpen.value = false;
+};
+
+// 打开/关闭播放列表面板（与搜索面板互斥；与歌词面板可共存，歌词框在模板中更靠后，层叠在上）
+const togglePlaylistPanel = () => {
+  if (isPlaylistOpen.value) {
+    isPlaylistOpen.value = false;
+    return;
   }
-  isPlaying.value = false;
-  currentSong.value = '';
-  currentSongIndex.value = null;
-  currentPlaylist.value = [];
+  isSearching.value = false;
+  isPlaylistOpen.value = true;
+};
+
+// 点击播放列表项：当前曲目切播放/暂停，其余缺播放地址时补拉后起播
+const handlePlaylistItemClick = async (song, index) => {
+  if (isCurrentSong(song)) {
+    togglePlay();
+    return;
+  }
+  if (!song?.url) {
+    try {
+      const { data } = await musicApi.songUrl(song.id);
+      song.url = data?.data?.[0]?.url;
+    } catch (error) {
+      console.error('获取播放地址失败:', error);
+      return;
+    }
+    if (!song.url) {
+      console.error('该歌曲暂无可用播放地址:', song.id);
+      return;
+    }
+  }
+  playSong(song, index);
 };
 const rightContent = ref(); //主内容容器
 //搜索栏滚动隐藏
@@ -418,9 +572,14 @@ const progress = computed( //进度条
 
 
 const updateTime = () => { //更新（获取）歌曲时长
-  currentTime.value = audioElement.value.currentTime;
-  //获取时长
-  duration.value = currentSong.value.duration;
+  if (!audioElement.value) return;
+  currentTime.value = audioElement.value.currentTime || 0;
+  // 优先用歌曲自带时长，缺失时回落到音频真实时长，避免出现 NaN
+  const songDuration = currentSong.value?.duration;
+  const realDuration = audioElement.value.duration;
+  duration.value = Number.isFinite(songDuration) && songDuration > 0
+    ? songDuration
+    : (Number.isFinite(realDuration) ? realDuration : 0);
 };
 
 const seek = (e) => { //调整进度控制歌曲时间
@@ -439,6 +598,9 @@ const playSong = (song, index) => { // 播放歌曲
   // 确保更新当前歌曲索引和歌曲信息
   currentSongIndex.value = index;
   currentSong.value = song;
+
+  // 补充歌词：无 lrc 的歌曲（推荐、歌单等列表）按 id 兜底拉取
+  fetchLyrics(song);
 
   try {
     audioElement.value.src = song.url;
@@ -532,7 +694,8 @@ const lyricsWrapper = ref(null); //容器
 const lyricLine = ref(null); // 歌词行
 const isShowModal = ref(false); // 歌词框显示
 
-const openMore = () => { //打开
+// 打开歌词框（与搜索面板、播放列表面板均可共存；歌词框在模板中更靠后，层叠在上）
+const openMore = () => {
   isShowModal.value = true;
 };
 
@@ -565,19 +728,70 @@ const parseLRC = (lrcText) => { // LRC解析器
   return lyrics.sort((a, b) => a.time - b.time);
 };
 
-watch(currentSongIndex, async () => {
-  if (!currentSong.value.lrc) {
+const lyricsCache = new Map(); // 歌词缓存：songId -> lrc
+const lyricsLoading = new Set(); // 正在请求中的歌曲 id，避免重复请求
+let lyricsToken = 0; // 请求令牌，切歌后丢弃过期结果
+
+const applyLyrics = (lrcText) => {
+  if (!lrcText) {
     currentLyrics.value = [];
     return;
   }
   try {
-    // 直接解析字符串，无需 fetch
-    currentLyrics.value = parseLRC(currentSong.value.lrc);
+    currentLyrics.value = parseLRC(lrcText);
   } catch (error) {
     console.error("歌词解析失败:", error);
     currentLyrics.value = [];
   }
-}, { immediate: true });
+};
+
+// 兜底获取歌词：歌曲对象没有 lrc 时按 id 拉取并回写，保证推荐/歌单等页面播放也能显示歌词
+const fetchLyrics = async (song) => {
+  if (!song || !song.id) {
+    currentLyrics.value = [];
+    return;
+  }
+  if (song.lrc) {
+    applyLyrics(song.lrc);
+    return;
+  }
+  if (lyricsCache.has(song.id)) {
+    song.lrc = lyricsCache.get(song.id);
+    applyLyrics(song.lrc);
+    return;
+  }
+  if (lyricsLoading.has(song.id)) return;
+
+  lyricsLoading.add(song.id);
+  const token = ++lyricsToken;
+  try {
+    const { data } = await musicApi.lyric(song.id);
+    const lrc = data?.lrc?.lyric || '';
+    lyricsCache.set(song.id, lrc);
+    song.lrc = lrc;
+    if (token !== lyricsToken) return; // 期间已切歌，丢弃过期结果
+    applyLyrics(lrc);
+  } catch (error) {
+    console.error("歌词获取失败:", error);
+    if (token === lyricsToken) currentLyrics.value = [];
+  } finally {
+    lyricsLoading.delete(song.id);
+  }
+};
+
+// 监听歌曲 id 而非索引：跨列表切歌、同索引不同歌曲时都能正确刷新歌词
+watch(
+  () => currentSong.value?.id,
+  () => {
+    const song = currentSong.value;
+    if (!song || song === '') {
+      currentLyrics.value = [];
+      return;
+    }
+    fetchLyrics(song);
+  },
+  { immediate: true }
+);
 
 
 const scrollToLyric = (index) => {// 歌词滚动控制
@@ -643,6 +857,8 @@ watch(currentTime, (newTime) => { // 歌词同步检测
 onMounted(async () => {
   audioElement.value = new Audio();  // 初始化音频元素
   audioElement.value.addEventListener("timeupdate", updateTime);
+  // 元数据加载后回填真实时长，兜底列表缺少 duration 的情况
+  audioElement.value.addEventListener("loadedmetadata", updateTime);
   audioElement.value.addEventListener("ended", () => {  // 播放结束事件
     if (playMode.value === "random" && shuffleList.value.length === 0) {
       generateShuffleList();
@@ -768,6 +984,8 @@ onUnmounted(() => {
         font-family: var(--app-font-family);
         background-color: var(--bg-surface);
         border: 1px solid var(--deco-neutral-weak);
+        width: 15rem;
+        letter-spacing: 0.01em;
 
         &::placeholder {
           font-size: 0.8rem;
@@ -776,32 +994,68 @@ onUnmounted(() => {
       }
     }
 
-    // 搜索头部
+    // 搜索面板 / 播放列表面板容器（ModalBox 根节点）
+    .search-modal,
+    .playlist-modal {
+      :deep(.modal-content) {
+        width: 34rem;
+        max-width: 90vw;
+        max-height: 70vh;
+        background-color: var(--bg-surface-alt);
+        overflow: hidden;
+        overscroll-behavior: contain;
+        position: relative;
+        padding-top: 3rem;
+
+        // 深色主题下关闭图标（深色 PNG）在深底上不可见，做反色保证可辨认
+        &>button img {
+          [data-theme='dark'] & {
+            filter: invert(1) brightness(1.8);
+          }
+        }
+      }
+    }
+
+    // 播放队列头部 / 搜索结果头部：同一套样式，计数行绝对定位在各自列表上方
+    .playlist-header,
     .search-header {
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--deco-neutral-weak);
+      box-sizing: border-box;
       flex-shrink: 0;
+      position: absolute;
+      top: 1rem;
+      z-index: 1;
 
       .result-count {
         font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         @include text-color('text-sec-color');
+      }
+
+      .playlist-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        @include text-color('text-color');
       }
     }
 
-    // 搜索结果列表
-    .search-results {
-      max-height: 55vh;
-      overflow-y: auto;
-      padding: 0.5rem 0;
+    // 搜索结果列表 / 播放队列
+    .search-results,
+    .playlist-songs {
+      width: 100%;
+      box-sizing: border-box;
 
-      .search-item {
+      .search-item,
+      .playlist-item {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        padding: 0.5rem 0.6rem;
+        padding: 0.55rem 0.6rem;
+        border-radius: 6px;
         cursor: pointer;
         transition: background-color 0.2s;
 
@@ -809,12 +1063,30 @@ onUnmounted(() => {
           background-color: rgba(var(--color-accent-rgb), 0.06);
         }
 
+        // 正在播放的曲目
+        &.active {
+          background-color: rgba(var(--color-accent-rgb), 0.12);
+
+          .info .name {
+            @include text-color('primary-color');
+          }
+        }
+
         .song-index {
           width: 1.5rem;
-          text-align: center;
+          height: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           font-size: 0.8rem;
           flex-shrink: 0;
           @include text-color('text-sec-color');
+
+          .state-icon {
+            width: 0.75rem;
+            height: 0.75rem;
+            color: var(--primary-color);
+          }
         }
 
         .cover {
@@ -841,17 +1113,51 @@ onUnmounted(() => {
           }
 
           .artist {
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
             font-size: 0.75rem;
             @include text-color('text-sec-color');
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
+
+            .artist-name {
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .album-name {
+              flex-shrink: 0;
+              max-width: 45%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              opacity: 0.8;
+            }
           }
         }
 
         .duration {
           font-size: 0.75rem;
           flex-shrink: 0;
+          font-variant-numeric: tabular-nums;
+          @include text-color('text-sec-color');
+        }
+      }
+
+      // 空态 / 加载态
+      .search-empty,
+      .playlist-empty {
+        padding: 2.5rem 1rem;
+        text-align: center;
+
+        .empty-title {
+          font-size: 0.9rem;
+          margin-bottom: 0.4rem;
+          @include text-color('text-color');
+        }
+
+        .empty-hint {
+          font-size: 0.75rem;
           @include text-color('text-sec-color');
         }
       }
@@ -863,7 +1169,8 @@ onUnmounted(() => {
       bottom: 0;
       left: 0;
       width: 100%;
-      z-index: 2;
+      // 高于搜索面板遮罩（998），面板打开时仍可控制播放
+      z-index: 999;
       gap: 0.5rem;
       min-width: 40rem;
       padding: 1rem;
@@ -871,6 +1178,11 @@ onUnmounted(() => {
       @include flexCenter(row, center);
       @include text-color('text-color');
       backdrop-filter: blur(15px);
+
+      // 无歌曲播放时头像
+      .defalut-img {
+        background-position: 50% 50%;
+      }
 
       .player-content {
         width: 80%;
@@ -1102,6 +1414,34 @@ onUnmounted(() => {
               }
             }
 
+            // 播放列表
+            .playlist-toggle {
+              position: relative;
+              cursor: pointer;
+              opacity: 0.85;
+              transition: color 0.3s ease, opacity 0.3s ease;
+
+              &:hover,
+              &.active {
+                opacity: 1;
+                color: var(--primary-color);
+              }
+
+              .playlist-count {
+                position: absolute;
+                top: -0.2rem;
+                right: -0.05rem;
+                min-width: 0.85rem;
+                padding: 0 0.15rem;
+                font-size: 0.6rem;
+                line-height: 0.85rem;
+                text-align: center;
+                border-radius: 0.5rem;
+                color: var(--text-on-dark);
+                background-color: var(--primary-color);
+              }
+            }
+
             // 随机/循环
             .order-change {
               display: flex;
@@ -1114,6 +1454,15 @@ onUnmounted(() => {
         }
       }
     }
+  }
+}
+
+// 歌词弹框：ModalBox 的滚动层下沉到 .modal-body 后，其无 padding 的边界会裁掉
+// .album-pic 的 -1rem 负偏移；此处用 padding 预留 1rem 缓冲、负 margin 抵消回原视觉位置
+.lyrics-modal {
+  :deep(.modal-body) {
+    padding: 1rem 0 0 1rem;
+    margin: -1rem 0 0 -1rem;
   }
 }
 
@@ -1144,7 +1493,7 @@ onUnmounted(() => {
       height: 110%;
       background-image: url('@/assets/icon/treasure/coverall.png');
       background-position: 0 -845px;
-      z-index: 2;
+
     }
 
     img {

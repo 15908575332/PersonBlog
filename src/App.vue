@@ -33,7 +33,7 @@
       </div>
 
       <!-- 返回顶部 -->
-      <a-back-top shape="">
+      <a-back-top :key="backTopKey" shape="" :target="getScrollTarget" :visibility-height="200">
         <template #icon>
           <svg t="1751354919171" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
             p-id="6987" width="27" height="27">
@@ -252,7 +252,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch, ref } from 'vue'
+import { computed, onMounted, watch, ref, nextTick } from 'vue'
 
 import ClickRipple from "./components/layout/ClickRipple.vue";
 import { rippleStore } from "@/stores/isEnabledRipple";
@@ -508,6 +508,24 @@ const route = useRoute()
 watch(() => route.path, () => {
   fetchData()
 })
+/** ------------------------ 回到顶部 ------------------------ */
+// ant-design-vue 的 BackTop 只在挂载时读取一次 target，因此靠 key 重建使其重新解析滚动容器
+const backTopKey = ref(0)
+// 音乐页真正滚动容器为 .right-content，其余页面回退到 window
+const getScrollTarget = () => document.querySelector('.right-content') || window
+
+// 路由变化后 DOM 尚未渲染完成，await nextTick 再重建按钮以重新解析 target
+watch(() => route.fullPath, async () => {
+  await nextTick()
+  backTopKey.value++
+})
+
+// 首屏兜底：懒加载路由首帧可能还未渲染出 .right-content
+onMounted(async () => {
+  await nextTick()
+  backTopKey.value++
+})
+
 async function fetchData() {
   await mainStore.fetchNavData()
 }
@@ -641,7 +659,6 @@ $insideShadow: calc($width * 0) calc($width * -0.025) calc($width * 0.025) 0 rgb
   box-shadow: 0px 0px 0.75rem 0px rgba(var(--mask-rgb), 0.2);
   @include flexCenter(column, space-around);
   @include background("card-background");
-
   user-select: none;
   -webkit-user-select: none;
   /* Safari */
