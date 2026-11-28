@@ -170,28 +170,13 @@ import ModalBox from '@/components/base/ModalBox.vue';
 import PwdToggle from '@/components/base/PwdToggle.vue';
 
 import Captcha from '@/components/business/auth/Captcha.vue';
+import useRandomBackground from '@/composables/useRandomBackground';
 
 const $http = getCurrentInstance().appContext.config.globalProperties.$http;
 const route = useRouter();
 
 /** ------------------------ 随机背景图 ------------------------ */
-// 6 张首页背景图，与源项目保持一致
-const backImages = ref([
-    'src/assets/img/home/back1.webp',
-    'src/assets/img/home/back2.webp',
-    'src/assets/img/home/back3.webp',
-    'src/assets/img/home/back4.webp',
-    'src/assets/img/home/back5.webp',
-    'src/assets/img/home/back6.webp',
-]);
-const randomIndex = ref(0);
-// 非空数组前提下随机取下标，空数组时保留默认值，避免索引越界
-if (backImages.value.length > 0) {
-    randomIndex.value = Math.floor(Math.random() * backImages.value.length);
-}
-const currentPageBackground = computed(() => ({
-    backgroundImage: `url('${backImages.value[randomIndex.value] ?? ''}')`,
-}));
+const { backgroundStyle: currentPageBackground } = useRandomBackground();
 
 /** ------------------------ 全局配置 ------------------------ */
 const isShowModal = ref(false); //验证框

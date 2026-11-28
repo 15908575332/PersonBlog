@@ -28,38 +28,23 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import Navigation from "@/components/layout/NavigationMenu.vue";
 import vueDanmaku from 'vue3-danmaku';
-import utils from '@/utils/getAssetsFile';
+import useRandomBackground from '@/composables/useRandomBackground';
 import axios from 'axios';
 import { API_ORIGIN } from '@/api/base';
 const danmaku = ref();
-const randomIndex = ref();
 const inputValue = ref();
 import { useAuthStore } from "@/stores/auth";
 const authStore = useAuthStore();
 
-const currentPageBackground = computed(() => {
-    return {
-        backgroundImage: `url('${backImgaes.value[randomIndex.value]}')`
-    }
-});
+const { backgroundStyle: currentPageBackground } = useRandomBackground({ count: 5 });
 function getRandomColor() {
     return `hsl(${Math.floor(Math.random() * 360)}, 60%, 55%)`;
 }
 
 const danmus = ref([])
-const backImgaes = ref([
-    utils.getAssetsFile('img/home/back1.webp'),
-    utils.getAssetsFile('img/home/back2.webp'),
-    utils.getAssetsFile('img/home/back3.webp'),
-    utils.getAssetsFile('img/home/back4.webp'),
-    utils.getAssetsFile('img/home/back5.webp'),
-]);
-if (backImgaes.value.length > 0) {
-    randomIndex.value = Math.floor(Math.random() * backImgaes.value.length); //背景图索引值
-};
 
 // 在Vue组件中调用
 const fetchMessages = async () => {

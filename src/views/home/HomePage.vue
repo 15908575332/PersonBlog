@@ -158,7 +158,7 @@ import { useRoute } from "vue-router";
 import WeatherCard from "@/components/business/home/WeatherCard.vue";
 import Navigation from "@/components/layout/NavigationMenu.vue";
 import SkeletonScreen from "@/components/business/home/SkeletonScreen.vue";
-import utils from "@/utils/getAssetsFile";
+import useRandomBackground from "@/composables/useRandomBackground";
 import { message, notification } from "ant-design-vue";
 import { SmileOutlined } from '@ant-design/icons-vue';
 import { Solar } from "lunar-javascript";
@@ -167,20 +167,7 @@ const $http = instance.appContext.config.globalProperties.$http;
 const route = useRoute();
 
 /** ------------------------ 页面背景图 ------------------------ */
-const randomIndex = ref(0); // 随机数索引
-const currentPageBackgrounds = computed(() => {
-  return {
-    backgroundImage: `url('${onOtherImgs.value[randomIndex.value]}')`,
-  };
-});
-const onOtherImgs = ref([
-  utils.getAssetsFile("img/home/back1.webp"),
-  utils.getAssetsFile("img/home/back2.webp"),
-  utils.getAssetsFile("img/home/back3.webp"),
-  utils.getAssetsFile("img/home/back4.webp"),
-  utils.getAssetsFile("img/home/back5.webp"),
-  utils.getAssetsFile("img/home/back6.webp"),
-]);
+const { backgroundStyle: currentPageBackgrounds } = useRandomBackground();
 
 /** ------------------------ 时间/日期（农历年月日） ------------------------ */
 const hourString = computed(() => { //时
@@ -362,9 +349,6 @@ const notificationFun = (() => {
 
 onMounted(() => {
   notificationFun();
-  if (onOtherImgs.value.length > 0) {
-    randomIndex.value = Math.floor(Math.random() * onOtherImgs.value.length); //背景图索引值
-  }
   getFavorites();
   // 添加定时器：每2秒更新一次时间
   setInterval(() => {
