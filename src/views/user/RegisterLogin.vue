@@ -1,124 +1,167 @@
 <template>
     <div id="userLogin">
-        <!-- 背景图 -->
-        <div class="backPhoto" :style=currentPageBackground></div>
-        <!-- 遮罩 -->
-        <!-- 验证 -->
+        <!-- 随机图片背景层：6 张图随机取一，置于卡片之下、容器底色之上 -->
+        <div class="backPhoto" :style="currentPageBackground"></div>
+
+        <!-- 图形验证码弹窗：登录/注册共用，答案由后端校验，前端只回传 captchaId + captchaCode -->
         <ModalBox :isVisible="isShowModal" @close="handChangeModal" :animationType="selectedAnimation">
-            <!-- 图形验证码（登录/注册共用）：答案由后端校验，前端只回传 captchaId + captchaCode -->
             <Captcha :title="captchaTitle" :onSuccess="onCaptchaSuccess" :onCancel="onCaptchaCancel" />
         </ModalBox>
 
-        <div class="layout">
-            <div class="main">
-                <!-- 注册 sign up -->
-                <div class="container a-container" id="a-container">
-                    <form class="form" id="a-form" :model="registerData">
-                        <h2 class="form_title title incline_en">创建账户</h2>
-                        <span class="form__span">或者使用你的邮箱进行注册</span>
-                        <div class="login_email">
-                            <input class="form__input form-field-input form-field-input--action" type="text"
-                                placeholder="用户名" required max="8" v-model="registerData.userName">
-                            <button v-if="registerData.userName" type="button" class="input-clear" aria-label="清空用户名"
-                                @click="clearFields('userName')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M6.6 6.6 17.4 17.4" />
-                                    <path d="M17.4 6.6 6.6 17.4" />
-                                </svg>
-                            </button>
-                        </div>
+        <!-- 深色品红双面板卡片：isRegisterForm 驱动 active 态，面板内容整体平移翻转 -->
+        <div class="auth-card" :class="{ 'is-active': formState.isRegisterForm }">
+            <!-- 两块斜切曲面：切换时相互旋转，形成源项目的翻面效果 -->
+            <i class="curved-shape"></i>
+            <i class="curved-shape2"></i>
 
-                        <div class="login_email">
-                            <input class="form__input form-field-input form-field-input--action" type="email" required
-                                autocomplete="userEmail" placeholder="邮箱" v-model="registerData.userEmail">
-                            <button v-if="registerData.userEmail" type="button" class="input-clear" aria-label="清空邮箱"
-                                @click="clearFields('userEmail')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M6.6 6.6 17.4 17.4" />
-                                    <path d="M17.4 6.6 6.6 17.4" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="pwd-field">
-                            <input class="form__input form-field-input form-field-input--action"
-                                :type="showRegisterPassword ? 'text' : 'password'" autocomplete="current-password"
-                                placeholder="密码" v-model="registerData.userPassword">
-                            <PwdToggle v-model="showRegisterPassword" />
-                        </div>
-                        <div class="pwd-field">
-                            <input class="form__input form-field-input form-field-input--action"
-                                :type="showRePassword ? 'text' : 'password'" autocomplete="new-password"
-                                placeholder="再次输入密码" v-model="registerData.rePassword">
-                            <PwdToggle v-model="showRePassword" />
-                        </div>
-
-                        <button class="form__button button submit" type="submit"
-                            @click="UserRegister"><span>注册</span></button>
-                    </form>
-                </div>
-
-                <!-- 登录 sign in -->
-                <div class="container b-container" id="b-container">
-                    <form class="form" id="b-form" method="" :model="defaultLoginInfo">
-                        <h2 class="form_title title incline_en"><span>登录</span></h2>
-                        <span class="form__span">或者使用你的电子邮箱账户</span>
-                        <div class="login_email">
-                            <input class="form__input form-field-input form-field-input--action form__input--email"
-                                autocomplete="username" type="email" required placeholder="电子邮箱"
-                                v-model="defaultLoginInfo.loginEmail">
-                            <button v-if="defaultLoginInfo.loginEmail" type="button" class="input-clear"
-                                aria-label="清空邮箱" @click="clearFields('loginEmail')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M6.6 6.6 17.4 17.4" />
-                                    <path d="M17.4 6.6 6.6 17.4" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="pwd-field">
-                            <input class="form__input form-field-input form-field-input--action"
-                                :type="showLoginPassword ? 'text' : 'password'" autocomplete="current-password"
-                                placeholder="请输入你的密码" v-model="defaultLoginInfo.loginPassword">
-                            <PwdToggle v-model="showLoginPassword" />
-                        </div>
-                        <a href="/resetPassword" class="form__link">忘记密码</a>
-                        <button class="form__button button submit" @click="login"
-                            :disabled="isLoginLoading || lockLeft > 0"><span>{{ lockLeft > 0 ? `${lockLeft}s 后重试` : '登录'
-                            }}</span></button>
-                    </form>
-                </div>
-                <!-- login/register 切换按钮 -->
-                <div class="switch" id="switch-cnt">
-                    <div class="switch__circle"></div>
-                    <div class="switch__circle switch__circle--t"></div>
-                    <div class="switch__container" id="switch-c1">
-                        <h2 class="switch__title title incline_en">没有账号？</h2>
-                        <p class="description">
-                            <img src="@/assets/icon/user/register-icon.svg"></img>
-                            <span>立即注册吧</span>
-                        </p>
-                        <button class="switch__button button switch-btn"><span>注册</span></button>
+            <!-- ================ 登录面板（左半区） ================ -->
+            <div class="form-box form-box--login">
+                <h2 class="form-title anim" :style="animStyle(21, 0)">登录</h2>
+                <form class="form" novalidate @submit.prevent>
+                    <div class="input-box anim" :style="animStyle(22, 1)">
+                        <input id="login-email" v-model="defaultLoginInfo.loginEmail"
+                            class="form__input form-field-input form-field-input--action" type="email" placeholder=" "
+                            autocomplete="username">
+                        <label for="login-email">电子邮箱</label>
+                        <button v-if="defaultLoginInfo.loginEmail" type="button" class="input-clear" aria-label="清空邮箱"
+                            @click="clearFields('loginEmail')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6.6 6.6 17.4 17.4" />
+                                <path d="M17.4 6.6 6.6 17.4" />
+                            </svg>
+                        </button>
+                        <span v-else class="input-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="5.5" width="18" height="13" rx="2.2" />
+                                <path d="m3.6 7.4 8.4 5.8 8.4-5.8" />
+                            </svg>
+                        </span>
                     </div>
-                    <div class="switch__container is-hidden" id="switch-c2">
-                        <h2 class="switch__title title incline_en">已有账号？</h2>
-                        <p class="description">
-                            <img src="@/assets/icon/user/login-icon.svg"></img>
-                            <span>请登录</span>
-                        </p>
-                        <button class="switch__button button"><span>登录</span></button>
+
+                    <div class="input-box anim" :style="animStyle(23, 2)">
+                        <input id="login-password" v-model="defaultLoginInfo.loginPassword"
+                            class="form__input form-field-input form-field-input--action"
+                            :type="showLoginPassword ? 'text' : 'password'" placeholder=" "
+                            autocomplete="current-password">
+                        <label for="login-password">请输入你的密码</label>
+                        <PwdToggle v-model="showLoginPassword" />
                     </div>
-                </div>
+
+                    <a href="/resetPassword" class="link-forgot anim" :style="animStyle(24, 3)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4.6" y="10.2" width="14.8" height="9.6" rx="2.2" />
+                            <path d="M8.2 10.2V7.4a3.8 3.8 0 0 1 7.6 0v2.8" />
+                        </svg>
+                        <span>忘记密码</span>
+                    </a>
+
+                    <button type="button" class="btn anim" :style="animStyle(25, 4)"
+                        :disabled="isLoginLoading || lockLeft > 0" @click="login">
+                        {{ lockLeft > 0 ? `${lockLeft}s 后重试` : '登录' }}
+                    </button>
+
+                    <p class="switch-tip anim" :style="animStyle(26, 5)">
+                        还没有账号？<a role="button" tabindex="0" @click="toggleForm"
+                            @keydown.enter.prevent="toggleForm">立即注册</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- 登录侧宣传文案（右半区） -->
+            <div class="info-content info-content--login">
+                <h2 class="anim" :style="animStyle(20, 0)">Welcome</h2>
+                <p class="anim" :style="animStyle(21, 1)">很高兴再次见到你。这里始终为你敞开，需要任何帮助，我们随时都在。</p>
+            </div>
+
+            <!-- ================ 注册面板（右半区） ================ -->
+            <div class="form-box form-box--register">
+                <h2 class="form-title anim" :style="animStyle(0, 17, true)">Register</h2>
+                <form class="form" novalidate @submit.prevent>
+                    <div class="input-box anim" :style="animStyle(1, 18, true)">
+                        <input id="register-username" v-model="registerData.userName" max="8"
+                            class="form__input form-field-input form-field-input--action" type="text" placeholder=" "
+                            autocomplete="username">
+                        <label for="register-username">用户名</label>
+                        <button v-if="registerData.userName" type="button" class="input-clear" aria-label="清空用户名"
+                            @click="clearFields('userName')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6.6 6.6 17.4 17.4" />
+                                <path d="M17.4 6.6 6.6 17.4" />
+                            </svg>
+                        </button>
+                        <span v-else class="input-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="8" r="3.6" />
+                                <path d="M4.8 20a7.2 7.2 0 0 1 14.4 0" />
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div class="input-box anim" :style="animStyle(2, 19, true)">
+                        <input id="register-email" v-model="registerData.userEmail"
+                            class="form__input form-field-input form-field-input--action" type="email" placeholder=" "
+                            autocomplete="userEmail">
+                        <label for="register-email">邮箱</label>
+                        <button v-if="registerData.userEmail" type="button" class="input-clear" aria-label="清空邮箱"
+                            @click="clearFields('userEmail')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6.6 6.6 17.4 17.4" />
+                                <path d="M17.4 6.6 6.6 17.4" />
+                            </svg>
+                        </button>
+                        <span v-else class="input-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="5.5" width="18" height="13" rx="2.2" />
+                                <path d="m3.6 7.4 8.4 5.8 8.4-5.8" />
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div class="input-box anim" :style="animStyle(3, 19, true)">
+                        <input id="register-password" v-model="registerData.userPassword"
+                            class="form__input form-field-input form-field-input--action"
+                            :type="showRegisterPassword ? 'text' : 'password'" placeholder=" "
+                            autocomplete="current-password">
+                        <label for="register-password">密码</label>
+                        <PwdToggle v-model="showRegisterPassword" />
+                    </div>
+
+                    <div class="input-box anim" :style="animStyle(4, 20, true)">
+                        <input id="register-repassword" v-model="registerData.rePassword"
+                            class="form__input form-field-input form-field-input--action"
+                            :type="showRePassword ? 'text' : 'password'" placeholder=" " autocomplete="new-password">
+                        <label for="register-repassword">再次输入密码</label>
+                        <PwdToggle v-model="showRePassword" />
+                    </div>
+
+                    <button type="button" class="btn anim" :style="animStyle(5, 21, true)"
+                        @click="UserRegister">注册</button>
+
+                    <p class="switch-tip anim" :style="animStyle(6, 22, true)">
+                        已有账号？<a role="button" tabindex="0" @click="toggleForm"
+                            @keydown.enter.prevent="toggleForm">请登录</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- 注册侧宣传文案（左半区） -->
+            <div class="info-content info-content--register">
+                <h2 class="anim" :style="animStyle(0, 17, true)">Welcome back</h2>
+                <p class="anim" :style="animStyle(1, 18, true)">很高兴你来到这里。如有任何疑问或需要协助，随时联系我们。</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed, getCurrentInstance } from 'vue';
+import { ref, onBeforeUnmount, computed, getCurrentInstance } from 'vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
@@ -130,6 +173,25 @@ import Captcha from '@/components/business/auth/Captcha.vue';
 
 const $http = getCurrentInstance().appContext.config.globalProperties.$http;
 const route = useRouter();
+
+/** ------------------------ 随机背景图 ------------------------ */
+// 6 张首页背景图，与源项目保持一致
+const backImages = ref([
+    'src/assets/img/home/back1.webp',
+    'src/assets/img/home/back2.webp',
+    'src/assets/img/home/back3.webp',
+    'src/assets/img/home/back4.webp',
+    'src/assets/img/home/back5.webp',
+    'src/assets/img/home/back6.webp',
+]);
+const randomIndex = ref(0);
+// 非空数组前提下随机取下标，空数组时保留默认值，避免索引越界
+if (backImages.value.length > 0) {
+    randomIndex.value = Math.floor(Math.random() * backImages.value.length);
+}
+const currentPageBackground = computed(() => ({
+    backgroundImage: `url('${backImages.value[randomIndex.value] ?? ''}')`,
+}));
 
 /** ------------------------ 全局配置 ------------------------ */
 const isShowModal = ref(false); //验证框
@@ -165,23 +227,11 @@ const captchaTitle = computed(() => { //验证码弹窗标题随当前表单变�
     return formState.value.currentOption === 'register' ? '请完成注册安全验证' : '请完成登录安全验证';
 });
 
-/** ------------------------ 背景图切换 ------------------------ */
-const randomIndex = ref();
-const currentPageBackground = computed(() => {
-    return {
-        backgroundImage: `url('${backImages.value[randomIndex.value]}')`
-    }
-});
-const backImages = ref([
-    'src/assets/img/home/back1.webp',
-    'src/assets/img/home/back2.webp',
-    'src/assets/img/home/back3.webp',
-    'src/assets/img/home/back4.webp',
-    'src/assets/img/home/back5.webp',
-    'src/assets/img/home/back6.webp'
-]);
-if (backImages.value.length > 0) {
-    randomIndex.value = Math.floor(Math.random() * backImages.value.length);
+// 面板进场/退场的错峰延迟：--S 控制入场、--D / --li 控制出场与进场收尾，取值与源项目一致
+const animStyle = (delayIn, delayOut, isRegisterPanel = false) => {
+    return isRegisterPanel
+        ? { '--S': delayIn, '--li': delayOut }
+        : { '--S': delayIn, '--D': delayOut };
 };
 
 /** ------------------------ 注册 ------------------------ */
@@ -398,319 +448,452 @@ const clearFields = (prop) => {
     }
 };
 
-onMounted(() => {
-    let switchCtn = document.querySelector("#switch-cnt");
-    let switchC1 = document.querySelector("#switch-c1");
-    let switchC2 = document.querySelector("#switch-c2");
-    let switchCircle = document.querySelectorAll(".switch__circle");
-    let switchBtn = document.querySelectorAll(".switch__button");
-    let aContainer = document.querySelector("#a-container");
-    let bContainer = document.querySelector("#b-container");
-    let allButtons = document.querySelectorAll(".submit");
-    let getButtons = e => e.preventDefault();
-    let changeForm = e => {
-        switchCtn.classList.toggle("is-txr");
-        switchCircle[0].classList.toggle("is-txr");
-        switchCircle[1].classList.toggle("is-txr");
-        switchC1.classList.toggle("is-hidden");
-        switchC2.classList.toggle("is-hidden");
-        aContainer.classList.toggle("is-txl");
-        bContainer.classList.toggle("is-txl");
-        aContainer.classList.toggle("is-z200");
-        switchC2.classList.toggle("is-z200");
-        toggleForm();
-    };
-    let mainF = e => {
-        for (var i = 0; i < allButtons.length; i++) {
-            allButtons[i].addEventListener("click", getButtons);
-        }
-        for (var i = 0; i < switchBtn.length; i++) {
-            switchBtn[i].addEventListener("click", changeForm);
-        }
-    };
-    window.addEventListener("load", mainF);
-
-})
-
 onBeforeUnmount(() => {
     clearLockTimer();
 })
 </script>
 
 <style scoped lang="scss">
+/* ===================== 皮肤令牌（固定深色品红，不依赖全局主题令牌） ===================== */
+$c-bg: rgba(255, 255, 255, 0.9);
+/* 卡片底：与 $c-bg 同 RGB，仅降 alpha，让背景图透出 */
+$c-card: rgba(37, 37, 43, 0.72);
+$c-accent: var(--primary-color);
+$c-text: rgba(0, 0, 0, 0.9);
+$c-text-dim: rgba(0, 0, 0, 0.72);
+$c-path: rgba(0, 0, 0, 0.45);
+$c-accent-soft: rgba(72, 171, 229, 0.12);
+
+/* 尺寸：源项目 px 按根字号 20px 换算（750px = 37.5rem，450px = 22.5rem） */
+$card-w: 37.5rem;
+$card-h: 22.5rem;
+$field-h: 2rem;
+$field-gap: 0.95rem;
+$field-fs: 0.8rem;
+$btn-h: 2.25rem;
+
 #userLogin {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100vw;
     height: 100vh;
-    font-family: var(--app-font-family);
-    font-size: 0.75rem;
-    position: relative;
     overflow: hidden;
+    background: $c-bg;
+    color: $c-text;
+    font-family: var(--app-font-family);
+    font-size: $field-fs;
+    /* 建立独立层叠上下文：使负层级的背景图绘制在容器底色之上、卡片内容之下 */
+    isolation: isolate;
 
-    &::after {
-        content: "";
-        @include mask-overlay(rgba(var(--mask-rgb), 0.188), 100%, absolute, -1);
-        pointer-events: none;
-    }
-
+    /* 随机背景图：撑满容器，fadeIn 从 scale(1.3) 收到 1，由容器 overflow hidden 兜住 */
     .backPhoto {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
+        background-repeat: no-repeat;
         background-size: cover;
-        background-origin: center;
+        background-position: center;
+        z-index: -2;
+        animation: fadeIn 1s ease forwards;
+    }
+}
+
+/* ===================== 卡片与双曲面 ===================== */
+.auth-card {
+    position: relative;
+    width: $card-w;
+    height: $card-h;
+    background: $c-bg;
+    border: 0.1rem solid $c-accent;
+    box-shadow: 0 0 1.25rem $c-accent;
+    overflow: hidden;
+
+    /* 斜切曲面 1：登录态斜压在右半区，注册态转正填补中缝 */
+    .curved-shape {
         position: absolute;
-        left: 0;
-        top: 0;
-        z-index: -1;
-        animation: fadeIn 1s;
-    }
-}
-
-.layout {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .main {
-        width: 40rem;
+        top: -0.25rem;
+        right: 0;
+        width: 42.5rem;
         height: 30rem;
-        border-radius: 0.75rem;
-        margin: 0 auto;
-        z-index: 1;
-        position: relative;
+        background: linear-gradient(45deg, $c-bg, $c-accent);
+        transform: rotate(10deg) skewY(40deg);
+        transform-origin: bottom right;
+        transition: 1.5s ease;
+        transition-delay: 1.6s;
+    }
+
+    /* 斜切曲面 2：注册态反向旋转，形成上下两道弧形分割 */
+    .curved-shape2 {
+        position: absolute;
+        top: 100%;
+        left: 12.5rem;
+        width: 42.5rem;
+        height: 35rem;
+        background: $c-bg;
+        border-top: 0.15rem solid $c-accent;
+        transform: rotate(0deg) skewY(0deg);
+        transform-origin: bottom left;
+        transition: 1.5s ease;
+        transition-delay: 0.5s;
+    }
+
+    &.is-active .curved-shape {
+        transform: rotate(0deg) skewY(0deg);
+        transition-delay: 0.5s;
+    }
+
+    &.is-active .curved-shape2 {
+        transform: rotate(-11deg) skewY(-41deg);
+        transition-delay: 1.2s;
     }
 }
 
-// 按钮公共样式
-.button {
-    color: var(--text-on-dark);
-    font-size: 0.8rem;
-    margin-top: 30px;
-    padding: 8px 40px;
-    border-radius: 20px;
-    transition: all 0.3s ease-out !important;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* ===================== 表单面板 ===================== */
+.form-box {
     position: absolute;
     top: 0;
-    width: 20rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
     height: 100%;
-    padding: 1.56rem;
-    color: white;
-    background-color: rgba(var(--primary-sub-rgb), 0.565);
-    transition: 1.25s;
 
-    input {
-        color: black;
+    &--login {
+        left: 0;
+        padding: 0 2rem;
     }
+
+    &--register {
+        right: 0;
+        padding: 0 3rem;
+    }
+}
+
+/* 未激活的一侧不接受交互，避免隐形控件挡住可见内容 */
+.auth-card:not(.is-active) .form-box--register,
+.auth-card.is-active .form-box--login {
+    pointer-events: none;
 }
 
 .form {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
     width: 100%;
-    height: 100%;
-
-    .form__button {
-        border: 1px solid #ccc;
-
-        &:hover {
-            background-color: #fff;
-
-            color: black;
-        }
-    }
 }
 
-.login_email {
-    position: relative;
+.form-title {
+    margin-bottom: 0.35rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.02rem;
+    text-align: center;
+}
 
-    // 清空按钮：与 PwdToggle 同款线性图标、26px 圆形热区与悬停反馈
+/* ===================== 下划线输入框 ===================== */
+.input-box {
+    position: relative;
+    width: 100%;
+    height: $field-h;
+    margin-top: $field-gap;
+
+    /* 皮肤只保留下划线，排版基线仍由全局 .form-field-input 提供 */
+    .form__input {
+        width: 100%;
+        height: 100%;
+        padding: 0 1.9rem 0.3rem 0;
+        border: none;
+        border-bottom: 0.1rem solid $c-path;
+        border-radius: 0;
+        background: transparent;
+        color: $c-text;
+        font-size: $field-fs;
+        font-weight: 600;
+        transition: border-color 0.4s ease;
+
+        &:focus,
+        &:not(:placeholder-shown) {
+            border-bottom-color: $c-accent;
+        }
+
+        /* 浏览器自动填充：保持深色底白字，避免出现浅色块 */
+        &:-webkit-autofill {
+            -webkit-text-fill-color: $c-text;
+            caret-color: $c-text;
+            box-shadow: 0 0 0 100rem $c-bg inset;
+        }
+    }
+
+    /* 占位标签：空值时代替 placeholder，聚焦/有值后上浮变小 */
+    label {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        font-size: $field-fs;
+        color: $c-text;
+        pointer-events: none;
+        transition: all 0.35s ease;
+    }
+
+    .form__input:focus~label,
+    .form__input:not(:placeholder-shown)~label {
+        top: -0.1rem;
+        transform: translateY(-100%);
+        font-size: 0.7rem;
+        color: $c-accent;
+    }
+
+    .input-icon,
     .input-clear {
         position: absolute;
-        right: 6px;
         top: 50%;
-        transform: translateY(-50%);
+        right: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 26px;
-        height: 26px;
+        width: 1.3rem;
+        height: 1.3rem;
         padding: 0;
         border: none;
-        outline: none;
         border-radius: 50%;
         background: transparent;
-        color: var(--text-sec-color);
+        color: $c-text-dim;
+        transform: translateY(-50%);
+    }
+
+    .input-icon {
+        pointer-events: none;
+
+        svg {
+            display: block;
+            width: 0.9rem;
+            height: 0.9rem;
+        }
+    }
+
+    .input-clear {
         cursor: pointer;
-        z-index: 2;
         transition: color 0.2s ease, background-color 0.2s ease;
 
         svg {
-            width: 15px;
-            height: 15px;
             display: block;
+            width: 0.75rem;
+            height: 0.75rem;
             pointer-events: none;
         }
 
         &:hover {
-            color: var(--primary-sub);
-            background: rgba(var(--primary-sub-rgb), 0.1);
+            color: $c-accent;
+            background: $c-accent-soft;
         }
     }
-}
 
-// 皮肤：neumorphism 底色与内阴影；字号 / 字重 / 内边距 / 去边框由 .form-field-input 统一提供
-.form__input {
-    width: 17rem;
-    margin: 0.25rem 0;
-    background-color: var(--deco-light);
-    border-radius: 0.5rem;
-}
-
-.form__input:focus {
-    box-shadow: inset 2px 2px 2px rgba(var(--shadow-color-rgb), 0.35), inset -2px -2px 2px rgba(var(--shadow-color-rgb), 0.35);
-}
-
-// 密码框：外层承载定位与间距，输入框让出右侧空间给小眼睛按钮
-.pwd-field {
-    position: relative;
-    width: 17rem;
-    margin: 0.25rem 0;
-
-    .form__input {
-        width: 100%;
-        margin: 0;
+    .form__input:focus~.input-icon {
+        color: $c-accent;
     }
-}
 
-.form__span {
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    font-size: 0.8rem;
-}
-
-.form__link {
-    font-size: 0.8rem;
-    margin-top: 1.56rem;
-    border-bottom: 1px solid var(--deco-neutral-weak);
-    line-height: 1;
-    cursor: pointer;
-}
-
-.title {
-    font-size: 1.7rem;
-    font-weight: 700;
-    line-height: 2;
-}
-
-.description {
-    font-size: 0.8rem;
-    letter-spacing: 0.02rem;
-    text-align: center;
-    line-height: 1.6;
-    display: flex;
-}
-
-
-.a-container {
-    left: calc(100% - 20rem);
-    opacity: 0;
-}
-
-.b-container {
-    left: calc(100% - 20rem);
-}
-
-// 左侧切换板块
-.switch {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 20rem;
-    padding: 3.13rem;
-    z-index: 200;
-    transition: 1.25s;
-    background-color: rgba(var(--highlight-rgb), 0.902);
-    color: black;
-    overflow: hidden;
-
-    .switch__button {
-        color: black;
-        border: 1px solid var(--primary-sub);
+    /* 小眼睛来自 PwdToggle 组件，此处只覆盖深色皮肤下的配色（重复类名用于压过组件默认样式） */
+    :deep(.pwd-toggle.pwd-toggle) {
+        color: $c-text-dim;
 
         &:hover {
-            background-color: var(--primary-sub);
-            color: var(--text-on-dark);
+            color: $c-accent;
+            background: $c-accent-soft;
+        }
+
+        &.is-on {
+            color: $c-accent;
         }
     }
 }
 
-.switch__circle {
-    color: rgb(204, 204, 204);
-    color: rgb(102, 102, 102);
-    position: absolute;
-    width: 22rem;
-    height: 24rem;
-    border-radius: 50%;
-    box-shadow: inset 0.5rem 0.5rem 0.75rem rgba(var(--shadow-color-rgb), 0.35), inset -0.5rem -0.5rem 0.75rem rgba(var(--shadow-color-rgb), 0.35);
-    bottom: -60%;
-    left: -30%;
-    transition: 1.25s;
-}
-
-.switch__circle--t {
-    top: -35%;
-    left: 60%;
-    width: 16rem;
-    height: 16rem;
-}
-
-.switch__container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: absolute;
-    width: 25rem;
-    padding: 3.13rem 3.44rem;
-    transition: 1.25s;
-}
-
-/**/
-.is-txr {
-    left: calc(100% - 20rem);
-    transition: 1.25s;
-    transform-origin: left;
-}
-
-.is-txl {
-    left: 0;
-    transition: 1.25s;
-    transform-origin: right;
-    opacity: 0;
-}
-
-.is-z200 {
+/* ===================== 渐变描边按钮 ===================== */
+.btn {
+    position: relative;
     z-index: 1;
-    transition: 1.25s;
-    opacity: 1;
+    width: 100%;
+    height: $btn-h;
+    margin-top: 1rem;
+    overflow: hidden;
+    border: 0.1rem solid $c-accent;
+    border-radius: 2rem;
+    background: transparent;
+    color: $c-text;
+    font-size: $field-fs;
+    font-weight: 600;
+    letter-spacing: 0.02rem;
+    cursor: pointer;
+
+    /* 悬停时自上而下推入渐变，源项目的按钮动效 */
+    &::before {
+        content: "";
+        position: absolute;
+        top: -100%;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 300%;
+        background: linear-gradient($c-bg, $c-accent, $c-bg, $c-accent);
+        transition: 0.5s;
+    }
+
+    &:hover::before {
+        top: 0;
+    }
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+
+        &::before {
+            display: none;
+        }
+    }
 }
 
-.is-hidden {
-    visibility: hidden;
-    opacity: 0;
+/* ===================== 辅助链接 ===================== */
+.link-forgot {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-end;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    color: $c-text-dim;
+    transition: color 0.2s ease;
+
+    svg {
+        width: 0.7rem;
+        height: 0.7rem;
+    }
+
+    &:hover {
+        color: $c-accent;
+    }
+}
+
+.switch-tip {
+    margin-top: 0.9rem;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    text-align: center;
+    color: $c-text-dim;
+
+    a {
+        color: $c-accent;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* ===================== 侧栏宣传文案 ===================== */
+.info-content {
     position: absolute;
-    transition: 1.25s;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    pointer-events: none;
+
+    &--login {
+        right: 0;
+        padding: 0 2rem 3rem 7.5rem;
+        text-align: right;
+    }
+
+    &--register {
+        left: 0;
+        padding: 0 7.5rem 3rem 1.9rem;
+        text-align: left;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1.3;
+        text-transform: uppercase;
+    }
+
+    p {
+        margin-top: 0.6rem;
+        font-size: 0.8rem;
+        line-height: 1.7;
+        color: rgba($c-text, 0.85);
+    }
+}
+
+/* ===================== 面板进场 / 退场动效 ===================== */
+/* 登录表单：默认在场，切走时向左滑出 */
+.form-box--login .anim {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+    transition: 0.7s ease;
+    transition-delay: calc(0.1s * var(--S));
+}
+
+.auth-card.is-active .form-box--login .anim {
+    opacity: 0;
+    transform: translateX(-120%);
+    transition-delay: calc(0.1s * var(--D));
+}
+
+/* 登录侧文案：默认在场，切走时向右滑出并虚化 */
+.info-content--login .anim {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+    transition: 0.7s ease;
+    transition-delay: calc(0.1s * var(--S));
+}
+
+.auth-card.is-active .info-content--login .anim {
+    opacity: 0;
+    filter: blur(0.5rem);
+    transform: translateX(120%);
+    transition-delay: calc(0.1s * var(--D));
+}
+
+/* 注册表单：默认右侧待命并虚化，激活后归位 */
+.form-box--register .anim {
+    opacity: 0;
+    filter: blur(0.5rem);
+    transform: translateX(120%);
+    transition: 0.7s ease;
+    transition-delay: calc(0.1s * var(--S));
+}
+
+.auth-card.is-active .form-box--register .anim {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+    transition-delay: calc(0.1s * var(--li));
+}
+
+/* 注册侧文案：默认左侧待命，激活后归位 */
+.info-content--register .anim {
+    opacity: 0;
+    filter: blur(0.5rem);
+    transform: translateX(-120%);
+    transition: 0.7s ease;
+    transition-delay: calc(0.1s * var(--S));
+}
+
+.auth-card.is-active .info-content--register .anim {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+    transition-delay: calc(0.1s * var(--li));
 }
 </style>

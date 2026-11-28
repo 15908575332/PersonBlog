@@ -7,8 +7,10 @@
                 :class="{ active: activeIndex === index }" :style="{ backgroundImage: `url(${item.backImgUrl})` }">
             </div>
         </div>
-        <!-- 导航 -->
-        <Navigation></Navigation>
+
+        <div class="nav-wrapper" :class="[$isNavHidden ? 'navHiddenOut' : 'navHiddenIn']">
+            <Navigation></Navigation>
+        </div>
 
         <div class="layout">
             <div class="content">
@@ -88,7 +90,7 @@
                                     <textarea v-model="formData.introduce" :maxlength="maxlength"
                                         placeholder="写点什么介绍一下自己..." @input="handleInput"></textarea>
                                     <span class="char-counter" :class="{ warn: remainingChars <= 10 }">{{ remainingChars
-                                        }}</span>
+                                    }}</span>
                                 </div>
                             </div>
 
