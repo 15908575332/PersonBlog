@@ -518,10 +518,11 @@ onBeforeUnmount(() => {
     height: 100%;
 
     .form__button {
-        border: 1px solid var(--border-color);
+        border: 1px solid #ccc;
 
         &:hover {
-            background-color: var(--bg-surface);
+            background-color: #fff;
+
             color: black;
         }
     }
@@ -559,8 +560,8 @@ onBeforeUnmount(() => {
         }
 
         &:hover {
-            color: var(--primary-color);
-            background: rgba(var(--primary-color-rgb), 0.1);
+            color: var(--primary-sub);
+            background: rgba(var(--primary-sub-rgb), 0.1);
         }
     }
 }
@@ -571,11 +572,10 @@ onBeforeUnmount(() => {
     margin: 0.25rem 0;
     background-color: var(--deco-light);
     border-radius: 0.5rem;
-    box-shadow: inset 2px 2px 4px var(--deco-light), inset -2px -2px 4px var(--deco-light);
 }
 
 .form__input:focus {
-    box-shadow: inset 4px 4px 4px var(--deco-light), inset -4px -4px 4px var(--deco-light);
+    box-shadow: inset 2px 2px 2px rgba(var(--shadow-color-rgb), 0.35), inset -2px -2px 2px rgba(var(--shadow-color-rgb), 0.35);
 }
 
 // 密码框：外层承载定位与间距，输入框让出右侧空间给小眼睛按钮
@@ -657,11 +657,13 @@ onBeforeUnmount(() => {
 }
 
 .switch__circle {
+    color: rgb(204, 204, 204);
+    color: rgb(102, 102, 102);
     position: absolute;
     width: 22rem;
     height: 24rem;
     border-radius: 50%;
-    box-shadow: inset 0.5rem 0.5rem 0.75rem rgba(var(--primary-color-rgb), 0.35), inset -0.5rem -0.5rem 0.75rem var(--deco-light);
+    box-shadow: inset 0.5rem 0.5rem 0.75rem rgba(var(--shadow-color-rgb), 0.35), inset -0.5rem -0.5rem 0.75rem rgba(var(--shadow-color-rgb), 0.35);
     bottom: -60%;
     left: -30%;
     transition: 1.25s;

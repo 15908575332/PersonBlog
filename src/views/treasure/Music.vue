@@ -1469,7 +1469,6 @@ onUnmounted(() => {
 .player-controls {
   background-size: cover;
   border-radius: 0.5rem;
-  box-shadow: 0 0 20px rgba(var(--primary-color-rgb), 0.72);
   gap: 1rem;
   position: relative;
   background-image: linear-gradient(180deg, var(--deco-dark) 30%, var(--deco-dark) 100%);
@@ -1510,6 +1509,7 @@ onUnmounted(() => {
     padding: 0.5rem;
     box-shadow: 0 1px 10px rgba(var(--highlight-rgb), .2);
     background-color: rgba(var(--mask-rgb), 0.3);
+    background-color: red;
 
     &>div {
       min-width: 30px;
@@ -1540,6 +1540,7 @@ onUnmounted(() => {
       overflow-y: auto;
       overscroll-behavior: contain;
       background-color: rgba(var(--mask-rgb), 0.3);
+      background-color: rebeccapurple;
       padding: 0.5rem 0;
 
       /* IE 10+ */
